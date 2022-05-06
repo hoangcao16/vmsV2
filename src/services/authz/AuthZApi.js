@@ -1,5 +1,8 @@
 import { STORAGE } from '@/constants/common';
+import { history } from 'umi';
 import MyService from '../RestApiClient';
+
+const loginPath = '/user/login';
 const AuthZApi = {
   login: async (payload) => {
     try {
@@ -25,6 +28,7 @@ const AuthZApi = {
   logout: async () => {
     try {
       await MyService.postRequest(`/authz/logout`);
+      history.push(loginPath);
     } catch (error) {
       console.log(error);
     }

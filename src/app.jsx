@@ -1,13 +1,10 @@
-import { SettingDrawer } from '@ant-design/pro-layout';
-import { PageLoading } from '@ant-design/pro-layout';
-import { history, Link } from 'umi';
-import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
+import RightContent from '@/components/RightContent';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
+import { PageLoading, SettingDrawer } from '@ant-design/pro-layout';
+import { history, Link } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 import AuthZApi from './services/authz/AuthZApi';
-import { STORAGE } from './constants/common';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 /** 获取用户信息比较慢的时候会展示一个 loading */
@@ -21,9 +18,6 @@ export const initialStateConfig = {
 
 export async function getInitialState() {
   const fetchUserInfo = async () => {
-    if (!localStorage.getItem(STORAGE.TOKEN)) {
-      return history.push(loginPath);
-    }
 
     try {
       const msg = await AuthZApi.getPermissionForCurrentUser();

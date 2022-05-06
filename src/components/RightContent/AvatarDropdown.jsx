@@ -1,11 +1,13 @@
-import React, { useCallback } from 'react';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { STORAGE } from '@/constants/common';
+import { outLogin } from '@/services/ant-design-pro/api';
+import AuthZApi from '@/services/authz/AuthZApi';
+import { LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
-import { history, useModel } from 'umi';
 import { stringify } from 'querystring';
+import React, { useCallback } from 'react';
+import { history, useModel } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
-import { outLogin } from '@/services/ant-design-pro/api';
 
 /**
  * 退出登录，并且将当前的 url 保存
@@ -28,12 +30,15 @@ const loginOut = async () => {
 const AvatarDropdown = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
   const onMenuClick = useCallback(
-    (event) => {
+    async (event) => {
       const { key } = event;
 
       if (key === 'logout') {
         setInitialState((s) => ({ ...s, currentUser: undefined }));
-        loginOut();
+        await AuthZApi.logout();
+        localStorage.setItem(STORAGE.TOKEN, null);
+        const loginPath = '/user/login';
+        history.push(loginPath);
         return;
       }
 
