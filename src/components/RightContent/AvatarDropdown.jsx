@@ -59,13 +59,15 @@ const AvatarDropdown = ({ menu }) => {
 
   const { currentUser } = initialState;
 
-  if (!currentUser || !currentUser.name) {
+  console.log('currentUser:', currentUser);
+
+  if (!currentUser) {
     return loading;
   }
 
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-      {menu && (
+      {/* {menu && (
         <Menu.Item key="center">
           <UserOutlined />
           个人中心
@@ -77,19 +79,24 @@ const AvatarDropdown = ({ menu }) => {
           个人设置
         </Menu.Item>
       )}
-      {menu && <Menu.Divider />}
+      {menu && <Menu.Divider />} */}
 
       <Menu.Item key="logout">
         <LogoutOutlined />
-        退出登录
+        Đăng xuất
       </Menu.Item>
     </Menu>
   );
   return (
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
-        <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
-        <span className={`${styles.name} anticon`}>{currentUser.name}</span>
+        <Avatar
+          size="small"
+          className={styles.avatar}
+          src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png'"
+          alt="avatar"
+        />
+        <span className={`${styles.name} anticon`}>Thường</span>
       </span>
     </HeaderDropdown>
   );

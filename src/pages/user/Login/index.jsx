@@ -1,6 +1,7 @@
 import Footer from '@/components/Footer';
 import { login } from '@/services/ant-design-pro/api';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import AuthZApi from '@/services/authz/AuthZApi';
 import {
   AlipayCircleOutlined,
   LockOutlined,
@@ -35,20 +36,27 @@ const Login = () => {
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
 
+    console.log('userInfo:', userInfo);
+
     if (userInfo) {
       await setInitialState((s) => ({ ...s, currentUser: userInfo }));
     }
   };
 
   const handleSubmit = async (values) => {
+    console.log('values:', values);
+
     try {
       // 登录
-      const msg = await login({ ...values, type });
+      // const msg = await login({ ...values, type });
+      const msg = await AuthZApi.login({ ...values, type });
 
-      if (msg.status === 'ok') {
+      console.log(msg);
+
+      if (msg.code === 600) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
-          defaultMessage: '登录成功！',
+          defaultMessage: 'Đăng nhập thành công',
         });
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
@@ -57,8 +65,15 @@ const Login = () => {
         if (!history) return;
         const { query } = history.location;
         const { redirect } = query;
+        console.log('passs============>');
         history.push(redirect || '/');
         return;
+      } else {
+        const defaultLoginFailureMessage = intl.formatMessage({
+          id: 'pages.login.failure',
+          defaultMessage: 'Đăng nhập thất bại！',
+        });
+        message.error(defaultLoginFailureMessage);
       }
 
       console.log(msg); // 如果失败去设置用户错误信息
@@ -67,7 +82,7 @@ const Login = () => {
     } catch (error) {
       const defaultLoginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',
-        defaultMessage: '登录失败，请重试！',
+        defaultMessage: 'Đăng nhập thất bại！',
       });
       message.error(defaultLoginFailureMessage);
     }
@@ -89,16 +104,6 @@ const Login = () => {
           initialValues={{
             autoLogin: true,
           }}
-          actions={[
-            <FormattedMessage
-              key="loginWith"
-              id="pages.login.loginWith"
-              defaultMessage="其他登录方式"
-            />,
-            <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.icon} />,
-            <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.icon} />,
-            <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.icon} />,
-          ]}
           onFinish={async (values) => {
             await handleSubmit(values);
           }}
@@ -109,13 +114,6 @@ const Login = () => {
               tab={intl.formatMessage({
                 id: 'pages.login.accountLogin.tab',
                 defaultMessage: '账户密码登录',
-              })}
-            />
-            <Tabs.TabPane
-              key="mobile"
-              tab={intl.formatMessage({
-                id: 'pages.login.phoneLogin.tab',
-                defaultMessage: '手机号登录',
               })}
             />
           </Tabs>
@@ -131,13 +129,13 @@ const Login = () => {
           {type === 'account' && (
             <>
               <ProFormText
-                name="username"
+                name="email"
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon} />,
                 }}
                 placeholder={intl.formatMessage({
-                  id: 'pages.login.username.placeholder',
+                  id: 'pages.login.email.placeholder',
                   defaultMessage: '用户名: admin or user',
                 })}
                 rules={[
@@ -145,7 +143,7 @@ const Login = () => {
                     required: true,
                     message: (
                       <FormattedMessage
-                        id="pages.login.username.required"
+                        id="pages.login.email.required"
                         defaultMessage="请输入用户名!"
                       />
                     ),
@@ -177,7 +175,6 @@ const Login = () => {
             </>
           )}
 
-          {/* {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />} */}
           {type === 'mobile' && (
             <>
               <ProFormText

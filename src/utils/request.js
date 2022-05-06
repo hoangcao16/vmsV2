@@ -9,8 +9,10 @@ request.interceptors.request.use(
   function (config) {
     const token = localStorage.getItem(STORAGE.TOKEN);
 
+    console.log('token', token);
+
     if (token) {
-      config.headers.Authorization = 'Bearer ' + token;
+      config.headers.Authorization = token;
     }
 
     return config;
@@ -26,10 +28,10 @@ request.interceptors.response.use(
   },
   function (error) {
     if (error?.toJSON()?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      // localStorage.removeItem('token');
+      // localStorage.removeItem('user');
       //call api refresh Token
-      location.reload();
+      // location.reload();
     }
     return Promise.reject(error);
   },
