@@ -1,5 +1,5 @@
 const Settings = {
-  navTheme: 'light',
+  navTheme: 'realDark',
   // 拂晓蓝
   primaryColor: '#1890ff',
   layout: 'mix',

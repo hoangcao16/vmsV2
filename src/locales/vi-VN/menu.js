@@ -11,6 +11,8 @@ export default {
   'menu.dashboard.analysis': 'Analysis',
   'menu.dashboard.monitor': 'Monitor',
   'menu.dashboard.workplace': 'Workplace',
+  'menu.setting-test': 'helo',
+  'menu.setting-test.create-data': 'create-data',
   'menu.exception.403': '403',
   'menu.exception.404': '404',
   'menu.exception.500': '500',
