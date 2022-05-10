@@ -320,8 +320,8 @@ export default defineConfig({
       component: './report/Report',
     },
     {
-      path: '/setting-test',
-      name: 'setting-test',
+      path: '/setting-user',
+      name: 'Cài đặt',
       icon: 'setting',
       // hideInMenu: true,
       routes: [
@@ -330,10 +330,10 @@ export default defineConfig({
         //   redirect: '/dashboard/analysis',
         // },
         {
-          name: 'create-data',
+          name: 'Danh sách user',
           icon: 'smile',
-          path: '/setting-test/create-data',
-          component: './setting-test/create-data',
+          path: '/setting-user/list-user',
+          component: './setting-user/list-user',
         },
       ],
     },

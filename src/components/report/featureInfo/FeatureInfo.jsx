@@ -29,7 +29,6 @@ sortData[3] = array[1];
 
 const FeatureInfo = () => {
   const [camera, setCamera] = useState([]);
-  console.log('camera', camera);
 
   useEffect(() => {
     cameraApi.getReportCamera().then((result) => {
@@ -40,10 +39,10 @@ const FeatureInfo = () => {
         };
       });
       const sortData = [];
-      sortData[0] = convertData[3];
-      sortData[1] = convertData[2];
-      sortData[2] = convertData[0];
-      sortData[3] = convertData[1];
+      sortData[0] = convertData.find((i) => i.cameraName == 'totalCamera');
+      sortData[1] = convertData.find((i) => i.cameraName == 'cameraAI');
+      sortData[2] = convertData.find((i) => i.cameraName == 'cameraIsWorking');
+      sortData[3] = convertData.find((i) => i.cameraName == 'cameraIsNotWorking');
       setCamera(sortData);
     });
   }, []);

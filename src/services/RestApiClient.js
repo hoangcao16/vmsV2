@@ -3,7 +3,7 @@ import _uniqueId from 'lodash/uniqueId';
 
 const MyService = {
   async getRequest(url, params) {
-    if (params == 'report') {
+    if (params?.report == 'report') {
       return request.get(url, {
         headers: {
           requestId: _uniqueId('cctv'),
