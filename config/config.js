@@ -307,6 +307,12 @@ export default defineConfig({
       ],
     },
     {
+      name: 'report',
+      icon: 'smile',
+      path: '/report',
+      component: './report/Report',
+    },
+    {
       path: '/',
       redirect: '/dashboard/analysis',
     },
