@@ -317,7 +317,7 @@ export default defineConfig({
       name: 'report',
       icon: 'smile',
       path: '/report',
-      component: './report/Report',
+      component: './report',
     },
     {
       path: '/setting-user',

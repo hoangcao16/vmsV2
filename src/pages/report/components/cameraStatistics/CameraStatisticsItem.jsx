@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card } from 'antd';
-import './FeatureInfoItem.less';
+import './CameraStatisticsItem.less';
 import { useIntl } from 'umi';
 
-export default function FeatureInfoItem(props) {
+export default function CameraStatisticsItem(props) {
   const intl = useIntl();
   return (
     <Card className={`card ${props?.color}`}>

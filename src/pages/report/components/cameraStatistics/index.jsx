@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Tooltip } from 'antd';
 import cameraApi from '@/services/camera/CameraApi';
-import FeatureInfoItem from './FeatureInfoItem';
+import CameraStatisticsItem from './CameraStatisticsItem';
 
 const topColResponsiveProps = {
   xs: 24,
@@ -27,7 +27,7 @@ sortData[1] = array[2];
 sortData[2] = array[0];
 sortData[3] = array[1];
 
-const FeatureInfo = () => {
+const CameraStatistics = () => {
   const [camera, setCamera] = useState([]);
 
   useEffect(() => {
@@ -65,7 +65,7 @@ const FeatureInfo = () => {
       {camera.map((c) => {
         return (
           <Col {...topColResponsiveProps}>
-            <FeatureInfoItem
+            <CameraStatisticsItem
               key={c?.cameraName}
               cameraName={c?.cameraName}
               totalCamera={c?.totalCamera}
@@ -78,4 +78,4 @@ const FeatureInfo = () => {
   );
 };
 
-export default FeatureInfo;
+export default CameraStatistics;

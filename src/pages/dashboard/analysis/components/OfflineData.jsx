@@ -57,13 +57,13 @@ const OfflineData = ({ activeKey, loading, offlineData, offlineChartData, handle
               responsive
               xField="date"
               yField="value"
-              seriesField="type"
-              interactions={[
-                {
-                  type: 'slider',
-                  cfg: {},
-                },
-              ]}
+              seriesField="type" //tên
+              // interactions={[
+              //   {
+              //     type: 'slider',
+              //     cfg: {},
+              //   },
+              // ]}
               legend={{
                 position: 'top-center',
               }}
