@@ -7,7 +7,8 @@ body,
 }
 
 .colorWeak {
-  filter: invert(80%);
+  -webkit-filter: invert(80%);
+          filter: invert(80%);
 }
 
 .ant-layout {
@@ -31,7 +32,9 @@ ul,
 ol {
   list-style: none;
 }
-
+.ant-pro-setting-drawer-handle {
+  display: none;
+}
 @media (max-width: @screen-xs) {
   .ant-table {
     width: 100%;
