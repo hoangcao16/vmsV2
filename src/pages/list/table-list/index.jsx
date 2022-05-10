@@ -149,7 +149,7 @@ const TableList = () => {
         }
 
         if (`${status}` === '3') {
-          return <Input {...rest} placeholder="请输入异常原因！" />;
+          return <Input {...rest} placeholder="请输入异常原因sâsa！" />;
         }
 
         return defaultRender(item);
