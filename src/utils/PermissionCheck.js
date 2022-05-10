@@ -4,7 +4,6 @@ import { isEmpty } from 'lodash';
 export default function permissionCheck(permission_name) {
   const permissionUser = JSON.parse(localStorage.getItem(STORAGE.PERMISSIONS));
 
-  console.log('permissionUser:', permissionUser);
   if (!isEmpty(permissionUser?.roles)) {
     const checkSuperAdmin = permissionUser?.roles.filter((r) => r.role_code === 'superadmin');
 

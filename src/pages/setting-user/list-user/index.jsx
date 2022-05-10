@@ -87,28 +87,32 @@
 //   );
 // }
 
-import { Button, message, Input, Select, Space, Tooltip, Switch } from 'antd';
-import { useState, useRef } from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
-import ProTable from '@ant-design/pro-table';
-import { LightFilter } from '@ant-design/pro-form';
-import { connect } from 'dva';
+import MSCustomizeDrawer from '@/components/CustomizeComponent/Drawer/DrawerCustomize';
+import MSItemInForm from '@/components/CustomizeComponent/Form/Item';
+import Menu from '@/locales/en-US/menu';
+import permissionCheck from '@/utils/PermissionCheck';
 import {
-  EyeOutlined,
-  EnvironmentOutlined,
-  EditOutlined,
-  PlusOutlined,
-  ExportOutlined,
-  ScanOutlined,
-  FilterOutlined,
-  MergeCellsOutlined,
+  ArrowDownOutlined,
   CheckOutlined,
   CloseOutlined,
+  EditOutlined,
+  EllipsisOutlined,
+  EnvironmentOutlined,
+  EyeOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
-import permissionCheck from '@/utils/PermissionCheck';
+import { LightFilter } from '@ant-design/pro-form';
+import { PageContainer } from '@ant-design/pro-layout';
+import ProTable from '@ant-design/pro-table';
+import { Button, Dropdown, Input, Select, Space, Switch, Tooltip, Form, Row, Col } from 'antd';
+import { connect } from 'dva';
+import { useState } from 'react';
+import styles from './styles.less';
 const { Option } = Select;
 const { Search } = Input;
 const UserList = ({ dispatch, list, metadata }) => {
+  const [visible, setVisible] = useState(false);
+  const [form] = Form.useForm();
   const columns = [
     {
       title: 'Name',
@@ -143,7 +147,7 @@ const UserList = ({ dispatch, list, metadata }) => {
     },
 
     {
-      title: '',
+      title: 'Thao tác',
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
@@ -172,6 +176,66 @@ const UserList = ({ dispatch, list, metadata }) => {
   const onSearch = (val) => {
     console.log('search:', val);
   };
+
+  const handlaExpand = (e) => {
+    setVisible(!visible);
+  };
+
+  const handleSubmit = () => {
+    const a = form.getFieldsValue(true);
+    console.log('a:', a);
+  };
+  const formItemLayout = {
+    wrapperCol: { span: 24 },
+    labelCol: { span: 24 },
+  };
+
+  const renderFilter = () => {
+    return (
+      <>
+        <Form layout="horizontal" form={form} onFinish={handleSubmit} {...formItemLayout}>
+          <Row gutter={16} span={24} className={styles.expandRow}>
+            <Col span={18}>
+              <MSItemInForm type="input" name="name" minLength={5} maxLength={255} required={true}>
+                <Search />
+              </MSItemInForm>
+            </Col>
+            <Col span={6}>
+              <h4 onClick={handlaExpand}>{visible ? 'Ẩn bộ lọc' : 'Thêm bộ lọc'}</h4>
+            </Col>
+          </Row>
+
+          {visible && (
+            <div className={styles.formExpand}>
+              <Row gutter={16}>
+                <Col className="gutter-row" span={12}>
+                  <MSItemInForm label="Chức vụ" type="input" name="test">
+                    <Select />
+                  </MSItemInForm>
+                </Col>
+                <Col className="gutter-row" span={12}>
+                  <MSItemInForm label="Vai trò" type="input" name="test1">
+                    <Select />
+                  </MSItemInForm>
+                </Col>
+                <Col className="gutter-row" span={12}>
+                  <MSItemInForm label="Đơn vị" type="input" name="test2">
+                    <Select />
+                  </MSItemInForm>
+                </Col>
+                <Col className="gutter-row" span={12}>
+                  <MSItemInForm label="Nhóm người dùng" type="input" name="test3">
+                    <Select />
+                  </MSItemInForm>
+                </Col>
+              </Row>
+            </div>
+          )}
+        </Form>
+      </>
+    );
+  };
+
   return (
     <PageContainer>
       <ProTable
@@ -184,28 +248,20 @@ const UserList = ({ dispatch, list, metadata }) => {
         options={false}
         toolbar={{
           multipleLine: true,
-          search: {
-            onSearch: (value) => {
-              alert(value);
-            },
-          },
+          filter: <LightFilter wrapperCol={24}>{renderFilter()}</LightFilter>,
           actions: [
-            // eslint-disable-next-line react/jsx-key
-            <Select
-              showSearch
-              placeholder="Select a person"
-              optionFilterProp="children"
-              onChange={onChange}
-              onSearch={onSearch}
-              filterOption={(input, option) =>
-                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
+            <Button
+              key="add"
+              type="primary"
+              onClick={() => {
+                alert('add');
+              }}
             >
-              <Option value="jack">Jack</Option>
-              <Option value="lucy">Lucy</Option>
-              <Option value="tom">Tom</Option>
-            </Select>,
+              <PlusOutlined />
+              Thêm camera
+            </Button>,
           ],
+          style: { width: '100%' },
         }}
         pagination={{
           showQuickJumper: true,
