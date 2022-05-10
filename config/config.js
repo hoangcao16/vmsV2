@@ -160,6 +160,12 @@ export default defineConfig({
           redirect: '/list/table-list',
         },
         {
+          name: 'Danh sách camera',
+          icon: 'table',
+          path: '/list/camera-list',
+          component: './list/camera-list',
+        },
+        {
           name: 'table-list',
           icon: 'smile',
           path: '/list/table-list',
