@@ -314,6 +314,12 @@ export default defineConfig({
       ],
     },
     {
+      name: 'report',
+      icon: 'smile',
+      path: '/report',
+      component: './report/Report',
+    },
+    {
       path: '/setting-user',
       name: 'Cài đặt',
       icon: 'setting',

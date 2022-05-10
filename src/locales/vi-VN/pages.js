@@ -68,4 +68,8 @@ export default {
   'pages.searchTable.tenThousand': '0000',
   'pages.searchTable.batchDeletion': 'deleção em lote',
   'pages.searchTable.batchApproval': 'aprovação em lote',
+  'pages.report.featureInfo.totalCamera': 'Tổng số Camera',
+  'pages.report.featureInfo.cameraAI': 'Camera AI',
+  'pages.report.featureInfo.cameraIsWorking': 'Camera đang hoạt động',
+  'pages.report.featureInfo.cameraIsNotWorking': 'Camera không hoạt động',
 };
