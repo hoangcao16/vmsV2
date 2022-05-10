@@ -18,6 +18,10 @@ const AuthZApi = {
   getPermissionForCurrentUser: async () => {
     try {
       const { data } = await MyService.getRequest(`/authz/api/v0/authorization/get_permission`);
+
+      console.log('data', data);
+      console.log('data.payload', data.payload);
+      localStorage.setItem(STORAGE.PERMISSIONS, JSON.stringify(data.payload));
       return data;
     } catch (error) {
       console.log(error);
@@ -29,6 +33,15 @@ const AuthZApi = {
     try {
       await MyService.postRequest(`/authz/logout`);
       history.push(loginPath);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  getAllUser: async (params) => {
+    try {
+      const { data } = await MyService.getRequest(`/authz/api/v0/users`, params);
+      return data;
     } catch (error) {
       console.log(error);
     }
