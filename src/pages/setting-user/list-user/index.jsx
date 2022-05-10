@@ -3,7 +3,7 @@ import MSItemInForm from '@/components/CustomizeComponent/Form/Item';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Col, Form, Input, Row, Space } from 'antd';
 import React, { useState } from 'react';
-import styles from '../create-data/styles.less';
+import styles from './styles.less';
 export default function CreateData() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [form] = Form.useForm();
