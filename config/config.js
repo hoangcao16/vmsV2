@@ -3,6 +3,7 @@ import { defineConfig } from 'umi';
 import { join } from 'path';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
+import routes from './routes';
 const { REACT_APP_ENV } = process.env;
 export default defineConfig({
   hash: true,
@@ -160,6 +161,12 @@ export default defineConfig({
           redirect: '/list/table-list',
         },
         {
+          name: 'Danh sách camera',
+          icon: 'table',
+          path: '/list/camera-list',
+          component: './list/camera-list',
+        },
+        {
           name: 'table-list',
           icon: 'smile',
           path: '/list/table-list',
@@ -313,6 +320,24 @@ export default defineConfig({
       component: './report/Report',
     },
     {
+      path: '/setting-test',
+      name: 'setting-test',
+      icon: 'setting',
+      // hideInMenu: true,
+      routes: [
+        // {
+        //   path: '/setting-test',
+        //   redirect: '/dashboard/analysis',
+        // },
+        {
+          name: 'create-data',
+          icon: 'smile',
+          path: '/setting-test/create-data',
+          component: './setting-test/create-data',
+        },
+      ],
+    },
+    {
       path: '/',
       redirect: '/dashboard/analysis',
     },
@@ -320,6 +345,7 @@ export default defineConfig({
       component: '404',
     },
   ],
+  // routes:routes,
   access: {},
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {

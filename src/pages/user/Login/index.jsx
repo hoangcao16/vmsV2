@@ -1,15 +1,7 @@
 import Footer from '@/components/Footer';
-import { login } from '@/services/ant-design-pro/api';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import AuthZApi from '@/services/authz/AuthZApi';
-import {
-  AlipayCircleOutlined,
-  LockOutlined,
-  MobileOutlined,
-  TaobaoCircleOutlined,
-  UserOutlined,
-  WeiboCircleOutlined,
-} from '@ant-design/icons';
+import { LockOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { Alert, message, Tabs } from 'antd';
 import React, { useState } from 'react';
@@ -35,23 +27,16 @@ const Login = () => {
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
-
-    console.log('userInfo:', userInfo);
-
     if (userInfo) {
       await setInitialState((s) => ({ ...s, currentUser: userInfo }));
     }
   };
 
   const handleSubmit = async (values) => {
-    console.log('values:', values);
-
     try {
       // 登录
       // const msg = await login({ ...values, type });
       const msg = await AuthZApi.login({ ...values, type });
-
-      console.log(msg);
 
       if (msg.code === 600) {
         const defaultLoginSuccessMessage = intl.formatMessage({
@@ -65,8 +50,7 @@ const Login = () => {
         if (!history) return;
         const { query } = history.location;
         const { redirect } = query;
-        console.log('passs============>');
-        history.push(redirect || '/');
+        history.push(redirect || '/account');
         return;
       } else {
         const defaultLoginFailureMessage = intl.formatMessage({

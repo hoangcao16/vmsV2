@@ -18,7 +18,6 @@ export const initialStateConfig = {
 
 export async function getInitialState() {
   const fetchUserInfo = async () => {
-
     try {
       const msg = await AuthZApi.getPermissionForCurrentUser();
 
@@ -84,7 +83,7 @@ export const layout = ({ initialState, setInitialState }) => {
           {!props.location?.pathname?.includes('/login') && (
             <SettingDrawer
               disableUrlParams
-              enableDarkTheme
+              enableDarkTheme={true}
               settings={initialState?.settings}
               onSettingChange={(settings) => {
                 setInitialState((preInitialState) => ({ ...preInitialState, settings }));

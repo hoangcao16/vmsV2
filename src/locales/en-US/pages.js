@@ -67,4 +67,8 @@ export default {
   'pages.searchTable.tenThousand': '0000',
   'pages.searchTable.batchDeletion': 'bacth deletion',
   'pages.searchTable.batchApproval': 'batch approval',
+  'pages.report.featureInfo.totalCamera': 'Total Camera',
+  'pages.report.featureInfo.cameraAI': 'Camera AI',
+  'pages.report.featureInfo.cameraIsWorking': 'Camera is working',
+  'pages.report.featureInfo.cameraIsNotWorking': 'Camera is not working',
 };
