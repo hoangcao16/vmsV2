@@ -18,6 +18,15 @@ const ModuleApi = {
             console.log(error);
         }
     },
+
+    getAllCamproxy: async(params) => {
+        try {
+            const { data } = await MyService.getRequest('/cctv-controller-svc/api/v1/camproxy', params);
+            return data;
+        } catch (error) {
+            console.log(error);
+        }
+    },
 };
 
 export default ModuleApi;
