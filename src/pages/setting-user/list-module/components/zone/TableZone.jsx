@@ -1,12 +1,12 @@
 import MSCustomizeDrawer from '@/components/CustomizeComponent/Drawer/DrawerCustomize';
 import MSItemInForm from '@/components/CustomizeComponent/Form/Item';
-import { EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { useState } from 'react';
 
-const TableNVR = ({ dispatch, list, metadata }) => {
+const TableZone = ({ dispatch, list, metadata }) => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [form] = Form.useForm();
   const showDrawer = () => {
@@ -22,13 +22,6 @@ const TableNVR = ({ dispatch, list, metadata }) => {
     return false;
   };
 
-  const renderTag = (cellValue) => {
-    return (
-      <Tag color={cellValue === 'UP' ? '#1380FF' : '#FF4646'} style={{ color: '#ffffff' }}>
-        {cellValue === 'UP' ? `Đang hoạt động` : `Dừng hoạt động`}
-      </Tag>
-    );
-  };
   const columns = [
     {
       title: 'STT',
@@ -41,28 +34,28 @@ const TableNVR = ({ dispatch, list, metadata }) => {
       key: 'name',
     },
     {
+      title: 'Địa điểm',
+      dataIndex: 'address',
+      key: 'address',
+    },
+    {
       title: 'Mô tả',
       dataIndex: 'description',
       key: 'description',
-    },
-    {
-      title: 'Ghi chú',
-      dataIndex: 'note',
-      key: 'note',
-    },
-    {
-      title: 'Trạng thái',
-      dataIndex: 'status',
-      key: 'status',
-      render: renderTag,
     },
     {
       title: 'Thao tác',
       render: (text, record) => {
         return (
           <Space>
-            <Tooltip placement="rightTop" title="Chỉnh sửa">
-              <EditOutlined style={{ fontSize: '16px', color: '#6E6B7B' }} onClick={showDrawer} />
+            <Tooltip placement="top" title="Chi tiết">
+              <InfoCircleOutlined style={{ fontSize: '16px', color: '#6E6B7B' }} />
+            </Tooltip>
+            <Tooltip placement="top" title="Chỉnh sửa">
+              <EditOutlined style={{ fontSize: '16px', color: '#6E6B7B' }} />
+            </Tooltip>
+            <Tooltip placement="top" title="Xóa">
+              <DeleteOutlined style={{ fontSize: '16px', color: '#6E6B7B' }} />
             </Tooltip>
           </Space>
         );
@@ -72,7 +65,7 @@ const TableNVR = ({ dispatch, list, metadata }) => {
   return (
     <>
       <ProTable
-        headerTitle="Danh sách NVR"
+        headerTitle="Danh sách Zone"
         rowKey="id"
         search={false}
         dataSource={list}
@@ -85,11 +78,23 @@ const TableNVR = ({ dispatch, list, metadata }) => {
               alert(value);
             },
           },
+          actions: [
+            <Button
+              key="add"
+              type="primary"
+              onClick={() => {
+                alert('add');
+              }}
+            >
+              <PlusOutlined />
+              Thêm zone
+            </Button>,
+          ],
         }}
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
-          showTotal: (total) => `Tổng cộng ${total} NVR`,
+          showTotal: (total) => `Tổng cộng ${total} Zone`,
           total: metadata?.total,
           pageSize: metadata?.size,
           current: metadata?.page,
@@ -154,11 +159,11 @@ const TableNVR = ({ dispatch, list, metadata }) => {
 };
 
 function mapStateToProps(state) {
-  const { list, metadata } = state.nvr;
+  const { list, metadata } = state.zone;
   return {
-    loading: state.loading.models.nvr,
+    loading: state.loading.models.zone,
     list,
     metadata,
   };
 }
-export default connect(mapStateToProps)(TableNVR);
+export default connect(mapStateToProps)(TableZone);

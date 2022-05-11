@@ -3,6 +3,7 @@ import { Menu } from 'antd';
 import { useState } from 'react';
 import TableNVR from './components/nvr/TableNVR';
 import TablePlayback from './components/playback/TablePlayback';
+import TableZone from './components/zone/TableZone';
 import styles from './style.less';
 
 const { Item } = Menu;
@@ -25,7 +26,7 @@ const ModuleList = () => {
         return <TablePlayback />;
 
       case 'zone':
-        return;
+        return <TableZone />;
 
       case 'camproxy':
         return;
