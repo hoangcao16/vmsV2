@@ -1,5 +1,5 @@
-import MSCustomizeDrawer from '@/components/CustomizeComponent/Drawer/DrawerCustomize';
-import MSItemInForm from '@/components/CustomizeComponent/Form/Item';
+import MSCustomizeDrawer from '@/components/Drawer';
+import MSFormItem from '@/components/Form/Item';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
@@ -121,7 +121,7 @@ const TableZone = ({ dispatch, list, metadata }) => {
             <Form layout="vertical" form={form} onFinish={handleSubmit}>
               <Row gutter={16}>
                 <Col span={24}>
-                  <MSItemInForm
+                  <MSFormItem
                     label="Username"
                     type="input"
                     name="name"
@@ -130,7 +130,7 @@ const TableZone = ({ dispatch, list, metadata }) => {
                     required={true}
                   >
                     <Input />
-                  </MSItemInForm>
+                  </MSFormItem>
                 </Col>
               </Row>
             </Form>

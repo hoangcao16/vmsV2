@@ -1,5 +1,5 @@
 import Footer from '@/components/Footer';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+
 import AuthZApi from '@/services/authz/AuthZApi';
 import { LockOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';

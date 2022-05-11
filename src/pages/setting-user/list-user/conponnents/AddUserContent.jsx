@@ -1,4 +1,4 @@
-import MSItemInForm from '@/components/CustomizeComponent/Form/Item';
+import MSFormItem from '@/components/Form/Item';
 import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
@@ -28,7 +28,7 @@ function AddUserContent({ dispatch, onClose }) {
       <Form layout="vertical" form={form} onFinish={handleSubmit}>
         <Row gutter={16}>
           <Col span={24}>
-            <MSItemInForm
+            <MSFormItem
               label="Tên"
               type="input"
               name="name"
@@ -37,15 +37,15 @@ function AddUserContent({ dispatch, onClose }) {
               required={true}
             >
               <Input autoComplete="new-password" />
-            </MSItemInForm>
+            </MSFormItem>
           </Col>
           <Col span={24}>
-            <MSItemInForm label="Giới tính" type="select" name="sex" required={true}>
+            <MSFormItem label="Giới tính" type="select" name="sex" required={true}>
               <Select placeholder="Chọn giới tính">
                 <Option value={0}>Nam</Option>
                 <Option value={1}>Nữ</Option>
               </Select>
-            </MSItemInForm>
+            </MSFormItem>
           </Col>
           <Col span={24}>
             <Form.Item
@@ -97,7 +97,7 @@ function AddUserContent({ dispatch, onClose }) {
             </Form.Item>
           </Col>
           <Col span={24}>
-            <MSItemInForm
+            <MSFormItem
               label="Email"
               type="email"
               name="email"
@@ -106,10 +106,10 @@ function AddUserContent({ dispatch, onClose }) {
               required={true}
             >
               <Input autoComplete="new-password" />
-            </MSItemInForm>
+            </MSFormItem>
           </Col>
           <Col span={24}>
-            <MSItemInForm
+            <MSFormItem
               label="Mật khẩu"
               type="input"
               name="password"
@@ -118,7 +118,7 @@ function AddUserContent({ dispatch, onClose }) {
               required={true}
             >
               <Input type="password" autoComplete="new-password" />
-            </MSItemInForm>
+            </MSFormItem>
           </Col>
         </Row>
       </Form>
