@@ -6,7 +6,7 @@ import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { useState } from 'react';
 
-const TableNVR = ({ dispatch, list, metadata }) => {
+const TablePlayback = ({ dispatch, list, metadata }) => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [form] = Form.useForm();
   const showDrawer = () => {
@@ -36,7 +36,7 @@ const TableNVR = ({ dispatch, list, metadata }) => {
       render: (text, record, index) => index + 1,
     },
     {
-      title: 'Tên NVR',
+      title: 'Tên Playback',
       dataIndex: 'name',
       key: 'name',
     },
@@ -72,7 +72,7 @@ const TableNVR = ({ dispatch, list, metadata }) => {
   return (
     <>
       <ProTable
-        headerTitle="Danh sách NVR"
+        headerTitle="Danh sách Playback"
         rowKey="id"
         search={false}
         dataSource={list}
@@ -154,11 +154,11 @@ const TableNVR = ({ dispatch, list, metadata }) => {
 };
 
 function mapStateToProps(state) {
-  const { list, metadata } = state.nvr;
+  const { list, metadata } = state.playback;
   return {
-    loading: state.loading.models.nvr,
+    loading: state.loading.models.playback,
     list,
     metadata,
   };
 }
-export default connect(mapStateToProps)(TableNVR);
+export default connect(mapStateToProps)(TablePlayback);
