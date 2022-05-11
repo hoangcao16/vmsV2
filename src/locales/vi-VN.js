@@ -5,6 +5,7 @@ import pages from './vi-VN/pages';
 import pwa from './vi-VN/pwa';
 import settingDrawer from './vi-VN/settingDrawer';
 import settings from './vi-VN/settings';
+import common from './vi-VN/common';
 export default {
   'navBar.lang': 'Languages',
   'layout.user.link.help': 'Help',
@@ -21,4 +22,5 @@ export default {
   ...pwa,
   ...component,
   ...pages,
+  ...common,
 };
