@@ -1,6 +1,7 @@
 import { GridContent, PageContainer } from '@ant-design/pro-layout';
 import { Menu } from 'antd';
 import { useState } from 'react';
+import TableCamproxy from './components/camproxy/TableCamproxy';
 import TableNVR from './components/nvr/TableNVR';
 import TablePlayback from './components/playback/TablePlayback';
 import TableZone from './components/zone/TableZone';
@@ -29,7 +30,7 @@ const ModuleList = () => {
         return <TableZone />;
 
       case 'camproxy':
-        return;
+        return <TableCamproxy />;
 
       default:
         return null;
