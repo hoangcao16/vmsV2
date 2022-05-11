@@ -37,6 +37,7 @@ const AvatarDropdown = ({ menu }) => {
         setInitialState((s) => ({ ...s, currentUser: undefined }));
         await AuthZApi.logout();
         localStorage.setItem(STORAGE.TOKEN, null);
+        localStorage.setItem(STORAGE.USER_PERMISSIONS, null);
         const loginPath = '/user/login';
         history.push(loginPath);
         return;

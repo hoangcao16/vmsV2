@@ -1,3 +1,4 @@
+import AuthZApi from '@/services/authz/AuthZApi';
 import axios from 'axios';
 import { API_URL, STORAGE } from '../constants/common';
 
@@ -28,9 +29,10 @@ request.interceptors.response.use(
   },
   function (error) {
     if (error?.toJSON()?.status === 401) {
-      // localStorage.removeItem('token');
-      // localStorage.removeItem('user');
-      //call api refresh Token
+      const oldToken = localStorage.getItem(STORAGE.TOKEN);
+
+      AuthZApi.refreshToken(oldToken);
+
       // location.reload();
     }
     return Promise.reject(error);

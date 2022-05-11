@@ -1,4 +1,4 @@
-import AuthZApi from '@/services/authz/AuthZApi';
+import UserApi from '@/services/user/UserApi';
 
 export default {
   namespace: 'user',
@@ -17,7 +17,7 @@ export default {
   },
   effects: {
     *fetchAllUser({ payload }, { call, put }) {
-      const response = yield call(AuthZApi.getAllUser, payload);
+      const response = yield call(UserApi.getAllUser, payload);
       yield put({
         type: 'save',
         payload: {
@@ -27,8 +27,36 @@ export default {
       });
     },
 
+    *patch({ payload: { id, values } }, { call, put, select }) {
+      yield call(UserApi.updateUser, id, values);
+      const oldList = yield select((state) => state.user.list);
+      const metadata = yield select((state) => state.user.metadata);
+
+      const userIndex = oldList.findIndex((user) => user.uuid === id);
+
+      if (userIndex >= 0) {
+        oldList[userIndex] = { ...oldList[userIndex], ...values };
+      }
+
+      const newList = [...oldList];
+
+      yield put({
+        type: 'save',
+        payload: {
+          data: newList,
+          metadata: metadata,
+        },
+      });
+      // yield put({ type: 'reload' });
+    },
+
+    *remove({ payload: id }, { call, put }) {
+      yield call(UserApi.deleteUser, id);
+      yield put({ type: 'reload' });
+    },
+
     *create({ payload: values }, { call, put }) {
-      yield call(AuthZApi.createUser, values);
+      yield call(UserApi.createUser, values);
       yield put({ type: 'reload' });
     },
 

@@ -4,10 +4,9 @@ import permissionCheck from '@/utils/PermissionCheck';
 import {
   CheckOutlined,
   CloseOutlined,
+  DeleteOutlined,
   EditOutlined,
-  EnvironmentOutlined,
-  EyeOutlined,
-  PlusOutlined,
+  PlusOutlined
 } from '@ant-design/icons';
 import { LightFilter } from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -28,6 +27,27 @@ const UserList = ({ dispatch, list, metadata }) => {
   };
   const onClose = () => {
     setOpenDrawer(false);
+  };
+
+  const handleUpdateStatus = async (e, uuid) => {
+    let status;
+    if (e) {
+      status = 1;
+    } else {
+      status = 0;
+    }
+
+    dispatch({
+      type: 'user/patch',
+      payload: { id: uuid, values: { status: status } },
+    });
+  };
+
+  const handleDeleteUser = async (id) => {
+    dispatch({
+      type: 'user/remove',
+      payload: id,
+    });
   };
 
   const columns = [
@@ -51,8 +71,8 @@ const UserList = ({ dispatch, list, metadata }) => {
           <Space>
             <Tooltip placement="top" title="Trạng thái">
               <Switch
-                defaultChecked={record.status === 1 ? true : false}
-                // onChange={(e) => handleUpdateStatus(e, record.uuid)}
+                checked={record.status === 1 ? true : false}
+                onChange={(e) => handleUpdateStatus(e, record.uuid)}
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
                 disabled={!permissionCheck('deactivate_user')}
@@ -67,13 +87,26 @@ const UserList = ({ dispatch, list, metadata }) => {
       title: 'Thao tác',
       dataIndex: 'option',
       valueType: 'option',
-      render: (_, record) => [
-        <>
-          <EyeOutlined />
-          <EnvironmentOutlined />
-          <EditOutlined />
-        </>,
-      ],
+      render: (text, record) => {
+        return (
+          <>
+            <Space>
+              {permissionCheck('edit_user') && (
+                <Tooltip placement="top" title="Sửa" arrowPointAtCenter={true}>
+                  <EditOutlined />
+                </Tooltip>
+              )}
+            </Space>
+            <Space>
+              {permissionCheck('delete_user') && (
+                <Tooltip placement="top" title="Xóa" arrowPointAtCenter={true}>
+                  <DeleteOutlined onClick={() => handleDeleteUser(record.uuid)} />
+                </Tooltip>
+              )}
+            </Space>
+          </>
+        );
+      },
     },
   ];
   const onPaginationChange = (page, size) => {
