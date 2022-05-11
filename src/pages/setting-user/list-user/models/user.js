@@ -26,6 +26,16 @@ export default {
         },
       });
     },
+
+    *create({ payload: values }, { call, put }) {
+      yield call(AuthZApi.createUser, values);
+      yield put({ type: 'reload' });
+    },
+
+    *reload(action, { put, select }) {
+      const page = yield select((state) => state.user.page);
+      yield put({ type: 'fetchAllUser', payload: { page } });
+    },
   },
   subscriptions: {
     setup({ dispatch, history }) {
