@@ -89,7 +89,7 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
-          showTotal: (total) => `Tổng cộng ${total} user`,
+          showTotal: (total) => `Tổng cộng ${total} Playback`,
           total: metadata?.total,
           pageSize: metadata?.size,
           current: metadata?.page,
