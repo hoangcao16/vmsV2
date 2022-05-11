@@ -1,9 +1,8 @@
 // https://umijs.org/config/
-import { defineConfig } from 'umi';
 import { join } from 'path';
+import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
-import routes from './routes';
 const { REACT_APP_ENV } = process.env;
 export default defineConfig({
   hash: true,
@@ -25,6 +24,7 @@ export default defineConfig({
     // default true, when it is true, will use `navigator.language` overwrite default
     baseNavigator: true,
   },
+
   dynamicImport: {
     loading: '@ant-design/pro-layout/es/PageLoading',
   },
@@ -315,9 +315,16 @@ export default defineConfig({
     },
     {
       name: 'report',
-      icon: 'smile',
+      icon: 'highlight',
       path: '/report',
-      component: './report',
+      routes: [
+        {
+          name: 'flow',
+          icon: 'smile',
+          path: '/report',
+          component: './report',
+        },
+      ],
     },
     {
       path: '/setting-user',
@@ -334,6 +341,12 @@ export default defineConfig({
           icon: 'smile',
           path: '/setting-user/list-user',
           component: './setting-user/list-user',
+        },
+        {
+          name: 'Danh sách Module',
+          icon: 'smile',
+          path: '/setting-user/list-module',
+          component: './setting-user/list-module',
         },
       ],
     },

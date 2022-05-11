@@ -35,6 +35,7 @@ const AuthZApi = {
       history.push(loginPath);
     } catch (error) {
       console.log(error);
+      return {};
     }
   },
 
@@ -44,6 +45,17 @@ const AuthZApi = {
       return data;
     } catch (error) {
       console.log(error);
+      return {};
+    }
+  },
+
+  createUser: async (values) => {
+    try {
+      const { payload } = await MyService.postRequest('/authz/api/v0/users', values);
+      return payload;
+    } catch (error) {
+      console.log(error);
+      return {};
     }
   },
 };
