@@ -32,12 +32,14 @@ const CameraStatistics = () => {
 
   useEffect(() => {
     cameraApi.getReportCamera().then((result) => {
-      const convertData = result.map((r) => {
-        return {
-          ...r,
-          color: getColor(r),
-        };
-      });
+      const convertData =
+        result &&
+        result.map((r) => {
+          return {
+            ...r,
+            color: getColor(r),
+          };
+        });
       const sortData = [];
       sortData[0] = convertData.find((i) => i.cameraName == 'totalCamera');
       sortData[1] = convertData.find((i) => i.cameraName == 'cameraAI');

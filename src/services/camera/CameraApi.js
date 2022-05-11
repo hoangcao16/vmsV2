@@ -6,7 +6,7 @@ const CameraApi = {
     let result;
     try {
       result = await MyService.getRequest('/owl/api/v1/get-report-camera', { report: 'report' });
-      console.log(result);
+      console.log('result:', result);
       return result.data.payload;
     } catch (error) {
       console.log(error);
