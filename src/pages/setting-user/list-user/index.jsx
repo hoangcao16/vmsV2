@@ -1,19 +1,19 @@
-import MSCustomizeDrawer from '@/components/CustomizeComponent/Drawer/DrawerCustomize';
-import MSItemInForm from '@/components/CustomizeComponent/Form/Item';
+import MSCustomizeDrawer from '@/components/Drawer';
+import MSFormItem from '@/components/Form/Item';
 import permissionCheck from '@/utils/PermissionCheck';
 import {
   CheckOutlined,
   CloseOutlined,
   DeleteOutlined,
   EditOutlined,
-  PlusOutlined
+  PlusOutlined,
 } from '@ant-design/icons';
 import { LightFilter } from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Row, Select, Space, Switch, Tooltip } from 'antd';
 import { connect } from 'dva';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import AddUserContent from './conponnents/AddUserContent';
 import styles from './styles.less';
 const { Option } = Select;
@@ -125,21 +125,23 @@ const UserList = ({ dispatch, list, metadata }) => {
 
   const handleSubmit = () => {
     const a = form.getFieldsValue(true);
+
+    console.log(a);
   };
   const formItemLayout = {
     wrapperCol: { span: 24 },
     labelCol: { span: 24 },
   };
 
-  const renderFilter = () => {
+  const RenderFilter = () => {
     return (
       <>
         <Form layout="horizontal" form={form} onFinish={handleSubmit} {...formItemLayout}>
           <Row gutter={16} span={24} className={styles.expandRow}>
             <Col span={18}>
-              <MSItemInForm type="input" name="name" minLength={5} maxLength={255} required={true}>
+              <MSFormItem type="input" name="name" minLength={5} maxLength={255} required={true}>
                 <Search />
-              </MSItemInForm>
+              </MSFormItem>
             </Col>
             <Col span={6}>
               <h4 onClick={handlaExpand}>{visible ? 'Ẩn bộ lọc' : 'Thêm bộ lọc'}</h4>
@@ -150,24 +152,24 @@ const UserList = ({ dispatch, list, metadata }) => {
             <div className={styles.formExpand}>
               <Row gutter={16}>
                 <Col className="gutter-row" span={12}>
-                  <MSItemInForm label="Chức vụ" type="input" name="test">
+                  <MSFormItem label="Chức vụ" type="input" name="test">
                     <Select />
-                  </MSItemInForm>
+                  </MSFormItem>
                 </Col>
                 <Col className="gutter-row" span={12}>
-                  <MSItemInForm label="Vai trò" type="input" name="test1">
+                  <MSFormItem label="Vai trò" type="input" name="test1">
                     <Select />
-                  </MSItemInForm>
+                  </MSFormItem>
                 </Col>
                 <Col className="gutter-row" span={12}>
-                  <MSItemInForm label="Đơn vị" type="input" name="test2">
+                  <MSFormItem label="Đơn vị" type="input" name="test2">
                     <Select />
-                  </MSItemInForm>
+                  </MSFormItem>
                 </Col>
                 <Col className="gutter-row" span={12}>
-                  <MSItemInForm label="Nhóm người dùng" type="input" name="test3">
+                  <MSFormItem label="Nhóm người dùng" type="input" name="test3">
                     <Select />
-                  </MSItemInForm>
+                  </MSFormItem>
                 </Col>
               </Row>
             </div>
@@ -189,7 +191,11 @@ const UserList = ({ dispatch, list, metadata }) => {
         options={false}
         toolbar={{
           multipleLine: true,
-          filter: <LightFilter wrapperCol={24}>{renderFilter()}</LightFilter>,
+          filter: (
+            <LightFilter wrapperCol={24}>
+              <RenderFilter />
+            </LightFilter>
+          ),
           actions: [
             <Button key="add" type="primary" onClick={showDrawer}>
               <PlusOutlined />

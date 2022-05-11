@@ -1,5 +1,5 @@
-import MSCustomizeDrawer from '@/components/CustomizeComponent/Drawer/DrawerCustomize';
-import MSItemInForm from '@/components/CustomizeComponent/Form/Item';
+import MSCustomizeDrawer from '@/components/Drawer';
+import MSFormItem from '@/components/Form/Item';
 import { EditOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
@@ -116,7 +116,7 @@ const TableNVR = ({ dispatch, list, metadata }) => {
             <Form layout="vertical" form={form} onFinish={handleSubmit}>
               <Row gutter={16}>
                 <Col span={24}>
-                  <MSItemInForm
+                  <MSFormItem
                     label="Username"
                     type="input"
                     name="name"
@@ -125,7 +125,7 @@ const TableNVR = ({ dispatch, list, metadata }) => {
                     required={true}
                   >
                     <Input />
-                  </MSItemInForm>
+                  </MSFormItem>
                 </Col>
               </Row>
             </Form>
@@ -156,7 +156,7 @@ const TableNVR = ({ dispatch, list, metadata }) => {
 function mapStateToProps(state) {
   const { list, metadata } = state.nvr;
   return {
-    loading: state.loading.models.nvr,
+    // loading: state.loading.models.nvr,
     list,
     metadata,
   };

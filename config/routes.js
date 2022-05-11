@@ -4,73 +4,110 @@ export default [
     layout: false,
     routes: [
       {
-        name: 'login',
         path: '/user/login',
+        layout: false,
+        name: 'login',
         component: './user/Login',
       },
       {
-        component: './404',
+        path: '/user',
+        redirect: '/user/login',
       },
-    ],
-  },
-  {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
-    component: './Welcome',
-  },
-  {
-    path: '/admin',
-    name: 'admin',
-    icon: 'crown',
-    access: 'canAdmin',
-    component: './Admin',
-    routes: [
       {
-        path: '/admin/sub-page',
-        name: 'sub-page',
+        name: 'register',
         icon: 'smile',
-        component: './Welcome',
+        path: '/user/register',
+        component: './user/register',
       },
       {
-        component: './404',
+        component: '404',
       },
     ],
   },
   {
-    name: 'list.table-list',
-    icon: 'table',
     path: '/list',
-    component: './TableList',
+    icon: 'table',
+    name: 'list',
+    routes: [
+      // {
+      //   path: '/list',
+      //   redirect: '/list/table-list',
+      // },
+      {
+        name: 'Danh sách camera',
+        icon: 'table',
+        path: '/list/camera-list',
+        component: './list/camera-list',
+      },
+    ],
   },
   {
-    name: 'account',
-    icon: 'user',
-    path: '/account',
+    name: 'exception',
+    icon: 'warning',
+    path: '/exception',
+    hideInMenu: true,
     routes: [
       {
-        path: '/account',
-        redirect: '/account/center',
+        name: '403',
+        icon: 'smile',
+        path: '/exception/403',
+        component: './exception/403',
       },
       {
-        name: 'center',
+        name: '404',
         icon: 'smile',
-        path: '/account/center',
-        component: './account/center',
+        path: '/exception/404',
+        component: './exception/404',
       },
       {
-        name: 'settings',
+        name: '500',
         icon: 'smile',
-        path: '/account/settings',
-        component: './account/settings',
+        path: '/exception/500',
+        component: './exception/500',
+      },
+    ],
+  },
+  {
+    name: 'report',
+    icon: 'highlight',
+    path: '/report',
+    routes: [
+      {
+        name: 'flow',
+        icon: 'smile',
+        path: '/report',
+        component: './report',
+      },
+    ],
+  },
+  {
+    path: '/setting-user',
+    name: 'Cài đặt',
+    icon: 'setting',
+    routes: [
+      // {
+      //   path: '/setting-user',
+      //   redirect: '/setting-user/list-user',
+      // },
+      {
+        name: 'Danh sách user',
+        icon: 'smile',
+        path: '/setting-user/list-user',
+        component: './setting-user/list-user',
+      },
+      {
+        name: 'Danh sách Module',
+        icon: 'smile',
+        path: '/setting-user/list-module',
+        component: './setting-user/list-module',
       },
     ],
   },
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/dashboard/analysis',
   },
   {
-    component: './404',
+    component: '404',
   },
 ];
