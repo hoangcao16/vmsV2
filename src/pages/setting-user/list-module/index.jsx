@@ -2,6 +2,7 @@ import { GridContent, PageContainer } from '@ant-design/pro-layout';
 import { Menu } from 'antd';
 import { useState } from 'react';
 import TableNVR from './components/nvr/TableNVR';
+import TablePlayback from './components/playback/TablePlayback';
 import styles from './style.less';
 
 const { Item } = Menu;
@@ -21,7 +22,7 @@ const ModuleList = () => {
         return <TableNVR />;
 
       case 'playback':
-        return;
+        return <TablePlayback />;
 
       case 'zone':
         return;

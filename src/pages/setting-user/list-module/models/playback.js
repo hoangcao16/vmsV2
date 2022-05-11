@@ -1,7 +1,7 @@
 import ModuleApi from '@/services/module-api/ModuleApi';
 
 export default {
-  namespace: 'nvr',
+  namespace: 'playback',
   state: {
     list: [],
     metadata: {
@@ -15,8 +15,8 @@ export default {
     },
   },
   effects: {
-    *fetchAllNVR({ payload }, { call, put }) {
-      const response = yield call(ModuleApi.getAllNVR, payload);
+    *fetchAllPlayback({ payload }, { call, put }) {
+      const response = yield call(ModuleApi.getAllPlayback, payload);
       yield put({
         type: 'save',
         payload: {
@@ -35,7 +35,7 @@ export default {
           size: query.size || 10,
         };
         if (pathname === '/setting-user/list-module') {
-          dispatch({ type: 'fetchAllNVR', payload: metadata });
+          dispatch({ type: 'fetchAllPlayback', payload: metadata });
         }
       });
     },
