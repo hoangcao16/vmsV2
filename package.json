@@ -49,6 +49,7 @@
   "dependencies": {
     "@ant-design/charts": "^0.9.4",
     "@ant-design/icons": "^4.7.0",
+    "@ant-design/plots": "^1.0.9",
     "@ant-design/pro-card": "^1.19.0",
     "@ant-design/pro-descriptions": "^1.10.0",
     "@ant-design/pro-form": "^1.64.0",
@@ -64,6 +65,7 @@
     "axios": "^0.27.2",
     "bizcharts": "^3.5.3-beta.0",
     "bizcharts-plugin-slider": "^2.1.1-beta.1",
+    "btoa": "^1.2.1",
     "classnames": "^2.3.0",
     "dotenv": "^16.0.0",
     "gg-editor": "^2.0.2",
