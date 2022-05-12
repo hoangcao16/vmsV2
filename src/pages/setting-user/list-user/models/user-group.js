@@ -50,10 +50,10 @@ export default {
       // yield put({ type: 'reload' });
     },
 
-    // *remove({ payload: id }, { call, put }) {
-    //   yield call(UserApi.deleteUser, id);
-    //   yield put({ type: 'reload' });
-    // },
+    *remove({ payload: id }, { call, put }) {
+      yield call(UserApi.deleteUserGroup, id);
+      yield put({ type: 'reload' });
+    },
 
     *create({ payload: values }, { call, put }) {
       yield call(UserApi.createUserGroup, values);

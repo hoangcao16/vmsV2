@@ -64,6 +64,14 @@ const UserApi = {
       return {};
     }
   },
+
+  deleteUserGroup: async (uuid) => {
+    try {
+      await MyService.deleteRequest(`/authz/api/v0/groups/${uuid}`);
+    } catch (error) {
+      console.log(error);
+    }
+  },
   // UserRole
   getAllUserRole: async (params) => {
     try {
