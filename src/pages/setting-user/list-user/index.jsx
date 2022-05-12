@@ -15,6 +15,7 @@ import { Button, Col, Form, Input, Row, Select, Space, Switch, Tooltip } from 'a
 import { connect } from 'dva';
 import { useMemo, useState } from 'react';
 import AddUserContent from './conponnents/AddUserContent';
+import UserGroup from './conponnents/user-group';
 import styles from './styles.less';
 const { Option } = Select;
 const { Search } = Input;
@@ -182,6 +183,7 @@ const UserList = ({ dispatch, list, metadata }) => {
   return (
     <PageContainer>
       <ProTable
+        // loading={loading}
         headerTitle="Danh sách user"
         rowKey="id"
         search={false}
@@ -191,12 +193,13 @@ const UserList = ({ dispatch, list, metadata }) => {
         options={false}
         toolbar={{
           multipleLine: true,
-          filter: (
-            <LightFilter wrapperCol={24}>
-              <RenderFilter />
-            </LightFilter>
-          ),
+          // filter: (
+          //   <LightFilter wrapperCol={24}>
+          //     <RenderFilter />
+          //   </LightFilter>
+          // ),
           actions: [
+            <UserGroup key="user-group" />,
             <Button key="add" type="primary" onClick={showDrawer}>
               <PlusOutlined />
               Thêm người dùng

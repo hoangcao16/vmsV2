@@ -1,6 +1,7 @@
 import MyService from '../RestApiClient';
 
 const UserApi = {
+  // User
   getAllUser: async (params) => {
     try {
       const { data } = await MyService.getRequest(`/authz/api/v0/users`, params);
@@ -33,6 +34,17 @@ const UserApi = {
       await MyService.deleteRequest(`/authz/api/v0/users/${uuid}`);
     } catch (error) {
       console.log(error);
+    }
+  },
+
+  // UserGroup
+  getAllUserGroup: async (params) => {
+    try {
+      const { data } = await MyService.getRequest(`/authz/api/v0/groups`, params);
+      return data;
+    } catch (error) {
+      console.log(error);
+      return {};
     }
   },
 };
