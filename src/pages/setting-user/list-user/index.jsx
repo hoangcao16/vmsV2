@@ -16,9 +16,11 @@ import { connect } from 'dva';
 import { useMemo, useState } from 'react';
 import AddUserContent from './conponnents/AddUserContent';
 import UserGroup from './conponnents/user-group';
+import UserRole from './conponnents/roles';
 import styles from './styles.less';
 const { Option } = Select;
 const { Search } = Input;
+
 const UserList = ({ dispatch, list, metadata }) => {
   const [visible, setVisible] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -200,6 +202,7 @@ const UserList = ({ dispatch, list, metadata }) => {
           // ),
           actions: [
             <UserGroup key="user-group" />,
+            <UserRole key="user-role" />,
             <Button key="add" type="primary" onClick={showDrawer}>
               <PlusOutlined />
               Thêm người dùng
