@@ -11,12 +11,8 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
 
   const [form] = Form.useForm();
 
-  const onCloseDrawerAddUserGroup = () => {
-    onClose();
-  };
-
-  const handleSubmit = () => {
-    const values = form.getFieldsValue(true);
+  const handleSubmit = (values) => {
+    console.log('==============================');
 
     const payload = {
       ...values,
@@ -41,7 +37,7 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
     <div>
       <MSCustomizeDrawer
         openDrawer={openDrawer}
-        onClose={onCloseDrawerAddUserGroup}
+        onClose={onClose}
         width={'20%'}
         zIndex={1002}
         title={
@@ -91,8 +87,7 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
               </MSFormItem>
             </Col>
           </Row>
-        </Form>
-        <div
+          <div
           style={{
             position: 'absolute',
             right: 0,
@@ -104,7 +99,7 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
             textAlign: 'right',
           }}
         >
-          <Button htmlType="submit" onClick={handleSubmit} type="primary">
+          <Button htmlType="submit" type="primary">
             {isEmpty(selectedRecord)
               ? intl.formatMessage({
                   id: 'pages.setting-user.list-user.add',
@@ -114,6 +109,8 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
                 })}
           </Button>
         </div>
+        </Form>
+
       </MSCustomizeDrawer>
     </div>
   );

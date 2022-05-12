@@ -11,13 +11,7 @@ function AddEditUserRole({ dispatch, onClose, openDrawer, selectedRecord }) {
 
   const [form] = Form.useForm();
 
-  const onCloseDrawerAddRole = () => {
-    onClose();
-  };
-
-  const handleSubmit = () => {
-    const values = form.getFieldsValue(true);
-
+  const handleSubmit = (values) => {
     const payload = {
       ...values,
     };
@@ -41,7 +35,7 @@ function AddEditUserRole({ dispatch, onClose, openDrawer, selectedRecord }) {
     <div>
       <MSCustomizeDrawer
         openDrawer={openDrawer}
-        onClose={onCloseDrawerAddRole}
+        onClose={onClose}
         width={'20%'}
         zIndex={1002}
         title={
@@ -91,29 +85,29 @@ function AddEditUserRole({ dispatch, onClose, openDrawer, selectedRecord }) {
               </MSFormItem>
             </Col>
           </Row>
+          <div
+            style={{
+              position: 'absolute',
+              right: 0,
+              bottom: 0,
+              width: '100%',
+              borderTop: '1px solid #e9e9e9',
+              padding: '10px 16px',
+              background: '#fff',
+              textAlign: 'right',
+            }}
+          >
+            <Button htmlType="submit" type="primary">
+              {isEmpty(selectedRecord)
+                ? intl.formatMessage({
+                    id: 'pages.setting-user.list-user.add',
+                  })
+                : intl.formatMessage({
+                    id: 'pages.setting-user.list-user.edit',
+                  })}
+            </Button>
+          </div>
         </Form>
-        <div
-          style={{
-            position: 'absolute',
-            right: 0,
-            bottom: 0,
-            width: '100%',
-            borderTop: '1px solid #e9e9e9',
-            padding: '10px 16px',
-            background: '#fff',
-            textAlign: 'right',
-          }}
-        >
-          <Button htmlType="submit" onClick={handleSubmit} type="primary">
-            {isEmpty(selectedRecord)
-              ? intl.formatMessage({
-                  id: 'pages.setting-user.list-user.add',
-                })
-              : intl.formatMessage({
-                  id: 'pages.setting-user.list-user.edit',
-                })}
-          </Button>
-        </div>
       </MSCustomizeDrawer>
     </div>
   );
