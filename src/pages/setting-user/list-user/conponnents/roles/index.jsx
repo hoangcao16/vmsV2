@@ -5,11 +5,13 @@ import ProTable from '@ant-design/pro-table';
 import { Button, Space, Tooltip } from 'antd';
 import { connect } from 'dva';
 import React, { useEffect, useState } from 'react';
-import AddUserRole from './AddUserRole';
 import { useIntl } from 'umi';
+import AddEditUserRole from './AddEditUserRole';
 function UserRole({ dispatch, list, metadata }) {
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [showDrawerAdd, setOpenDrawerAdd] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
 
   useEffect(() => {
     dispatch({
@@ -27,6 +29,15 @@ function UserRole({ dispatch, list, metadata }) {
   };
   const onClose = () => {
     setOpenDrawer(false);
+  };
+
+  const showDrawerAddUserRole = (record) => {
+    setOpenDrawerAdd(true);
+    setSelectedRecord(record);
+  };
+  const closeDrawerAddRole = () => {
+    setOpenDrawerAdd(false);
+    setSelectedRecord(null);
   };
 
   const columns = [
@@ -61,7 +72,7 @@ function UserRole({ dispatch, list, metadata }) {
                   })}
                   arrowPointAtCenter={true}
                 >
-                  <EditOutlined />
+                  <EditOutlined onClick={() => showDrawerAddUserRole(record)} />
                 </Tooltip>
               )}
             </Space>
@@ -133,7 +144,13 @@ function UserRole({ dispatch, list, metadata }) {
                 //     <Search placeholder="Tìm kiếm theo tên vai trò" />
                 //   </LightFilter>
                 // ),
-                actions: [<AddUserRole key="add-user-role" />],
+                actions: [
+                  <Button key="add-role" type="primary" onClick={() => showDrawerAddUserRole(null)}>
+                    {intl.formatMessage({
+                      id: 'pages.setting-user.list-user.add-role',
+                    })}
+                  </Button>,
+                ],
                 style: { width: '100%' },
               }}
               pagination={{
@@ -149,6 +166,13 @@ function UserRole({ dispatch, list, metadata }) {
                 current: metadata?.page,
               }}
             />
+            {showDrawerAdd && (
+              <AddEditUserRole
+                onClose={closeDrawerAddRole}
+                openDrawer={showDrawerAdd}
+                selectedRecord={selectedRecord}
+              />
+            )}
           </>
         </MSCustomizeDrawer>
       )}

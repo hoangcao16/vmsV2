@@ -55,10 +55,10 @@ export default {
     //   yield put({ type: 'reload' });
     // },
 
-    // *create({ payload: values }, { call, put }) {
-    //   yield call(UserApi.createUser, values);
-    //   yield put({ type: 'reload' });
-    // },
+    *create({ payload: values }, { call, put }) {
+      yield call(UserApi.createRole, values);
+      yield put({ type: 'reload' });
+    },
 
     *reload(action, { put, select }) {
       const page = yield select((state) => state.userRole.page);

@@ -96,6 +96,8 @@ export default {
   'pages.setting-user.list-user.require': 'This field is required',
   'pages.setting-user.list-user.password': 'Password',
   'pages.setting-user.list-user.add': 'Add',
-  'pages.setting-user.list-user.add-group-user': 'Add group user',
+  'pages.setting-user.list-user.add-user-group': 'Add group user',
+  'pages.setting-user.list-user.edit-user-group': 'Edit group user',
   'pages.setting-user.list-user.add-role': 'Add role',
+  'pages.setting-user.list-user.edit-role': 'Edit role',
 };

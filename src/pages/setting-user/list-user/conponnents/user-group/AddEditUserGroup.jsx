@@ -4,51 +4,59 @@ import { Button, Col, Form, Input, Row } from 'antd';
 import React, { useState } from 'react';
 import { useIntl } from 'umi';
 import { connect } from 'dva';
+import { isEmpty } from 'lodash';
 
-function AddUserGroup({ dispatch }) {
+function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
   const intl = useIntl();
-  const [openDrawer1, setOpenDrawer] = useState(false);
-  const [form] = Form.useForm();
-  const showDrawer = () => {
-    setOpenDrawer(true);
-  };
-  const onClose = () => {
-    setOpenDrawer(false);
-  };
 
-  const handleSubmit = () => {
-    const value = form.getFieldsValue(true);
+  const [form] = Form.useForm();
+
+  const handleSubmit = (values) => {
+    console.log('==============================');
 
     const payload = {
-      ...value,
+      ...values,
     };
 
-    dispatch({
-      type: 'userGroup/create',
-      payload: payload,
-    });
+    if (isEmpty(selectedRecord)) {
+      dispatch({
+        type: 'userGroup/create',
+        payload: payload,
+      });
+    } else {
+      dispatch({
+        type: 'userGroup/patch',
+        payload: { id: selectedRecord?.uuid, values: { ...payload } },
+      });
+    }
 
     //đóng drawer
     onClose();
   };
   return (
     <div>
-      <Button type="primary" onClick={showDrawer}>
-        {intl.formatMessage({
-          id: 'pages.setting-user.list-user.add-group-user',
-        })}
-      </Button>
       <MSCustomizeDrawer
-        openDrawer={openDrawer1}
+        openDrawer={openDrawer}
         onClose={onClose}
         width={'20%'}
         zIndex={1002}
-        title={intl.formatMessage({
-          id: 'pages.setting-user.list-user.add-group-user',
-        })}
+        title={
+          isEmpty(selectedRecord)
+            ? intl.formatMessage({
+                id: 'pages.setting-user.list-user.add-user-group',
+              })
+            : intl.formatMessage({
+                id: 'pages.setting-user.list-user.edit-user-group',
+              })
+        }
         placement="right"
       >
-        <Form layout="vertical" form={form} onFinish={handleSubmit}>
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={handleSubmit}
+          initialValues={selectedRecord ?? {}}
+        >
           <Row gutter={16}>
             <Col span={24}>
               <MSFormItem
@@ -79,8 +87,7 @@ function AddUserGroup({ dispatch }) {
               </MSFormItem>
             </Col>
           </Row>
-        </Form>
-        <div
+          <div
           style={{
             position: 'absolute',
             right: 0,
@@ -92,12 +99,18 @@ function AddUserGroup({ dispatch }) {
             textAlign: 'right',
           }}
         >
-          <Button htmlType="submit" onClick={handleSubmit} type="primary">
-            {intl.formatMessage({
-              id: 'pages.setting-user.list-user.add',
-            })}
+          <Button htmlType="submit" type="primary">
+            {isEmpty(selectedRecord)
+              ? intl.formatMessage({
+                  id: 'pages.setting-user.list-user.add',
+                })
+              : intl.formatMessage({
+                  id: 'pages.setting-user.list-user.edit',
+                })}
           </Button>
         </div>
+        </Form>
+
       </MSCustomizeDrawer>
     </div>
   );
@@ -105,8 +118,8 @@ function AddUserGroup({ dispatch }) {
 
 function mapStateToProps(state) {
   return {
-    loading: state.loading.models.user,
+    loading: state.loading.models.userGroup,
   };
 }
 
-export default connect(mapStateToProps)(AddUserGroup);
+export default connect(mapStateToProps)(AddEditUserGroup);

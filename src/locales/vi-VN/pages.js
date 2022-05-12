@@ -40,6 +40,8 @@ export default {
   'pages.setting-user.list-user.require': 'Trường này bắt buộc',
   'pages.setting-user.list-user.password': 'Mật khẩu',
   'pages.setting-user.list-user.add': 'Thêm',
-  'pages.setting-user.list-user.add-group-user': 'Thêm nhóm người dùng',
-  'pages.setting-user.list-user.add-role': 'Thêm vai trờ',
+  'pages.setting-user.list-user.add-user-group': 'Thêm nhóm người dùng',
+  'pages.setting-user.list-user.edit-user-group': 'Sửa nhóm người dùng',
+  'pages.setting-user.list-user.add-role': 'Thêm vai trò',
+  'pages.setting-user.list-user.edit-role': 'Sửa vai trò',
 };
