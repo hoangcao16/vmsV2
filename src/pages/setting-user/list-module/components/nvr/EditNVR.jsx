@@ -1,10 +1,12 @@
 import MSFormItem from '@/components/Form/Item';
 import { Button, Col, Form, Input, Row } from 'antd';
 import React from 'react';
+import { useIntl } from 'umi';
 
 const { TextArea } = Input;
 
 const EditNVR = ({ selectedNVREdit, onClose, dispatch }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const handleSubmit = (value) => {
     dispatch({
@@ -21,7 +23,9 @@ const EditNVR = ({ selectedNVREdit, onClose, dispatch }) => {
         <Row gutter={16}>
           <Col span={24}>
             <MSFormItem
-              label="Tên NVR"
+              label={`${intl.formatMessage({
+                id: 'view.common_device.nvr_name',
+              })}`}
               type="input"
               name="name"
               minLength={5}
@@ -33,7 +37,9 @@ const EditNVR = ({ selectedNVREdit, onClose, dispatch }) => {
           </Col>
           <Col span={24}>
             <MSFormItem
-              label="Ghi chú"
+              label={`${intl.formatMessage({
+                id: 'view.common_device.note',
+              })}`}
               type="input"
               name="note"
               minLength={5}
@@ -45,7 +51,9 @@ const EditNVR = ({ selectedNVREdit, onClose, dispatch }) => {
           </Col>
           <Col span={24}>
             <MSFormItem
-              label="Mô tả"
+              label={`${intl.formatMessage({
+                id: 'view.common_device.desc',
+              })}`}
               type="input"
               name="description"
               minLength={5}

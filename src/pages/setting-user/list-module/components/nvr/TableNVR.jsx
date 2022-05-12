@@ -6,8 +6,10 @@ import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { useState } from 'react';
 import EditNVR from './EditNVR';
+import { useIntl } from 'umi';
 
 const TableNVR = ({ dispatch, list, metadata }) => {
+  const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedNVREdit, setSelectedNVREdit] = useState(null);
 
@@ -33,32 +35,42 @@ const TableNVR = ({ dispatch, list, metadata }) => {
       render: (text, record, index) => index + 1,
     },
     {
-      title: 'Tên NVR',
+      title: intl.formatMessage({
+        id: 'view.common_device.nvr_name',
+      }),
       dataIndex: 'name',
       key: 'name',
       width: '20%',
     },
     {
-      title: 'Mô tả',
+      title: intl.formatMessage({
+        id: 'view.common_device.desc',
+      }),
       dataIndex: 'description',
       key: 'description',
       width: '20%',
     },
     {
-      title: 'Ghi chú',
+      title: intl.formatMessage({
+        id: 'view.common_device.note',
+      }),
       dataIndex: 'note',
       key: 'note',
       width: '20%',
     },
     {
-      title: 'Trạng thái',
+      title: intl.formatMessage({
+        id: 'view.common_device.status',
+      }),
       dataIndex: 'status',
       key: 'status',
       width: '20%',
       render: renderTag,
     },
     {
-      title: 'Thao tác',
+      title: intl.formatMessage({
+        id: 'view.common_device.action',
+      }),
       width: '15%',
       render: (text, record) => {
         return (
@@ -80,7 +92,9 @@ const TableNVR = ({ dispatch, list, metadata }) => {
   return (
     <>
       <ProTable
-        headerTitle="Danh sách NVR"
+        headerTitle={`${intl.formatMessage({
+          id: 'view.common_device.nvr_list',
+        })}`}
         rowKey="id"
         search={false}
         dataSource={list}
@@ -97,7 +111,7 @@ const TableNVR = ({ dispatch, list, metadata }) => {
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
-          showTotal: (total) => `Tổng cộng ${total} NVR`,
+          showTotal: (total) => `${total} NVR`,
           total: metadata?.total,
           pageSize: metadata?.size,
           current: metadata?.page,
@@ -109,7 +123,9 @@ const TableNVR = ({ dispatch, list, metadata }) => {
           onClose={onClose}
           width={'30%'}
           zIndex={1001}
-          title="Chỉnh sửa NVR"
+          title={`${intl.formatMessage({
+            id: 'view.common_device.edit_nvr',
+          })}`}
           placement="right"
         >
           <EditNVR selectedNVREdit={selectedNVREdit} onClose={onClose} dispatch={dispatch} />

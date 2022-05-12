@@ -56,4 +56,8 @@ export default {
   'menu.setting-user': 'Setting',
   'menu.setting-user.list-user': 'List user',
   'menu.list-user': 'List user',
+
+  // Modules
+  'menu.setting-user.list-modules': 'System Modules',
+  'menu.list-modules': 'System Modules',
 };

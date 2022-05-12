@@ -5,8 +5,10 @@ import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { useState } from 'react';
+import { useIntl } from 'umi';
 
 const TableZone = ({ dispatch, list, metadata }) => {
+  const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [form] = Form.useForm();
   const showDrawer = () => {
@@ -26,25 +28,38 @@ const TableZone = ({ dispatch, list, metadata }) => {
     {
       title: 'STT',
       key: 'index',
+      width: '5%',
       render: (text, record, index) => index + 1,
     },
     {
-      title: 'Tên NVR',
+      title: intl.formatMessage({
+        id: 'view.common_device.zone_name',
+      }),
       dataIndex: 'name',
       key: 'name',
+      width: '30%',
     },
     {
-      title: 'Địa điểm',
+      title: intl.formatMessage({
+        id: 'view.map.address',
+      }),
       dataIndex: 'address',
       key: 'address',
+      width: '30%',
     },
     {
-      title: 'Mô tả',
+      title: intl.formatMessage({
+        id: 'view.user.detail_list.desc',
+      }),
       dataIndex: 'description',
       key: 'description',
+      width: '20%',
     },
     {
-      title: 'Thao tác',
+      title: intl.formatMessage({
+        id: 'view.common_device.action',
+      }),
+      width: '15%',
       render: (text, record) => {
         return (
           <Space>
@@ -65,7 +80,9 @@ const TableZone = ({ dispatch, list, metadata }) => {
   return (
     <>
       <ProTable
-        headerTitle="Danh sách Zone"
+        headerTitle={`${intl.formatMessage({
+          id: 'view.common_device.zone_list',
+        })}`}
         rowKey="id"
         search={false}
         dataSource={list}
@@ -94,7 +111,7 @@ const TableZone = ({ dispatch, list, metadata }) => {
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
-          showTotal: (total) => `Tổng cộng ${total} Zone`,
+          showTotal: (total) => `${total} Zone`,
           total: metadata?.total,
           pageSize: metadata?.size,
           current: metadata?.page,

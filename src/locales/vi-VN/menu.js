@@ -56,4 +56,8 @@ export default {
   'menu.setting-user': 'Cấu hình 1',
   'menu.setting-user.list-user': 'Danh sách người dùng',
   'menu.list-user': 'Danh sách người dùng',
+
+  // Modules
+  'menu.setting-user.list-modules': 'Modules hệ thống',
+  'menu.list-modules': 'Modules hệ thống',
 };
