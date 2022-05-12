@@ -85,6 +85,7 @@ export default {
   'pages.setting-user.list-user.status': 'Status',
   'pages.setting-user.list-user.option': 'Option',
   'pages.setting-user.list-user.delete': 'Delete',
+  'pages.setting-user.list-user.delete-confirm': 'Are you sure you want to delete?',
   'pages.setting-user.list-user.edit': 'Edit',
   'pages.setting-user.list-user.total': 'Total',
   'pages.setting-user.list-user.user': 'user',

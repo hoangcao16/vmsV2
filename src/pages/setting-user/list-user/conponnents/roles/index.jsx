@@ -1,8 +1,8 @@
 import MSCustomizeDrawer from '@/components/Drawer';
 import permissionCheck from '@/utils/PermissionCheck';
-import { EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
-import { Button, Space, Tooltip } from 'antd';
+import { Button, Popconfirm, Space, Tooltip } from 'antd';
 import { connect } from 'dva';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
@@ -40,6 +40,13 @@ function UserRole({ dispatch, list, metadata }) {
     setSelectedRecord(null);
   };
 
+  const handleDeleteRole = (id) => {
+    dispatch({
+      type: 'userRole/remove',
+      payload: id,
+    });
+  };
+
   const columns = [
     {
       title: intl.formatMessage({
@@ -64,7 +71,7 @@ function UserRole({ dispatch, list, metadata }) {
         return (
           <>
             <Space>
-              {permissionCheck('edit_user_group') && (
+              {permissionCheck('edit_role') && (
                 <Tooltip
                   placement="top"
                   title={intl.formatMessage({
@@ -77,16 +84,25 @@ function UserRole({ dispatch, list, metadata }) {
               )}
             </Space>
             <Space>
-              {permissionCheck('delete_user_group') && (
-                <Tooltip
-                  placement="top"
+              {permissionCheck('delete_role') && (
+                <Popconfirm
                   title={intl.formatMessage({
-                    id: 'pages.setting-user.list-user.delete',
+                    id: 'pages.setting-user.list-user.delete-confirm',
                   })}
-                  arrowPointAtCenter={true}
+                  onConfirm={() => handleDeleteRole(record.uuid)}
+                  cancelText="Cancel"
+                  okText="Ok"
                 >
-                  {/* <DeleteOutlined onClick={() => handleDeleteUserGroup(record.uuid)} /> */}
-                </Tooltip>
+                  <Tooltip
+                    placement="top"
+                    title={intl.formatMessage({
+                      id: 'pages.setting-user.list-user.delete',
+                    })}
+                    arrowPointAtCenter={true}
+                  >
+                    <DeleteOutlined />
+                  </Tooltip>
+                </Popconfirm>
               )}
             </Space>
           </>

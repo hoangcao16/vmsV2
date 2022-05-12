@@ -29,6 +29,7 @@ export default {
   'pages.setting-user.list-user.status': 'Trạng thái',
   'pages.setting-user.list-user.option': 'Thao tác',
   'pages.setting-user.list-user.delete': 'Xóa',
+  'pages.setting-user.list-user.delete-confirm': 'Bạn chắc chắn muốn xóa ?',
   'pages.setting-user.list-user.edit': 'Sửa',
   'pages.setting-user.list-user.total': 'Tổng số',
   'pages.setting-user.list-user.user': 'người dùng',
