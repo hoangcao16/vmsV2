@@ -11,8 +11,7 @@ export default {
   'menu.dashboard.analysis': 'Analysis',
   'menu.dashboard.monitor': 'Monitor',
   'menu.dashboard.workplace': 'Workplace',
-  'menu.setting-test': 'Setting',
-  'menu.setting-test.create-data': 'List User',
+
   'menu.exception.403': '403',
   'menu.exception.404': '404',
   'menu.exception.500': '500',
@@ -52,4 +51,9 @@ export default {
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
   'menu.report': 'Report',
+
+  //User
+  'menu.setting-user': 'Setting',
+  'menu.setting-user.list-user': 'List user',
+  'menu.list-user': 'List user',
 };

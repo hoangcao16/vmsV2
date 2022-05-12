@@ -1,16 +1,16 @@
 import MSCustomizeDrawer from '@/components/Drawer';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import ProTable, { Search } from '@ant-design/pro-table';
-import { Button, Space, Tooltip } from 'antd';
-import React, { useState } from 'react';
-import AddUserGroup from './AddUserGroup';
-import { connect } from 'dva';
-import { LightFilter } from '@ant-design/pro-form';
-import { useEffect } from 'react';
 import permissionCheck from '@/utils/PermissionCheck';
-
+import { EditOutlined } from '@ant-design/icons';
+import ProTable from '@ant-design/pro-table';
+import { Button, Space, Tooltip } from 'antd';
+import { connect } from 'dva';
+import React, { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
+import AddUserGroup from './AddUserGroup';
 function UserGroup({ dispatch, list, metadata }) {
   const [openDrawer, setOpenDrawer] = useState(false);
+
+  const intl = useIntl();
 
   useEffect(() => {
     dispatch({
@@ -32,16 +32,22 @@ function UserGroup({ dispatch, list, metadata }) {
 
   const columns = [
     {
-      title: 'Name',
+      title: intl.formatMessage({
+        id: 'pages.setting-user.list-user.name',
+      }),
       dataIndex: 'name',
     },
     {
-      title: 'Mô tả',
+      title: intl.formatMessage({
+        id: 'pages.setting-user.list-user.description',
+      }),
       dataIndex: 'description',
     },
 
     {
-      title: 'Thao tác',
+      title: intl.formatMessage({
+        id: 'pages.setting-user.list-user.option',
+      }),
       dataIndex: 'option',
       valueType: 'option',
       render: (text, record) => {
@@ -49,14 +55,26 @@ function UserGroup({ dispatch, list, metadata }) {
           <>
             <Space>
               {permissionCheck('edit_user_group') && (
-                <Tooltip placement="top" title="Sửa" arrowPointAtCenter={true}>
+                <Tooltip
+                  placement="top"
+                  title={intl.formatMessage({
+                    id: 'pages.setting-user.list-user.edit',
+                  })}
+                  arrowPointAtCenter={true}
+                >
                   <EditOutlined />
                 </Tooltip>
               )}
             </Space>
             <Space>
               {permissionCheck('delete_user_group') && (
-                <Tooltip placement="top" title="Xóa" arrowPointAtCenter={true}>
+                <Tooltip
+                  placement="top"
+                  title={intl.formatMessage({
+                    id: 'pages.setting-user.list-user.delete',
+                  })}
+                  arrowPointAtCenter={true}
+                >
                   {/* <DeleteOutlined onClick={() => handleDeleteUserGroup(record.uuid)} /> */}
                 </Tooltip>
               )}
@@ -81,7 +99,9 @@ function UserGroup({ dispatch, list, metadata }) {
     <>
       <Space>
         <Button type="primary" onClick={showDrawer}>
-          Nhóm người dùng
+          {intl.formatMessage({
+            id: 'pages.setting-user.list-user.group-user',
+          })}
         </Button>
       </Space>
       {openDrawer && (
@@ -90,13 +110,17 @@ function UserGroup({ dispatch, list, metadata }) {
           onClose={onClose}
           width={'80%'}
           zIndex={1001}
-          title="Danh sách nhóm người dùng"
+          title={intl.formatMessage({
+            id: 'pages.setting-user.list-user.group-user-list',
+          })}
           placement="right"
         >
           <>
             <ProTable
               // loading={loading}
-              headerTitle="Danh sách nhóm người dùng"
+              headerTitle={intl.formatMessage({
+                id: 'pages.setting-user.list-user.group-user-list',
+              })}
               rowKey="id"
               search={false}
               dataSource={list}
@@ -116,7 +140,10 @@ function UserGroup({ dispatch, list, metadata }) {
               pagination={{
                 showQuickJumper: true,
                 showSizeChanger: true,
-                showTotal: (total) => `Tổng cộng ${total} nhóm người dùng`,
+                showTotal: (total) =>
+                  `${intl.formatMessage({
+                    id: 'pages.setting-user.list-user.total',
+                  })} ${total}`,
                 total: metadata?.total,
                 onChange: onPaginationChange,
                 pageSize: metadata?.size,
