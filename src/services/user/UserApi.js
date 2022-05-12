@@ -47,6 +47,16 @@ const UserApi = {
       return {};
     }
   },
+  // UserRole
+  getAllUserRole: async (params) => {
+    try {
+      const { data } = await MyService.getRequest(`/authz/api/v0/roles`, params);
+      return data;
+    } catch (error) {
+      console.log(error);
+      return {};
+    }
+  },
 };
 
 export default UserApi;
