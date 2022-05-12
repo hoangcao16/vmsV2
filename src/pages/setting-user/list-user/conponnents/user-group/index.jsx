@@ -114,6 +114,12 @@ function UserGroup({ dispatch, list, metadata }) {
       },
     });
   };
+  const handleDeleteUserGroup = (uuid) => {
+    dispatch({
+      type: 'userGroup/remove',
+      payload: uuid,
+    });
+  };
 
   return (
     <>
