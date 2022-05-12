@@ -14,19 +14,6 @@ const topColResponsiveProps = {
   },
 };
 
-let array = [
-  { cameraName: 'cameraIsWorking', totalCamera: 31 },
-  { cameraName: 'cameraIsNotWorking', totalCamera: 4 },
-  { cameraName: 'cameraAI', totalCamera: 1 },
-  { cameraName: 'totalCamera', totalCamera: 35 },
-];
-
-const sortData = [];
-sortData[0] = array[3];
-sortData[1] = array[2];
-sortData[2] = array[0];
-sortData[3] = array[1];
-
 const CameraStatistics = () => {
   const [camera, setCamera] = useState([]);
 

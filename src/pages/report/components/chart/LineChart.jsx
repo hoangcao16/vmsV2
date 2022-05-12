@@ -1,30 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Line } from '@ant-design/plots';
+import ChartHeader from './ChartHeader';
+import { Divider } from 'antd';
+import moment from 'moment';
+import reportApi from '@/services/report/ReportApi';
+import { connect } from 'dva';
+import { useIntl } from 'umi';
 
-const LineChart = () => {
-  const data = [
-    { date: 2020, value: 100, type: 'A' },
-    { date: 2020, value: 200, type: 'B' },
-    { date: 2020, value: 300, type: 'C' },
-    { date: 2021, value: 200, type: 'A' },
-    { date: 2021, value: 400, type: 'B' },
-    { date: 2021, value: 600, type: 'C' },
-    { date: 2022, value: 200, type: 'A' },
-    { date: 2022, value: 400, type: 'B' },
-    { date: 2022, value: 600, type: 'C' },
-    { date: 2023, value: 200, type: 'A' },
-    { date: 2023, value: 400, type: 'B' },
-    { date: 2023, value: 600, type: 'C' },
-    { date: 2024, value: 200, type: 'A' },
-    { date: 2024, value: 400, type: 'B' },
-    { date: 2024, value: 600, type: 'C' },
-    { date: 2025, value: 200, type: 'A' },
-    { date: 2025, value: 400, type: 'B' },
-    { date: 2025, value: 600, type: 'C' },
-  ];
+const LineChart = (props) => {
+  const [data, setData] = useState([]);
+  const intl = useIntl();
+
+  useEffect(() => {
+    if (props.data) {
+      setData(props.data);
+    }
+  }, [props.data]);
+
   const config = {
-    data,
-    xField: 'date',
+    data: data,
+    xField: 'time',
     yField: 'value',
     seriesField: 'type',
     yAxis: {
@@ -35,11 +30,27 @@ const LineChart = () => {
     legend: {
       position: 'bottom',
     },
-    smooth: true,
     color: ['#1979C9', '#D62A0D', '#FAA219'],
   };
 
-  return <Line {...config} />;
+  return (
+    <>
+      <ChartHeader
+        title={intl.formatMessage({
+          id: `pages.report.chart.lineTitle`,
+          defaultMessage: 'name',
+        })}
+      />
+      <Divider />
+      <Line {...config} />
+    </>
+  );
 };
 
-export default LineChart;
+function mapStateToProps(state) {
+  const { chart } = state;
+  console.log('chart', chart);
+  return { data: chart?.list?.events };
+}
+
+export default connect(mapStateToProps)(LineChart);
