@@ -11,17 +11,20 @@ import {
 import { LightFilter } from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
-import { Button, Col, Form, Input, Row, Select, Space, Switch, Tooltip } from 'antd';
+import { Button, Col, Form, Input, Popconfirm, Row, Select, Space, Switch, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { useMemo, useState } from 'react';
-import AddUserContent from './conponnents/AddUserContent';
 import UserGroup from './conponnents/user-group';
 import UserRole from './conponnents/roles';
+import AddUser from './conponnents/AddUser';
 import styles from './styles.less';
 const { Option } = Select;
 const { Search } = Input;
+import { useIntl } from 'umi';
 
 const UserList = ({ dispatch, list, metadata }) => {
+  const intl = useIntl();
+
   const [visible, setVisible] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [form] = Form.useForm();
@@ -55,7 +58,9 @@ const UserList = ({ dispatch, list, metadata }) => {
 
   const columns = [
     {
-      title: 'Name',
+      title: intl.formatMessage({
+        id: 'pages.setting-user.list-user.list',
+      }),
       dataIndex: 'name',
     },
     {
@@ -63,16 +68,25 @@ const UserList = ({ dispatch, list, metadata }) => {
       dataIndex: 'email',
     },
     {
-      title: 'Điện thoại',
+      title: intl.formatMessage({
+        id: 'pages.setting-user.list-user.phone',
+      }),
       dataIndex: 'phone',
     },
     {
-      title: 'Trạng thái',
+      title: intl.formatMessage({
+        id: 'pages.setting-user.list-user.status',
+      }),
       dataIndex: 'status',
       render: (text, record) => {
         return (
           <Space>
-            <Tooltip placement="top" title="Trạng thái">
+            <Tooltip
+              placement="top"
+              title={intl.formatMessage({
+                id: 'pages.setting-user.list-user.status',
+              })}
+            >
               <Switch
                 checked={record.status === 1 ? true : false}
                 onChange={(e) => handleUpdateStatus(e, record.uuid)}
@@ -87,7 +101,9 @@ const UserList = ({ dispatch, list, metadata }) => {
     },
 
     {
-      title: 'Thao tác',
+      title: intl.formatMessage({
+        id: 'pages.setting-user.list-user.option',
+      }),
       dataIndex: 'option',
       valueType: 'option',
       render: (text, record) => {
@@ -95,16 +111,37 @@ const UserList = ({ dispatch, list, metadata }) => {
           <>
             <Space>
               {permissionCheck('edit_user') && (
-                <Tooltip placement="top" title="Sửa" arrowPointAtCenter={true}>
+                <Tooltip
+                  placement="top"
+                  title={intl.formatMessage({
+                    id: 'pages.setting-user.list-user.edit',
+                  })}
+                  arrowPointAtCenter={true}
+                >
                   <EditOutlined />
                 </Tooltip>
               )}
             </Space>
             <Space>
               {permissionCheck('delete_user') && (
-                <Tooltip placement="top" title="Xóa" arrowPointAtCenter={true}>
-                  <DeleteOutlined onClick={() => handleDeleteUser(record.uuid)} />
-                </Tooltip>
+                <Popconfirm
+                  title={intl.formatMessage({
+                    id: 'pages.setting-user.list-user.delete-confirm',
+                  })}
+                  onConfirm={() => handleDeleteUser(record.uuid)}
+                  cancelText="Cancel"
+                  okText="Ok"
+                >
+                  <Tooltip
+                    placement="top"
+                    title={intl.formatMessage({
+                      id: 'pages.setting-user.list-user.delete',
+                    })}
+                    arrowPointAtCenter={true}
+                  >
+                    <DeleteOutlined />
+                  </Tooltip>
+                </Popconfirm>
               )}
             </Space>
           </>
@@ -186,7 +223,9 @@ const UserList = ({ dispatch, list, metadata }) => {
     <PageContainer>
       <ProTable
         // loading={loading}
-        headerTitle="Danh sách user"
+        headerTitle={intl.formatMessage({
+          id: 'pages.setting-user.list-user.list',
+        })}
         rowKey="id"
         search={false}
         dataSource={list}
@@ -195,17 +234,19 @@ const UserList = ({ dispatch, list, metadata }) => {
         options={false}
         toolbar={{
           multipleLine: true,
-          // filter: (
-          //   <LightFilter wrapperCol={24}>
-          //     <RenderFilter />
-          //   </LightFilter>
-          // ),
+          filter: (
+            <LightFilter wrapperCol={24}>
+              <RenderFilter />
+            </LightFilter>
+          ),
           actions: [
             <UserGroup key="user-group" />,
             <UserRole key="user-role" />,
             <Button key="add" type="primary" onClick={showDrawer}>
               <PlusOutlined />
-              Thêm người dùng
+              {intl.formatMessage({
+                id: 'pages.setting-user.list-user.new-user',
+              })}
             </Button>,
           ],
           style: { width: '100%' },
@@ -213,7 +254,12 @@ const UserList = ({ dispatch, list, metadata }) => {
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
-          showTotal: (total) => `Tổng cộng ${total} user`,
+          showTotal: (total) =>
+            `${intl.formatMessage({
+              id: 'pages.setting-user.list-user.total',
+            })} ${total} ${intl.formatMessage({
+              id: 'pages.setting-user.list-user.user',
+            })}`,
           total: metadata?.total,
           onChange: onPaginationChange,
           pageSize: metadata?.size,
@@ -224,12 +270,14 @@ const UserList = ({ dispatch, list, metadata }) => {
         <MSCustomizeDrawer
           openDrawer={openDrawer}
           onClose={onClose}
-          width={350}
+          width={'20%'}
           zIndex={1001}
-          title="Thêm người dùng mới"
+          title={intl.formatMessage({
+            id: 'pages.setting-user.list-user.new-user',
+          })}
           placement="right"
         >
-          <AddUserContent onClose={onClose} />
+          <AddUser onClose={onClose} />
         </MSCustomizeDrawer>
       )}
     </PageContainer>

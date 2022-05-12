@@ -25,6 +25,15 @@ export default {
         },
       });
     },
+    *editNVR({ nvrId, payload }, { call, put }) {
+      yield call(ModuleApi.editNVR, nvrId, payload);
+      yield put({ type: 'reload' });
+    },
+
+    *reload(action, { put, select }) {
+      const page = yield select((state) => state.user.page);
+      yield put({ type: 'fetchAllNVR', payload: { page } });
+    },
   },
   subscriptions: {
     setup({ dispatch, history }) {

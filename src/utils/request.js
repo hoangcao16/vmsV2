@@ -10,8 +10,6 @@ request.interceptors.request.use(
   function (config) {
     const token = localStorage.getItem(STORAGE.TOKEN);
 
-    console.log('token', token);
-
     if (token) {
       config.headers.Authorization = token;
     }
@@ -27,13 +25,16 @@ request.interceptors.response.use(
   function (response) {
     return response;
   },
-  function (error) {
-    if (error?.toJSON()?.status === 401) {
+  async function (error) {
+    const originalRequest = error.config;
+
+    if (error?.toJSON()?.status === 401 && !originalRequest._retry) {
       const oldToken = localStorage.getItem(STORAGE.TOKEN);
 
-      AuthZApi.refreshToken(oldToken);
+      await AuthZApi.refreshToken(oldToken);
 
-      // location.reload();
+      originalRequest._retry = true;
+      return this.request(originalRequest);
     }
     return Promise.reject(error);
   },

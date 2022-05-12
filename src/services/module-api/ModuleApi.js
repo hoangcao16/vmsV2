@@ -9,6 +9,15 @@ const ModuleApi = {
       console.log(error);
     }
   },
+  editNVR: async (nvrId, params) => {
+    try {
+      await MyService.putRequest(`/cctv-controller-svc/api/v1/nvr/${nvrId}`, params);
+    } catch (error) {
+      console.log(error);
+    }
+
+    return true;
+  },
 
   getAllPlayback: async (params) => {
     try {

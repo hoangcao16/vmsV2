@@ -1,16 +1,18 @@
 import MSCustomizeDrawer from '@/components/Drawer';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import ProTable, { Search } from '@ant-design/pro-table';
-import { Button, Space, Tooltip } from 'antd';
-import React, { useState } from 'react';
-import AddUserGroup from './AddUserGroup';
-import { connect } from 'dva';
-import { LightFilter } from '@ant-design/pro-form';
-import { useEffect } from 'react';
 import permissionCheck from '@/utils/PermissionCheck';
-
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import ProTable from '@ant-design/pro-table';
+import { Button, Popconfirm, Space, Tooltip } from 'antd';
+import { connect } from 'dva';
+import React, { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
+import AddUserGroup from './AddEditUserGroup';
 function UserGroup({ dispatch, list, metadata }) {
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [showDrawerAdd, setOpenDrawerAdd] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
+
+  const intl = useIntl();
 
   useEffect(() => {
     dispatch({
@@ -30,18 +32,33 @@ function UserGroup({ dispatch, list, metadata }) {
     setOpenDrawer(false);
   };
 
+  const showDrawerAddUserGroup = (record) => {
+    setOpenDrawerAdd(true);
+    setSelectedRecord(record);
+  };
+  const closeDrawerAddUserGroup = () => {
+    setOpenDrawerAdd(false);
+    setSelectedRecord(null);
+  };
+
   const columns = [
     {
-      title: 'Name',
+      title: intl.formatMessage({
+        id: 'pages.setting-user.list-user.name',
+      }),
       dataIndex: 'name',
     },
     {
-      title: 'Mô tả',
+      title: intl.formatMessage({
+        id: 'pages.setting-user.list-user.description',
+      }),
       dataIndex: 'description',
     },
 
     {
-      title: 'Thao tác',
+      title: intl.formatMessage({
+        id: 'pages.setting-user.list-user.option',
+      }),
       dataIndex: 'option',
       valueType: 'option',
       render: (text, record) => {
@@ -49,16 +66,37 @@ function UserGroup({ dispatch, list, metadata }) {
           <>
             <Space>
               {permissionCheck('edit_user_group') && (
-                <Tooltip placement="top" title="Sửa" arrowPointAtCenter={true}>
-                  <EditOutlined />
+                <Tooltip
+                  placement="top"
+                  title={intl.formatMessage({
+                    id: 'pages.setting-user.list-user.edit',
+                  })}
+                  arrowPointAtCenter={true}
+                >
+                  <EditOutlined onClick={() => showDrawerAddUserGroup(record)} />
                 </Tooltip>
               )}
             </Space>
             <Space>
               {permissionCheck('delete_user_group') && (
-                <Tooltip placement="top" title="Xóa" arrowPointAtCenter={true}>
-                  {/* <DeleteOutlined onClick={() => handleDeleteUserGroup(record.uuid)} /> */}
-                </Tooltip>
+                <Popconfirm
+                  title={intl.formatMessage({
+                    id: 'pages.setting-user.list-user.delete-confirm',
+                  })}
+                  onConfirm={() => handleDeleteUserGroup(record.uuid)}
+                  cancelText="Cancel"
+                  okText="Ok"
+                >
+                  <Tooltip
+                    placement="top"
+                    title={intl.formatMessage({
+                      id: 'pages.setting-user.list-user.delete',
+                    })}
+                    arrowPointAtCenter={true}
+                  >
+                    <DeleteOutlined />
+                  </Tooltip>
+                </Popconfirm>
               )}
             </Space>
           </>
@@ -76,12 +114,20 @@ function UserGroup({ dispatch, list, metadata }) {
       },
     });
   };
+  const handleDeleteUserGroup = (uuid) => {
+    dispatch({
+      type: 'userGroup/remove',
+      payload: uuid,
+    });
+  };
 
   return (
     <>
       <Space>
         <Button type="primary" onClick={showDrawer}>
-          Nhóm người dùng
+          {intl.formatMessage({
+            id: 'pages.setting-user.list-user.group-user',
+          })}
         </Button>
       </Space>
       {openDrawer && (
@@ -90,13 +136,17 @@ function UserGroup({ dispatch, list, metadata }) {
           onClose={onClose}
           width={'80%'}
           zIndex={1001}
-          title="Danh sách nhóm người dùng"
+          title={intl.formatMessage({
+            id: 'pages.setting-user.list-user.group-user-list',
+          })}
           placement="right"
         >
           <>
             <ProTable
               // loading={loading}
-              headerTitle="Danh sách nhóm người dùng"
+              headerTitle={intl.formatMessage({
+                id: 'pages.setting-user.list-user.group-user-list',
+              })}
               rowKey="id"
               search={false}
               dataSource={list}
@@ -110,19 +160,39 @@ function UserGroup({ dispatch, list, metadata }) {
                 //     <Search placeholder="Tìm kiếm theo tên nhóm người dùng" />
                 //   </LightFilter>
                 // ),
-                actions: [<AddUserGroup key="add-user-group" />],
+                actions: [
+                  <Button
+                    key="add-user"
+                    type="primary"
+                    onClick={() => showDrawerAddUserGroup(null)}
+                  >
+                    {intl.formatMessage({
+                      id: 'pages.setting-user.list-user.add-user-group',
+                    })}
+                  </Button>,
+                ],
                 style: { width: '100%' },
               }}
               pagination={{
                 showQuickJumper: true,
                 showSizeChanger: true,
-                showTotal: (total) => `Tổng cộng ${total} nhóm người dùng`,
+                showTotal: (total) =>
+                  `${intl.formatMessage({
+                    id: 'pages.setting-user.list-user.total',
+                  })} ${total}`,
                 total: metadata?.total,
                 onChange: onPaginationChange,
                 pageSize: metadata?.size,
                 current: metadata?.page,
               }}
             />
+            {showDrawerAdd && (
+              <AddUserGroup
+                onClose={closeDrawerAddUserGroup}
+                openDrawer={showDrawerAdd}
+                selectedRecord={selectedRecord}
+              />
+            )}
           </>
         </MSCustomizeDrawer>
       )}

@@ -1,4 +1,5 @@
 import MyService from '../RestApiClient';
+import { useIntl } from 'umi';
 
 const UserApi = {
   // User
@@ -47,11 +48,51 @@ const UserApi = {
       return {};
     }
   },
+  createUserGroup: async (params) => {
+    try {
+      await MyService.postRequest(`/authz/api/v0/groups`, params);
+    } catch (error) {
+      console.log(error);
+      return {};
+    }
+  },
+  updateUserGroup: async (id, values) => {
+    try {
+      await MyService.putRequest(`/authz/api/v0/groups/${id}`, values);
+    } catch (error) {
+      console.log(error);
+      return {};
+    }
+  },
+
+  deleteUserGroup: async (uuid) => {
+    try {
+      await MyService.deleteRequest(`/authz/api/v0/groups/${uuid}`);
+    } catch (error) {
+      console.log(error);
+    }
+  },
   // UserRole
   getAllUserRole: async (params) => {
     try {
       const { data } = await MyService.getRequest(`/authz/api/v0/roles`, params);
       return data;
+    } catch (error) {
+      console.log(error);
+      return {};
+    }
+  },
+  createRole: async (params) => {
+    try {
+      await MyService.postRequest(`/authz/api/v0/roles`, params);
+    } catch (error) {
+      console.log(error);
+      return {};
+    }
+  },
+  deleteRole: async (id) => {
+    try {
+      await MyService.deleteRequest(`/authz/api/v0/roles/${id}`);
     } catch (error) {
       console.log(error);
       return {};

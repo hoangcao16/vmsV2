@@ -815,4 +815,8 @@ export default {
   'AI.zac_human': 'Hurdles and intrusion (Human detection)',
   'AI.zac_vehicle': 'Hurdles and intrusion (Vehicle detection)',
   'AI.attendance': 'Attendance',
+
+  //Ver2================================================================================================================================
+
+  'view.ai_humans.status': 'Status',
 };

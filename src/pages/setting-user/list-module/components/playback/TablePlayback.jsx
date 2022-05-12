@@ -5,8 +5,10 @@ import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { useState } from 'react';
+import { useIntl } from 'umi';
 
 const TablePlayback = ({ dispatch, list, metadata }) => {
+  const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [form] = Form.useForm();
   const showDrawer = () => {
@@ -33,36 +35,58 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
     {
       title: 'STT',
       key: 'index',
+      width: '5%',
       render: (text, record, index) => index + 1,
     },
     {
-      title: 'Tên Playback',
+      title: intl.formatMessage({
+        id: 'view.common_device.playback_name',
+      }),
       dataIndex: 'name',
       key: 'name',
+      width: '20%',
     },
     {
-      title: 'Mô tả',
+      title: intl.formatMessage({
+        id: 'view.common_device.desc',
+      }),
       dataIndex: 'description',
       key: 'description',
+      width: '20%',
     },
     {
-      title: 'Ghi chú',
+      title: intl.formatMessage({
+        id: 'view.common_device.note',
+      }),
       dataIndex: 'note',
       key: 'note',
+      width: '20%',
     },
     {
-      title: 'Trạng thái',
+      title: intl.formatMessage({
+        id: 'view.common_device.status',
+      }),
       dataIndex: 'status',
       key: 'status',
+      width: '20%',
       render: renderTag,
     },
     {
-      title: 'Thao tác',
+      title: intl.formatMessage({
+        id: 'view.common_device.action',
+      }),
+      width: '15%',
       render: (text, record) => {
         return (
           <Space>
             <Tooltip placement="rightTop" title="Chỉnh sửa">
-              <EditOutlined style={{ fontSize: '16px', color: '#6E6B7B' }} onClick={showDrawer} />
+              <EditOutlined
+                style={{ fontSize: '16px', color: '#6E6B7B' }}
+                onClick={() => {
+                  showDrawer();
+                  setSelectedNVREdit(record);
+                }}
+              />
             </Tooltip>
           </Space>
         );
@@ -72,7 +96,9 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
   return (
     <>
       <ProTable
-        headerTitle="Danh sách Playback"
+        headerTitle={`${intl.formatMessage({
+          id: 'view.common_device.playback_list',
+        })}`}
         rowKey="id"
         search={false}
         dataSource={list}
@@ -89,7 +115,7 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
-          showTotal: (total) => `Tổng cộng ${total} Playback`,
+          showTotal: (total) => `${total} Playback`,
           total: metadata?.total,
           pageSize: metadata?.size,
           current: metadata?.page,
