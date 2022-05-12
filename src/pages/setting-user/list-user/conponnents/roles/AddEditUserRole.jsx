@@ -1,17 +1,17 @@
 import MSCustomizeDrawer from '@/components/Drawer';
 import MSFormItem from '@/components/Form/Item';
 import { Button, Col, Form, Input, Row } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
 import { useIntl } from 'umi';
 import { connect } from 'dva';
 import { isEmpty } from 'lodash';
 
-function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
+function AddEditUserRole({ dispatch, onClose, openDrawer, selectedRecord }) {
   const intl = useIntl();
 
   const [form] = Form.useForm();
 
-  const onCloseDrawerAddUserGroup = () => {
+  const onCloseDrawerAddRole = () => {
     onClose();
   };
 
@@ -24,12 +24,12 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
 
     if (isEmpty(selectedRecord)) {
       dispatch({
-        type: 'userGroup/create',
+        type: 'userRole/create',
         payload: payload,
       });
     } else {
       dispatch({
-        type: 'userGroup/patch',
+        type: 'userRole/patch',
         payload: { id: selectedRecord?.uuid, values: { ...payload } },
       });
     }
@@ -41,16 +41,16 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
     <div>
       <MSCustomizeDrawer
         openDrawer={openDrawer}
-        onClose={onCloseDrawerAddUserGroup}
+        onClose={onCloseDrawerAddRole}
         width={'20%'}
         zIndex={1002}
         title={
           isEmpty(selectedRecord)
             ? intl.formatMessage({
-                id: 'pages.setting-user.list-user.add-user-group',
+                id: 'pages.setting-user.list-user.add-role',
               })
             : intl.formatMessage({
-                id: 'pages.setting-user.list-user.edit-user-group',
+                id: 'pages.setting-user.list-user.edit-role',
               })
         }
         placement="right"
@@ -120,9 +120,12 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
 }
 
 function mapStateToProps(state) {
+  const { list, metadata } = state.userRole;
   return {
-    loading: state.loading.models.userGroup,
+    loading: state.loading.models.userRole,
+    list,
+    metadata,
   };
 }
 
-export default connect(mapStateToProps)(AddEditUserGroup);
+export default connect(mapStateToProps)(AddEditUserRole);

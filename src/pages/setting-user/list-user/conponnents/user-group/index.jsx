@@ -152,7 +152,7 @@ function UserGroup({ dispatch, list, metadata }) {
                     onClick={() => showDrawerAddUserGroup(null)}
                   >
                     {intl.formatMessage({
-                      id: 'pages.setting-user.list-user.add-group-user',
+                      id: 'pages.setting-user.list-user.add-user-group',
                     })}
                   </Button>,
                 ],

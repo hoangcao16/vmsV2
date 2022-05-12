@@ -74,6 +74,14 @@ const UserApi = {
       return {};
     }
   },
+  createRole: async (params) => {
+    try {
+      await MyService.postRequest(`/authz/api/v0/roles`, params);
+    } catch (error) {
+      console.log(error);
+      return {};
+    }
+  },
 };
 
 export default UserApi;
