@@ -27,28 +27,28 @@ export default {
       });
     },
 
-    // *patch({ payload: { id, values } }, { call, put, select }) {
-    //   yield call(UserApi.updateUser, id, values);
-    //   const oldList = yield select((state) => state.user.list);
-    //   const metadata = yield select((state) => state.user.metadata);
+    *patch({ payload: { id, values } }, { call, put, select }) {
+      yield call(UserApi.updateUser, id, values);
+      const oldList = yield select((state) => state.userRole.list);
+      const metadata = yield select((state) => state.userRole.metadata);
 
-    //   const userIndex = oldList.findIndex((user) => user.uuid === id);
+      const roleIndex = oldList.findIndex((role) => role.uuid === id);
 
-    //   if (userIndex >= 0) {
-    //     oldList[userIndex] = { ...oldList[userIndex], ...values };
-    //   }
+      if (roleIndex >= 0) {
+        oldList[roleIndex] = { ...oldList[roleIndex], ...values };
+      }
 
-    //   const newList = [...oldList];
+      const newList = [...oldList];
 
-    //   yield put({
-    //     type: 'save',
-    //     payload: {
-    //       data: newList,
-    //       metadata: metadata,
-    //     },
-    //   });
-    //   // yield put({ type: 'reload' });
-    // },
+      yield put({
+        type: 'save',
+        payload: {
+          data: newList,
+          metadata: metadata,
+        },
+      });
+      // yield put({ type: 'reload' });
+    },
 
     // *remove({ payload: id }, { call, put }) {
     //   yield call(UserApi.deleteUser, id);
