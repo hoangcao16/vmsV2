@@ -92,7 +92,7 @@ export default [
         component: './setting-user/list-user',
       },
       {
-        name: 'Danh sách Module',
+        name: 'list-modules',
         icon: 'smile',
         path: '/setting-user/list-module',
         component: './setting-user/list-module',
