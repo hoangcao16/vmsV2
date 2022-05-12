@@ -1,5 +1,5 @@
-import { Form as MSForm } from "antd";
-import Item from "./Item";
+import { Form as MSForm } from 'antd';
+import Item from './Item';
 
 MSForm.Item = Item;
 

@@ -27,38 +27,38 @@ export default {
       });
     },
 
-    // *patch({ payload: { id, values } }, { call, put, select }) {
-    //   yield call(UserApi.updateUser, id, values);
-    //   const oldList = yield select((state) => state.user.list);
-    //   const metadata = yield select((state) => state.user.metadata);
+    *patch({ payload: { id, values } }, { call, put, select }) {
+      yield call(UserApi.updateUserGroup, id, values);
+      const oldList = yield select((state) => state.userGroup.list);
+      const metadata = yield select((state) => state.userGroup.metadata);
 
-    //   const userIndex = oldList.findIndex((user) => user.uuid === id);
+      const userGroupIndex = oldList.findIndex((userG) => userG.uuid === id);
 
-    //   if (userIndex >= 0) {
-    //     oldList[userIndex] = { ...oldList[userIndex], ...values };
-    //   }
+      if (userGroupIndex >= 0) {
+        oldList[userGroupIndex] = { ...oldList[userGroupIndex], ...values };
+      }
 
-    //   const newList = [...oldList];
+      const newList = [...oldList];
 
-    //   yield put({
-    //     type: 'save',
-    //     payload: {
-    //       data: newList,
-    //       metadata: metadata,
-    //     },
-    //   });
-    //   // yield put({ type: 'reload' });
-    // },
+      yield put({
+        type: 'save',
+        payload: {
+          data: newList,
+          metadata: metadata,
+        },
+      });
+      // yield put({ type: 'reload' });
+    },
 
     // *remove({ payload: id }, { call, put }) {
     //   yield call(UserApi.deleteUser, id);
     //   yield put({ type: 'reload' });
     // },
 
-    // *create({ payload: values }, { call, put }) {
-    //   yield call(UserApi.createUser, values);
-    //   yield put({ type: 'reload' });
-    // },
+    *create({ payload: values }, { call, put }) {
+      yield call(UserApi.createUserGroup, values);
+      yield put({ type: 'reload' });
+    },
 
     *reload(action, { put, select }) {
       const page = yield select((state) => state.userGroup.page);

@@ -20,7 +20,7 @@ export default [
         component: './user/register',
       },
       {
-        component: '404',
+        component: './exception/404',
       },
     ],
   },
@@ -29,10 +29,6 @@ export default [
     icon: 'table',
     name: 'list',
     routes: [
-      // {
-      //   path: '/list',
-      //   redirect: '/list/table-list',
-      // },
       {
         name: 'Danh sách camera',
         icon: 'table',
@@ -82,7 +78,7 @@ export default [
   },
   {
     path: '/setting-user',
-    name: 'Cài đặt',
+    name: 'setting-user',
     icon: 'setting',
     routes: [
       // {
@@ -90,7 +86,7 @@ export default [
       //   redirect: '/setting-user/list-user',
       // },
       {
-        name: 'Danh sách user',
+        name: 'list-user',
         icon: 'smile',
         path: '/setting-user/list-user',
         component: './setting-user/list-user',
@@ -105,9 +101,9 @@ export default [
   },
   {
     path: '/',
-    redirect: '/dashboard/analysis',
+    redirect: '/report',
   },
   {
-    component: '404',
+    component: './exception/404',
   },
 ];

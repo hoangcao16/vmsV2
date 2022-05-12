@@ -5,10 +5,13 @@ import ProTable from '@ant-design/pro-table';
 import { Button, Space, Tooltip } from 'antd';
 import { connect } from 'dva';
 import React, { useEffect, useState } from 'react';
-import AddUserRole from './AddUserRole';
-
+import { useIntl } from 'umi';
+import AddEditUserRole from './AddEditUserRole';
 function UserRole({ dispatch, list, metadata }) {
+  const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [showDrawerAdd, setOpenDrawerAdd] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
 
   useEffect(() => {
     dispatch({
@@ -28,18 +31,33 @@ function UserRole({ dispatch, list, metadata }) {
     setOpenDrawer(false);
   };
 
+  const showDrawerAddUserRole = (record) => {
+    setOpenDrawerAdd(true);
+    setSelectedRecord(record);
+  };
+  const closeDrawerAddRole = () => {
+    setOpenDrawerAdd(false);
+    setSelectedRecord(null);
+  };
+
   const columns = [
     {
-      title: 'Name',
+      title: intl.formatMessage({
+        id: 'pages.setting-user.list-user.name',
+      }),
       dataIndex: 'name',
     },
     {
-      title: 'Mô tả',
+      title: intl.formatMessage({
+        id: 'pages.setting-user.list-user.description',
+      }),
       dataIndex: 'description',
     },
 
     {
-      title: 'Thao tác',
+      title: intl.formatMessage({
+        id: 'pages.setting-user.list-user.option',
+      }),
       dataIndex: 'option',
       valueType: 'option',
       render: (text, record) => {
@@ -47,14 +65,26 @@ function UserRole({ dispatch, list, metadata }) {
           <>
             <Space>
               {permissionCheck('edit_user_group') && (
-                <Tooltip placement="top" title="Sửa" arrowPointAtCenter={true}>
-                  <EditOutlined />
+                <Tooltip
+                  placement="top"
+                  title={intl.formatMessage({
+                    id: 'pages.setting-user.list-user.edit',
+                  })}
+                  arrowPointAtCenter={true}
+                >
+                  <EditOutlined onClick={() => showDrawerAddUserRole(record)} />
                 </Tooltip>
               )}
             </Space>
             <Space>
               {permissionCheck('delete_user_group') && (
-                <Tooltip placement="top" title="Xóa" arrowPointAtCenter={true}>
+                <Tooltip
+                  placement="top"
+                  title={intl.formatMessage({
+                    id: 'pages.setting-user.list-user.delete',
+                  })}
+                  arrowPointAtCenter={true}
+                >
                   {/* <DeleteOutlined onClick={() => handleDeleteUserGroup(record.uuid)} /> */}
                 </Tooltip>
               )}
@@ -79,7 +109,9 @@ function UserRole({ dispatch, list, metadata }) {
     <>
       <Space>
         <Button type="primary" onClick={showDrawer}>
-          Vai trò
+          {intl.formatMessage({
+            id: 'pages.setting-user.list-user.role',
+          })}
         </Button>
       </Space>
       {openDrawer && (
@@ -88,13 +120,17 @@ function UserRole({ dispatch, list, metadata }) {
           onClose={onClose}
           width={'80%'}
           zIndex={1001}
-          title="Danh sách vai trò"
+          title={intl.formatMessage({
+            id: 'pages.setting-user.list-user.list-role',
+          })}
           placement="right"
         >
           <>
             <ProTable
               // loading={loading}
-              headerTitle="Danh sách vai trò"
+              headerTitle={intl.formatMessage({
+                id: 'pages.setting-user.list-user.list-role',
+              })}
               rowKey="id"
               search={false}
               dataSource={list}
@@ -108,19 +144,35 @@ function UserRole({ dispatch, list, metadata }) {
                 //     <Search placeholder="Tìm kiếm theo tên vai trò" />
                 //   </LightFilter>
                 // ),
-                actions: [<AddUserRole key="add-user-role" />],
+                actions: [
+                  <Button key="add-role" type="primary" onClick={() => showDrawerAddUserRole(null)}>
+                    {intl.formatMessage({
+                      id: 'pages.setting-user.list-user.add-role',
+                    })}
+                  </Button>,
+                ],
                 style: { width: '100%' },
               }}
               pagination={{
                 showQuickJumper: true,
                 showSizeChanger: true,
-                showTotal: (total) => `Tổng cộng ${total} vai trò`,
+                showTotal: (total) =>
+                  `${intl.formatMessage({
+                    id: 'pages.setting-user.list-user.total',
+                  })} ${total}`,
                 total: metadata?.total,
                 onChange: onPaginationChange,
                 pageSize: metadata?.size,
                 current: metadata?.page,
               }}
             />
+            {showDrawerAdd && (
+              <AddEditUserRole
+                onClose={closeDrawerAddRole}
+                openDrawer={showDrawerAdd}
+                selectedRecord={selectedRecord}
+              />
+            )}
           </>
         </MSCustomizeDrawer>
       )}

@@ -7,9 +7,6 @@ import { history, useModel } from 'umi';
 import HeaderDropdown from '../Header/HeaderDropdown';
 import styles from './index.less';
 
-
-
-
 const AvatarDropdown = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
   const onMenuClick = useCallback(
