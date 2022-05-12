@@ -1,10 +1,10 @@
 import MSCustomizeDrawer from '@/components/Drawer';
 import MSFormItem from '@/components/Form/Item';
 import { Button, Col, Form, Input, Row } from 'antd';
-import React, { useState } from 'react';
-import { useIntl } from 'umi';
 import { connect } from 'dva';
 import { isEmpty } from 'lodash';
+import React from 'react';
+import { useIntl } from 'umi';
 
 function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
   const intl = useIntl();
@@ -12,7 +12,6 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
   const [form] = Form.useForm();
 
   const handleSubmit = (values) => {
-    console.log('==============================');
 
     const payload = {
       ...values,

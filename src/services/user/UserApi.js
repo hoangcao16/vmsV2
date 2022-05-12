@@ -82,6 +82,14 @@ const UserApi = {
       return {};
     }
   },
+  deleteRole: async (id) => {
+    try {
+      await MyService.deleteRequest(`/authz/api/v0/roles/${id}`);
+    } catch (error) {
+      console.log(error);
+      return {};
+    }
+  },
 };
 
 export default UserApi;

@@ -1,8 +1,8 @@
 import MSCustomizeDrawer from '@/components/Drawer';
 import permissionCheck from '@/utils/PermissionCheck';
-import { EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
-import { Button, Space, Tooltip } from 'antd';
+import { Button, Popconfirm, Space, Tooltip } from 'antd';
 import { connect } from 'dva';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
@@ -79,15 +79,24 @@ function UserGroup({ dispatch, list, metadata }) {
             </Space>
             <Space>
               {permissionCheck('delete_user_group') && (
-                <Tooltip
-                  placement="top"
+                <Popconfirm
                   title={intl.formatMessage({
-                    id: 'pages.setting-user.list-user.delete',
+                    id: 'pages.setting-user.list-user.delete-confirm',
                   })}
-                  arrowPointAtCenter={true}
+                  onConfirm={() => handleDeleteUserGroup(record.uuid)}
+                  cancelText="Cancel"
+                  okText="Ok"
                 >
-                  {/* <DeleteOutlined onClick={() => handleDeleteUserGroup(record.uuid)} /> */}
-                </Tooltip>
+                  <Tooltip
+                    placement="top"
+                    title={intl.formatMessage({
+                      id: 'pages.setting-user.list-user.delete',
+                    })}
+                    arrowPointAtCenter={true}
+                  >
+                    <DeleteOutlined />
+                  </Tooltip>
+                </Popconfirm>
               )}
             </Space>
           </>

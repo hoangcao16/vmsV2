@@ -11,7 +11,7 @@ import {
 import { LightFilter } from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
-import { Button, Col, Form, Input, Row, Select, Space, Switch, Tooltip } from 'antd';
+import { Button, Col, Form, Input, Popconfirm, Row, Select, Space, Switch, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { useMemo, useState } from 'react';
 import UserGroup from './conponnents/user-group';
@@ -124,15 +124,24 @@ const UserList = ({ dispatch, list, metadata }) => {
             </Space>
             <Space>
               {permissionCheck('delete_user') && (
-                <Tooltip
-                  placement="top"
+                <Popconfirm
                   title={intl.formatMessage({
-                    id: 'pages.setting-user.list-user.delete',
+                    id: 'pages.setting-user.list-user.delete-confirm',
                   })}
-                  arrowPointAtCenter={true}
+                  onConfirm={() => handleDeleteUser(record.uuid)}
+                  cancelText="Cancel"
+                  okText="Ok"
                 >
-                  <DeleteOutlined onClick={() => handleDeleteUser(record.uuid)} />
-                </Tooltip>
+                  <Tooltip
+                    placement="top"
+                    title={intl.formatMessage({
+                      id: 'pages.setting-user.list-user.delete',
+                    })}
+                    arrowPointAtCenter={true}
+                  >
+                    <DeleteOutlined />
+                  </Tooltip>
+                </Popconfirm>
               )}
             </Space>
           </>
