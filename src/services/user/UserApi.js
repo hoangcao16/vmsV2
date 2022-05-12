@@ -1,4 +1,5 @@
 import MyService from '../RestApiClient';
+import { useIntl } from 'umi';
 
 const UserApi = {
   // User
@@ -42,6 +43,14 @@ const UserApi = {
     try {
       const { data } = await MyService.getRequest(`/authz/api/v0/groups`, params);
       return data;
+    } catch (error) {
+      console.log(error);
+      return {};
+    }
+  },
+  createUserGroup: async (params) => {
+    try {
+      await MyService.postRequest(`/authz/api/v0/groups`, params);
     } catch (error) {
       console.log(error);
       return {};

@@ -11,8 +11,7 @@ export default {
   'menu.dashboard.analysis': 'Analysis',
   'menu.dashboard.monitor': 'Monitor',
   'menu.dashboard.workplace': 'Workplace',
-  'menu.setting-test': 'Cấu hình',
-  'menu.setting-test.create-data': 'Danh sách người dùng',
+
   'menu.exception.403': '403',
   'menu.exception.404': '404',
   'menu.exception.500': '500',
@@ -52,4 +51,9 @@ export default {
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
   'menu.report': 'Báo cáo',
+
+  //user
+  'menu.setting-user': 'Cấu hình 1',
+  'menu.setting-user.list-user': 'Danh sách người dùng',
+  'menu.list-user': 'Danh sách người dùng',
 };

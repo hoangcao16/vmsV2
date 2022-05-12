@@ -816,4 +816,10 @@ export default {
   'AI.zac_human': 'Vượt rào ảo và xâm nhập (Phát hiện người)',
   'AI.zac_vehicle': 'Vượt rào ảo và xâm nhập (Phát hiện phương tiện)',
   'AI.attendance': 'Điểm danh',
+
+
+  
+  //Ver2================================================================================================================================
+
+  
 };

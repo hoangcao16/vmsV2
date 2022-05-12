@@ -3,8 +3,10 @@ import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
+import { useIntl } from 'umi';
 const { Option } = Select;
 function AddUserContent({ dispatch, onClose }) {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const handleSubmit = () => {
     const value = form.getFieldsValue(true);
@@ -29,7 +31,9 @@ function AddUserContent({ dispatch, onClose }) {
         <Row gutter={16}>
           <Col span={24}>
             <MSFormItem
-              label="Tên"
+              label={intl.formatMessage({
+                id: 'pages.setting-user.list-user.name',
+              })}
               type="input"
               name="name"
               minLength={5}
@@ -40,37 +44,62 @@ function AddUserContent({ dispatch, onClose }) {
             </MSFormItem>
           </Col>
           <Col span={24}>
-            <MSFormItem label="Giới tính" type="select" name="sex" required={true}>
+            <MSFormItem
+              label={intl.formatMessage({
+                id: 'pages.setting-user.list-user.sex',
+              })}
+              type="select"
+              name="sex"
+              required={true}
+            >
               <Select placeholder="Chọn giới tính">
-                <Option value={0}>Nam</Option>
-                <Option value={1}>Nữ</Option>
+                <Option value={0}>
+                  {intl.formatMessage({
+                    id: 'pages.setting-user.list-user.male',
+                  })}
+                </Option>
+                <Option value={1}>
+                  {intl.formatMessage({
+                    id: 'pages.setting-user.list-user.female',
+                  })}
+                </Option>
               </Select>
             </MSFormItem>
           </Col>
           <Col span={24}>
             <Form.Item
               name="date_of_birth"
-              label="Ngày sinh"
-              rules={[{ required: true, message: 'Trường này bắt buộc' }]}
+              label={intl.formatMessage({
+                id: 'pages.setting-user.list-user.date_of_birth',
+              })}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({
+                    id: 'pages.setting-user.list-user.require',
+                  }),
+                },
+              ]}
             >
-              <DatePicker
-                placeholder="Ngày/Tháng/Năm"
-                inputReadOnly={true}
-                format="DD/MM/YYYY"
-                width="100%"
-              />
+              <DatePicker inputReadOnly={true} format="DD/MM/YYYY" width="100%" />
             </Form.Item>
           </Col>
           <Col span={24}>
             <Form.Item
               name={['phone']}
-              label="Số điện thoại"
+              label={intl.formatMessage({
+                id: 'pages.setting-user.list-user.phone',
+              })}
               rules={[
                 ({ getFieldValue }) => ({
                   validator(rule, value) {
                     const valiValue = getFieldValue(['phone']);
                     if (!valiValue.length) {
-                      return Promise.reject('Trường này bắt buộc');
+                      return Promise.reject(
+                        intl.formatMessage({
+                          id: 'pages.setting-user.list-user.require',
+                        }),
+                      );
                     }
 
                     if (!valiValue.startsWith('0')) {
@@ -90,7 +119,11 @@ function AddUserContent({ dispatch, onClose }) {
                     return Promise.resolve();
                   },
                 }),
-                { required: 'Trường này bắt buộc' },
+                {
+                  required: intl.formatMessage({
+                    id: 'pages.setting-user.list-user.require',
+                  }),
+                },
               ]}
             >
               <Input type="number" autoComplete="new-password" />
@@ -110,7 +143,9 @@ function AddUserContent({ dispatch, onClose }) {
           </Col>
           <Col span={24}>
             <MSFormItem
-              label="Mật khẩu"
+              label={intl.formatMessage({
+                id: 'pages.setting-user.list-user.password',
+              })}
               type="input"
               name="password"
               minLength={8}
@@ -135,7 +170,9 @@ function AddUserContent({ dispatch, onClose }) {
         }}
       >
         <Button htmlType="submit" onClick={handleSubmit} type="primary">
-          Thêm
+          {intl.formatMessage({
+                    id: 'pages.setting-user.list-user.add',
+                  })}
         </Button>
       </div>
     </>
