@@ -14,9 +14,9 @@ import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Row, Select, Space, Switch, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { useMemo, useState } from 'react';
-import AddUserContent from './conponnents/AddUserContent';
 import UserGroup from './conponnents/user-group';
 import UserRole from './conponnents/roles';
+import AddUser from './conponnents/AddUser';
 import styles from './styles.less';
 const { Option } = Select;
 const { Search } = Input;
@@ -268,7 +268,7 @@ const UserList = ({ dispatch, list, metadata }) => {
           })}
           placement="right"
         >
-          <AddUserContent onClose={onClose} />
+          <AddUser onClose={onClose} />
         </MSCustomizeDrawer>
       )}
     </PageContainer>

@@ -20,7 +20,7 @@ export default [
         component: './user/register',
       },
       {
-        component: '404',
+        component: './exception/404',
       },
     ],
   },
@@ -29,10 +29,6 @@ export default [
     icon: 'table',
     name: 'list',
     routes: [
-      // {
-      //   path: '/list',
-      //   redirect: '/list/table-list',
-      // },
       {
         name: 'Danh sách camera',
         icon: 'table',
@@ -108,6 +104,6 @@ export default [
     redirect: '/report',
   },
   {
-    component: '404',
+    component: './exception/404',
   },
 ];

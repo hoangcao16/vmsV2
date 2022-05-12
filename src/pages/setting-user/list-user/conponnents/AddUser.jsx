@@ -5,16 +5,15 @@ import { connect } from 'dva';
 import moment from 'moment';
 import { useIntl } from 'umi';
 const { Option } = Select;
-function AddUserContent({ dispatch, onClose }) {
+function AddUser({ dispatch, onClose }) {
   const intl = useIntl();
   const [form] = Form.useForm();
-  const handleSubmit = () => {
-    const value = form.getFieldsValue(true);
 
+  const handleSubmit = (values) => {
     const payload = {
-      ...value,
-      phone: value?.phone,
-      date_of_birth: moment(value?.date_of_birth).format('DD-MM-YYYY'),
+      ...values,
+      phone: values?.phone,
+      date_of_birth: moment(values?.date_of_birth).format('DD-MM-YYYY'),
     };
 
     dispatch({
@@ -22,7 +21,6 @@ function AddUserContent({ dispatch, onClose }) {
       payload: payload,
     });
 
-    //đóng drawer
     onClose();
   };
   return (
@@ -171,8 +169,8 @@ function AddUserContent({ dispatch, onClose }) {
       >
         <Button htmlType="submit" onClick={handleSubmit} type="primary">
           {intl.formatMessage({
-                    id: 'pages.setting-user.list-user.add',
-                  })}
+            id: 'pages.setting-user.list-user.add',
+          })}
         </Button>
       </div>
     </>
@@ -185,4 +183,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(AddUserContent);
+export default connect(mapStateToProps)(AddUser);

@@ -14,3 +14,8 @@ export default function permissionCheck(permission_name) {
 
   return permissionUser?.p_others.includes(permission_name);
 }
+
+export const Permission = ({ permissionName, children }) => {
+  if (permissionCheck(permissionName)) return children;
+  return null;
+};
