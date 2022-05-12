@@ -1,65 +1,29 @@
-import { GridContent, PageContainer } from '@ant-design/pro-layout';
-import { Menu } from 'antd';
-import { useState } from 'react';
+import { Tabs } from 'antd';
 import TableCamproxy from './components/camproxy/TableCamproxy';
 import TableNVR from './components/nvr/TableNVR';
 import TablePlayback from './components/playback/TablePlayback';
 import TableZone from './components/zone/TableZone';
-import styles from './style.less';
 
-const { Item } = Menu;
+const { TabPane } = Tabs;
 
 const ModuleList = () => {
-  const menuModule = {
-    nvr: 'NVR',
-    playback: 'Playback',
-    zone: 'Zone',
-    camproxy: 'Camproxy',
-  };
-
-  const [selectModule, setSelectModule] = useState('nvr');
-  const renderModule = () => {
-    switch (selectModule) {
-      case 'nvr':
-        return <TableNVR />;
-
-      case 'playback':
-        return <TablePlayback />;
-
-      case 'zone':
-        return <TableZone />;
-
-      case 'camproxy':
-        return <TableCamproxy />;
-
-      default:
-        return null;
-    }
-  };
-
-  const getMenu = () => {
-    return Object.keys(menuModule).map((item) => <Item key={item}>{menuModule[item]}</Item>);
-  };
-
   return (
-    <PageContainer>
-      <GridContent>
-        <div className={styles.main}>
-          <div className={styles.leftMenu}>
-            <Menu
-              mode="inline"
-              selectedKeys={selectModule}
-              onClick={({ key }) => {
-                setSelectModule(key);
-              }}
-            >
-              {getMenu()}
-            </Menu>
-          </div>
-          <div className={styles.right}>{renderModule()}</div>
-        </div>
-      </GridContent>
-    </PageContainer>
+    <>
+      <Tabs defaultActiveKey="1">
+        <TabPane tab="Danh sách NVR" key="nvr">
+          <TableNVR />
+        </TabPane>
+        <TabPane tab="Danh sách Playback" key="playback">
+          <TablePlayback />
+        </TabPane>
+        <TabPane tab="Danh sách Zone" key="zone">
+          <TableZone />
+        </TabPane>
+        <TabPane tab="Danh sách Camproxy" key="camproxy">
+          <TableCamproxy />
+        </TabPane>
+      </Tabs>
+    </>
   );
 };
 

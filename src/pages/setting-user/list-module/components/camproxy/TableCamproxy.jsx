@@ -1,5 +1,5 @@
 import MSCustomizeDrawer from '@/components/Drawer';
-import MSForm from '@/components/Form';
+import MSFormItem from '@/components/Form/Item';
 import { EditOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
@@ -113,10 +113,10 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
           }
         >
           <div>
-            <MSForm layout="vertical" form={form} onFinish={handleSubmit}>
+            <Form layout="vertical" form={form} onFinish={handleSubmit}>
               <Row gutter={16}>
                 <Col span={24}>
-                  <MSForm.Item
+                  <MSFormItem
                     label="Username"
                     type="input"
                     name="name"
@@ -125,10 +125,10 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
                     required={true}
                   >
                     <Input />
-                  </MSForm.Item>
+                  </MSFormItem>
                 </Col>
               </Row>
-            </MSForm>
+            </Form>
             <div
               style={{
                 position: 'absolute',
