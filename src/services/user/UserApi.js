@@ -56,6 +56,14 @@ const UserApi = {
       return {};
     }
   },
+  updateUserGroup: async (id, values) => {
+    try {
+      await MyService.putRequest(`/authz/api/v0/groups/${id}`, values);
+    } catch (error) {
+      console.log(error);
+      return {};
+    }
+  },
   // UserRole
   getAllUserRole: async (params) => {
     try {

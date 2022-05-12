@@ -6,9 +6,11 @@ import { Button, Space, Tooltip } from 'antd';
 import { connect } from 'dva';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
-import AddUserGroup from './AddUserGroup';
+import AddUserGroup from './AddEditUserGroup';
 function UserGroup({ dispatch, list, metadata }) {
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [showDrawerAdd, setOpenDrawerAdd] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
 
   const intl = useIntl();
 
@@ -28,6 +30,15 @@ function UserGroup({ dispatch, list, metadata }) {
   };
   const onClose = () => {
     setOpenDrawer(false);
+  };
+
+  const showDrawerAddUserGroup = (record) => {
+    setOpenDrawerAdd(true);
+    setSelectedRecord(record);
+  };
+  const closeDrawerAddUserGroup = () => {
+    setOpenDrawerAdd(false);
+    setSelectedRecord(null);
   };
 
   const columns = [
@@ -62,7 +73,7 @@ function UserGroup({ dispatch, list, metadata }) {
                   })}
                   arrowPointAtCenter={true}
                 >
-                  <EditOutlined />
+                  <EditOutlined onClick={() => showDrawerAddUserGroup(record)} />
                 </Tooltip>
               )}
             </Space>
@@ -134,7 +145,17 @@ function UserGroup({ dispatch, list, metadata }) {
                 //     <Search placeholder="Tìm kiếm theo tên nhóm người dùng" />
                 //   </LightFilter>
                 // ),
-                actions: [<AddUserGroup key="add-user-group" />],
+                actions: [
+                  <Button
+                    key="add-user"
+                    type="primary"
+                    onClick={() => showDrawerAddUserGroup(null)}
+                  >
+                    {intl.formatMessage({
+                      id: 'pages.setting-user.list-user.add-group-user',
+                    })}
+                  </Button>,
+                ],
                 style: { width: '100%' },
               }}
               pagination={{
@@ -150,6 +171,13 @@ function UserGroup({ dispatch, list, metadata }) {
                 current: metadata?.page,
               }}
             />
+            {showDrawerAdd && (
+              <AddUserGroup
+                onClose={closeDrawerAddUserGroup}
+                openDrawer={showDrawerAdd}
+                selectedRecord={selectedRecord}
+              />
+            )}
           </>
         </MSCustomizeDrawer>
       )}

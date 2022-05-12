@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useIntl } from 'umi';
 export default function AddUserRole() {
   const intl = useIntl();
-  const [openDrawer1, setOpenDrawer] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
   const [form] = Form.useForm();
 
   const showDrawer = () => {
@@ -17,15 +17,15 @@ export default function AddUserRole() {
     <div>
       <Button type="primary" onClick={showDrawer}>
         {intl.formatMessage({
-        id: 'pages.setting-user.list-user.add-role',
-      })}
+          id: 'pages.setting-user.list-user.add-role',
+        })}
       </Button>
       <MSCustomizeDrawer
-        openDrawer={openDrawer1}
+        openDrawer={openDrawer}
         onClose={onClose}
         width={'50%'}
         zIndex={1002}
-        title=        {intl.formatMessage({
+        title={intl.formatMessage({
           id: 'pages.setting-user.list-user.add-role',
         })}
         placement="right"
