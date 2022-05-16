@@ -10,11 +10,19 @@ export default {
   'pages.login.password.required': 'Password là bắt buộc',
   'pages.login.rememberMe': 'Nhớ mật khẩu',
   'pages.login.forgotPassword': 'Quên mật khẩu?',
-  'pages.login.submit': 'Enviar',
-  'pages.report.featureInfo.totalCamera': 'Tổng số Camera',
-  'pages.report.featureInfo.cameraAI': 'Camera AI',
-  'pages.report.featureInfo.cameraIsWorking': 'Camera đang hoạt động',
-  'pages.report.featureInfo.cameraIsNotWorking': 'Camera không hoạt động',
+
+  //Report
+
+  'pages.report.cameraStatistics.totalCamera': 'Tổng số Camera',
+  'pages.report.cameraStatistics.cameraAI': 'Camera AI',
+  'pages.report.cameraStatistics.cameraIsWorking': 'Camera đang hoạt động',
+  'pages.report.cameraStatistics.cameraIsNotWorking': 'Camera không hoạt động',
+  'pages.report.chart.lineTitle': 'Thống kê diễn biến vi phạm giao thông',
+  'pages.report.chart.pieTitle': 'Thống kê loại vi phạm giao thông',
+  'pages.report.chart.day': 'Ngày',
+  'pages.report.chart.week': 'Tuần',
+  'pages.report.chart.month': 'Tháng',
+  'pages.report.chart.year': 'Năm',
 
   //User
 

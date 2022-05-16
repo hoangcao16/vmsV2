@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Pie } from '@ant-design/plots';
+import ChartHeader from './ChartHeader';
+import { Divider } from 'antd';
+import { useIntl } from 'umi';
 
 const PieChart = () => {
+  const intl = useIntl();
   const data = [
     {
       type: 'AAAAAAAAAAAAA AAAAAAAAAA AAAAAAAAAAAAAAAAAAAAAAA',
@@ -48,7 +52,18 @@ const PieChart = () => {
       },
     ],
   };
-  return <Pie {...config} />;
+  return (
+    <>
+      <ChartHeader
+        title={intl.formatMessage({
+          id: `pages.report.chart.pieTitle`,
+          defaultMessage: 'name',
+        })}
+      />
+      <Divider />
+      <Pie {...config} />
+    </>
+  );
 };
 
 export default PieChart;

@@ -9,7 +9,7 @@ export default function CameraStatisticsItem(props) {
     <Card className={`card ${props?.color}`}>
       <div className="card--title">
         {intl.formatMessage({
-          id: `pages.report.featureInfo.${props.cameraName}`,
+          id: `pages.report.cameraStatistics.${props.cameraName}`,
           defaultMessage: 'name',
         })}
       </div>
