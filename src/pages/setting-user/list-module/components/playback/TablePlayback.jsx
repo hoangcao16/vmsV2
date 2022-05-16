@@ -4,7 +4,7 @@ import { EditOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import EditPlayback from './EditPlayback';
 
@@ -12,6 +12,18 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedPlaybackEdit, setSelectedPlaybackEdit] = useState(null);
+
+  useEffect(() => {
+    dispatch({
+      type: 'playback/fetchAllPlayback',
+      payload: {
+        filter: '',
+        page: metadata?.page,
+        size: metadata?.size,
+        name: metadata?.name,
+      },
+    });
+  }, []);
 
   const showDrawer = () => {
     setOpenDrawer(true);

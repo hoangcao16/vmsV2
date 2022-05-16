@@ -9,12 +9,11 @@ const EditPlayback = ({ selectedPlaybackEdit, onClose, dispatch }) => {
   const intl = useIntl();
   const [form] = Form.useForm();
   const handleSubmit = (value) => {
-    const isEdit = dispatch({
+    dispatch({
       type: 'playback/editPlayback',
       playbackId: selectedPlaybackEdit.uuid,
       payload: value,
     });
-    console.log('isEdit: ', isEdit);
     onClose();
   };
 

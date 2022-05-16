@@ -4,7 +4,7 @@ import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined } from '
 import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import AddZone from './AddZone';
 import DetailZone from './DetailZone';
@@ -17,6 +17,18 @@ const TableZone = ({ dispatch, list, metadata }) => {
   const [openDrawerEdit, setOpenDrawerEdit] = useState(false);
 
   const [selectedZoneDetail, setSelectedZoneDetail] = useState(null);
+
+  useEffect(() => {
+    dispatch({
+      type: 'zone/fetchAllZone',
+      payload: {
+        filter: '',
+        page: metadata?.page,
+        size: metadata?.size,
+        name: metadata?.name,
+      },
+    });
+  }, []);
 
   const onCloseDetails = () => {
     setOpenDrawerDetail(false);
