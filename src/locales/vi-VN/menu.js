@@ -61,6 +61,9 @@ export default {
   'menu.setting-user.list-modules': 'Modules hệ thống',
   'menu.list-modules': 'Modules hệ thống',
 
+  // Storage
+  'menu.storage': 'Lưu trữ',
+
   //Live
   'menu.live': 'Giám sát',
 };

@@ -106,6 +106,12 @@ export default [
     ],
   },
   {
+    path: '/storage',
+    name: 'storage',
+    icon: 'setting',
+    component: './storage',
+  },
+  {
     path: '/',
     redirect: '/report',
   },

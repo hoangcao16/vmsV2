@@ -58,4 +58,8 @@ export default {
   'pages.setting-user.list-user.titleSuccess': 'Thành công',
   'pages..setting-user.list-user.titleErrors': 'Thất bại',
   'pages.setting-user.list-user.600': 'okok',
+
+  //Storage
+  'pages.storage.dailyArchive.total': 'Tổng',
+  'pages.storage.dailyArchive.camera': 'camera',
 };
