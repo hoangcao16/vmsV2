@@ -12,7 +12,6 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
   const [form] = Form.useForm();
 
   const handleSubmit = (values) => {
-
     const payload = {
       ...values,
     };
@@ -87,29 +86,28 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
             </Col>
           </Row>
           <div
-          style={{
-            position: 'absolute',
-            right: 0,
-            bottom: 0,
-            width: '100%',
-            borderTop: '1px solid #e9e9e9',
-            padding: '10px 16px',
-            background: '#fff',
-            textAlign: 'right',
-          }}
-        >
-          <Button htmlType="submit" type="primary">
-            {isEmpty(selectedRecord)
-              ? intl.formatMessage({
-                  id: 'pages.setting-user.list-user.add',
-                })
-              : intl.formatMessage({
-                  id: 'pages.setting-user.list-user.edit',
-                })}
-          </Button>
-        </div>
+            style={{
+              position: 'absolute',
+              right: 0,
+              bottom: 0,
+              width: '100%',
+              borderTop: '1px solid #e9e9e9',
+              padding: '10px 16px',
+              background: '#fff',
+              textAlign: 'right',
+            }}
+          >
+            <Button htmlType="submit" type="primary">
+              {isEmpty(selectedRecord)
+                ? intl.formatMessage({
+                    id: 'pages.setting-user.list-user.add',
+                  })
+                : intl.formatMessage({
+                    id: 'pages.setting-user.list-user.edit',
+                  })}
+            </Button>
+          </div>
         </Form>
-
       </MSCustomizeDrawer>
     </div>
   );
