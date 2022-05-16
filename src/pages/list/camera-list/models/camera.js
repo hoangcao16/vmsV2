@@ -27,17 +27,4 @@ export default {
       });
     },
   },
-  subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen(({ pathname, query }) => {
-        const metadata = {
-          page: query.page || 1,
-          size: query.size || 10,
-        };
-        if (pathname === '/list/camera-list') {
-          dispatch({ type: 'fetchAllCamera', payload: metadata });
-        }
-      });
-    },
-  },
 };
