@@ -12,6 +12,15 @@ export default {
   R: 'Vai trò',
   r: 'vai trò',
   VMS: 'HỆ THỐNG VMS',
+  //menu
+  'menu.home': 'Trang chủ',
+  'menu.map': 'Bản đồ',
+  'menu.live_mode': 'Giám sát',
+  'menu.storage': 'Lưu trữ',
+  'menu.category': 'Danh mục',
+  'menu.category.camera': 'Thiết bị Camera',
+  'menu.setting': 'Cài đặt',
+  'menu.report': 'Báo cáo',
   //components
   'components.bookmark.favorite_screen_list': 'Danh sách màn hình ưa thích',
   'components.bookmark.enter_screen_name': 'Nhập tên màn hình',
@@ -823,6 +832,9 @@ export default {
     'Vui lòng chọn lại khoảng thời gian. Thời gian chọn không vượt quá {number} {type}',
   'noti.not_exeed_5': 'Số lượng {ele} không được vượt quá 5',
   'noti.event_greater_than_1': 'Số lượng sự kiện phải lớn hơn 1',
+  'noti.please_select_lnglat_camera': 'Vui lòng chọn vị trí camera',
+  'noti.error_code': 'Lỗi {code}',
+  'noti.upload_failed': 'Tải tệp không thành công',
   //breadcrumd
   'breadcrumd.report': 'Quản lý báo cáo',
   'breadcrumd.info': 'Thông tin cá nhân',

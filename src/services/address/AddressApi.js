@@ -6,7 +6,6 @@ const AddressApi = {
       url: '/cctv-controller-svc/api/v1/provinces',
     });
   },
-
   getDistrictByProvinceId(provinceId) {
     return request.request({
       method: 'GET',

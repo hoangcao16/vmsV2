@@ -12,6 +12,15 @@ export default {
   R: 'Role',
   r: 'role',
   VMS: 'VMS SYSTEM',
+  //menu
+  'menu.home': 'Home',
+  'menu.map': 'Map',
+  'menu.live_mode': 'Monitoring',
+  'menu.storage': 'Storage',
+  'menu.category': 'Category',
+  'menu.category.camera': 'Camera Equipment',
+  'menu.setting': 'Setting',
+  'menu.report': 'Report',
   // Components bookmark
   'components.bookmark.favorite_screen_list': 'Favorite Screen List',
   'components.bookmark.enter_screen_name': 'Please enter Screen Name',
@@ -822,6 +831,9 @@ export default {
     "Please check date range again. The time picker can't pass {number} {type}",
   'noti.not_exeed_5': 'The number of {ele} must not exceed 5',
   'noti.event_greater_than_1': 'Number of events must be greater than 1',
+  'noti.please_select_lnglat_camera': 'Please select the location camera',
+  'noti.error_code': 'Error {code}',
+  'noti.upload_failed': 'Upload file failed',
   // breadcrumd
   'breadcrumd.report': 'Report Management',
   'breadcrumd.info': 'Information',

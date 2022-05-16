@@ -16,9 +16,13 @@ export const StyledSpace = styled(Space)`
   .ant-space-item {
     &:first-child {
       flex: 1;
+      margin-left: 11px;
     }
     &:last-child {
       margin-bottom: 24px;
     }
+  }
+  .ant-select.ant-select-in-form-item {
+    /* width: calc(100% - 12px); */
   }
 `;

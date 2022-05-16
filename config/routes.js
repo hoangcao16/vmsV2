@@ -31,17 +31,47 @@ export default [
     icon: 'video-camera',
   },
   {
-    path: '/list',
+    path: '/',
+    icon: 'home',
+    name: 'home',
+  },
+  {
+    path: '/map',
+    icon: 'environment',
+    name: 'map',
+  },
+  {
+    path: '/live_mode',
+    icon: 'videoCamera',
+    name: 'live_mode',
+  },
+  {
+    path: '/storage',
+    icon: 'save',
+    name: 'storage',
+  },
+  {
+    path: '/category',
     icon: 'table',
-    name: 'list',
+    name: 'category',
     routes: [
       {
-        name: 'Danh sách camera',
+        name: 'camera',
         icon: 'table',
-        path: '/list/camera-list',
-        component: './list/camera-list',
+        path: '/category/camera',
+        component: './category/camera',
       },
     ],
+  },
+  {
+    path: '/setting',
+    icon: 'setting',
+    name: 'setting',
+  },
+  {
+    path: '/report',
+    icon: 'notification',
+    name: 'report',
   },
   {
     name: 'exception',

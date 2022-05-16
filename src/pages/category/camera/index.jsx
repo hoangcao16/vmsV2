@@ -122,8 +122,8 @@ const CameraList = ({ dispatch, list, metadata }) => {
     dispatch({
       type: 'camera/fetchAllCamera',
       payload: {
-        page: metadata.page,
-        size: metadata.size,
+        page: metadata?.page,
+        size: metadata?.size,
       },
     });
   }, []);
@@ -149,13 +149,11 @@ const CameraList = ({ dispatch, list, metadata }) => {
         toolbar={{
           multipleLine: true,
           filter: (
-            <>
-              <Search
-                placeholder={intl.formatMessage({
-                  id: 'view.camera.find_camera',
-                })}
-              />
-            </>
+            <Search
+              placeholder={intl.formatMessage({
+                id: 'view.camera.find_camera',
+              })}
+            />
           ),
           actions: [
             <Button
