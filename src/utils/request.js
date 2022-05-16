@@ -23,7 +23,7 @@ request.interceptors.request.use(
 
 request.interceptors.response.use(
   function (response) {
-    return response;
+    return response.data;
   },
   async function (error) {
     const originalRequest = error.config;
