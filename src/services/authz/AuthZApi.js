@@ -12,6 +12,8 @@ const AuthZApi = {
       return data;
     } catch (error) {
       console.log(error);
+      history.push(loginPath);
+      localStorage.clear();
       return {};
     }
   },
@@ -23,6 +25,8 @@ const AuthZApi = {
       return data;
     } catch (error) {
       console.log(error);
+      history.push(loginPath);
+      localStorage.clear();
       return {};
     }
   },
@@ -31,8 +35,11 @@ const AuthZApi = {
     try {
       await request.post(`/authz/logout`);
       history.push(loginPath);
+      localStorage.clear();
     } catch (error) {
       console.log(error);
+      history.push(loginPath);
+      localStorage.clear();
       return {};
     }
   },
@@ -45,6 +52,9 @@ const AuthZApi = {
       return data;
     } catch (error) {
       console.log(error);
+
+      history.push(loginPath);
+      localStorage.clear();
       return {};
     }
   },
