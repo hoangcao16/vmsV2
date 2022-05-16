@@ -1,4 +1,7 @@
+import { appIntl } from '@/components/IntlGlobalProvider';
+import { notify } from '@/components/Notify';
 import UserApi from '@/services/user/UserApi';
+import { notification } from 'antd';
 
 export default {
   namespace: 'user',
@@ -26,6 +29,8 @@ export default {
             metadata: response?.metadata,
           },
         });
+
+        // notify('success', 'noti.successfully| (key or message)', 'noti.successfully | (key or message)');
       } catch (error) {
         console.log(error);
       }

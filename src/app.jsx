@@ -2,30 +2,29 @@ import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import { PageLoading, SettingDrawer } from '@ant-design/pro-layout';
 import { history } from 'umi';
+
 import defaultSettings from '../config/defaultSettings';
+import { IntlGlobalProvider } from './components/IntlGlobalProvider';
 import AuthZApi from './services/authz/AuthZApi';
+
 const loginPath = '/user/login';
-/** 获取用户信息比较慢的时候会展示一个 loading */
 
 export const initialStateConfig = {
   loading: <PageLoading />,
 };
-/**
- * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
- * */
 
 export async function getInitialState() {
   const fetchUserInfo = async () => {
     try {
-      const msg = await AuthZApi.getPermissionForCurrentUser();
+      const currentUser = await AuthZApi.getPermissionForCurrentUser();
 
-      return msg;
+      return currentUser;
     } catch (error) {
       history.push(loginPath);
     }
 
     return undefined;
-  }; // 如果不是登录页面，执行
+  };
 
   if (history.location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
@@ -40,18 +39,18 @@ export async function getInitialState() {
     fetchUserInfo,
     settings: defaultSettings,
   };
-} // ProLayout 支持的api https://procomponents.ant.design/components/layout
+}
 
 export const layout = ({ initialState, setInitialState }) => {
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
-      content: initialState?.currentUser?.name || 'thuong',
+      content: initialState?.currentUser?.name || 'VMS',
     },
     footerRender: () => <Footer />,
     onPageChange: () => {
-      const { location } = history; // 如果没有登录，重定向到 login
+      const { location } = history;
 
       if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.push(loginPath);
@@ -61,9 +60,8 @@ export const layout = ({ initialState, setInitialState }) => {
     menuHeaderRender: undefined,
 
     childrenRender: (children, props) => {
-      // if (initialState?.loading) return <PageLoading />;
       return (
-        <>
+        <IntlGlobalProvider>
           {children}
           {!props.location?.pathname?.includes('/login') && (
             <SettingDrawer
@@ -75,7 +73,7 @@ export const layout = ({ initialState, setInitialState }) => {
               }}
             />
           )}
-        </>
+        </IntlGlobalProvider>
       );
     },
     ...initialState?.settings,
