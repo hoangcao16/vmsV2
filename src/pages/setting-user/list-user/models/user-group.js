@@ -1,3 +1,4 @@
+import { Notification } from '@/components/Notify';
 import UserApi from '@/services/user/UserApi';
 
 export default {
@@ -17,47 +18,67 @@ export default {
   },
   effects: {
     *fetchAllUserGroup({ payload }, { call, put }) {
-      const response = yield call(UserApi.getAllUserGroup, payload);
-      yield put({
-        type: 'save',
-        payload: {
-          data: response?.payload,
-          metadata: response?.metadata,
-        },
-      });
+      try {
+        const response = yield call(UserApi.getAllUserGroup, payload);
+        yield put({
+          type: 'save',
+          payload: {
+            data: response?.payload,
+            metadata: response?.metadata,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     *patch({ payload: { id, values } }, { call, put, select }) {
-      yield call(UserApi.updateUserGroup, id, values);
-      const oldList = yield select((state) => state.userGroup.list);
-      const metadata = yield select((state) => state.userGroup.metadata);
+      try {
+        const res = yield call(UserApi.updateUserGroup, id, values);
+        //check res==>push notif
+        const oldList = yield select((state) => state.userGroup.list);
+        const metadata = yield select((state) => state.userGroup.metadata);
 
-      const userGroupIndex = oldList.findIndex((userG) => userG.uuid === id);
+        const userGroupIndex = oldList.findIndex((userG) => userG.uuid === id);
 
-      if (userGroupIndex >= 0) {
-        oldList[userGroupIndex] = { ...oldList[userGroupIndex], ...values };
+        if (userGroupIndex >= 0) {
+          oldList[userGroupIndex] = { ...oldList[userGroupIndex], ...values };
+        }
+
+        const newList = [...oldList];
+
+        yield put({
+          type: 'save',
+          payload: {
+            data: newList,
+            metadata: metadata,
+          },
+        });
+
+        // Notification('success', 'titleSuccess', '600');
+      } catch (error) {
+        console.log(error);
       }
-
-      const newList = [...oldList];
-
-      yield put({
-        type: 'save',
-        payload: {
-          data: newList,
-          metadata: metadata,
-        },
-      });
-      // yield put({ type: 'reload' });
     },
 
     *remove({ payload: id }, { call, put }) {
-      yield call(UserApi.deleteUserGroup, id);
-      yield put({ type: 'reload' });
+      try {
+        const res = yield call(UserApi.deleteUserGroup, id);
+        //check res==>push notif
+        yield put({ type: 'reload' });
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     *create({ payload: values }, { call, put }) {
-      yield call(UserApi.createUserGroup, values);
-      yield put({ type: 'reload' });
+      try {
+        const res = yield call(UserApi.createUserGroup, values);
+        //check res==>push notif
+        yield put({ type: 'reload' });
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     *reload(action, { put, select }) {

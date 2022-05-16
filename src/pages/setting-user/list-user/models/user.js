@@ -17,65 +17,71 @@ export default {
   },
   effects: {
     *fetchAllUser({ payload }, { call, put }) {
-      const response = yield call(UserApi.getAllUser, payload);
-      yield put({
-        type: 'save',
-        payload: {
-          data: response?.payload,
-          metadata: response?.metadata,
-        },
-      });
+      try {
+        const response = yield call(UserApi.getAllUser, payload);
+        yield put({
+          type: 'save',
+          payload: {
+            data: response?.payload,
+            metadata: response?.metadata,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     *patch({ payload: { id, values } }, { call, put, select }) {
-      yield call(UserApi.updateUser, id, values);
-      const oldList = yield select((state) => state.user.list);
-      const metadata = yield select((state) => state.user.metadata);
+      try {
+        const res = yield call(UserApi.updateUser, id, values);
+        //check res==>push notif
+        const oldList = yield select((state) => state.user.list);
+        const metadata = yield select((state) => state.user.metadata);
 
-      const userIndex = oldList.findIndex((user) => user.uuid === id);
+        const userIndex = oldList.findIndex((user) => user.uuid === id);
 
-      if (userIndex >= 0) {
-        oldList[userIndex] = { ...oldList[userIndex], ...values };
+        if (userIndex >= 0) {
+          oldList[userIndex] = { ...oldList[userIndex], ...values };
+        }
+
+        const newList = [...oldList];
+
+        yield put({
+          type: 'save',
+          payload: {
+            data: newList,
+            metadata: metadata,
+          },
+        });
+        // yield put({ type: 'reload' });
+      } catch (error) {
+        console.log(error);
       }
-
-      const newList = [...oldList];
-
-      yield put({
-        type: 'save',
-        payload: {
-          data: newList,
-          metadata: metadata,
-        },
-      });
-      // yield put({ type: 'reload' });
     },
 
     *remove({ payload: id }, { call, put }) {
-      yield call(UserApi.deleteUser, id);
-      yield put({ type: 'reload' });
+      try {
+        const res = yield call(UserApi.deleteUser, id);
+        //check res==>push notif
+        yield put({ type: 'reload' });
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     *create({ payload: values }, { call, put }) {
-      yield call(UserApi.createUser, values);
-      yield put({ type: 'reload' });
+      try {
+        const res = yield call(UserApi.createUser, values);
+        //check res==>push notif
+        yield put({ type: 'reload' });
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     *reload(action, { put, select }) {
       const page = yield select((state) => state.user.page);
       yield put({ type: 'fetchAllUser', payload: { page } });
-    },
-  },
-  subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen(({ pathname, query }) => {
-        const metadata = {
-          page: query.page || 1,
-          size: query.size || 10,
-        };
-        if (pathname === '/setting-user/list-user') {
-          dispatch({ type: 'fetchAllUser', payload: metadata });
-        }
-      });
     },
   },
 };
