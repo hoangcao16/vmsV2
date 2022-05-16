@@ -13,6 +13,21 @@ const CameraApi = {
       return {};
     }
   },
+  getAllCameraTypes(data) {
+    return request.request({
+      method: 'GET',
+      url: `/cctv-controller-svc/api/v1/camera_types?name=${data?.name}${
+        data?.size ? `&size=${data?.size}` : ''
+      }`,
+    });
+  },
+  getAllGroupCamera(data) {
+    return request.request({
+      method: 'GET',
+      url: `/cctv-controller-svc/api/v1/camera_groups`,
+      data,
+    });
+  },
 };
 
 export default CameraApi;

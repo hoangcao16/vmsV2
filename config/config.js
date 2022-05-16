@@ -18,21 +18,18 @@ export default defineConfig({
     siderWidth: 208,
     ...defaultSettings,
   },
-
   locale: {
     // default vi-VN
     default: 'vi-VN',
     antd: true,
     baseNavigator: true,
   },
-
   dynamicImport: {
     loading: '@ant-design/pro-layout/es/PageLoading',
   },
   targets: {
     ie: 11,
   },
-
   routes: routes,
   access: {},
 
@@ -64,7 +61,10 @@ export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
   },
-  mfsu: {},
+  // mfsu: {},
   webpack5: {},
   exportStatic: {},
+  define: {
+    ...process.env,
+  },
 });
