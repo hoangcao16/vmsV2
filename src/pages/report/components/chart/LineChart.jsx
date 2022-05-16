@@ -49,7 +49,6 @@ const LineChart = (props) => {
 
 function mapStateToProps(state) {
   const { chart } = state;
-  console.log('chart', chart);
   return { data: chart?.list?.events };
 }
 

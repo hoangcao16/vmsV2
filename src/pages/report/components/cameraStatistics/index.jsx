@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row, Tooltip } from 'antd';
 import cameraApi from '@/services/camera/CameraApi';
 import CameraStatisticsItem from './CameraStatisticsItem';
+import { isEmpty } from 'lodash';
 
 const topColResponsiveProps = {
   xs: 24,
@@ -19,20 +20,20 @@ const CameraStatistics = () => {
 
   useEffect(() => {
     cameraApi.getReportCamera().then((result) => {
-      const convertData =
-        result &&
-        result.map((r) => {
+      if (!isEmpty(result)) {
+        const convertData = result.map((r) => {
           return {
             ...r,
             color: getColor(r),
           };
         });
-      const sortData = [];
-      sortData[0] = convertData.find((i) => i.cameraName == 'totalCamera');
-      sortData[1] = convertData.find((i) => i.cameraName == 'cameraAI');
-      sortData[2] = convertData.find((i) => i.cameraName == 'cameraIsWorking');
-      sortData[3] = convertData.find((i) => i.cameraName == 'cameraIsNotWorking');
-      setCamera(sortData);
+        const sortData = [];
+        sortData[0] = convertData.find((i) => i.cameraName == 'totalCamera');
+        sortData[1] = convertData.find((i) => i.cameraName == 'cameraAI');
+        sortData[2] = convertData.find((i) => i.cameraName == 'cameraIsWorking');
+        sortData[3] = convertData.find((i) => i.cameraName == 'cameraIsNotWorking');
+        setCamera(sortData);
+      }
     });
   }, []);
 
