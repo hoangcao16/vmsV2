@@ -13,7 +13,7 @@ import {
 } from '@ant-design/icons';
 import MapAddCamera from '../map';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
-import { NotificationError } from '@/components/Notif/NotifCustomize';
+import { NotificationError } from '@/components/Notify';
 import AddressApi from '@/services/address/AddressApi';
 import CameraApi from '@/services/camera/CameraApi';
 import ZoneApi from '@/services/zone/ZoneApi';
@@ -165,6 +165,7 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
     // },
   };
   const handleSubmit = () => {};
+  const handleSearchMap = (value) => {};
   return (
     <StyledDrawer
       openDrawer={openDrawer}
@@ -566,7 +567,7 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
                     label={intl.formatMessage({
                       id: 'view.map.map',
                     })}
-                    name={['cameraUrl']}
+                    name={['searchmap']}
                     rules={[
                       {
                         required: true,
@@ -589,15 +590,16 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
                       )}
                       onBlur={(e) => {
                         form.setFieldsValue({
-                          cameraUrl: e.target.value.trim(),
+                          searchmap: e.target.value.trim(),
                         });
                       }}
                       onPaste={(e) => {
                         e.preventDefault();
                         form.setFieldsValue({
-                          cameraUrl: e.clipboardData.getData('text').trim(),
+                          searchmap: e.clipboardData.getData('text').trim(),
                         });
                       }}
+                      onSearch={(value) => handleSearchMap(value)}
                       maxLength={2000}
                     />
                   </Form.Item>
