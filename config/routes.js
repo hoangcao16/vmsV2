@@ -7,7 +7,7 @@ export default [
         path: '/user/login',
         layout: false,
         name: 'login',
-        component: './user/Login',
+        component: './user/login',
       },
       {
         path: '/user',
@@ -23,6 +23,12 @@ export default [
         component: './exception/404',
       },
     ],
+  },
+
+  {
+    path: '/live',
+    name: 'live',
+    icon: 'video-camera',
   },
   {
     path: '/list',

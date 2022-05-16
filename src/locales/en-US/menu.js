@@ -60,4 +60,7 @@ export default {
   // Modules
   'menu.setting-user.list-modules': 'System Modules',
   'menu.list-modules': 'System Modules',
+
+  //Live
+  'menu.live': 'Live mode',
 };
