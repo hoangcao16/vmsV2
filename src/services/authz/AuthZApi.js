@@ -6,7 +6,7 @@ const loginPath = '/user/login';
 const AuthZApi = {
   login: async (payload) => {
     try {
-      const data = request.post(`/authz/login`, payload);
+      const data = await request.post(`/authz/login`, payload);
       localStorage.setItem(STORAGE.TOKEN, data.accessToken);
       localStorage.setItem(STORAGE.REFRESH_TOKEN, data.refreshToken);
       return data;
@@ -18,7 +18,7 @@ const AuthZApi = {
 
   getPermissionForCurrentUser: async () => {
     try {
-      const data = request.get(`/authz/api/v0/authorization/get_permission`);
+      const data = await request.get(`/authz/api/v0/authorization/get_permission`);
       localStorage.setItem(STORAGE.USER_PERMISSIONS, JSON.stringify(data.payload));
       return data;
     } catch (error) {
@@ -39,7 +39,7 @@ const AuthZApi = {
 
   refreshToken: async (oldToken) => {
     try {
-      const data = await request.post('/authz/refresh', oldToken);
+      const data = await await request.post('/authz/refresh', oldToken);
       localStorage.setItem(STORAGE.TOKEN, data.accessToken);
       localStorage.setItem(STORAGE.REFRESH_TOKEN, data.refreshToken);
       return data;
