@@ -27,6 +27,13 @@ const ModuleApi = {
       console.log(error);
     }
   },
+  editPlayback: async (playbackId, params) => {
+    try {
+      await MyService.putRequest(`/cctv-controller-svc/api/v1/playback/${playbackId}`, params);
+    } catch (error) {
+      console.log(error);
+    }
+  },
 
   getAllCamproxy: async (params) => {
     try {

@@ -25,6 +25,14 @@ export default {
         },
       });
     },
+    *editPlayback({ playbackId, payload }, { call, put }) {
+      yield call(ModuleApi.editPlayback, playbackId, payload);
+      yield put({ type: 'reload' });
+    },
+    *reload(action, { put, select }) {
+      const page = yield select((state) => state.playback.page);
+      yield put({ type: 'fetchAllPlayback', payload: { page } });
+    },
   },
   subscriptions: {
     setup({ dispatch, history }) {
