@@ -61,6 +61,9 @@ export default {
   'menu.setting-user.list-modules': 'System Modules',
   'menu.list-modules': 'System Modules',
 
+  // Storage
+  'menu.storage': 'Storage',
+
   //Live
   'menu.live': 'Live mode',
 };
