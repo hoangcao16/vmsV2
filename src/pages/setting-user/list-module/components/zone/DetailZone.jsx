@@ -108,7 +108,9 @@ const DetailZone = ({ onClose, selectedZoneDetail }) => {
         }}
       >
         <Button onClick={onClose} type="danger">
-          Đóng
+          {`${intl.formatMessage({
+            id: 'view.camera.close',
+          })}`}
         </Button>
       </div>
     </div>

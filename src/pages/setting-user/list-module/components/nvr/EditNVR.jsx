@@ -77,10 +77,14 @@ const EditNVR = ({ selectedNVREdit, onClose, dispatch }) => {
           }}
         >
           <Button onClick={onClose} type="danger">
-            Hủy
+            {`${intl.formatMessage({
+              id: 'view.user.detail_list.cancel',
+            })}`}
           </Button>
           <Button htmlType="submit" type="ghost">
-            Sửa
+            {`${intl.formatMessage({
+              id: 'view.user.detail_list.edit',
+            })}`}
           </Button>
         </div>
       </Form>

@@ -6,11 +6,16 @@ import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { useState } from 'react';
 import { useIntl } from 'umi';
+import AddZone from './AddZone';
 import DetailZone from './DetailZone';
+import EditZone from './EditZone';
 
 const TableZone = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
   const [openDrawerDetail, setOpenDrawerDetail] = useState(false);
+  const [openDrawerAdd, setOpenDrawerAdd] = useState(false);
+  const [openDrawerEdit, setOpenDrawerEdit] = useState(false);
+
   const [selectedZoneDetail, setSelectedZoneDetail] = useState(null);
 
   const onCloseDetails = () => {
@@ -56,7 +61,12 @@ const TableZone = ({ dispatch, list, metadata }) => {
       render: (text, record) => {
         return (
           <Space>
-            <Tooltip placement="top" title="Chi tiết">
+            <Tooltip
+              placement="top"
+              title={intl.formatMessage({
+                id: 'view.common_device.detail',
+              })}
+            >
               <InfoCircleOutlined
                 onClick={() => {
                   setOpenDrawerDetail(true);
@@ -65,10 +75,25 @@ const TableZone = ({ dispatch, list, metadata }) => {
                 style={{ fontSize: '16px', color: '#6E6B7B' }}
               />
             </Tooltip>
-            <Tooltip placement="top" title="Chỉnh sửa">
-              <EditOutlined style={{ fontSize: '16px', color: '#6E6B7B' }} />
+            <Tooltip
+              placement="top"
+              title={intl.formatMessage({
+                id: 'view.common_device.edit',
+              })}
+            >
+              <EditOutlined
+                onClick={() => {
+                  setOpenDrawerEdit(true);
+                }}
+                style={{ fontSize: '16px', color: '#6E6B7B' }}
+              />
             </Tooltip>
-            <Tooltip placement="top" title="Xóa">
+            <Tooltip
+              placement="top"
+              title={intl.formatMessage({
+                id: 'view.ai_events.delete',
+              })}
+            >
               <DeleteOutlined style={{ fontSize: '16px', color: '#6E6B7B' }} />
             </Tooltip>
           </Space>
@@ -99,11 +124,18 @@ const TableZone = ({ dispatch, list, metadata }) => {
               key="add"
               type="primary"
               onClick={() => {
-                alert('add');
+                setOpenDrawerAdd(true);
               }}
             >
               <PlusOutlined />
-              Thêm zone
+              {intl.formatMessage(
+                { id: 'view.common_device.add_zone' },
+                {
+                  add: intl.formatMessage({
+                    id: 'add',
+                  }),
+                },
+              )}
             </Button>,
           ],
         }}
@@ -128,6 +160,37 @@ const TableZone = ({ dispatch, list, metadata }) => {
           placement="right"
         >
           <DetailZone onClose={onCloseDetails} selectedZoneDetail={selectedZoneDetail} />
+        </MSCustomizeDrawer>
+      )}
+      {openDrawerAdd && (
+        <MSCustomizeDrawer
+          openDrawer={openDrawerAdd}
+          onClose={() => setOpenDrawerAdd(false)}
+          width={'30%'}
+          zIndex={1001}
+          title={intl.formatMessage(
+            { id: 'view.common_device.add_zone' },
+            {
+              add: intl.formatMessage({
+                id: 'add',
+              }),
+            },
+          )}
+          placement="right"
+        >
+          <AddZone onClose={() => setOpenDrawerAdd(false)} dispatch={dispatch} />
+        </MSCustomizeDrawer>
+      )}
+      {openDrawerEdit && (
+        <MSCustomizeDrawer
+          openDrawer={openDrawerEdit}
+          onClose={() => setOpenDrawerEdit(false)}
+          width={'30%'}
+          zIndex={1001}
+          title={intl.formatMessage({ id: 'view.common_device.edit_zone' })}
+          placement="right"
+        >
+          <EditZone />
         </MSCustomizeDrawer>
       )}
     </>

@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import MyService from '../RestApiClient';
 
 const ModuleApi = {
@@ -47,6 +48,14 @@ const ModuleApi = {
     try {
       const data = await MyService.getRequest('/cctv-controller-svc/api/v1/zones', params);
       return data;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  addZone: async (params) => {
+    try {
+      result = await MyService.postRequest('/cctv-controller-svc/api/v1/zones', params);
     } catch (error) {
       console.log(error);
     }
