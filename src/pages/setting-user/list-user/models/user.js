@@ -30,7 +30,13 @@ export default {
           },
         });
 
-        // notify('success', 'noti.successfully| (key or message)', 'noti.successfully | (key or message)');
+        // notify('success', 'noti.successfully', 'noti.successfully');
+        // notify('error', 'noti.ERROR', {
+        //   id: 'noti.max_characters',
+        //   params: {
+        //     max: 10,
+        //   },
+        // });
       } catch (error) {
         console.log(error);
       }
