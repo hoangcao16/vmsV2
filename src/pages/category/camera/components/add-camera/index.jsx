@@ -3,29 +3,26 @@ import { useState, useEffect } from 'react';
 import { StyledDrawer, StyledSpace } from './style';
 import { Space, Button, Card, Row, Col, Form, Input, Upload, Avatar, Select } from 'antd';
 import { useIntl } from 'umi';
-import {
-  UserOutlined,
-  LoadingOutlined,
-  PlusOutlined,
-  SaveOutlined,
-  CloseOutlined,
-  InboxOutlined,
-} from '@ant-design/icons';
+import { PlusOutlined, SaveOutlined, CloseOutlined, InboxOutlined } from '@ant-design/icons';
 import MapAddCamera from '../map';
+import { v4 as uuidV4 } from 'uuid';
+import clearData from '@/utils/CleanData';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
-import { NotificationError } from '@/components/Notify';
+import { notify } from '@/components/Notify';
 import AddressApi from '@/services/address/AddressApi';
 import CameraApi from '@/services/camera/CameraApi';
 import ZoneApi from '@/services/zone/ZoneApi';
 import AdDivisionApi from '@/services/advision/AdDivision';
 import VendorApi from '@/services/vendor/VendorApi';
 import TagApi from '@/services/tag/tagApi';
+import VietMapApi from '@/services/vietmapApi';
+import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
 const { Dragger } = Upload;
 const formItemLayout = {
   wrapperCol: { span: 24 },
-  labelCol: { span: 8 },
+  labelCol: { span: 5 },
 };
-const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
+const AddCamera = ({ openDrawer, setIsAddNewDrawer, dispatch }) => {
   const [form] = Form.useForm();
   const intl = useIntl();
   const [cameraTypesOptions, setCameraTypesOptions] = useState([]);
@@ -36,12 +33,16 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
   const [tagsOptions, setTagsOptions] = useState([]);
   const [avatarUrl, setAvatarUrl] = useState('');
   const [avatarFileName, setAvatarFileName] = useState('');
-  const [isLoading, setLoading] = useState(false);
   const [provinces, setProvinces] = useState([]);
   const [provinceId, setProvinceId] = useState(null);
   const [districts, setDistrict] = useState([]);
   const [districtId, setDistrictId] = useState(null);
   const [wards, setWard] = useState([]);
+  const [resultSearchMap, setResultSearchMap] = useState(null);
+  const [currentLat, setCurrentLat] = useState(null);
+  const [currentLng, setCurrentLng] = useState(null);
+  const vietmapApiKey = REACT_APP_VIETMAP_APIKEY;
+
   //get Data first mount
   useEffect(() => {
     const data = {
@@ -51,33 +52,33 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
       districtId: '',
     };
     AddressApi.getAllProvinces().then((res) => {
-      setProvinces(res?.data?.payload);
+      setProvinces(res?.payload);
     });
 
     CameraApi.getAllCameraTypes(data).then((res) => {
-      setCameraTypesOptions(res?.data?.payload);
+      setCameraTypesOptions(res?.payload);
     });
     CameraApi.getAllGroupCamera(data).then((res) => {
-      setGroupCameraOptions(res?.data?.payload);
+      setGroupCameraOptions(res?.payload);
     });
     ZoneApi.getAllZones(data).then((res) => {
-      setZonesOptions(res?.data?.payload);
+      setZonesOptions(res?.payload);
     });
     AdDivisionApi.getAllAdDivision(data).then((res) => {
-      setAdDivisionsOptions(res?.data?.payload);
+      setAdDivisionsOptions(res?.payload);
     });
     VendorApi.getAllVendor(data).then((res) => {
-      setVendorsOptions(res?.data?.payload);
+      setVendorsOptions(res?.payload);
     });
     TagApi.getAllTags(data).then((res) => {
-      setTagsOptions(res?.data?.payload);
+      setTagsOptions(res?.payload);
     });
   }, []);
   // get districts when select province
   useEffect(() => {
     if (provinceId) {
       AddressApi.getDistrictByProvinceId(provinceId).then((res) => {
-        setDistrict(res?.data?.payload);
+        setDistrict(res?.payload);
       });
       setDistrictId(null);
     }
@@ -85,7 +86,7 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
   useEffect(() => {
     if (districtId) {
       AddressApi.getWardByDistrictId(districtId).then((res) => {
-        setWard(res?.data?.payload);
+        setWard(res?.payload);
       });
     } else {
       setWard([]);
@@ -99,38 +100,29 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
     setDistrictId(districtId);
     form.setFieldsValue({ wardId: null });
   };
-  const handleChange = (info) => {
-    if (info.file.status === 'uploading') {
-      setLoading(true);
-    }
-  };
-  const uploadButton = (
-    <div>
-      {isLoading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>{'view.map.add_image'}</div>
-    </div>
-  );
   function beforeUpload(file) {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
-      NotificationError('', `${intl.formatMessage({ id: 'noti.upload_file_desc' })}`);
+      notify('error', 'noti.ERROR', 'noti.upload_file_desc');
     }
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
-      NotificationError('', `${intl.formatMessage({ id: 'noti.upload_file_desc' })}`);
+      notify('error', 'noti.ERROR', 'noti.upload_file_desc');
     }
     return isJpgOrPng && isLt2M;
+  }
+  function getBase64(img, callback) {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
   }
   const uploadImage = async (options) => {
     const { file } = options;
     await ExportEventFileApi.uploadAvatar(uuidV4(), file).then((result) => {
       if (result.data && result.data.payload && result.data.payload.fileUploadInfoList.length > 0) {
         getBase64(file, (imageUrl) => {
-          setLoading(false);
           setAvatarUrl(imageUrl);
           let fileName = result.data.payload.fileUploadInfoList[0].name;
-
-          // handleSubmit({ avatar_file_name: fileName });
           setAvatarFileName(fileName);
 
           //phần này set vào state để push lên
@@ -145,37 +137,51 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
     name: 'avatar',
     accept: '.png,.jpeg,.jpg',
     listType: 'picture-card',
-    beforeUpload: { beforeUpload },
-    customRequest: { uploadImage },
-    onChange: { handleChange },
-    // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    // onChange(info) {
-    //   const { status } = info.file;
-    //   if (status !== 'uploading') {
-    //     console.log(info.file, info.fileList);
-    //   }
-    //   if (status === 'done') {
-    //     message.success(`${info.file.name} file uploaded successfully.`);
-    //   } else if (status === 'error') {
-    //     message.error(`${info.file.name} file upload failed.`);
-    //   }
-    // },
-    // onDrop(e) {
-    //   console.log('Dropped files', e.dataTransfer.files);
-    // },
+    beforeUpload: beforeUpload,
+    customRequest: uploadImage,
+    multiple: false,
   };
-  const handleSubmit = () => {};
-  const handleSearchMap = (value) => {};
+  const handleSubmit = async (data) => {
+    if (currentLat === null) {
+      notify('error', 'noti.ERROR', 'noti.please_select_lnglat_camera');
+    } else {
+      const payload = {
+        ...data,
+        avatarFileName: avatarFileName,
+        lat_: currentLat,
+        long_: currentLng,
+      };
+      const clearPayload = clearData(payload);
+      dispatch({
+        type: 'camera/addCamera',
+        payload: clearPayload,
+      });
+    }
+  };
+  const handleSearchMap = async (value) => {
+    const result = await VietMapApi.search(value, vietmapApiKey);
+    setResultSearchMap(result);
+  };
+  const handleSelectMap = (lng, lat) => {
+    setCurrentLat(lat);
+    setCurrentLng(lng);
+  };
   return (
     <StyledDrawer
       openDrawer={openDrawer}
       onClose={onClose}
-      width={'70%'}
+      width={'80%'}
       zIndex={1001}
       placement="right"
       extra={
         <Space>
-          <Button type="primary" onClick={onClose}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            onClick={() => {
+              form.submit();
+            }}
+          >
             <SaveOutlined />
             {intl.formatMessage({ id: 'view.map.button_save' })}
           </Button>
@@ -195,13 +201,13 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
           onFinish={handleSubmit}
         >
           <Row>
-            <Col span={10}>
+            <Col span={11}>
               <Row gutter={24}>
                 <Col span={24}>
                   <Form.Item
                     name={['code']}
-                    labelCol={10}
-                    wrapperCol={24}
+                    labelCol={{ span: 5 }}
+                    wrapperCol={{ span: 24 }}
                     label={intl.formatMessage(
                       { id: 'view.map.camera_id' },
                       {
@@ -252,8 +258,8 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
               <Row gutter={24}>
                 <Col span={24}>
                   <Form.Item
-                    labelCol={8}
-                    wrapperCol={16}
+                    labelCol={{ span: 5 }}
+                    wrapperCol={{ span: 24 }}
                     name={['name']}
                     label={intl.formatMessage(
                       {
@@ -308,8 +314,8 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
                 <Col span={24}>
                   <StyledSpace>
                     <Form.Item
-                      labelCol={8}
-                      wrapperCol={24}
+                      labelCol={{ span: 5 }}
+                      wrapperCol={{ span: 24 }}
                       label={intl.formatMessage(
                         {
                           id: 'view.camera.group_camera',
@@ -320,7 +326,7 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
                           }),
                         },
                       )}
-                      name={['cameraTypeUuid']}
+                      name={['groupCameraUuid']}
                       rules={[
                         {
                           required: true,
@@ -361,8 +367,8 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
                 <Col span={24}>
                   <StyledSpace>
                     <Form.Item
-                      labelCol={8}
-                      wrapperCol={24}
+                      labelCol={{ span: 5 }}
+                      wrapperCol={{ span: 24 }}
                       label={intl.formatMessage(
                         {
                           id: 'view.camera.camera_type',
@@ -414,8 +420,8 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
                 <Col span={24}>
                   <StyledSpace>
                     <Form.Item
-                      labelCol={8}
-                      wrapperCol={16}
+                      labelCol={{ span: 5 }}
+                      wrapperCol={{ span: 24 }}
                       name={['vendorUuid']}
                       label={intl.formatMessage({
                         id: 'view.map.vendor',
@@ -452,8 +458,8 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
               <Row gutter={24}>
                 <Col span={24}>
                   <Form.Item
-                    labelCol={8}
-                    wrapperCol={16}
+                    labelCol={{ span: 5 }}
+                    wrapperCol={{ span: 24 }}
                     label={intl.formatMessage({
                       id: 'view.map.port',
                     })}
@@ -517,8 +523,8 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
               <Row gutter={24}>
                 <Col span={24}>
                   <Form.Item
-                    labelCol={8}
-                    wrapperCol={16}
+                    labelCol={{ span: 5 }}
+                    wrapperCol={{ span: 24 }}
                     label={intl.formatMessage({
                       id: 'view.map.original_url',
                     })}
@@ -562,20 +568,12 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
               <Row gutter={24}>
                 <Col span={24}>
                   <Form.Item
-                    labelCol={8}
-                    wrapperCol={16}
+                    labelCol={{ span: 5 }}
+                    wrapperCol={{ span: 24 }}
                     label={intl.formatMessage({
                       id: 'view.map.map',
                     })}
                     name={['searchmap']}
-                    rules={[
-                      {
-                        required: true,
-                        message: intl.formatMessage({
-                          id: 'view.map.required_field',
-                        }),
-                      },
-                    ]}
                   >
                     <Input.Search
                       placeholder={intl.formatMessage(
@@ -607,14 +605,19 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
               </Row>
               <Row gutter={24}>
                 <Col span={24}>
-                  <MapAddCamera />
+                  <MapAddCamera
+                    resultSearchMap={resultSearchMap}
+                    handleSelectMap={handleSelectMap}
+                  />
                 </Col>
               </Row>
             </Col>
-            <Col span={10} offset={4}>
+            <Col span={11} offset={2}>
               <Row gutter={24}>
                 <Col span={12}>
                   <Form.Item
+                    labelCol={{ span: 10 }}
+                    wrapperCol={{ span: 24 }}
                     name={['provinceId']}
                     label={intl.formatMessage({
                       id: 'view.map.province_id',
@@ -644,6 +647,8 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
                 </Col>
                 <Col span={12}>
                   <Form.Item
+                    labelCol={{ span: 10 }}
+                    wrapperCol={{ span: 24 }}
                     name={['districtId']}
                     label={intl.formatMessage({
                       id: 'view.map.district_id',
@@ -675,6 +680,8 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
               <Row gutter={24}>
                 <Col span={12}>
                   <Form.Item
+                    labelCol={{ span: 10 }}
+                    wrapperCol={{ span: 24 }}
                     name={['wardId']}
                     label={intl.formatMessage({
                       id: 'view.map.ward_id',
@@ -703,6 +710,8 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
                 </Col>
                 <Col span={12}>
                   <Form.Item
+                    labelCol={{ span: 10 }}
+                    wrapperCol={{ span: 24 }}
                     name={['address']}
                     label={intl.formatMessage({
                       id: 'view.storage.street',
@@ -747,8 +756,8 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
                 <Col span={24}>
                   <StyledSpace>
                     <Form.Item
-                      labelCol={8}
-                      wrapperCol={16}
+                      labelCol={{ span: 5 }}
+                      wrapperCol={{ span: 24 }}
                       label={intl.formatMessage({
                         id: 'view.map.zone',
                       })}
@@ -794,8 +803,8 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
                 <Col span={24}>
                   <StyledSpace>
                     <Form.Item
-                      labelCol={8}
-                      wrapperCol={16}
+                      labelCol={{ span: 5 }}
+                      wrapperCol={{ span: 24 }}
                       label={intl.formatMessage({
                         id: 'view.map.administrative_unit',
                       })}
@@ -811,7 +820,7 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
                           id: 'view.map.please_choose_administrative_unit',
                         })}
                         getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                      />
+                      />{' '}
                     </Form.Item>
                     <Button
                       shape="circle"
@@ -825,8 +834,8 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
               <Row gutter={24}>
                 <Col span={24}>
                   <Form.Item
-                    labelCol={8}
-                    wrapperCol={16}
+                    labelCol={{ span: 5 }}
+                    wrapperCol={{ span: 24 }}
                     label={intl.formatMessage({
                       id: 'view.map.hls_url',
                     })}
@@ -863,8 +872,8 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
                 <Col span={24}>
                   <StyledSpace>
                     <Form.Item
-                      labelCol={8}
-                      wrapperCol={16}
+                      labelCol={{ span: 5 }}
+                      wrapperCol={{ span: 24 }}
                       label={intl.formatMessage({
                         id: 'view.category.tags',
                       })}
@@ -895,8 +904,58 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
               <Row gutter={24}>
                 <Col span={24}>
                   <Form.Item
-                    labelCol={8}
-                    wrapperCol={16}
+                    labelCol={{ span: 5 }}
+                    wrapperCol={{ span: 24 }}
+                    label="IP"
+                    name={['ip']}
+                    rules={[
+                      {
+                        required: true,
+                        message: `${intl.formatMessage({
+                          id: 'view.map.required_field',
+                        })}`,
+                      },
+                      {
+                        pattern:
+                          /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
+                        message: `${intl.formatMessage({
+                          id: 'view.map.ip_error',
+                        })}`,
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder={intl.formatMessage(
+                        {
+                          id: 'view.map.please_enter_ip',
+                        },
+                        {
+                          plsEnter: intl.formatMessage({
+                            id: 'please_enter',
+                          }),
+                        },
+                      )}
+                      onBlur={(e) => {
+                        form.setFieldsValue({
+                          ip: e.target.value.trim(),
+                        });
+                      }}
+                      onPaste={(e) => {
+                        e.preventDefault();
+                        form.setFieldsValue({
+                          ip: e.clipboardData.getData('text').trim(),
+                        });
+                      }}
+                      maxLength={2000}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={24}>
+                <Col span={24}>
+                  <Form.Item
+                    labelCol={{ span: 5 }}
+                    wrapperCol={{ span: 14 }}
                     label={intl.formatMessage({
                       id: 'view.map.add_image',
                     })}
@@ -916,36 +975,6 @@ const AddCamera = ({ openDrawer, setIsAddNewDrawer }) => {
                         })}
                       </p>
                     </Dragger>
-                    {/* <Upload
-                  // accept=".png,.jpeg,.jpg"
-                  // name="avatar"
-                  // listType="picture-card"
-                  className="avatar-uploader width-150"
-                  showUploadList={false}
-                  beforeUpload={beforeUpload}
-                  customRequest={uploadImage}
-                  onChange={handleChange}
-                >
-                  {avatarUrl && avatarUrl !== '' ? (
-                    <div className=" d-flex justify-content-center">
-                      <Avatar
-                        icon={<UserOutlined />}
-                        src={avatarUrl}
-                        className="avatarUser"
-                        size={{
-                          xs: 24,
-                          sm: 32,
-                          md: 40,
-                          lg: 64,
-                          xl: 80,
-                          xxl: 130,
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    uploadButton
-                  )}
-                </Upload> */}
                   </Form.Item>
                 </Col>
               </Row>
