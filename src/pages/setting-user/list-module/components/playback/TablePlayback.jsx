@@ -1,6 +1,7 @@
 import ProTable from '@ant-design/pro-table';
-import { Tag } from 'antd';
+import { AutoComplete, Input, Tag } from 'antd';
 import { connect } from 'dva';
+import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
@@ -15,7 +16,6 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
     dispatch({
       type: 'playback/fetchAllPlayback',
       payload: {
-        filter: '',
         page: metadata?.page,
         size: metadata?.size,
         name: metadata?.name,
@@ -28,6 +28,17 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
   };
   const onClose = () => {
     setOpenDrawer(false);
+  };
+
+  const handleSearch = (value) => {
+    dispatch({
+      type: 'playback/fetchAllPlayback',
+      payload: {
+        page: metadata?.page,
+        size: metadata?.size,
+        name: value,
+      },
+    });
   };
 
   const renderTag = (cellValue) => {
@@ -101,11 +112,20 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
         }}
         toolbar={{
           multipleLine: true,
-          search: {
-            onSearch: (value) => {
-              alert(value);
-            },
-          },
+          filter: (
+            <AutoComplete key="search" onSearch={debounce(handleSearch, 1000)}>
+              <Input.Search
+                placeholder={intl.formatMessage(
+                  { id: 'view.common_device.please_enter_playback_name' },
+                  {
+                    plsEnter: intl.formatMessage({
+                      id: 'please_enter',
+                    }),
+                  },
+                )}
+              />
+            </AutoComplete>
+          ),
         }}
         pagination={{
           showQuickJumper: true,

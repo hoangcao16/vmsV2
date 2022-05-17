@@ -8,6 +8,7 @@ export default {
     metadata: {
       page: 1,
       size: 10,
+      name: '',
     },
   },
   reducers: {
@@ -19,6 +20,7 @@ export default {
     *fetchAllPlayback({ payload }, { call, put }) {
       try {
         const response = yield call(ModuleApi.getAllPlayback, payload);
+
         yield put({
           type: 'save',
           payload: {

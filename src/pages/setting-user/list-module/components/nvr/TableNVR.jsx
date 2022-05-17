@@ -1,6 +1,8 @@
+import { SearchOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
-import { Tag } from 'antd';
+import { AutoComplete, Input, Tag } from 'antd';
 import { connect } from 'dva';
+import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
@@ -15,7 +17,6 @@ const TableNVR = ({ dispatch, list, metadata }) => {
     dispatch({
       type: 'nvr/fetchAllNVR',
       payload: {
-        filter: '',
         page: metadata?.page,
         size: metadata?.size,
         name: metadata?.name,
@@ -28,6 +29,17 @@ const TableNVR = ({ dispatch, list, metadata }) => {
   };
   const onClose = () => {
     setOpenDrawer(false);
+  };
+
+  const handleSearch = (value) => {
+    dispatch({
+      type: 'nvr/fetchAllNVR',
+      payload: {
+        page: metadata?.page,
+        size: metadata?.size,
+        name: value,
+      },
+    });
   };
 
   const renderTag = (cellValue) => {
@@ -101,11 +113,20 @@ const TableNVR = ({ dispatch, list, metadata }) => {
         }}
         toolbar={{
           multipleLine: true,
-          search: {
-            onSearch: (value) => {
-              alert(value);
-            },
-          },
+          filter: (
+            <AutoComplete key="search" onSearch={debounce(handleSearch, 1000)}>
+              <Input.Search
+                placeholder={intl.formatMessage(
+                  { id: 'view.common_device.please_enter_nvr_name' },
+                  {
+                    plsEnter: intl.formatMessage({
+                      id: 'please_enter',
+                    }),
+                  },
+                )}
+              />
+            </AutoComplete>
+          ),
         }}
         pagination={{
           showQuickJumper: true,

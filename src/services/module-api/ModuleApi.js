@@ -1,22 +1,22 @@
 import request from '@/utils/request';
 
 const ModuleApi = {
-  getAllNVR: async () => {
-    return request.get(`/cctv-controller-svc/api/v1/nvr`);
+  getAllNVR: async (params) => {
+    return request.get(`/cctv-controller-svc/api/v1/nvr`, { params: params });
   },
   editNVR: async (nvrId, values) => {
     return request.put(`/cctv-controller-svc/api/v1/nvr/${nvrId}`, values);
   },
 
-  getAllPlayback: async () => {
-    return request.get(`/cctv-controller-svc/api/v1/playback`);
+  getAllPlayback: async (params) => {
+    return request.get(`/cctv-controller-svc/api/v1/playback`, { params: params });
   },
   editPlayback: async (playbackId, values) => {
     return request.put(`/cctv-controller-svc/api/v1/playback/${playbackId}`, values);
   },
 
-  getAllZone: async () => {
-    return request.get(`/cctv-controller-svc/api/v1/zones`);
+  getAllZone: async (params) => {
+    return request.get(`/cctv-controller-svc/api/v1/zones`, { params: params });
   },
 
   addZone: async (values) => {
@@ -31,8 +31,8 @@ const ModuleApi = {
     return request.delete(`/cctv-controller-svc/api/v1/zones/${zoneId}`);
   },
 
-  getAllCamproxy: async () => {
-    return request.get(`/cctv-controller-svc/api/v1/camproxy`);
+  getAllCamproxy: async (params) => {
+    return request.get(`/cctv-controller-svc/api/v1/camproxy`, { params: params });
   },
   editCamproxy: async (camproxyId, values) => {
     return request.put(`/cctv-controller-svc/api/v1/camproxy/${camproxyId}`, values);
