@@ -27,4 +27,14 @@ export const ProTableStyle = styled(ProTable)`
   .ant-table-row {
     cursor: pointer;
   }
+
+  .ant-input-search {
+    width: 360px !important;
+  }
+  .ant-pro-table-list-toolbar-extra-line {
+    max-width: 433px;
+  }
+  .ant-select-auto-complete {
+    width: 100%;
+  }
 `;
