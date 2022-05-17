@@ -1,18 +1,13 @@
-import MSCustomizeDrawer from '@/components/Drawer';
-import MSFormItem from '@/components/Form/Item';
-import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import ProTable from '@ant-design/pro-table';
-import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import { connect } from 'dva';
-import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
+import { ProTableStyle } from '../../style';
 import AddEditZone from './AddEditZone';
-import DetailZone from './DetailZone';
 
 const TableZone = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
-  const [openDrawerDetail, setOpenDrawerDetail] = useState(false);
   const [openDrawerAddEdit, setOpenDrawerAddEdit] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
 
@@ -28,15 +23,11 @@ const TableZone = ({ dispatch, list, metadata }) => {
     });
   }, []);
 
-  const onCloseDetails = () => {
-    setOpenDrawerDetail(false);
-  };
-
   const columns = [
     {
       title: 'STT',
       key: 'index',
-      width: '5%',
+      width: '6%',
       render: (text, record, index) => index + 1,
     },
     {
@@ -61,58 +52,12 @@ const TableZone = ({ dispatch, list, metadata }) => {
       }),
       dataIndex: 'description',
       key: 'description',
-      width: '20%',
-    },
-    {
-      title: intl.formatMessage({
-        id: 'view.common_device.action',
-      }),
-      width: '15%',
-      render: (text, record) => {
-        return (
-          <Space>
-            <Tooltip
-              placement="top"
-              title={intl.formatMessage({
-                id: 'view.common_device.detail',
-              })}
-            >
-              <InfoCircleOutlined
-                onClick={() => {
-                  setOpenDrawerDetail(true);
-                  setSelectedRecord(record);
-                }}
-              />
-            </Tooltip>
-            <Tooltip
-              placement="top"
-              title={intl.formatMessage({
-                id: 'view.common_device.edit',
-              })}
-            >
-              <EditOutlined
-                onClick={() => {
-                  setOpenDrawerAddEdit(true);
-                  setSelectedRecord(record);
-                }}
-              />
-            </Tooltip>
-            <Tooltip
-              placement="top"
-              title={intl.formatMessage({
-                id: 'view.ai_events.delete',
-              })}
-            >
-              <DeleteOutlined />
-            </Tooltip>
-          </Space>
-        );
-      },
+      width: '34%',
     },
   ];
   return (
     <>
-      <ProTable
+      <ProTableStyle
         headerTitle={`${intl.formatMessage({
           id: 'view.common_device.zone_list',
         })}`}
@@ -121,6 +66,14 @@ const TableZone = ({ dispatch, list, metadata }) => {
         dataSource={list}
         columns={columns}
         options={false}
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              setOpenDrawerAddEdit(true);
+              setSelectedRecord(record);
+            },
+          };
+        }}
         toolbar={{
           multipleLine: true,
           search: {
@@ -152,52 +105,23 @@ const TableZone = ({ dispatch, list, metadata }) => {
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
-          showTotal: (total) => `${total} Zone`,
+          showTotal: (total) =>
+            `${intl.formatMessage({
+              id: 'view.camera.total',
+            })} ${total} Zone`,
           total: metadata?.total,
           pageSize: metadata?.size,
           current: metadata?.page,
         }}
       />
-      {openDrawerDetail && (
-        <MSCustomizeDrawer
-          openDrawer={openDrawerDetail}
-          onClose={onCloseDetails}
-          width={'30%'}
-          zIndex={1001}
-          title={`${intl.formatMessage({
-            id: 'view.common_device.zone_detail',
-          })}`}
-          placement="right"
-        >
-          <DetailZone onClose={onCloseDetails} selectedRecord={selectedRecord} />
-        </MSCustomizeDrawer>
-      )}
+
       {openDrawerAddEdit && (
-        <MSCustomizeDrawer
-          openDrawer={openDrawerAddEdit}
+        <AddEditZone
           onClose={() => setOpenDrawerAddEdit(false)}
-          width={'30%'}
-          zIndex={1001}
-          title={
-            isEmpty(selectedRecord)
-              ? intl.formatMessage(
-                  { id: 'view.common_device.add_zone' },
-                  {
-                    add: intl.formatMessage({
-                      id: 'add',
-                    }),
-                  },
-                )
-              : intl.formatMessage({ id: 'view.common_device.edit_zone' })
-          }
-          placement="right"
-        >
-          <AddEditZone
-            onClose={() => setOpenDrawerAddEdit(false)}
-            dispatch={dispatch}
-            selectedRecord={selectedRecord}
-          />
-        </MSCustomizeDrawer>
+          dispatch={dispatch}
+          selectedRecord={selectedRecord}
+          openDrawer={openDrawerAddEdit}
+        />
       )}
     </>
   );

@@ -30,6 +30,9 @@ const ModuleApi = {
   getAllCamproxy: async () => {
     return request.get(`/cctv-controller-svc/api/v1/camproxy`);
   },
+  editCamproxy: async (camproxyId, values) => {
+    return request.put(`/cctv-controller-svc/api/v1/camproxy/${camproxyId}`, values);
+  },
 };
 
 export default ModuleApi;

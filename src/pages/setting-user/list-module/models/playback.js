@@ -30,9 +30,9 @@ export default {
         console.log(error);
       }
     },
-    *editPlayback({ playbackId, payload }, { call, put }) {
+    *editPlayback({ payload: { id, values } }, { call, put }) {
       try {
-        const res = yield call(ModuleApi.editPlayback, playbackId, payload);
+        const res = yield call(ModuleApi.editPlayback, id, values);
 
         yield put({ type: 'reload' });
       } catch (error) {

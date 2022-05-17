@@ -1,11 +1,9 @@
-import MSCustomizeDrawer from '@/components/Drawer';
-import MSFormItem from '@/components/Form/Item';
-import { EditOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
-import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
+import { Tag } from 'antd';
 import { connect } from 'dva';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
+import { ProTableStyle } from '../../style';
 import EditPlayback from './EditPlayback';
 
 const TablePlayback = ({ dispatch, list, metadata }) => {
@@ -35,7 +33,9 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
   const renderTag = (cellValue) => {
     return (
       <Tag color={cellValue === 'UP' ? '#1380FF' : '#FF4646'}>
-        {cellValue === 'UP' ? `Đang hoạt động` : `Dừng hoạt động`}
+        {intl.formatMessage({
+          id: `view.camera.${cellValue === 'UP' ? 'active' : 'inactive'}`,
+        })}
       </Tag>
     );
   };
@@ -43,7 +43,7 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
     {
       title: 'STT',
       key: 'index',
-      width: '5%',
+      width: '6%',
       render: (text, record, index) => index + 1,
     },
     {
@@ -52,7 +52,7 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
       }),
       dataIndex: 'name',
       key: 'name',
-      width: '20%',
+      width: '24%',
     },
     {
       title: intl.formatMessage({
@@ -60,7 +60,7 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
       }),
       dataIndex: 'description',
       key: 'description',
-      width: '20%',
+      width: '25%',
     },
     {
       title: intl.formatMessage({
@@ -68,7 +68,7 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
       }),
       dataIndex: 'note',
       key: 'note',
-      width: '20%',
+      width: '25%',
     },
     {
       title: intl.formatMessage({
@@ -79,30 +79,10 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
       width: '20%',
       render: renderTag,
     },
-    {
-      title: intl.formatMessage({
-        id: 'view.common_device.action',
-      }),
-      width: '15%',
-      render: (text, record) => {
-        return (
-          <Space>
-            <Tooltip placement="rightTop" title="Chỉnh sửa">
-              <EditOutlined
-                onClick={() => {
-                  showDrawer();
-                  setSelectedPlaybackEdit(record);
-                }}
-              />
-            </Tooltip>
-          </Space>
-        );
-      },
-    },
   ];
   return (
     <>
-      <ProTable
+      <ProTableStyle
         headerTitle={`${intl.formatMessage({
           id: 'view.common_device.playback_list',
         })}`}
@@ -111,6 +91,14 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
         dataSource={list}
         columns={columns}
         options={false}
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              showDrawer();
+              setSelectedPlaybackEdit(record);
+            },
+          };
+        }}
         toolbar={{
           multipleLine: true,
           search: {
@@ -122,29 +110,22 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
-          showTotal: (total) => `${total} Playback`,
+          showTotal: (total) =>
+            `${intl.formatMessage({
+              id: 'view.camera.total',
+            })} ${total} Playback`,
           total: metadata?.total,
           pageSize: metadata?.size,
           current: metadata?.page,
         }}
       />
       {openDrawer && (
-        <MSCustomizeDrawer
-          openDrawer={openDrawer}
+        <EditPlayback
+          selectedPlaybackEdit={selectedPlaybackEdit}
           onClose={onClose}
-          width={'30%'}
-          zIndex={1001}
-          title={`${intl.formatMessage({
-            id: 'view.common_device.edit_playback',
-          })}`}
-          placement="right"
-        >
-          <EditPlayback
-            selectedPlaybackEdit={selectedPlaybackEdit}
-            onClose={onClose}
-            dispatch={dispatch}
-          />
-        </MSCustomizeDrawer>
+          dispatch={dispatch}
+          openDrawer={openDrawer}
+        />
       )}
     </>
   );

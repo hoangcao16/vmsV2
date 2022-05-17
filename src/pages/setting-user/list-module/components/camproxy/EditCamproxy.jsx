@@ -6,13 +6,15 @@ import { StyledDrawer } from '../../style';
 
 const { TextArea } = Input;
 
-const EditNVR = ({ selectedNVREdit, onClose, dispatch, openDrawer }) => {
+const EditCamproxy = ({ selectedCamproxyEdit, onClose, dispatch, openDrawer }) => {
   const intl = useIntl();
   const [form] = Form.useForm();
+  console.log('selectedCamproxyEdit', selectedCamproxyEdit);
+
   const handleSubmit = (value) => {
     dispatch({
-      type: 'nvr/editNVR',
-      payload: { id: selectedNVREdit.uuid, values: { ...value } },
+      type: 'camproxy/editCamproxy',
+      payload: { id: selectedCamproxyEdit.uuid, values: { ...value } },
     });
     onClose();
   };
@@ -45,15 +47,20 @@ const EditNVR = ({ selectedNVREdit, onClose, dispatch, openDrawer }) => {
     >
       <Card
         title={`${intl.formatMessage({
-          id: 'view.common_device.edit_nvr',
+          id: 'view.common_device.edit_camproxy',
         })}`}
       >
-        <Form layout="vertical" form={form} onFinish={handleSubmit} initialValues={selectedNVREdit}>
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={handleSubmit}
+          initialValues={selectedCamproxyEdit}
+        >
           <Row gutter={16}>
             <Col span={24}>
               <MSFormItem
                 label={`${intl.formatMessage({
-                  id: 'view.common_device.nvr_name',
+                  id: 'view.common_device.camproxy_name',
                 })}`}
                 type="input"
                 name="name"
@@ -99,4 +106,4 @@ const EditNVR = ({ selectedNVREdit, onClose, dispatch, openDrawer }) => {
   );
 };
 
-export default EditNVR;
+export default EditCamproxy;

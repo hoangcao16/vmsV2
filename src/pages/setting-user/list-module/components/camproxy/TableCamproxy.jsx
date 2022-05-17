@@ -1,16 +1,17 @@
 import MSCustomizeDrawer from '@/components/Drawer';
-import MSFormItem from '@/components/Form/Item';
 import { EditOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
-import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
+import { Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
+import { ProTableStyle } from '../../style';
+import EditCamproxy from './EditCamproxy';
 
 const TableCamproxy = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [form] = Form.useForm();
+  const [selectedCamproxyEdit, setSelectedCamproxyEdit] = useState(null);
 
   useEffect(() => {
     dispatch({
@@ -31,16 +32,12 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
     setOpenDrawer(false);
   };
 
-  const handleSubmit = () => {
-    const a = form.getFieldsValue(true);
-
-    return false;
-  };
-
   const renderTag = (cellValue) => {
     return (
-      <Tag color={cellValue === 'UP' ? '#1380FF' : '#FF4646'} style={{ color: '#ffffff' }}>
-        {cellValue === 'UP' ? `Đang hoạt động` : `Dừng hoạt động`}
+      <Tag color={cellValue === 'UP' ? '#1380FF' : '#FF4646'}>
+        {intl.formatMessage({
+          id: `view.camera.${cellValue === 'UP' ? 'active' : 'inactive'}`,
+        })}
       </Tag>
     );
   };
@@ -48,7 +45,7 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
     {
       title: 'STT',
       key: 'index',
-      width: '5%',
+      width: '6%',
       render: (text, record, index) => index + 1,
     },
     {
@@ -57,7 +54,7 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
       }),
       dataIndex: 'name',
       key: 'name',
-      width: '20%',
+      width: '24%',
     },
     {
       title: intl.formatMessage({
@@ -65,7 +62,7 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
       }),
       dataIndex: 'description',
       key: 'description',
-      width: '20%',
+      width: '25%',
     },
     {
       title: intl.formatMessage({
@@ -73,7 +70,7 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
       }),
       dataIndex: 'note',
       key: 'note',
-      width: '20%',
+      width: '25%',
     },
     {
       title: intl.formatMessage({
@@ -84,31 +81,10 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
       width: '20%',
       render: renderTag,
     },
-    {
-      title: intl.formatMessage({
-        id: 'view.common_device.action',
-      }),
-      width: '15%',
-      render: (text, record) => {
-        return (
-          <Space>
-            <Tooltip placement="rightTop" title="Chỉnh sửa">
-              <EditOutlined
-                style={{ fontSize: '16px', color: '#6E6B7B' }}
-                onClick={() => {
-                  showDrawer();
-                  setSelectedNVREdit(record);
-                }}
-              />
-            </Tooltip>
-          </Space>
-        );
-      },
-    },
   ];
   return (
     <>
-      <ProTable
+      <ProTableStyle
         headerTitle={`${intl.formatMessage({
           id: 'view.common_device.camproxy_list',
         })}`}
@@ -117,6 +93,14 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
         dataSource={list}
         columns={columns}
         options={false}
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              showDrawer();
+              setSelectedCamproxyEdit(record);
+            },
+          };
+        }}
         toolbar={{
           multipleLine: true,
           search: {
@@ -128,65 +112,22 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
-          showTotal: (total) => `${total} Camproxy`,
+          showTotal: (total) =>
+            `${intl.formatMessage({
+              id: 'view.camera.total',
+            })} ${total} Camproxy`,
           total: metadata?.total,
           pageSize: metadata?.size,
           current: metadata?.page,
         }}
       />
       {openDrawer && (
-        <MSCustomizeDrawer
-          openDrawer={openDrawer}
+        <EditCamproxy
+          selectedCamproxyEdit={selectedCamproxyEdit}
           onClose={onClose}
-          width={800}
-          zIndex={1001}
-          title="Test"
-          placement="right"
-          extra={
-            <Space>
-              <Button onClick={onClose}>Cancel</Button>
-              <Button type="primary" onClick={onClose}>
-                OK
-              </Button>
-            </Space>
-          }
-        >
-          <div>
-            <Form layout="vertical" form={form} onFinish={handleSubmit}>
-              <Row gutter={16}>
-                <Col span={24}>
-                  <MSFormItem
-                    label="Username"
-                    type="input"
-                    name="name"
-                    minLength={5}
-                    maxLength={255}
-                    required={true}
-                  >
-                    <Input />
-                  </MSFormItem>
-                </Col>
-              </Row>
-            </Form>
-            <div
-              style={{
-                position: 'absolute',
-                right: 0,
-                bottom: 0,
-                width: '100%',
-                borderTop: '1px solid #e9e9e9',
-                padding: '10px 16px',
-                background: '#fff',
-                textAlign: 'right',
-              }}
-            >
-              <Button type="danger">Hủy</Button>
-              <Button htmlType="submit" onClick={handleSubmit} type="ghost">
-                Sửa
-              </Button>
-            </div>
-          </div>
-        </MSCustomizeDrawer>
+          dispatch={dispatch}
+          openDrawer={openDrawer}
+        />
       )}
     </>
   );

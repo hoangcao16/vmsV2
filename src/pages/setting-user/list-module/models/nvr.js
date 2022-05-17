@@ -30,9 +30,9 @@ export default {
         console.log(error);
       }
     },
-    *editNVR({ nvrId, payload }, { call, put }) {
+    *editNVR({ payload: { id, values } }, { call, put }) {
       try {
-        const res = yield call(ModuleApi.editNVR, nvrId, payload);
+        const res = yield call(ModuleApi.editNVR, id, values);
 
         yield put({ type: 'reload' });
       } catch (error) {

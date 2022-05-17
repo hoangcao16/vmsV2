@@ -1,12 +1,13 @@
 import MSFormItem from '@/components/Form/Item';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
-import { Button, Col, Form, Input, Row, Select } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { useIntl } from 'umi';
 import AddressApi from '@/services/address/AddressApi';
 import ModuleApi from '@/services/module-api/ModuleApi';
+import { CloseOutlined, SaveOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Form, Input, Row, Select, Space } from 'antd';
 import { isEmpty } from 'lodash';
-import { DrawerActionStyle } from '../../style';
+import { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
+import { StyledDrawer } from '../../style';
 
 const { TextArea } = Input;
 
@@ -17,7 +18,7 @@ export const DATA_FAKE_ZONE = {
   playback: [{ name: '', uuid: '' }],
 };
 
-const AddEditZone = ({ onClose, selectedRecord, dispatch }) => {
+const AddEditZone = ({ onClose, selectedRecord, dispatch, openDrawer }) => {
   const intl = useIntl();
   const [form] = Form.useForm();
   const [filterOptions, setFilterOptions] = useState(DATA_FAKE_ZONE);
@@ -103,178 +104,205 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch }) => {
   }
 
   return (
-    <div>
-      <Form
-        layout="vertical"
-        form={form}
-        onFinish={handleSubmit}
-        initialValues={selectedRecord ?? {}}
+    <StyledDrawer
+      openDrawer={openDrawer}
+      onClose={onClose}
+      width={'30%'}
+      zIndex={1001}
+      placement="right"
+      extra={
+        <Space>
+          <Button
+            type="primary"
+            htmlType="submit"
+            onClick={() => {
+              form.submit();
+            }}
+          >
+            <SaveOutlined />
+            {intl.formatMessage({ id: 'view.map.button_save' })}
+          </Button>
+          <Button onClick={onClose}>
+            <CloseOutlined />
+            {intl.formatMessage({ id: 'view.map.cancel' })}
+          </Button>
+        </Space>
+      }
+    >
+      <Card
+        title={
+          isEmpty(selectedRecord)
+            ? intl.formatMessage(
+                { id: 'view.common_device.add_zone' },
+                {
+                  add: intl.formatMessage({
+                    id: 'add',
+                  }),
+                },
+              )
+            : intl.formatMessage({ id: 'view.common_device.edit_zone' })
+        }
       >
-        <Row gutter={24}>
-          <Col span={24}>
-            <MSFormItem
-              label={`${intl.formatMessage({
-                id: 'view.common_device.zone_name',
-              })}`}
-              type="input"
-              name="name"
-              maxLength={255}
-              required={true}
-            >
-              <Input />
-            </MSFormItem>
-          </Col>
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={handleSubmit}
+          initialValues={selectedRecord ?? {}}
+        >
+          <Row gutter={24}>
+            <Col span={24}>
+              <MSFormItem
+                label={`${intl.formatMessage({
+                  id: 'view.common_device.zone_name',
+                })}`}
+                type="input"
+                name="name"
+                maxLength={255}
+                required={true}
+              >
+                <Input />
+              </MSFormItem>
+            </Col>
 
-          <Col span={8}>
-            <MSFormItem
-              type="select"
-              name="provinceId"
-              label={`${intl.formatMessage({
-                id: 'view.map.province_id',
-              })}`}
-              required={true}
-            >
-              <Select
-                showSearch
-                dataSource={provinces}
-                onChange={(cityId) => onChangeCity(cityId)}
-                filterOption={filterOption}
-                options={normalizeOptions('name', 'provinceId', provinces)}
-              />
-            </MSFormItem>
-          </Col>
+            <Col span={8}>
+              <MSFormItem
+                type="select"
+                name="provinceId"
+                label={`${intl.formatMessage({
+                  id: 'view.map.province_id',
+                })}`}
+                required={true}
+              >
+                <Select
+                  showSearch
+                  dataSource={provinces}
+                  onChange={(cityId) => onChangeCity(cityId)}
+                  filterOption={filterOption}
+                  options={normalizeOptions('name', 'provinceId', provinces)}
+                />
+              </MSFormItem>
+            </Col>
 
-          <Col span={8}>
-            <MSFormItem
-              type="select"
-              name="districtId"
-              label={`${intl.formatMessage({
-                id: 'view.map.district_id',
-              })}`}
-              required={true}
-            >
-              <Select
-                showSearch
-                dataSource={districts}
-                onChange={(districtId) => onChangeDistrict(districtId)}
-                filterOption={filterOption}
-                options={normalizeOptions('name', 'districtId', districts)}
-              />
-            </MSFormItem>
-          </Col>
+            <Col span={8}>
+              <MSFormItem
+                type="select"
+                name="districtId"
+                label={`${intl.formatMessage({
+                  id: 'view.map.district_id',
+                })}`}
+                required={true}
+              >
+                <Select
+                  showSearch
+                  dataSource={districts}
+                  onChange={(districtId) => onChangeDistrict(districtId)}
+                  filterOption={filterOption}
+                  options={normalizeOptions('name', 'districtId', districts)}
+                />
+              </MSFormItem>
+            </Col>
 
-          <Col span={8}>
-            <MSFormItem
-              type="select"
-              name="wardId"
-              label={`${intl.formatMessage({
-                id: 'view.map.ward_id',
-              })}`}
-            >
-              <Select
-                showSearch
-                dataSource={wards}
-                filterOption={filterOption}
-                options={normalizeOptions('name', 'id', wards)}
-              />
-            </MSFormItem>
-          </Col>
-          <Col span={24}>
-            <MSFormItem
-              type="input"
-              label={`${intl.formatMessage({
-                id: 'view.map.address',
-              })}`}
-              name="address"
-              maxLength={255}
-              required={true}
-            >
-              <Input />
-            </MSFormItem>
-          </Col>
+            <Col span={8}>
+              <MSFormItem
+                type="select"
+                name="wardId"
+                label={`${intl.formatMessage({
+                  id: 'view.map.ward_id',
+                })}`}
+              >
+                <Select
+                  showSearch
+                  dataSource={wards}
+                  filterOption={filterOption}
+                  options={normalizeOptions('name', 'id', wards)}
+                />
+              </MSFormItem>
+            </Col>
+            <Col span={24}>
+              <MSFormItem
+                type="input"
+                label={`${intl.formatMessage({
+                  id: 'view.map.address',
+                })}`}
+                name="address"
+                maxLength={255}
+                required={true}
+              >
+                <Input />
+              </MSFormItem>
+            </Col>
 
-          <Col span={24}>
-            <MSFormItem
-              type="input"
-              label={`${intl.formatMessage({
-                id: 'view.user.detail_list.desc',
-              })}`}
-              name="description"
-              maxLength={255}
-              required={true}
-            >
-              <TextArea />
-            </MSFormItem>
-          </Col>
-          <Col span={24}>
-            <MSFormItem
-              type="select"
-              label={`${intl.formatMessage({
-                id: 'view.common_device.choose_nvr',
-              })}`}
-              name="nvrUuidList"
-            >
-              <Select
-                mode="multiple"
-                showArrow
-                options={nvr?.map((r) => ({
-                  value: r.uuid,
-                  label: r.name,
-                }))}
-              />
-            </MSFormItem>
-          </Col>
-          <Col span={24}>
-            <MSFormItem
-              type="select"
-              label={`${intl.formatMessage({
-                id: 'view.common_device.choose_playback',
-              })}`}
-              name="playbackUuidList"
-            >
-              <Select
-                mode="multiple"
-                showArrow
-                options={playback?.map((s) => ({
-                  value: s.uuid,
-                  label: s.name,
-                }))}
-              />
-            </MSFormItem>
-          </Col>
-          <Col span={24}>
-            <MSFormItem
-              type="select"
-              label={`${intl.formatMessage({
-                id: 'view.common_device.choose_camproxy',
-              })}`}
-              name="campUuidList"
-            >
-              <Select
-                mode="multiple"
-                showArrow
-                options={camproxy?.map((c) => ({
-                  value: c.uuid,
-                  label: c.name,
-                }))}
-              />
-            </MSFormItem>
-          </Col>
-        </Row>
-        <DrawerActionStyle>
-          <Button onClick={onClose} type="danger">
-            {`${intl.formatMessage({
-              id: 'view.user.detail_list.cancel',
-            })}`}
-          </Button>
-          <Button htmlType="submit" type="ghost">
-            {`${intl.formatMessage({
-              id: 'view.user.detail_list.confirm',
-            })}`}
-          </Button>
-        </DrawerActionStyle>
-      </Form>
-    </div>
+            <Col span={24}>
+              <MSFormItem
+                type="input"
+                label={`${intl.formatMessage({
+                  id: 'view.user.detail_list.desc',
+                })}`}
+                name="description"
+                maxLength={255}
+                required={true}
+              >
+                <TextArea />
+              </MSFormItem>
+            </Col>
+            <Col span={24}>
+              <MSFormItem
+                type="select"
+                label={`${intl.formatMessage({
+                  id: 'view.common_device.choose_nvr',
+                })}`}
+                name="nvrUuidList"
+              >
+                <Select
+                  mode="multiple"
+                  showArrow
+                  options={nvr?.map((r) => ({
+                    value: r.uuid,
+                    label: r.name,
+                  }))}
+                />
+              </MSFormItem>
+            </Col>
+            <Col span={24}>
+              <MSFormItem
+                type="select"
+                label={`${intl.formatMessage({
+                  id: 'view.common_device.choose_playback',
+                })}`}
+                name="playbackUuidList"
+              >
+                <Select
+                  mode="multiple"
+                  showArrow
+                  options={playback?.map((s) => ({
+                    value: s.uuid,
+                    label: s.name,
+                  }))}
+                />
+              </MSFormItem>
+            </Col>
+            <Col span={24}>
+              <MSFormItem
+                type="select"
+                label={`${intl.formatMessage({
+                  id: 'view.common_device.choose_camproxy',
+                })}`}
+                name="campUuidList"
+              >
+                <Select
+                  mode="multiple"
+                  showArrow
+                  options={camproxy?.map((c) => ({
+                    value: c.uuid,
+                    label: c.name,
+                  }))}
+                />
+              </MSFormItem>
+            </Col>
+          </Row>
+        </Form>
+      </Card>
+    </StyledDrawer>
   );
 };
 

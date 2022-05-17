@@ -29,5 +29,18 @@ export default {
         console.log(error);
       }
     },
+    *editCamproxy({ payload: { id, values } }, { call, put }) {
+      try {
+        const res = yield call(ModuleApi.editCamproxy, id, values);
+
+        yield put({ type: 'reload' });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    *reload(action, { put, select }) {
+      const page = yield select((state) => state.camproxy.page);
+      yield put({ type: 'fetchAllCamproxy', payload: { page } });
+    },
   },
 };
