@@ -5,6 +5,7 @@ import { Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
+import { ProTableStyle } from '../../style';
 import EditCamproxy from './EditCamproxy';
 
 const TableCamproxy = ({ dispatch, list, metadata }) => {
@@ -48,7 +49,7 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
     {
       title: 'STT',
       key: 'index',
-      width: '5%',
+      width: '6%',
       render: (text, record, index) => index + 1,
     },
     {
@@ -57,7 +58,7 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
       }),
       dataIndex: 'name',
       key: 'name',
-      width: '20%',
+      width: '24%',
     },
     {
       title: intl.formatMessage({
@@ -65,7 +66,7 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
       }),
       dataIndex: 'description',
       key: 'description',
-      width: '20%',
+      width: '25%',
     },
     {
       title: intl.formatMessage({
@@ -73,7 +74,7 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
       }),
       dataIndex: 'note',
       key: 'note',
-      width: '20%',
+      width: '25%',
     },
     {
       title: intl.formatMessage({
@@ -84,30 +85,10 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
       width: '20%',
       render: renderTag,
     },
-    {
-      title: intl.formatMessage({
-        id: 'view.common_device.action',
-      }),
-      width: '15%',
-      render: (text, record) => {
-        return (
-          <Space>
-            <Tooltip placement="rightTop" title="Chỉnh sửa">
-              <EditOutlined
-                onClick={() => {
-                  showDrawer();
-                  setSelectedCamproxyEdit(record);
-                }}
-              />
-            </Tooltip>
-          </Space>
-        );
-      },
-    },
   ];
   return (
     <>
-      <ProTable
+      <ProTableStyle
         headerTitle={`${intl.formatMessage({
           id: 'view.common_device.camproxy_list',
         })}`}
@@ -116,6 +97,14 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
         dataSource={list}
         columns={columns}
         options={false}
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              showDrawer();
+              setSelectedCamproxyEdit(record);
+            },
+          };
+        }}
         toolbar={{
           multipleLine: true,
           search: {
@@ -127,29 +116,22 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
-          showTotal: (total) => `${total} Camproxy`,
+          showTotal: (total) =>
+            `${intl.formatMessage({
+              id: 'view.camera.total',
+            })} ${total} Camproxy`,
           total: metadata?.total,
           pageSize: metadata?.size,
           current: metadata?.page,
         }}
       />
       {openDrawer && (
-        <MSCustomizeDrawer
-          openDrawer={openDrawer}
+        <EditCamproxy
+          selectedCamproxyEdit={selectedCamproxyEdit}
           onClose={onClose}
-          width={'30%'}
-          zIndex={1001}
-          title={`${intl.formatMessage({
-            id: 'view.common_device.edit_camproxy',
-          })}`}
-          placement="right"
-        >
-          <EditCamproxy
-            selectedCamproxyEdit={selectedCamproxyEdit}
-            onClose={onClose}
-            dispatch={dispatch}
-          />
-        </MSCustomizeDrawer>
+          dispatch={dispatch}
+          openDrawer={openDrawer}
+        />
       )}
     </>
   );

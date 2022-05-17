@@ -1,12 +1,10 @@
-import MSCustomizeDrawer from '@/components/Drawer';
-import MSFormItem from '@/components/Form/Item';
-import { EditOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
-import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
+import { Tag } from 'antd';
 import { connect } from 'dva';
 import { useEffect, useState } from 'react';
-import EditNVR from './EditNVR';
 import { useIntl } from 'umi';
+import { ProTableStyle } from '../../style';
+import EditNVR from './EditNVR';
 
 const TableNVR = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
@@ -49,7 +47,7 @@ const TableNVR = ({ dispatch, list, metadata }) => {
     {
       title: 'STT',
       key: 'index',
-      width: '5%',
+      width: '6%',
       render: (text, record, index) => index + 1,
     },
     {
@@ -58,7 +56,7 @@ const TableNVR = ({ dispatch, list, metadata }) => {
       }),
       dataIndex: 'name',
       key: 'name',
-      width: '20%',
+      width: '24%',
     },
     {
       title: intl.formatMessage({
@@ -66,7 +64,7 @@ const TableNVR = ({ dispatch, list, metadata }) => {
       }),
       dataIndex: 'description',
       key: 'description',
-      width: '20%',
+      width: '25%',
     },
     {
       title: intl.formatMessage({
@@ -74,7 +72,7 @@ const TableNVR = ({ dispatch, list, metadata }) => {
       }),
       dataIndex: 'note',
       key: 'note',
-      width: '20%',
+      width: '25%',
     },
     {
       title: intl.formatMessage({
@@ -85,30 +83,10 @@ const TableNVR = ({ dispatch, list, metadata }) => {
       width: '20%',
       render: renderTag,
     },
-    {
-      title: intl.formatMessage({
-        id: 'view.common_device.action',
-      }),
-      width: '15%',
-      render: (text, record) => {
-        return (
-          <Space>
-            <Tooltip placement="rightTop" title="Chỉnh sửa">
-              <EditOutlined
-                onClick={() => {
-                  showDrawer();
-                  setSelectedNVREdit(record);
-                }}
-              />
-            </Tooltip>
-          </Space>
-        );
-      },
-    },
   ];
   return (
     <>
-      <ProTable
+      <ProTableStyle
         headerTitle={`${intl.formatMessage({
           id: 'view.common_device.nvr_list',
         })}`}
@@ -117,6 +95,14 @@ const TableNVR = ({ dispatch, list, metadata }) => {
         dataSource={list}
         columns={columns}
         options={false}
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              showDrawer();
+              setSelectedNVREdit(record);
+            },
+          };
+        }}
         toolbar={{
           multipleLine: true,
           search: {
@@ -128,25 +114,22 @@ const TableNVR = ({ dispatch, list, metadata }) => {
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
-          showTotal: (total) => `${total} NVR`,
+          showTotal: (total) =>
+            `${intl.formatMessage({
+              id: 'view.camera.total',
+            })} ${total} NVR`,
           total: metadata?.total,
           pageSize: metadata?.size,
           current: metadata?.page,
         }}
       />
       {openDrawer && (
-        <MSCustomizeDrawer
+        <EditNVR
+          selectedNVREdit={selectedNVREdit}
           openDrawer={openDrawer}
           onClose={onClose}
-          width={'30%'}
-          zIndex={1001}
-          title={`${intl.formatMessage({
-            id: 'view.common_device.edit_nvr',
-          })}`}
-          placement="right"
-        >
-          <EditNVR selectedNVREdit={selectedNVREdit} onClose={onClose} dispatch={dispatch} />
-        </MSCustomizeDrawer>
+          dispatch={dispatch}
+        />
       )}
     </>
   );
