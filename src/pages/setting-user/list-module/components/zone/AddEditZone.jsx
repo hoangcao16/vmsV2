@@ -217,7 +217,6 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch }) => {
               <Select
                 mode="multiple"
                 showArrow
-                style={{ width: '100%' }}
                 options={nvr?.map((r) => ({
                   value: r.uuid,
                   label: r.name,
@@ -236,7 +235,6 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch }) => {
               <Select
                 mode="multiple"
                 showArrow
-                style={{ width: '100%' }}
                 options={playback?.map((s) => ({
                   value: s.uuid,
                   label: s.name,
@@ -255,7 +253,6 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch }) => {
               <Select
                 mode="multiple"
                 showArrow
-                style={{ width: '100%' }}
                 options={camproxy?.map((c) => ({
                   value: c.uuid,
                   label: c.name,

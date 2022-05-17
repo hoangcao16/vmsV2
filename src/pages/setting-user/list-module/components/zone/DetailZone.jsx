@@ -2,6 +2,7 @@ import MSFormItem from '@/components/Form/Item';
 import { Button, Col, Form, Input, Row, Typography } from 'antd';
 import React from 'react';
 import { useIntl } from 'umi';
+import { DrawerActionStyle, DrawerLabelStyle } from '../../style';
 
 const { Paragraph } = Typography;
 
@@ -13,57 +14,57 @@ const DetailZone = ({ onClose, selectedRecord }) => {
       <Row gutter={24}>
         <Col span={12}>
           <Paragraph className="mt-1">
-            <p style={{ fontWeight: 600, fontSize: 14 }}>{`${intl.formatMessage({
+            <DrawerLabelStyle>{`${intl.formatMessage({
               id: 'view.common_device.zone_name',
-            })}`}</p>
+            })}`}</DrawerLabelStyle>
             <p>{selectedRecord?.name}</p>
           </Paragraph>
         </Col>
 
         <Col span={12}>
           <Paragraph className="mt-1">
-            <p style={{ fontWeight: 600, fontSize: 14 }}>{`${intl.formatMessage({
+            <DrawerLabelStyle>{`${intl.formatMessage({
               id: 'view.map.province_id',
-            })}`}</p>
+            })}`}</DrawerLabelStyle>
             <p>{selectedRecord?.provinceName}</p>
           </Paragraph>
         </Col>
         <Col span={12}>
           <Paragraph className="mt-1">
-            <p style={{ fontWeight: 600, fontSize: 14 }}>{`${intl.formatMessage({
+            <DrawerLabelStyle>{`${intl.formatMessage({
               id: 'view.map.district_id',
-            })}`}</p>
+            })}`}</DrawerLabelStyle>
             <p>{selectedRecord?.districtName}</p>
           </Paragraph>
         </Col>
         <Col span={12}>
           <Paragraph className="mt-1">
-            <p style={{ fontWeight: 600, fontSize: 14 }}>{`${intl.formatMessage({
+            <DrawerLabelStyle>{`${intl.formatMessage({
               id: 'view.map.ward_id',
-            })}`}</p>
+            })}`}</DrawerLabelStyle>
             <p>{selectedRecord?.wardName}</p>
           </Paragraph>
         </Col>
         <Col span={12}>
           <Paragraph className="mt-1">
-            <p style={{ fontWeight: 600, fontSize: 14 }}>{`${intl.formatMessage({
+            <DrawerLabelStyle>{`${intl.formatMessage({
               id: 'view.map.address',
-            })}`}</p>
+            })}`}</DrawerLabelStyle>
             <p>{selectedRecord?.address}</p>
           </Paragraph>
         </Col>
 
         <Col span={24}>
           <Paragraph className="mt-1">
-            <p style={{ fontWeight: 600, fontSize: 14 }}>{`${intl.formatMessage({
+            <DrawerLabelStyle>{`${intl.formatMessage({
               id: 'view.user.detail_list.desc',
-            })}`}</p>
+            })}`}</DrawerLabelStyle>
             <p>{selectedRecord?.description}</p>
           </Paragraph>
         </Col>
         <Col span={24}>
           <Paragraph className="mt-1">
-            <p style={{ fontWeight: 600, fontSize: 14 }}>NVR</p>
+            <DrawerLabelStyle>NVR</DrawerLabelStyle>
 
             <p>
               {selectedRecord?.nvrList.map((p) => {
@@ -74,7 +75,7 @@ const DetailZone = ({ onClose, selectedRecord }) => {
         </Col>
         <Col span={24}>
           <Paragraph className="mt-1">
-            <p style={{ fontWeight: 600, fontSize: 14 }}>Playback</p>
+            <DrawerLabelStyle>Playback</DrawerLabelStyle>
             <p>
               {selectedRecord?.playbackList.map((p) => {
                 return `${p.name}/`;
@@ -84,7 +85,7 @@ const DetailZone = ({ onClose, selectedRecord }) => {
         </Col>
         <Col span={24}>
           <Paragraph className="mt-1">
-            <p style={{ fontWeight: 600, fontSize: 14 }}>Camproxy</p>
+            <DrawerLabelStyle>Camproxy</DrawerLabelStyle>
 
             <p>
               {selectedRecord?.campList.map((p) => {
@@ -94,24 +95,13 @@ const DetailZone = ({ onClose, selectedRecord }) => {
           </Paragraph>
         </Col>
       </Row>
-      <div
-        style={{
-          position: 'absolute',
-          right: 0,
-          bottom: 0,
-          width: '100%',
-          borderTop: '1px solid #e9e9e9',
-          padding: '10px 16px',
-          background: '#fff',
-          textAlign: 'right',
-        }}
-      >
+      <DrawerActionStyle>
         <Button onClick={onClose} type="danger">
           {`${intl.formatMessage({
             id: 'view.camera.close',
           })}`}
         </Button>
-      </div>
+      </DrawerActionStyle>
     </div>
   );
 };

@@ -10,3 +10,8 @@ export const DrawerActionStyle = styled.div`
   background-color: #fff;
   text-align: right;
 `;
+
+export const DrawerLabelStyle = styled.p`
+  font-weight: 600;
+  font-size: 14px;
+`;
