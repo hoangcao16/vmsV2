@@ -23,10 +23,6 @@ const TableZone = ({ dispatch, list, metadata }) => {
     });
   }, []);
 
-  const onCloseDetails = () => {
-    setOpenDrawerDetail(false);
-  };
-
   const columns = [
     {
       title: 'STT',
