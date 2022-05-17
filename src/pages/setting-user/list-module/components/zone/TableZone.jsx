@@ -1,6 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { AutoComplete, Button, Input } from 'antd';
 import { connect } from 'dva';
+import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
@@ -15,13 +16,23 @@ const TableZone = ({ dispatch, list, metadata }) => {
     dispatch({
       type: 'zone/fetchAllZone',
       payload: {
-        filter: '',
         page: metadata?.page,
         size: metadata?.size,
         name: metadata?.name,
       },
     });
   }, []);
+
+  const handleSearch = (value) => {
+    dispatch({
+      type: 'zone/fetchAllZone',
+      payload: {
+        page: metadata?.page,
+        size: metadata?.size,
+        name: value,
+      },
+    });
+  };
 
   const columns = [
     {
@@ -76,11 +87,20 @@ const TableZone = ({ dispatch, list, metadata }) => {
         }}
         toolbar={{
           multipleLine: true,
-          search: {
-            onSearch: (value) => {
-              alert(value);
-            },
-          },
+          filter: (
+            <AutoComplete key="search" onSearch={debounce(handleSearch, 1000)}>
+              <Input.Search
+                placeholder={intl.formatMessage(
+                  { id: 'view.common_device.please_enter_zone_name' },
+                  {
+                    plsEnter: intl.formatMessage({
+                      id: 'please_enter',
+                    }),
+                  },
+                )}
+              />
+            </AutoComplete>
+          ),
           actions: [
             <Button
               key="add"
