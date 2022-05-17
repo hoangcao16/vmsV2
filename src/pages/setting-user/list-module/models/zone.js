@@ -30,8 +30,20 @@ export default {
       }
     },
     *addZone({ payload }, { call, put }) {
-      yield call(ModuleApi.addZone, payload);
-      yield put({ type: 'reload' });
+      try {
+        const res = yield call(ModuleApi.addZone, payload);
+        yield put({ type: 'reload' });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    *editZone({ payload: { id, values } }, { call, put }) {
+      try {
+        const res = yield call(ModuleApi.editZone, id, values);
+        yield put({ type: 'reload' });
+      } catch (error) {
+        console.log(error);
+      }
     },
     *reload(action, { put, select }) {
       const page = yield select((state) => state.zone.page);

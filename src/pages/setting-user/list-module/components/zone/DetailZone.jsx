@@ -5,9 +5,8 @@ import { useIntl } from 'umi';
 
 const { Paragraph } = Typography;
 
-const DetailZone = ({ onClose, selectedZoneDetail }) => {
+const DetailZone = ({ onClose, selectedRecord }) => {
   const intl = useIntl();
-  console.log('selectedZoneDetail', selectedZoneDetail);
 
   return (
     <div>
@@ -17,7 +16,7 @@ const DetailZone = ({ onClose, selectedZoneDetail }) => {
             <p style={{ fontWeight: 600, fontSize: 14 }}>{`${intl.formatMessage({
               id: 'view.common_device.zone_name',
             })}`}</p>
-            <p>{selectedZoneDetail?.name}</p>
+            <p>{selectedRecord?.name}</p>
           </Paragraph>
         </Col>
 
@@ -26,7 +25,7 @@ const DetailZone = ({ onClose, selectedZoneDetail }) => {
             <p style={{ fontWeight: 600, fontSize: 14 }}>{`${intl.formatMessage({
               id: 'view.map.province_id',
             })}`}</p>
-            <p>{selectedZoneDetail?.provinceName}</p>
+            <p>{selectedRecord?.provinceName}</p>
           </Paragraph>
         </Col>
         <Col span={12}>
@@ -34,7 +33,7 @@ const DetailZone = ({ onClose, selectedZoneDetail }) => {
             <p style={{ fontWeight: 600, fontSize: 14 }}>{`${intl.formatMessage({
               id: 'view.map.district_id',
             })}`}</p>
-            <p>{selectedZoneDetail?.districtName}</p>
+            <p>{selectedRecord?.districtName}</p>
           </Paragraph>
         </Col>
         <Col span={12}>
@@ -42,7 +41,7 @@ const DetailZone = ({ onClose, selectedZoneDetail }) => {
             <p style={{ fontWeight: 600, fontSize: 14 }}>{`${intl.formatMessage({
               id: 'view.map.ward_id',
             })}`}</p>
-            <p>{selectedZoneDetail?.wardName}</p>
+            <p>{selectedRecord?.wardName}</p>
           </Paragraph>
         </Col>
         <Col span={12}>
@@ -50,7 +49,7 @@ const DetailZone = ({ onClose, selectedZoneDetail }) => {
             <p style={{ fontWeight: 600, fontSize: 14 }}>{`${intl.formatMessage({
               id: 'view.map.address',
             })}`}</p>
-            <p>{selectedZoneDetail?.address}</p>
+            <p>{selectedRecord?.address}</p>
           </Paragraph>
         </Col>
 
@@ -59,7 +58,7 @@ const DetailZone = ({ onClose, selectedZoneDetail }) => {
             <p style={{ fontWeight: 600, fontSize: 14 }}>{`${intl.formatMessage({
               id: 'view.user.detail_list.desc',
             })}`}</p>
-            <p>{selectedZoneDetail?.description}</p>
+            <p>{selectedRecord?.description}</p>
           </Paragraph>
         </Col>
         <Col span={24}>
@@ -67,7 +66,7 @@ const DetailZone = ({ onClose, selectedZoneDetail }) => {
             <p style={{ fontWeight: 600, fontSize: 14 }}>NVR</p>
 
             <p>
-              {selectedZoneDetail?.nvrList.map((p) => {
+              {selectedRecord?.nvrList.map((p) => {
                 return `${p.name}/`;
               })}
             </p>
@@ -77,7 +76,7 @@ const DetailZone = ({ onClose, selectedZoneDetail }) => {
           <Paragraph className="mt-1">
             <p style={{ fontWeight: 600, fontSize: 14 }}>Playback</p>
             <p>
-              {selectedZoneDetail?.playbackList.map((p) => {
+              {selectedRecord?.playbackList.map((p) => {
                 return `${p.name}/`;
               })}
             </p>
@@ -88,7 +87,7 @@ const DetailZone = ({ onClose, selectedZoneDetail }) => {
             <p style={{ fontWeight: 600, fontSize: 14 }}>Camproxy</p>
 
             <p>
-              {selectedZoneDetail?.campList.map((p) => {
+              {selectedRecord?.campList.map((p) => {
                 return `${p.name}/`;
               })}
             </p>

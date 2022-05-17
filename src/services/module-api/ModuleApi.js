@@ -15,15 +15,20 @@ const ModuleApi = {
     return request.put(`/cctv-controller-svc/api/v1/playback/${playbackId}`, values);
   },
 
-  getAllCamproxy: async (params) => {
-    return request.get(`/cctv-controller-svc/api/v1/camproxy`, params);
-  },
   getAllZone: async (params) => {
     return request.get(`/cctv-controller-svc/api/v1/zones`, params);
   },
 
   addZone: async (values) => {
     return request.post('/cctv-controller-svc/api/v1/zones', values);
+  },
+
+  editZone: async (zoneId, values) => {
+    return request.put(`/cctv-controller-svc/api/v1/zones/${zoneId}`, values);
+  },
+
+  getAllCamproxy: async (params) => {
+    return request.get(`/cctv-controller-svc/api/v1/camproxy`, params);
   },
 };
 

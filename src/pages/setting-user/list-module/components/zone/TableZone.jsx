@@ -4,19 +4,18 @@ import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined } from '
 import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
+import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
-import AddZone from './AddZone';
+import AddEditZone from './AddEditZone';
 import DetailZone from './DetailZone';
 import EditZone from './EditZone';
 
 const TableZone = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
   const [openDrawerDetail, setOpenDrawerDetail] = useState(false);
-  const [openDrawerAdd, setOpenDrawerAdd] = useState(false);
-  const [openDrawerEdit, setOpenDrawerEdit] = useState(false);
-
-  const [selectedZoneDetail, setSelectedZoneDetail] = useState(null);
+  const [openDrawerAddEdit, setOpenDrawerAddEdit] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
 
   useEffect(() => {
     dispatch({
@@ -82,7 +81,7 @@ const TableZone = ({ dispatch, list, metadata }) => {
               <InfoCircleOutlined
                 onClick={() => {
                   setOpenDrawerDetail(true);
-                  setSelectedZoneDetail(record);
+                  setSelectedRecord(record);
                 }}
                 style={{ fontSize: '16px', color: '#6E6B7B' }}
               />
@@ -95,7 +94,8 @@ const TableZone = ({ dispatch, list, metadata }) => {
             >
               <EditOutlined
                 onClick={() => {
-                  setOpenDrawerEdit(true);
+                  setOpenDrawerAddEdit(true);
+                  setSelectedRecord(record);
                 }}
                 style={{ fontSize: '16px', color: '#6E6B7B' }}
               />
@@ -136,7 +136,8 @@ const TableZone = ({ dispatch, list, metadata }) => {
               key="add"
               type="primary"
               onClick={() => {
-                setOpenDrawerAdd(true);
+                setOpenDrawerAddEdit(true);
+                setSelectedRecord(null);
               }}
             >
               <PlusOutlined />
@@ -171,29 +172,37 @@ const TableZone = ({ dispatch, list, metadata }) => {
           })}`}
           placement="right"
         >
-          <DetailZone onClose={onCloseDetails} selectedZoneDetail={selectedZoneDetail} />
+          <DetailZone onClose={onCloseDetails} selectedRecord={selectedRecord} />
         </MSCustomizeDrawer>
       )}
-      {openDrawerAdd && (
+      {openDrawerAddEdit && (
         <MSCustomizeDrawer
-          openDrawer={openDrawerAdd}
-          onClose={() => setOpenDrawerAdd(false)}
+          openDrawer={openDrawerAddEdit}
+          onClose={() => setOpenDrawerAddEdit(false)}
           width={'30%'}
           zIndex={1001}
-          title={intl.formatMessage(
-            { id: 'view.common_device.add_zone' },
-            {
-              add: intl.formatMessage({
-                id: 'add',
-              }),
-            },
-          )}
+          title={
+            isEmpty(selectedRecord)
+              ? intl.formatMessage(
+                  { id: 'view.common_device.add_zone' },
+                  {
+                    add: intl.formatMessage({
+                      id: 'add',
+                    }),
+                  },
+                )
+              : intl.formatMessage({ id: 'view.common_device.edit_zone' })
+          }
           placement="right"
         >
-          <AddZone onClose={() => setOpenDrawerAdd(false)} dispatch={dispatch} />
+          <AddEditZone
+            onClose={() => setOpenDrawerAddEdit(false)}
+            dispatch={dispatch}
+            selectedRecord={selectedRecord}
+          />
         </MSCustomizeDrawer>
       )}
-      {openDrawerEdit && (
+      {/* {openDrawerEdit && (
         <MSCustomizeDrawer
           openDrawer={openDrawerEdit}
           onClose={() => setOpenDrawerEdit(false)}
@@ -204,7 +213,7 @@ const TableZone = ({ dispatch, list, metadata }) => {
         >
           <EditZone />
         </MSCustomizeDrawer>
-      )}
+      )} */}
     </>
   );
 };
