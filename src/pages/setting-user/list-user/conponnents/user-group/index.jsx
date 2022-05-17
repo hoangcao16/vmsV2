@@ -151,7 +151,7 @@ function UserGroup({ dispatch, list, metadata }) {
               search={false}
               dataSource={list}
               columns={columns}
-              rowSelection={{}}
+              // rowSelection={{}}
               options={false}
               toolbar={{
                 multipleLine: true,
