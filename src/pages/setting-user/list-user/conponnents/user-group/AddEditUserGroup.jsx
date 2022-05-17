@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { useIntl } from 'umi';
+import TableGroupCameraPermission from './group-camera-table/TableGroupCameraPermission';
 import TablePermissionInGroup from './TablePermissionInGroup';
 import TableUserInGroup from './TableUserInGroup';
 
@@ -114,6 +115,7 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
           <>
             <TableUserInGroup id={selectedRecord?.uuid} />
             <TablePermissionInGroup id={selectedRecord?.uuid} />
+            <TableGroupCameraPermission id={selectedRecord?.uuid} />
           </>
         )}
       </MSCustomizeDrawer>

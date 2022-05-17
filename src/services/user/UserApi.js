@@ -94,6 +94,21 @@ const UserApi = {
   deleteRole: async (id) => {
     return request.delete(`/authz/api/v0/roles/${id}`);
   },
+
+  // ==============================================================Permission
+
+  getAllCameraGroups: async (params) => {
+    return request.get(`/cctv-controller-svc/api/v1/camera_groups`, {
+      params,
+    });
+  },
+
+  setPermisionCameraGroups: async (payloadAdd) => {
+    return request.post('/authz/api/v0/authorization/add_permission', payloadAdd);
+  },
+  removePermisionCameraGroups: async (payloadAdd) => {
+    return request.post('/authz/api/v0/authorization/remove_permission', payloadAdd);
+  },
 };
 
 export default UserApi;

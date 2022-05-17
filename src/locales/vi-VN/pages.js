@@ -64,6 +64,7 @@ export default {
   'pages.setting-user.list-user.save': 'Lưu',
   'pages.setting-user.list-user.search': 'Tìm kiếm',
   'pages.setting-user.list-user.nodata': 'Không có dữ liệu',
+  'pages.setting-user.list-user.permissionCameraGroups': 'Phân quyền cho nhóm camera',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Thành công',

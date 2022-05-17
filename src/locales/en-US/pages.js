@@ -64,6 +64,7 @@ export default {
   'pages.setting-user.list-user.save': 'Save',
   'pages.setting-user.list-user.search': 'Search',
   'pages.setting-user.list-user.nodata': 'No data',
+  'pages.setting-user.list-user.permissionCameraGroups': 'Permissions For Camera Groups',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Success',
