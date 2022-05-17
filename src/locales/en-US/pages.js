@@ -59,6 +59,11 @@ export default {
   'pages.setting-user.list-user.select': 'Selected',
   'pages.setting-user.list-user.record': 'record',
   'pages.setting-user.list-user.clean': 'Clean All',
+  'pages.setting-user.list-user.list-permission': 'List permission',
+  'pages.setting-user.list-user.setting-per': 'Setting permission',
+  'pages.setting-user.list-user.save': 'Save',
+  'pages.setting-user.list-user.search': 'Search',
+  'pages.setting-user.list-user.nodata': 'No data',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Success',

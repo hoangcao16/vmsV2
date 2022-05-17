@@ -59,6 +59,11 @@ export default {
   'pages.setting-user.list-user.select': 'Đã chọn',
   'pages.setting-user.list-user.record': 'bản ghi',
   'pages.setting-user.list-user.clean': 'Bỏ chọn tất cả',
+  'pages.setting-user.list-user.list-permission': 'Danh sách quyền',
+  'pages.setting-user.list-user.setting-per': 'Chỉnh sửa quyền',
+  'pages.setting-user.list-user.save': 'Lưu',
+  'pages.setting-user.list-user.search': 'Tìm kiếm',
+  'pages.setting-user.list-user.nodata': 'Không có dữ liệu',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Thành công',
