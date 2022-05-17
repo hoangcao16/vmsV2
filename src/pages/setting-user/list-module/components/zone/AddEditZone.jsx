@@ -2,8 +2,8 @@ import MSFormItem from '@/components/Form/Item';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
 import AddressApi from '@/services/address/AddressApi';
 import ModuleApi from '@/services/module-api/ModuleApi';
-import { CloseOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Form, Input, Row, Select, Space } from 'antd';
+import { CloseOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Form, Input, Popconfirm, Row, Select, Space } from 'antd';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
@@ -103,6 +103,14 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch, openDrawer }) => {
     form.setFieldsValue({ wardId: null });
   }
 
+  const onDeleteRecord = () => {
+    dispatch({
+      type: 'zone/deleteZone',
+      payload: { id: selectedRecord?.uuid },
+    });
+    onClose();
+  };
+
   return (
     <StyledDrawer
       openDrawer={openDrawer}
@@ -126,6 +134,20 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch, openDrawer }) => {
             <CloseOutlined />
             {intl.formatMessage({ id: 'view.map.cancel' })}
           </Button>
+          {!isEmpty(selectedRecord) && (
+            <Popconfirm
+              placement="bottom"
+              title={intl.formatMessage({ id: 'noti.delete_zone' })}
+              onConfirm={onDeleteRecord}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="primary" danger>
+                <DeleteOutlined />
+                {intl.formatMessage({ id: 'delete' })}
+              </Button>
+            </Popconfirm>
+          )}
         </Space>
       }
     >
