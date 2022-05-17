@@ -40,6 +40,7 @@ const LineChart = (props) => {
           id: `pages.report.chart.lineTitle`,
           defaultMessage: 'name',
         })}
+        typeChart={'line'}
       />
       <Divider />
       <Line {...config} />

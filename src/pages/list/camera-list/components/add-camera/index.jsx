@@ -13,13 +13,14 @@ import {
 } from '@ant-design/icons';
 import MapAddCamera from '../map';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
-import { NotificationError } from '@/components/Notif/NotifCustomize';
 import AddressApi from '@/services/address/AddressApi';
 import CameraApi from '@/services/camera/CameraApi';
 import ZoneApi from '@/services/zone/ZoneApi';
 import AdDivisionApi from '@/services/advision/AdDivision';
 import VendorApi from '@/services/vendor/VendorApi';
 import TagApi from '@/services/tag/tagApi';
+import { NotificationError } from '@/components/Notify';
+
 const { Dragger } = Upload;
 const formItemLayout = {
   wrapperCol: { span: 24 },

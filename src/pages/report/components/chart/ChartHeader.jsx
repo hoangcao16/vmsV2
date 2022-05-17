@@ -13,7 +13,7 @@ const ChartHeader = (props) => {
     <div className="chart-header">
       <div className="chart-header-title">{props.title}</div>
       <div className="chart-header-date">
-        <DatePickerForm />
+        <DatePickerForm title={props.title} typeChart={props.typeChart} />
       </div>
     </div>
   );

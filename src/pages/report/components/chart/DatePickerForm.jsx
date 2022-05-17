@@ -45,10 +45,17 @@ const DatePickerForm = (props) => {
       cameraUuids: '',
     };
 
-    props.dispatch({
-      type: 'chart/changeReportHeaderData',
-      payload: params,
-    });
+    if (props.typeChart == 'pie') {
+      props.dispatch({
+        type: 'chart/changeReportHeaderDataPieChart',
+        payload: params,
+      });
+    } else {
+      props.dispatch({
+        type: 'chart/changeReportHeaderData',
+        payload: params,
+      });
+    }
   };
 
   const onValuesChange = ({ typeDate }) => {
