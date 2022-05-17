@@ -1,4 +1,4 @@
-import MyService from '../RestApiClient';
+import request from '@/utils/request';
 
 const ReportApi = {
   // getExportData: async (body) => {
@@ -34,24 +34,16 @@ const ReportApi = {
   //   return result;
   // },
 
-  getData: async (body) => {
-    try {
-      const { data } = await MyService.getRequest('/owl/api/v2/get-data-line', body);
-      return data.payload;
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
+  getData(params) {
+    return request.get(`/owl/api/v2/get-data-line`, {
+      params,
+    });
   },
 
-  getDataPieChart: async (body) => {
-    try {
-      const { data } = await MyService.getRequest('/owl/api/v2/get-data-pie', body);
-      return data.payload;
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
+  getDataPieChart(params) {
+    return request.get(`/owl/api/v2/get-data-pie`, {
+      params,
+    });
   },
 };
 

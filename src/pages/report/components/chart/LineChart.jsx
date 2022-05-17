@@ -50,7 +50,7 @@ const LineChart = (props) => {
 
 function mapStateToProps(state) {
   const { chart } = state;
-  return { data: chart?.list?.events };
+  return { data: chart?.list };
 }
 
 export default connect(mapStateToProps)(LineChart);
