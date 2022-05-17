@@ -65,39 +65,9 @@ export default {
       }
     },
 
-    // *patch({ payload: { id, values } }, { call, put, select }) {
-    //   yield call(UserApi.updateUserGroup, id, values);
-    //   const oldList = yield select((state) => state.userGroup.list);
-    //   const metadata = yield select((state) => state.userGroup.metadata);
-
-    //   const userGroupIndex = oldList.findIndex((userG) => userG.uuid === id);
-
-    //   if (userGroupIndex >= 0) {
-    //     oldList[userGroupIndex] = { ...oldList[userGroupIndex], ...values };
-    //   }
-
-    //   const newList = [...oldList];
-
-    //   yield put({
-    //     type: 'save',
-    //     payload: {
-    //       data: newList,
-    //       metadata: metadata,
-    //     },
-    //   });
-    //   // yield put({ type: 'reload' });
-    // },
-
-    // *remove({ payload: id }, { call, put }) {
-    //   yield call(UserApi.deleteUserGroup, id);
-    //   yield put({ type: 'reload' });
-    // },
-
     *addMemberIntoGroups({ payload: dataAdd }, { call, put }) {
       try {
         const res = yield call(UserApi.addMemberIntoGroups, dataAdd);
-
-        console.log('res:', res);
 
         yield put({ type: 'reload' });
         yield put({ type: 'reloadFetchAllUserNotInGroup' });
@@ -107,8 +77,6 @@ export default {
     *remove({ payload: dataRemove }, { call, put }) {
       try {
         const res = yield call(UserApi.removeUserInGroup, dataRemove);
-
-        console.log('res:', res);
 
         yield put({ type: 'reload' });
         yield put({ type: 'reloadFetchAllUserNotInGroup' });

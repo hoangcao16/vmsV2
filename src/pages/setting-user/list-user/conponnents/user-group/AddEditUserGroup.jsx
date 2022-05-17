@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { useIntl } from 'umi';
+import TablePermissionInGroup from './TablePermissionInGroup';
 import TableUserInGroup from './TableUserInGroup';
 
 function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
@@ -109,7 +110,12 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
             </Button>
           </div>
         </Form>
-        {!isEmpty(selectedRecord) && <TableUserInGroup id={selectedRecord?.uuid} />}
+        {!isEmpty(selectedRecord) && (
+          <>
+            <TableUserInGroup id={selectedRecord?.uuid} />
+            <TablePermissionInGroup id={selectedRecord?.uuid} />
+          </>
+        )}
       </MSCustomizeDrawer>
     </div>
   );
