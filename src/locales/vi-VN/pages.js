@@ -56,6 +56,8 @@ export default {
   'pages.setting-user.list-user.listUserInGroup': 'Danh sách thành viên',
   'pages.setting-user.list-user.add-user-in-group': 'Thêm thành viên vào nhóm',
   'pages.setting-user.list-user.add-user-in-group': 'Thêm',
+  'pages.setting-user.list-user.select': 'Đã chọn',
+  'pages.setting-user.list-user.record': 'bản ghi',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Thành công',

@@ -56,6 +56,8 @@ export default {
   'pages.setting-user.list-user.listUserInGroup': 'List Member In Group',
   'pages.setting-user.list-user.add-user-in-group': 'Add Member Into Group',
   'pages.setting-user.list-user.add': 'Add',
+  'pages.setting-user.list-user.select': 'Selected',
+  'pages.setting-user.list-user.record': 'record',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Success',

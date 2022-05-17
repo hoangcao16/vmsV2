@@ -100,7 +100,13 @@ function AddUserIntoGroup({ dispatch, listUserNoIntoGroup, listUuidCurrentUserIn
               tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => (
                 <Space size={24}>
                   <span>
-                    Đã chọn {selectedRowKeys.length} bản ghi
+                    {intl.formatMessage({
+                      id: 'pages.setting-user.list-user.select',
+                    })}{' '}
+                    {selectedRowKeys.length}{' '}
+                    {intl.formatMessage({
+                      id: 'pages.setting-user.list-user.record',
+                    })}
                     <a style={{ marginLeft: 8 }} onClick={onCleanSelected}>
                       Clear all
                     </a>
