@@ -45,6 +45,14 @@ export default {
         console.log(error);
       }
     },
+    *deleteZone({ payload: { id } }, { call, put }) {
+      try {
+        const res = yield call(ModuleApi.deleteZone, id);
+        yield put({ type: 'reload' });
+      } catch (error) {
+        console.log(error);
+      }
+    },
     *reload(action, { put, select }) {
       const page = yield select((state) => state.zone.page);
       yield put({ type: 'fetchAllZone', payload: { page } });

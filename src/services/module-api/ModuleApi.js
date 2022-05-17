@@ -27,6 +27,10 @@ const ModuleApi = {
     return request.put(`/cctv-controller-svc/api/v1/zones/${zoneId}`, values);
   },
 
+  deleteZone: async (zoneId) => {
+    return request.delete(`/cctv-controller-svc/api/v1/zones/${zoneId}`);
+  },
+
   getAllCamproxy: async () => {
     return request.get(`/cctv-controller-svc/api/v1/camproxy`);
   },
