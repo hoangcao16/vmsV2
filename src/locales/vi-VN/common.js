@@ -72,6 +72,7 @@ export default {
   'view.camera.find_camera': 'Tìm kiếm theo tên camera, địa chỉ',
   'view.camera.add_camera': 'Thêm camera',
   'view.camera.total': 'Tổng cộng',
+  'view.camera.edit_camera': 'Chỉnh sửa camera',
   //view category
   'view.category.camera_vendor': 'Hãng {cam}',
   'view.category.field': 'Lĩnh vực',

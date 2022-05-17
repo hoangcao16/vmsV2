@@ -16,10 +16,20 @@ import {
   MergeCellsOutlined,
 } from '@ant-design/icons';
 import AddCamera from './components/add-camera';
+import EditCamera from './components/edit-camera';
 const { Search } = Input;
 const CameraList = ({ dispatch, list, metadata }) => {
   const [isAddNewDrawer, setIsAddNewDrawer] = useState(false);
+  const [isEditDrawer, setIsEditDrawer] = useState(false);
   const intl = useIntl();
+  const handleEdit = (uuid) => {
+    setIsEditDrawer(true);
+    dispatch({
+      type: 'camera/selectUuidEdit',
+      payload: { uuid },
+    });
+  };
+
   const columns = [
     {
       title: intl.formatMessage(
@@ -29,6 +39,7 @@ const CameraList = ({ dispatch, list, metadata }) => {
         },
       ),
       dataIndex: 'code',
+      key: 'code',
     },
     {
       title: intl.formatMessage(
@@ -38,36 +49,42 @@ const CameraList = ({ dispatch, list, metadata }) => {
         },
       ),
       dataIndex: 'name',
+      key: 'name',
     },
     {
       title: intl.formatMessage({
         id: 'view.map.province_id',
       }),
       dataIndex: 'provinceName',
+      key: 'provinceName',
     },
     {
       title: intl.formatMessage({
         id: 'view.map.district_id',
       }),
       dataIndex: 'districtName',
+      key: 'districtName',
     },
     {
       title: intl.formatMessage({
         id: 'view.map.ward_id',
       }),
       dataIndex: 'wardName',
+      key: 'wardName',
     },
     {
       title: intl.formatMessage({
         id: 'view.map.address',
       }),
-      dataIndex: 'zoneName',
+      dataIndex: 'address',
+      key: 'address',
     },
     {
       title: intl.formatMessage({
         id: 'view.map.zone',
       }),
       dataIndex: 'zoneName',
+      key: 'zoneName',
     },
     {
       title: intl.formatMessage({
@@ -95,17 +112,17 @@ const CameraList = ({ dispatch, list, metadata }) => {
           status: 'Error',
         },
       },
+      key: 'cameraStatus',
     },
     {
       title: '',
       dataIndex: 'option',
       valueType: 'option',
+      key: 'option',
       render: (_, record) => [
-        <>
-          <EyeOutlined />
-          <EnvironmentOutlined />
-          <EditOutlined />
-        </>,
+        <EyeOutlined key="view" />,
+        <EnvironmentOutlined key="map" />,
+        <EditOutlined onClick={() => handleEdit(record?.uuid)} key="edit" />,
       ],
     },
   ];
@@ -153,6 +170,7 @@ const CameraList = ({ dispatch, list, metadata }) => {
               placeholder={intl.formatMessage({
                 id: 'view.camera.find_camera',
               })}
+              key="search"
             />
           ),
           actions: [
@@ -212,9 +230,8 @@ const CameraList = ({ dispatch, list, metadata }) => {
           current: metadata?.page,
         }}
       />
-      <div>
-        <AddCamera openDrawer={isAddNewDrawer} setIsAddNewDrawer={setIsAddNewDrawer} />
-      </div>
+      <AddCamera isAddNewDrawer={isAddNewDrawer} setIsAddNewDrawer={setIsAddNewDrawer} />
+      <EditCamera isEditDrawer={isEditDrawer} setIsEditDrawer={setIsEditDrawer} />
     </PageContainer>
   );
 };
