@@ -4,24 +4,32 @@ import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined } from '
 import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
-import { useState } from 'react';
+import { isEmpty } from 'lodash';
+import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
+import AddEditZone from './AddEditZone';
+import DetailZone from './DetailZone';
 
 const TableZone = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
-  const [openDrawer, setOpenDrawer] = useState(false);
-  const [form] = Form.useForm();
-  const showDrawer = () => {
-    setOpenDrawer(true);
-  };
-  const onClose = () => {
-    setOpenDrawer(false);
-  };
+  const [openDrawerDetail, setOpenDrawerDetail] = useState(false);
+  const [openDrawerAddEdit, setOpenDrawerAddEdit] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
 
-  const handleSubmit = () => {
-    const a = form.getFieldsValue(true);
+  useEffect(() => {
+    dispatch({
+      type: 'zone/fetchAllZone',
+      payload: {
+        filter: '',
+        page: metadata?.page,
+        size: metadata?.size,
+        name: metadata?.name,
+      },
+    });
+  }, []);
 
-    return false;
+  const onCloseDetails = () => {
+    setOpenDrawerDetail(false);
   };
 
   const columns = [
@@ -63,14 +71,39 @@ const TableZone = ({ dispatch, list, metadata }) => {
       render: (text, record) => {
         return (
           <Space>
-            <Tooltip placement="top" title="Chi tiết">
-              <InfoCircleOutlined style={{ fontSize: '16px', color: '#6E6B7B' }} />
+            <Tooltip
+              placement="top"
+              title={intl.formatMessage({
+                id: 'view.common_device.detail',
+              })}
+            >
+              <InfoCircleOutlined
+                onClick={() => {
+                  setOpenDrawerDetail(true);
+                  setSelectedRecord(record);
+                }}
+              />
             </Tooltip>
-            <Tooltip placement="top" title="Chỉnh sửa">
-              <EditOutlined style={{ fontSize: '16px', color: '#6E6B7B' }} />
+            <Tooltip
+              placement="top"
+              title={intl.formatMessage({
+                id: 'view.common_device.edit',
+              })}
+            >
+              <EditOutlined
+                onClick={() => {
+                  setOpenDrawerAddEdit(true);
+                  setSelectedRecord(record);
+                }}
+              />
             </Tooltip>
-            <Tooltip placement="top" title="Xóa">
-              <DeleteOutlined style={{ fontSize: '16px', color: '#6E6B7B' }} />
+            <Tooltip
+              placement="top"
+              title={intl.formatMessage({
+                id: 'view.ai_events.delete',
+              })}
+            >
+              <DeleteOutlined />
             </Tooltip>
           </Space>
         );
@@ -100,11 +133,19 @@ const TableZone = ({ dispatch, list, metadata }) => {
               key="add"
               type="primary"
               onClick={() => {
-                alert('add');
+                setOpenDrawerAddEdit(true);
+                setSelectedRecord(null);
               }}
             >
               <PlusOutlined />
-              Thêm zone
+              {intl.formatMessage(
+                { id: 'view.common_device.add_zone' },
+                {
+                  add: intl.formatMessage({
+                    id: 'add',
+                  }),
+                },
+              )}
             </Button>,
           ],
         }}
@@ -117,58 +158,45 @@ const TableZone = ({ dispatch, list, metadata }) => {
           current: metadata?.page,
         }}
       />
-      {openDrawer && (
+      {openDrawerDetail && (
         <MSCustomizeDrawer
-          openDrawer={openDrawer}
-          onClose={onClose}
-          width={800}
+          openDrawer={openDrawerDetail}
+          onClose={onCloseDetails}
+          width={'30%'}
           zIndex={1001}
-          title="Test"
+          title={`${intl.formatMessage({
+            id: 'view.common_device.zone_detail',
+          })}`}
           placement="right"
-          extra={
-            <Space>
-              <Button onClick={onClose}>Cancel</Button>
-              <Button type="primary" onClick={onClose}>
-                OK
-              </Button>
-            </Space>
-          }
         >
-          <div>
-            <Form layout="vertical" form={form} onFinish={handleSubmit}>
-              <Row gutter={16}>
-                <Col span={24}>
-                  <MSFormItem
-                    label="Username"
-                    type="input"
-                    name="name"
-                    minLength={5}
-                    maxLength={255}
-                    required={true}
-                  >
-                    <Input />
-                  </MSFormItem>
-                </Col>
-              </Row>
-            </Form>
-            <div
-              style={{
-                position: 'absolute',
-                right: 0,
-                bottom: 0,
-                width: '100%',
-                borderTop: '1px solid #e9e9e9',
-                padding: '10px 16px',
-                background: '#fff',
-                textAlign: 'right',
-              }}
-            >
-              <Button type="danger">Hủy</Button>
-              <Button htmlType="submit" onClick={handleSubmit} type="ghost">
-                Sửa
-              </Button>
-            </div>
-          </div>
+          <DetailZone onClose={onCloseDetails} selectedRecord={selectedRecord} />
+        </MSCustomizeDrawer>
+      )}
+      {openDrawerAddEdit && (
+        <MSCustomizeDrawer
+          openDrawer={openDrawerAddEdit}
+          onClose={() => setOpenDrawerAddEdit(false)}
+          width={'30%'}
+          zIndex={1001}
+          title={
+            isEmpty(selectedRecord)
+              ? intl.formatMessage(
+                  { id: 'view.common_device.add_zone' },
+                  {
+                    add: intl.formatMessage({
+                      id: 'add',
+                    }),
+                  },
+                )
+              : intl.formatMessage({ id: 'view.common_device.edit_zone' })
+          }
+          placement="right"
+        >
+          <AddEditZone
+            onClose={() => setOpenDrawerAddEdit(false)}
+            dispatch={dispatch}
+            selectedRecord={selectedRecord}
+          />
         </MSCustomizeDrawer>
       )}
     </>

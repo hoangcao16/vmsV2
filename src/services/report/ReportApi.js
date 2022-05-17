@@ -34,18 +34,15 @@ const ReportApi = {
   //   return result;
   // },
 
-  getData(data) {
-    return request.request({
-      method: 'GET',
-      url: `/owl/api/v2/get-data-line`,
-      data,
+  getData(params) {
+    return request.get(`/owl/api/v2/get-data-line`, {
+      params,
     });
   },
 
-  getDataPieChart(data) {
-    return request.request({
-      method: 'GET',
-      url: `/owl/api/v2/get-data-pie`,
+  getDataPieChart(params) {
+    return request.get(`/owl/api/v2/get-data-pie`, {
+      params,
     });
   },
 };

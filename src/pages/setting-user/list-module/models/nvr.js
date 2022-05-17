@@ -5,6 +5,7 @@ export default {
   state: {
     list: [],
     metadata: {
+      name: '',
       page: 1,
       size: 10,
     },
@@ -16,37 +17,32 @@ export default {
   },
   effects: {
     *fetchAllNVR({ payload }, { call, put }) {
-      const response = yield call(ModuleApi.getAllNVR, payload);
-      yield put({
-        type: 'save',
-        payload: {
-          data: response?.payload,
-          metadata: response?.metadata,
-        },
-      });
+      try {
+        const response = yield call(ModuleApi.getAllNVR, payload);
+        yield put({
+          type: 'save',
+          payload: {
+            data: response?.payload,
+            metadata: response?.metadata,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
     *editNVR({ nvrId, payload }, { call, put }) {
-      yield call(ModuleApi.editNVR, nvrId, payload);
-      yield put({ type: 'reload' });
+      try {
+        const res = yield call(ModuleApi.editNVR, nvrId, payload);
+
+        yield put({ type: 'reload' });
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     *reload(action, { put, select }) {
       const page = yield select((state) => state.nvr.page);
       yield put({ type: 'fetchAllNVR', payload: { page } });
-    },
-  },
-  subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen(({ pathname, query }) => {
-        const metadata = {
-          name: query.name || '',
-          page: query.page || 1,
-          size: query.size || 10,
-        };
-        if (pathname === '/setting-user/list-module') {
-          dispatch({ type: 'fetchAllNVR', payload: metadata });
-        }
-      });
     },
   },
 };

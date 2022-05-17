@@ -22,10 +22,11 @@ export default {
     *changeReportHeaderData({ payload }, { call, put }) {
       try {
         const response = yield call(reportApi.getData, payload);
+        console.log('line', response);
         yield put({
           type: 'save',
           payload: {
-            data: response,
+            data: response?.payload?.events,
           },
         });
       } catch (error) {
@@ -33,13 +34,13 @@ export default {
       }
     },
     *changeReportHeaderDataPieChart({ payload }, { call, put }) {
-      console.log('payload', payload);
       try {
         const response = yield call(reportApi.getDataPieChart, payload);
+        console.log('pie', response);
         yield put({
           type: 'save',
           payload: {
-            dataPieChart: response,
+            dataPieChart: response?.payload?.events,
           },
         });
       } catch (error) {

@@ -9,10 +9,15 @@ export default {
       page: 1,
       size: 10,
     },
+    selectedUuidEdit: '',
+    selectedCamera: {},
   },
   reducers: {
     save(state, { payload: { data: list, metadata } }) {
       return { ...state, list, metadata };
+    },
+    selectUuidEdit(state, { payload: selectedUuidEdit }) {
+      return { ...state, selectedUuidEdit };
     },
   },
   effects: {

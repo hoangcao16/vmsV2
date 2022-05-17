@@ -4,7 +4,7 @@ import { EditOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EditNVR from './EditNVR';
 import { useIntl } from 'umi';
 
@@ -12,6 +12,18 @@ const TableNVR = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedNVREdit, setSelectedNVREdit] = useState(null);
+
+  useEffect(() => {
+    dispatch({
+      type: 'nvr/fetchAllNVR',
+      payload: {
+        filter: '',
+        page: metadata?.page,
+        size: metadata?.size,
+        name: metadata?.name,
+      },
+    });
+  }, []);
 
   const showDrawer = () => {
     setOpenDrawer(true);
@@ -22,7 +34,7 @@ const TableNVR = ({ dispatch, list, metadata }) => {
 
   const renderTag = (cellValue) => {
     return (
-      <Tag color={cellValue === 'UP' ? '#1380FF' : '#FF4646'} style={{ color: '#ffffff' }}>
+      <Tag color={cellValue === 'UP' ? '#1380FF' : '#FF4646'}>
         {cellValue === 'UP' ? `Đang hoạt động` : `Dừng hoạt động`}
       </Tag>
     );
@@ -77,7 +89,6 @@ const TableNVR = ({ dispatch, list, metadata }) => {
           <Space>
             <Tooltip placement="rightTop" title="Chỉnh sửa">
               <EditOutlined
-                style={{ fontSize: '16px', color: '#6E6B7B' }}
                 onClick={() => {
                   showDrawer();
                   setSelectedNVREdit(record);

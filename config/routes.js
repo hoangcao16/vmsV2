@@ -24,12 +24,6 @@ export default [
       },
     ],
   },
-
-  {
-    path: '/live',
-    name: 'live',
-    icon: 'video-camera',
-  },
   {
     path: '/',
     icon: 'home',
@@ -41,7 +35,7 @@ export default [
     name: 'map',
   },
   {
-    path: '/live_mode',
+    path: '/live',
     icon: 'videoCamera',
     name: 'live_mode',
   },
@@ -49,6 +43,7 @@ export default [
     path: '/storage',
     icon: 'save',
     name: 'storage',
+    component: './storage',
   },
   {
     path: '/category',
@@ -64,9 +59,40 @@ export default [
     ],
   },
   {
-    path: '/setting',
+    path: '/setting-user',
+    name: 'setting-user',
     icon: 'setting',
-    name: 'setting',
+    routes: [
+      // {
+      //   path: '/setting-user',
+      //   redirect: '/setting-user/list-user',
+      // },
+      {
+        name: 'list-user',
+        icon: 'smile',
+        path: '/setting-user/list-user',
+        component: './setting-user/list-user',
+      },
+      {
+        name: 'list-modules',
+        icon: 'smile',
+        path: '/setting-user/list-module',
+        component: './setting-user/list-module',
+      },
+    ],
+  },
+  {
+    path: '/report',
+    icon: 'notification',
+    name: 'report',
+    routes: [
+      {
+        name: 'flow',
+        icon: 'smile',
+        path: '/report',
+        component: './report',
+      },
+    ],
   },
   {
     name: 'exception',

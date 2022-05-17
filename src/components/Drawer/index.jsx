@@ -29,6 +29,7 @@ export default function MSCustomizeDrawer(props) {
         visible={openDrawer}
         extra={extra}
         zIndex={zIndex}
+        destroyOnClose={true}
       >
         {children}
       </Drawer>

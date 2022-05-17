@@ -16,31 +16,38 @@ export default {
   },
   effects: {
     *fetchAllZone({ payload }, { call, put }) {
-      const response = yield call(ModuleApi.getAllZone, payload);
-      yield put({
-        type: 'save',
-        payload: {
-          data: response?.payload,
-          metadata: response?.metadata,
-        },
-      });
+      try {
+        const response = yield call(ModuleApi.getAllZone, payload);
+        yield put({
+          type: 'save',
+          payload: {
+            data: response?.payload,
+            metadata: response?.metadata,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
-  },
-  subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen(({ pathname, query }) => {
-        const metadata = {
-          name: query.name || '',
-          page: query.page || 1,
-          size: query.size || 10,
-          provinceId: query.provinceId || '',
-          districtId: query.districtId || '',
-          id: query.id || '',
-        };
-        if (pathname === '/setting-user/list-module') {
-          dispatch({ type: 'fetchAllZone', payload: metadata });
-        }
-      });
+    *addZone({ payload }, { call, put }) {
+      try {
+        const res = yield call(ModuleApi.addZone, payload);
+        yield put({ type: 'reload' });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    *editZone({ payload: { id, values } }, { call, put }) {
+      try {
+        const res = yield call(ModuleApi.editZone, id, values);
+        yield put({ type: 'reload' });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    *reload(action, { put, select }) {
+      const page = yield select((state) => state.zone.page);
+      yield put({ type: 'fetchAllZone', payload: { page } });
     },
   },
 };

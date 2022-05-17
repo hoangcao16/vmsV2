@@ -4,6 +4,7 @@ import ChartHeader from './ChartHeader';
 import { Divider } from 'antd';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
+import { isEmpty } from 'lodash';
 
 const PieChart = (props) => {
   const intl = useIntl();
@@ -11,7 +12,7 @@ const PieChart = (props) => {
   const G = G2.getEngine('canvas');
 
   useEffect(() => {
-    if (props.data) {
+    if (!isEmpty(props.data)) {
       props.data.forEach((item) => {
         if (parseFloat(item.percent) <= 100) {
           item.percent = parseFloat(item.percent) * 100;
@@ -91,7 +92,8 @@ const PieChart = (props) => {
 
 function mapStateToProps(state) {
   const { chart } = state;
-  return { data: chart?.listPieChart?.events };
+  console.log('chart', chart);
+  return { data: chart?.listPieChart };
 }
 
 export default connect(mapStateToProps)(PieChart);
