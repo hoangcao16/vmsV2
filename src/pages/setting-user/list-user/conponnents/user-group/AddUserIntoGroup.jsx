@@ -108,7 +108,9 @@ function AddUserIntoGroup({ dispatch, listUserNoIntoGroup, listUuidCurrentUserIn
                       id: 'pages.setting-user.list-user.record',
                     })}
                     <a style={{ marginLeft: 8 }} onClick={onCleanSelected}>
-                      Clear all
+                      {intl.formatMessage({
+                        id: 'pages.setting-user.list-user.clean',
+                      })}
                     </a>
                   </span>
                 </Space>

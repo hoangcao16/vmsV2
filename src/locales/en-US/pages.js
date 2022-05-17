@@ -58,6 +58,7 @@ export default {
   'pages.setting-user.list-user.add': 'Add',
   'pages.setting-user.list-user.select': 'Selected',
   'pages.setting-user.list-user.record': 'record',
+  'pages.setting-user.list-user.clean': 'Clean All',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Success',

@@ -58,6 +58,7 @@ export default {
   'pages.setting-user.list-user.add-user-in-group': 'Thêm',
   'pages.setting-user.list-user.select': 'Đã chọn',
   'pages.setting-user.list-user.record': 'bản ghi',
+  'pages.setting-user.list-user.clean': 'Bỏ chọn tất cả',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Thành công',
