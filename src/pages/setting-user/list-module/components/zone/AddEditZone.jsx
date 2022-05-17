@@ -6,6 +6,7 @@ import { useIntl } from 'umi';
 import AddressApi from '@/services/address/AddressApi';
 import ModuleApi from '@/services/module-api/ModuleApi';
 import { isEmpty } from 'lodash';
+import { DrawerActionStyle } from '../../style';
 
 const { TextArea } = Input;
 
@@ -216,7 +217,6 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch }) => {
               <Select
                 mode="multiple"
                 showArrow
-                style={{ width: '100%' }}
                 options={nvr?.map((r) => ({
                   value: r.uuid,
                   label: r.name,
@@ -235,7 +235,6 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch }) => {
               <Select
                 mode="multiple"
                 showArrow
-                style={{ width: '100%' }}
                 options={playback?.map((s) => ({
                   value: s.uuid,
                   label: s.name,
@@ -254,7 +253,6 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch }) => {
               <Select
                 mode="multiple"
                 showArrow
-                style={{ width: '100%' }}
                 options={camproxy?.map((c) => ({
                   value: c.uuid,
                   label: c.name,
@@ -263,18 +261,7 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch }) => {
             </MSFormItem>
           </Col>
         </Row>
-        <div
-          style={{
-            position: 'absolute',
-            right: 0,
-            bottom: 0,
-            width: '100%',
-            borderTop: '1px solid #e9e9e9',
-            padding: '10px 16px',
-            background: '#fff',
-            textAlign: 'right',
-          }}
-        >
+        <DrawerActionStyle>
           <Button onClick={onClose} type="danger">
             {`${intl.formatMessage({
               id: 'view.user.detail_list.cancel',
@@ -285,7 +272,7 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch }) => {
               id: 'view.user.detail_list.confirm',
             })}`}
           </Button>
-        </div>
+        </DrawerActionStyle>
       </Form>
     </div>
   );

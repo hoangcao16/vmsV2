@@ -95,7 +95,6 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
           <Space>
             <Tooltip placement="rightTop" title="Chỉnh sửa">
               <EditOutlined
-                style={{ fontSize: '16px', color: '#6E6B7B' }}
                 onClick={() => {
                   showDrawer();
                   setSelectedPlaybackEdit(record);

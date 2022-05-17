@@ -32,17 +32,11 @@ export default {
     },
     *editPlayback({ payload: { id, values } }, { call, put }) {
       try {
-        const res = yield call(ModuleApi.editPlayback, id, values);
+        const res = yield call(ModuleApi.editPlayback, playbackId, payload);
 
-        // if (res) {
-        //   NotificationSuccess('Chỉnh sửa Playback thành công');
-        // } else {
-        //   NotificationError('Đã xảy ra lỗi');
-        // }
         yield put({ type: 'reload' });
       } catch (error) {
         console.log(error);
-        // NotificationError('Đã xảy ra lỗi');
       }
     },
     *reload(action, { put, select }) {
