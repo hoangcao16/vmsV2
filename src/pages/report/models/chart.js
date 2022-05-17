@@ -1,18 +1,19 @@
 import moment from 'moment';
 import reportApi from '@/services/report/ReportApi';
+import { isEmpty } from 'lodash';
 
 export default {
   namespace: 'chart',
   state: {
-    list: {},
-    listPieChart: {},
+    list: [],
+    listPieChart: [],
   },
   reducers: {
     save(state, { payload: { data: list, dataPieChart: listPieChart } }) {
-      if (list) {
+      if (!isEmpty(list)) {
         state.list = list;
       }
-      if (listPieChart) {
+      if (!isEmpty(listPieChart)) {
         state.listPieChart = listPieChart;
       }
       return { ...state };
@@ -20,22 +21,30 @@ export default {
   },
   effects: {
     *changeReportHeaderData({ payload }, { call, put }) {
-      const response = yield call(reportApi.getData, payload);
-      yield put({
-        type: 'save',
-        payload: {
-          data: response,
-        },
-      });
+      try {
+        const response = yield call(reportApi.getData, payload);
+        yield put({
+          type: 'save',
+          payload: {
+            data: response?.payload?.events,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
     *changeReportHeaderDataPieChart({ payload }, { call, put }) {
-      const response = yield call(reportApi.getDataPieChart, payload);
-      yield put({
-        type: 'save',
-        payload: {
-          dataPieChart: response,
-        },
-      });
+      try {
+        const response = yield call(reportApi.getDataPieChart, payload);
+        yield put({
+          type: 'save',
+          payload: {
+            dataPieChart: response?.payload?.events,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

@@ -5,7 +5,6 @@ import 'moment/locale/en-gb';
 import locale from 'antd/es/locale/en_GB';
 import './ChartHeader.less';
 import { connect } from 'dva';
-import { useIntl } from 'umi';
 import DatePickerForm from './DatePickerForm';
 
 const ChartHeader = (props) => {
