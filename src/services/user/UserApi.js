@@ -1,102 +1,50 @@
-import MyService from '../RestApiClient';
-import { useIntl } from 'umi';
+import request from '@/utils/request';
 
 const UserApi = {
   // User
   getAllUser: async (params) => {
-    try {
-      const { data } = await MyService.getRequest(`/authz/api/v0/users`, params);
-      return data;
-    } catch (error) {
-      console.log(error);
-      return {};
-    }
+    return request.get(`/authz/api/v0/users`, params);
   },
   createUser: async (values) => {
-    try {
-      const { payload } = await MyService.postRequest('/authz/api/v0/users', values);
-      return payload;
-    } catch (error) {
-      console.log(error);
-      return {};
-    }
+    return request.post('/authz/api/v0/users', values);
   },
 
   updateUser: async (id, values) => {
-    try {
-      await MyService.putRequest(`/authz/api/v0/users/${id}`, values);
-    } catch (error) {
-      console.log(error);
-    }
+    return request.put(`/authz/api/v0/users/${id}`, values);
   },
 
   deleteUser: async (uuid) => {
-    try {
-      await MyService.deleteRequest(`/authz/api/v0/users/${uuid}`);
-    } catch (error) {
-      console.log(error);
-    }
+    return request.delete(`/authz/api/v0/users/${uuid}`);
   },
 
   // UserGroup
   getAllUserGroup: async (params) => {
-    try {
-      const { data } = await MyService.getRequest(`/authz/api/v0/groups`, params);
-      return data;
-    } catch (error) {
-      console.log(error);
-      return {};
-    }
+    return request.get(`/authz/api/v0/groups`, params);
   },
   createUserGroup: async (params) => {
-    try {
-      await MyService.postRequest(`/authz/api/v0/groups`, params);
-    } catch (error) {
-      console.log(error);
-      return {};
-    }
+    return request.post(`/authz/api/v0/groups`, params);
   },
   updateUserGroup: async (id, values) => {
-    try {
-      await MyService.putRequest(`/authz/api/v0/groups/${id}`, values);
-    } catch (error) {
-      console.log(error);
-      return {};
-    }
+    return request.put(`/authz/api/v0/groups/${id}`, values);
   },
 
   deleteUserGroup: async (uuid) => {
-    try {
-      await MyService.deleteRequest(`/authz/api/v0/groups/${uuid}`);
-    } catch (error) {
-      console.log(error);
-    }
+    return request.delete(`/authz/api/v0/groups/${uuid}`);
   },
   // UserRole
   getAllUserRole: async (params) => {
-    try {
-      const { data } = await MyService.getRequest(`/authz/api/v0/roles`, params);
-      return data;
-    } catch (error) {
-      console.log(error);
-      return {};
-    }
+    return request.get(`/authz/api/v0/roles`, params);
   },
+
+  updateUserRole: async (id, values) => {
+    return request.put(`/authz/api/v0/roles/${id}`, values);
+  },
+
   createRole: async (params) => {
-    try {
-      await MyService.postRequest(`/authz/api/v0/roles`, params);
-    } catch (error) {
-      console.log(error);
-      return {};
-    }
+    return request.post(`/authz/api/v0/roles`, params);
   },
   deleteRole: async (id) => {
-    try {
-      await MyService.deleteRequest(`/authz/api/v0/roles/${id}`);
-    } catch (error) {
-      console.log(error);
-      return {};
-    }
+    return request.delete(`/authz/api/v0/roles/${id}`);
   },
 };
 

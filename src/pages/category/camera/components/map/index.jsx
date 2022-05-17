@@ -1,22 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/self-closing-comp */
 import { useEffect, useState, useRef } from 'react';
-import {
-  MAP_STYLES,
-  STYLE_MODE,
-  NAVIGATION_CONTROL,
-  LAT_LNG,
-} from '@/components/common/vms/constans/map';
+import { MAP_STYLES, STYLE_MODE, NAVIGATION_CONTROL, LAT_LNG } from '@/constants/map';
 import { CircleMode, DirectMode, DragCircleMode, SimpleSelectMode } from 'mapbox-gl-draw-circle';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import mapboxgl from 'vietmaps-gl';
 import { MapContainer } from './style';
-const MapAddCamera = () => {
+const MapAddCamera = ({ resultSearchMap, handleSelectMap }) => {
   const mapboxRef = useRef(null);
   const mapBoxDrawRef = useRef(null);
-  const mapCamMarkersRef = useRef([]);
-  const mapAdUnitMarkersRef = useRef([]);
   const [currentLan, setCurrentLan] = useState(null);
   const zoom = 14;
   //Khoi tao map
@@ -77,14 +70,28 @@ const MapAddCamera = () => {
     mapboxRef.current &&
       mapboxRef.current.on('style.load', function () {
         mapboxRef.current.on('click', function (e) {
-          var coordinates = e.lngLat;
-          new mapboxgl.Popup()
-            .setLngLat(coordinates)
-            .setHTML('you clicked here: <br/>' + coordinates)
+          const lng = e.lngLat.lng;
+          const lat = e.lngLat.lat;
+          handleSelectMap(lng, lat);
+          new mapboxgl.Popup({
+            closeButton: false,
+          })
+            .setLngLat([lng, lat])
+            .setHTML('Lng:' + lng + '<br/>' + 'Lat:' + lat)
             .addTo(mapboxRef.current);
         });
       });
   }, []);
+  useEffect(() => {
+    if (resultSearchMap) {
+      const bbox = resultSearchMap.data.bbox;
+      const currentLatLngSelector = [bbox[2], bbox[3]];
+      setCurrentLan(currentLatLngSelector);
+      mapboxRef.current.flyTo({
+        center: currentLatLngSelector,
+      });
+    }
+  }, [resultSearchMap]);
   return (
     <>
       <MapContainer key="map" id="map"></MapContainer>

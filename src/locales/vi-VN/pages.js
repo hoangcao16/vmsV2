@@ -53,4 +53,13 @@ export default {
   'pages.setting-user.list-user.edit-user-group': 'Sửa nhóm người dùng',
   'pages.setting-user.list-user.add-role': 'Thêm vai trò',
   'pages.setting-user.list-user.edit-role': 'Sửa vai trò',
+
+  //Notif
+  'pages.setting-user.list-user.titleSuccess': 'Thành công',
+  'pages..setting-user.list-user.titleErrors': 'Thất bại',
+  'pages.setting-user.list-user.600': 'okok',
+
+  //Storage
+  'pages.storage.dailyArchive.total': 'Tổng',
+  'pages.storage.dailyArchive.camera': 'camera',
 };

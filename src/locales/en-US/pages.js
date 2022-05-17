@@ -53,4 +53,13 @@ export default {
   'pages.setting-user.list-user.edit-user-group': 'Edit group user',
   'pages.setting-user.list-user.add-role': 'Add role',
   'pages.setting-user.list-user.edit-role': 'Edit role',
+
+  //Notif
+  'pages.setting-user.list-user.titleSuccess': 'Success',
+  'pages.setting-user.list-user.titleErrors': 'Errors',
+  'pages.setting-user.list-user.600': 'okok',
+
+  //Storage
+  'pages.storage.dailyArchive.total': 'Total',
+  'pages.storage.dailyArchive.camera': 'camera',
 };

@@ -6,22 +6,18 @@ import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { useState } from 'react';
 import { useIntl } from 'umi';
+import EditPlayback from './EditPlayback';
 
 const TablePlayback = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [form] = Form.useForm();
+  const [selectedPlaybackEdit, setSelectedPlaybackEdit] = useState(null);
+
   const showDrawer = () => {
     setOpenDrawer(true);
   };
   const onClose = () => {
     setOpenDrawer(false);
-  };
-
-  const handleSubmit = () => {
-    const a = form.getFieldsValue(true);
-
-    return false;
   };
 
   const renderTag = (cellValue) => {
@@ -84,7 +80,7 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
                 style={{ fontSize: '16px', color: '#6E6B7B' }}
                 onClick={() => {
                   showDrawer();
-                  setSelectedNVREdit(record);
+                  setSelectedPlaybackEdit(record);
                 }}
               />
             </Tooltip>
@@ -125,54 +121,18 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
         <MSCustomizeDrawer
           openDrawer={openDrawer}
           onClose={onClose}
-          width={800}
+          width={'30%'}
           zIndex={1001}
-          title="Test"
+          title={`${intl.formatMessage({
+            id: 'view.common_device.edit_playback',
+          })}`}
           placement="right"
-          extra={
-            <Space>
-              <Button onClick={onClose}>Cancel</Button>
-              <Button type="primary" onClick={onClose}>
-                OK
-              </Button>
-            </Space>
-          }
         >
-          <div>
-            <Form layout="vertical" form={form} onFinish={handleSubmit}>
-              <Row gutter={16}>
-                <Col span={24}>
-                  <MSFormItem
-                    label="Username"
-                    type="input"
-                    name="name"
-                    minLength={5}
-                    maxLength={255}
-                    required={true}
-                  >
-                    <Input />
-                  </MSFormItem>
-                </Col>
-              </Row>
-            </Form>
-            <div
-              style={{
-                position: 'absolute',
-                right: 0,
-                bottom: 0,
-                width: '100%',
-                borderTop: '1px solid #e9e9e9',
-                padding: '10px 16px',
-                background: '#fff',
-                textAlign: 'right',
-              }}
-            >
-              <Button type="danger">Hủy</Button>
-              <Button htmlType="submit" onClick={handleSubmit} type="ghost">
-                Sửa
-              </Button>
-            </div>
-          </div>
+          <EditPlayback
+            selectedPlaybackEdit={selectedPlaybackEdit}
+            onClose={onClose}
+            dispatch={dispatch}
+          />
         </MSCustomizeDrawer>
       )}
     </>
