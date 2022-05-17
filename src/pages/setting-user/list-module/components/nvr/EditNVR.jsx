@@ -2,6 +2,7 @@ import MSFormItem from '@/components/Form/Item';
 import { Button, Col, Form, Input, Row } from 'antd';
 import React from 'react';
 import { useIntl } from 'umi';
+import { DrawerActionStyle } from '../../style';
 
 const { TextArea } = Input;
 
@@ -64,25 +65,18 @@ const EditNVR = ({ selectedNVREdit, onClose, dispatch }) => {
             </MSFormItem>
           </Col>
         </Row>
-        <div
-          style={{
-            position: 'absolute',
-            right: 0,
-            bottom: 0,
-            width: '100%',
-            borderTop: '1px solid #e9e9e9',
-            padding: '10px 16px',
-            background: '#fff',
-            textAlign: 'right',
-          }}
-        >
+        <DrawerActionStyle>
           <Button onClick={onClose} type="danger">
-            Hủy
+            {`${intl.formatMessage({
+              id: 'view.user.detail_list.cancel',
+            })}`}
           </Button>
           <Button htmlType="submit" type="ghost">
-            Sửa
+            {`${intl.formatMessage({
+              id: 'view.user.detail_list.edit',
+            })}`}
           </Button>
-        </div>
+        </DrawerActionStyle>
       </Form>
     </div>
   );

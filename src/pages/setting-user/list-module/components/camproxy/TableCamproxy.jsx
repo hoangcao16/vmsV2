@@ -4,13 +4,26 @@ import { EditOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 
 const TableCamproxy = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    dispatch({
+      type: 'camproxy/fetchAllCamproxy',
+      payload: {
+        filter: '',
+        page: metadata?.page,
+        size: metadata?.size,
+        name: metadata?.name,
+      },
+    });
+  }, []);
+
   const showDrawer = () => {
     setOpenDrawer(true);
   };
