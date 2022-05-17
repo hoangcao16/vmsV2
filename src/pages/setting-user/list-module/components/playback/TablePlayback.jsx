@@ -34,7 +34,7 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
 
   const renderTag = (cellValue) => {
     return (
-      <Tag color={cellValue === 'UP' ? '#1380FF' : '#FF4646'} style={{ color: '#ffffff' }}>
+      <Tag color={cellValue === 'UP' ? '#1380FF' : '#FF4646'}>
         {cellValue === 'UP' ? `Đang hoạt động` : `Dừng hoạt động`}
       </Tag>
     );
@@ -89,7 +89,6 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
           <Space>
             <Tooltip placement="rightTop" title="Chỉnh sửa">
               <EditOutlined
-                style={{ fontSize: '16px', color: '#6E6B7B' }}
                 onClick={() => {
                   showDrawer();
                   setSelectedPlaybackEdit(record);

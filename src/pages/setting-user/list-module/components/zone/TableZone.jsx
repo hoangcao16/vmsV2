@@ -82,7 +82,6 @@ const TableZone = ({ dispatch, list, metadata }) => {
                   setOpenDrawerDetail(true);
                   setSelectedRecord(record);
                 }}
-                style={{ fontSize: '16px', color: '#6E6B7B' }}
               />
             </Tooltip>
             <Tooltip
@@ -96,7 +95,6 @@ const TableZone = ({ dispatch, list, metadata }) => {
                   setOpenDrawerAddEdit(true);
                   setSelectedRecord(record);
                 }}
-                style={{ fontSize: '16px', color: '#6E6B7B' }}
               />
             </Tooltip>
             <Tooltip
@@ -105,7 +103,7 @@ const TableZone = ({ dispatch, list, metadata }) => {
                 id: 'view.ai_events.delete',
               })}
             >
-              <DeleteOutlined style={{ fontSize: '16px', color: '#6E6B7B' }} />
+              <DeleteOutlined />
             </Tooltip>
           </Space>
         );
