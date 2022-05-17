@@ -35,7 +35,13 @@ const TableNVR = ({ dispatch, list, metadata }) => {
   const renderTag = (cellValue) => {
     return (
       <Tag color={cellValue === 'UP' ? '#1380FF' : '#FF4646'} style={{ color: '#ffffff' }}>
-        {cellValue === 'UP' ? `Đang hoạt động` : `Dừng hoạt động`}
+        {cellValue === 'UP'
+          ? `${intl.formatMessage({
+              id: 'view.camera.active',
+            })}`
+          : `${intl.formatMessage({
+              id: 'view.camera.inactive',
+            })}`}
       </Tag>
     );
   };

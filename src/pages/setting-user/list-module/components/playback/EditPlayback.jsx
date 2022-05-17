@@ -11,8 +11,7 @@ const EditPlayback = ({ selectedPlaybackEdit, onClose, dispatch }) => {
   const handleSubmit = (value) => {
     dispatch({
       type: 'playback/editPlayback',
-      playbackId: selectedPlaybackEdit.uuid,
-      payload: value,
+      payload: { id: selectedPlaybackEdit.uuid, values: { ...value } },
     });
     onClose();
   };

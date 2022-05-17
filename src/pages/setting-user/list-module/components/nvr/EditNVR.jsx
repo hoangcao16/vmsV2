@@ -11,8 +11,7 @@ const EditNVR = ({ selectedNVREdit, onClose, dispatch }) => {
   const handleSubmit = (value) => {
     dispatch({
       type: 'nvr/editNVR',
-      nvrId: selectedNVREdit.uuid,
-      payload: value,
+      payload: { id: selectedNVREdit.uuid, values: { ...value } },
     });
     onClose();
   };
