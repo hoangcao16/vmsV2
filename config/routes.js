@@ -24,12 +24,6 @@ export default [
       },
     ],
   },
-
-  {
-    path: '/live',
-    name: 'live',
-    icon: 'video-camera',
-  },
   {
     path: '/',
     icon: 'home',
@@ -41,7 +35,7 @@ export default [
     name: 'map',
   },
   {
-    path: '/live_mode',
+    path: '/live',
     icon: 'videoCamera',
     name: 'live_mode',
   },
@@ -49,6 +43,7 @@ export default [
     path: '/storage',
     icon: 'save',
     name: 'storage',
+    component: './storage',
   },
   {
     path: '/category',
@@ -60,55 +55,6 @@ export default [
         icon: 'table',
         path: '/category/camera',
         component: './category/camera',
-      },
-    ],
-  },
-  {
-    path: '/setting',
-    icon: 'setting',
-    name: 'setting',
-  },
-  {
-    path: '/report',
-    icon: 'notification',
-    name: 'report',
-  },
-  {
-    name: 'exception',
-    icon: 'warning',
-    path: '/exception',
-    hideInMenu: true,
-    routes: [
-      {
-        name: '403',
-        icon: 'smile',
-        path: '/exception/403',
-        component: './exception/403',
-      },
-      {
-        name: '404',
-        icon: 'smile',
-        path: '/exception/404',
-        component: './exception/404',
-      },
-      {
-        name: '500',
-        icon: 'smile',
-        path: '/exception/500',
-        component: './exception/500',
-      },
-    ],
-  },
-  {
-    name: 'report',
-    icon: 'highlight',
-    path: '/report',
-    routes: [
-      {
-        name: 'flow',
-        icon: 'smile',
-        path: '/report',
-        component: './report',
       },
     ],
   },
@@ -136,10 +82,43 @@ export default [
     ],
   },
   {
-    path: '/storage',
-    name: 'storage',
-    icon: 'setting',
-    component: './storage',
+    path: '/report',
+    icon: 'notification',
+    name: 'report',
+    routes: [
+      {
+        name: 'flow',
+        icon: 'smile',
+        path: '/report',
+        component: './report',
+      },
+    ],
+  },
+  {
+    name: 'exception',
+    icon: 'warning',
+    path: '/exception',
+    hideInMenu: true,
+    routes: [
+      {
+        name: '403',
+        icon: 'smile',
+        path: '/exception/403',
+        component: './exception/403',
+      },
+      {
+        name: '404',
+        icon: 'smile',
+        path: '/exception/404',
+        component: './exception/404',
+      },
+      {
+        name: '500',
+        icon: 'smile',
+        path: '/exception/500',
+        component: './exception/500',
+      },
+    ],
   },
   {
     path: '/',

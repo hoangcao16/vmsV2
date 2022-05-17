@@ -1,8 +1,5 @@
-import { reactLocalStorage } from 'reactjs-localstorage';
 import FileService from './fileservice';
 import { notify } from '@/components/Notify';
-
-const language = reactLocalStorage.get('language');
 
 const ExportEventFileApi = {
   uploadAvatar: async (avatarFileName, file) => {

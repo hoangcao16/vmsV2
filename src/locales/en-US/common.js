@@ -72,6 +72,7 @@ export default {
   'view.camera.find_camera': 'Search by camera name, address',
   'view.camera.add_camera': 'Add camera',
   'view.camera.total': 'Total',
+  'view.camera.edit_camera': 'Edit camera',
   //View CateGory
   'view.category.camera_vendor': '{cam} vendor',
   'view.category.field': 'Field',
