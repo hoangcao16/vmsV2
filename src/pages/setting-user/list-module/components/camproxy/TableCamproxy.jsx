@@ -1,8 +1,6 @@
-import MSCustomizeDrawer from '@/components/Drawer';
-import { EditOutlined } from '@ant-design/icons';
-import ProTable from '@ant-design/pro-table';
-import { Space, Tag, Tooltip } from 'antd';
+import { AutoComplete, Input, Tag } from 'antd';
 import { connect } from 'dva';
+import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
@@ -17,7 +15,6 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
     dispatch({
       type: 'camproxy/fetchAllCamproxy',
       payload: {
-        filter: '',
         page: metadata?.page,
         size: metadata?.size,
         name: metadata?.name,
@@ -30,6 +27,17 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
   };
   const onClose = () => {
     setOpenDrawer(false);
+  };
+
+  const handleSearch = (value) => {
+    dispatch({
+      type: 'camproxy/fetchAllCamproxy',
+      payload: {
+        page: metadata?.page,
+        size: metadata?.size,
+        name: value,
+      },
+    });
   };
 
   const renderTag = (cellValue) => {
@@ -103,11 +111,20 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
         }}
         toolbar={{
           multipleLine: true,
-          search: {
-            onSearch: (value) => {
-              alert(value);
-            },
-          },
+          filter: (
+            <AutoComplete key="search" onSearch={debounce(handleSearch, 1000)}>
+              <Input.Search
+                placeholder={intl.formatMessage(
+                  { id: 'view.common_device.please_enter_camproxy_name' },
+                  {
+                    plsEnter: intl.formatMessage({
+                      id: 'please_enter',
+                    }),
+                  },
+                )}
+              />
+            </AutoComplete>
+          ),
         }}
         pagination={{
           showQuickJumper: true,
