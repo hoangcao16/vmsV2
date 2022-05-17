@@ -23,7 +23,7 @@ request.interceptors.request.use(
 
 request.interceptors.response.use(
   function (response) {
-    return response;
+    return response.data;
   },
   async function (error) {
     const originalRequest = error.config;
@@ -34,7 +34,7 @@ request.interceptors.response.use(
       await AuthZApi.refreshToken(oldToken);
 
       originalRequest._retry = true;
-      return this.request(originalRequest);
+      return request(originalRequest);
     }
     return Promise.reject(error);
   },

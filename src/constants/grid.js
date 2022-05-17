@@ -1,4 +1,3 @@
-
 export const GRIDALL = 'ALL';
 export const GRID1X1 = '1x1';
 export const GRID2X2 = '2x2';

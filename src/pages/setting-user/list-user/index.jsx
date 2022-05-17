@@ -13,14 +13,14 @@ import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Popconfirm, Row, Select, Space, Switch, Tooltip } from 'antd';
 import { connect } from 'dva';
-import { useMemo, useState } from 'react';
-import UserGroup from './conponnents/user-group';
-import UserRole from './conponnents/roles';
+import { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
 import AddUser from './conponnents/AddUser';
+import UserRole from './conponnents/roles';
+import UserGroup from './conponnents/user-group';
 import styles from './styles.less';
 const { Option } = Select;
 const { Search } = Input;
-import { useIntl } from 'umi';
 
 const UserList = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
@@ -28,6 +28,18 @@ const UserList = ({ dispatch, list, metadata }) => {
   const [visible, setVisible] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    dispatch({
+      type: 'user/fetchAllUser',
+      payload: {
+        filter: '',
+        page: metadata?.page,
+        size: metadata?.size,
+      },
+    });
+  }, []);
+
   const showDrawer = () => {
     setOpenDrawer(true);
   };

@@ -8,6 +8,7 @@ import MapAddCamera from '../map';
 import { v4 as uuidV4 } from 'uuid';
 import clearData from '@/utils/CleanData';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
+import { notify } from '@/components/Notify';
 import AddressApi from '@/services/address/AddressApi';
 import CameraApi from '@/services/camera/CameraApi';
 import ZoneApi from '@/services/zone/ZoneApi';

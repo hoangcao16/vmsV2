@@ -31,7 +31,7 @@ export default {
     },
 
     *reload(action, { put, select }) {
-      const page = yield select((state) => state.user.page);
+      const page = yield select((state) => state.nvr.page);
       yield put({ type: 'fetchAllNVR', payload: { page } });
     },
   },
