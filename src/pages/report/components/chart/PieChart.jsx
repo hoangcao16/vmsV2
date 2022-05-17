@@ -92,7 +92,6 @@ const PieChart = (props) => {
 
 function mapStateToProps(state) {
   const { chart } = state;
-  console.log('chart', chart);
   return { data: chart?.listPieChart };
 }
 
