@@ -19,22 +19,26 @@ const CameraStatistics = () => {
   const [camera, setCamera] = useState([]);
 
   useEffect(() => {
-    cameraApi.getReportCamera().then((result) => {
-      if (!isEmpty(result)) {
-        const convertData = result.map((r) => {
-          return {
-            ...r,
-            color: getColor(r),
-          };
-        });
-        const sortData = [];
-        sortData[0] = convertData.find((i) => i.cameraName == 'totalCamera');
-        sortData[1] = convertData.find((i) => i.cameraName == 'cameraAI');
-        sortData[2] = convertData.find((i) => i.cameraName == 'cameraIsWorking');
-        sortData[3] = convertData.find((i) => i.cameraName == 'cameraIsNotWorking');
-        setCamera(sortData);
-      }
-    });
+    try {
+      cameraApi.getReportCamera().then((result) => {
+        if (!isEmpty(result)) {
+          const convertData = result.payload.map((r) => {
+            return {
+              ...r,
+              color: getColor(r),
+            };
+          });
+          const sortData = [];
+          sortData[0] = convertData.find((i) => i.cameraName == 'totalCamera');
+          sortData[1] = convertData.find((i) => i.cameraName == 'cameraAI');
+          sortData[2] = convertData.find((i) => i.cameraName == 'cameraIsWorking');
+          sortData[3] = convertData.find((i) => i.cameraName == 'cameraIsNotWorking');
+          setCamera(sortData);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const getColor = (r) => {

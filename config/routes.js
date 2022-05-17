@@ -69,11 +69,6 @@ export default [
     name: 'setting',
   },
   {
-    path: '/report',
-    icon: 'notification',
-    name: 'report',
-  },
-  {
     name: 'exception',
     icon: 'warning',
     path: '/exception',
@@ -103,14 +98,7 @@ export default [
     name: 'report',
     icon: 'highlight',
     path: '/report',
-    routes: [
-      {
-        name: 'flow',
-        icon: 'smile',
-        path: '/report',
-        component: './report',
-      },
-    ],
+    component: './report',
   },
   {
     path: '/setting-user',
@@ -141,10 +129,10 @@ export default [
     icon: 'setting',
     component: './storage',
   },
-  {
-    path: '/',
-    redirect: '/report',
-  },
+  // {
+  //   path: '/',
+  //   redirect: '/report',
+  // },
   {
     component: './exception/404',
   },

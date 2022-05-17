@@ -20,22 +20,31 @@ export default {
   },
   effects: {
     *changeReportHeaderData({ payload }, { call, put }) {
-      const response = yield call(reportApi.getData, payload);
-      yield put({
-        type: 'save',
-        payload: {
-          data: response,
-        },
-      });
+      try {
+        const response = yield call(reportApi.getData, payload);
+        yield put({
+          type: 'save',
+          payload: {
+            data: response,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
     *changeReportHeaderDataPieChart({ payload }, { call, put }) {
-      const response = yield call(reportApi.getDataPieChart, payload);
-      yield put({
-        type: 'save',
-        payload: {
-          dataPieChart: response,
-        },
-      });
+      console.log('payload', payload);
+      try {
+        const response = yield call(reportApi.getDataPieChart, payload);
+        yield put({
+          type: 'save',
+          payload: {
+            dataPieChart: response,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
