@@ -58,4 +58,8 @@ export default {
   'pages.setting-user.list-user.titleSuccess': 'Success',
   'pages.setting-user.list-user.titleErrors': 'Errors',
   'pages.setting-user.list-user.600': 'okok',
+
+  //Storage
+  'pages.storage.dailyArchive.total': 'Total',
+  'pages.storage.dailyArchive.camera': 'camera',
 };

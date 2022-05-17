@@ -1,4 +1,7 @@
+import { appIntl } from '@/components/IntlGlobalProvider';
+import { notify } from '@/components/Notify';
 import UserApi from '@/services/user/UserApi';
+import { notification } from 'antd';
 
 export default {
   namespace: 'user',
@@ -26,6 +29,14 @@ export default {
             metadata: response?.metadata,
           },
         });
+
+        // notify('success', 'noti.successfully', 'noti.successfully');
+        // notify('error', 'noti.ERROR', {
+        //   id: 'noti.max_characters',
+        //   params: {
+        //     max: 10,
+        //   },
+        // });
       } catch (error) {
         console.log(error);
       }
