@@ -1,15 +1,10 @@
-import MSCustomizeDrawer from '@/components/Drawer';
-import MSFormItem from '@/components/Form/Item';
-import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import ProTable from '@ant-design/pro-table';
-import { Button, Col, Form, Input, Row, Space, Tag, Tooltip } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import { connect } from 'dva';
-import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
 import AddEditZone from './AddEditZone';
-import DetailZone from './DetailZone';
 
 const TableZone = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
