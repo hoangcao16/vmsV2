@@ -33,7 +33,6 @@ const UserList = ({ dispatch, list, metadata }) => {
     dispatch({
       type: 'user/fetchAllUser',
       payload: {
-        filter: '',
         page: metadata?.page,
         size: metadata?.size,
       },
@@ -242,7 +241,6 @@ const UserList = ({ dispatch, list, metadata }) => {
         search={false}
         dataSource={list}
         columns={columns}
-        rowSelection={{}}
         options={false}
         toolbar={{
           multipleLine: true,

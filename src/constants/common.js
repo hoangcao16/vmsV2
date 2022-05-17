@@ -7,6 +7,8 @@ export const STORAGE = {
   USER: 'user',
   USER_PERMISSIONS: 'user_permissions',
   REFRESH_TOKEN: 'refreshToken',
+  GROUP_CODE_SELECTED: 'group_code_selected',
+  GROUP_UUID_SELECTED: 'group_uuid_selected',
 };
 
 // export const IS_SERVER = typeof window === 'undefined';

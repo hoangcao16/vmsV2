@@ -53,6 +53,9 @@ export default {
   'pages.setting-user.list-user.edit-user-group': 'Sửa nhóm người dùng',
   'pages.setting-user.list-user.add-role': 'Thêm vai trò',
   'pages.setting-user.list-user.edit-role': 'Sửa vai trò',
+  'pages.setting-user.list-user.listUserInGroup': 'Danh sách thành viên',
+  'pages.setting-user.list-user.add-user-in-group': 'Thêm thành viên vào nhóm',
+  'pages.setting-user.list-user.add-user-in-group': 'Thêm',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Thành công',

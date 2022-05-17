@@ -151,7 +151,6 @@ function UserRole({ dispatch, list, metadata }) {
               search={false}
               dataSource={list}
               columns={columns}
-              rowSelection={{}}
               options={false}
               toolbar={{
                 multipleLine: true,

@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { useIntl } from 'umi';
+import TableUserInGroup from './TableUserInGroup';
 
 function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
   const intl = useIntl();
@@ -36,7 +37,7 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
       <MSCustomizeDrawer
         openDrawer={openDrawer}
         onClose={onClose}
-        width={'20%'}
+        width={isEmpty(selectedRecord) ? '20%' : '80%'}
         zIndex={1002}
         title={
           isEmpty(selectedRecord)
@@ -56,7 +57,7 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
           initialValues={selectedRecord ?? {}}
         >
           <Row gutter={16}>
-            <Col span={24}>
+            <Col span={isEmpty(selectedRecord) ? 24 : 12}>
               <MSFormItem
                 label={intl.formatMessage({
                   id: 'pages.setting-user.list-user.name',
@@ -70,7 +71,7 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
                 <Input autoComplete="new-password" />
               </MSFormItem>
             </Col>
-            <Col span={24}>
+            <Col span={isEmpty(selectedRecord) ? 24 : 12}>
               <MSFormItem
                 label={intl.formatMessage({
                   id: 'pages.setting-user.list-user.description',
@@ -108,6 +109,7 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
             </Button>
           </div>
         </Form>
+        {!isEmpty(selectedRecord) && <TableUserInGroup id={selectedRecord?.uuid} />}
       </MSCustomizeDrawer>
     </div>
   );

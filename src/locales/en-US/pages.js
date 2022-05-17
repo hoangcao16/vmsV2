@@ -53,6 +53,9 @@ export default {
   'pages.setting-user.list-user.edit-user-group': 'Edit group user',
   'pages.setting-user.list-user.add-role': 'Add role',
   'pages.setting-user.list-user.edit-role': 'Edit role',
+  'pages.setting-user.list-user.listUserInGroup': 'List Member In Group',
+  'pages.setting-user.list-user.add-user-in-group': 'Add Member Into Group',
+  'pages.setting-user.list-user.add': 'Add',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Success',
