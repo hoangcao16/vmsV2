@@ -9,7 +9,6 @@ import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import AddEditZone from './AddEditZone';
 import DetailZone from './DetailZone';
-import EditZone from './EditZone';
 
 const TableZone = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
@@ -202,18 +201,6 @@ const TableZone = ({ dispatch, list, metadata }) => {
           />
         </MSCustomizeDrawer>
       )}
-      {/* {openDrawerEdit && (
-        <MSCustomizeDrawer
-          openDrawer={openDrawerEdit}
-          onClose={() => setOpenDrawerEdit(false)}
-          width={'30%'}
-          zIndex={1001}
-          title={intl.formatMessage({ id: 'view.common_device.edit_zone' })}
-          placement="right"
-        >
-          <EditZone />
-        </MSCustomizeDrawer>
-      )} */}
     </>
   );
 };

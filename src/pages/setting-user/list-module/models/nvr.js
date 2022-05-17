@@ -1,7 +1,4 @@
-import { message } from '@umijs/plugin-request/lib/ui';
 import ModuleApi from '@/services/module-api/ModuleApi';
-import { NotificationError, NotificationSuccess } from '@/components/Notify';
-import { useIntl } from 'umi';
 
 export default {
   namespace: 'nvr',
@@ -37,16 +34,9 @@ export default {
       try {
         const res = yield call(ModuleApi.editNVR, nvrId, payload);
 
-        if (res) {
-          NotificationSuccess('Chỉnh sửa NVR thành công');
-        } else {
-          NotificationError('Đã xảy ra lỗi');
-        }
-
         yield put({ type: 'reload' });
       } catch (error) {
         console.log(error);
-        NotificationError('Đã xảy ra lỗi');
       }
     },
 

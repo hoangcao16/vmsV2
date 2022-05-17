@@ -6,6 +6,7 @@ import { useIntl } from 'umi';
 import AddressApi from '@/services/address/AddressApi';
 import ModuleApi from '@/services/module-api/ModuleApi';
 import { isEmpty } from 'lodash';
+import { DrawerActionStyle } from '../../style';
 
 const { TextArea } = Input;
 
@@ -263,18 +264,7 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch }) => {
             </MSFormItem>
           </Col>
         </Row>
-        <div
-          style={{
-            position: 'absolute',
-            right: 0,
-            bottom: 0,
-            width: '100%',
-            borderTop: '1px solid #e9e9e9',
-            padding: '10px 16px',
-            background: '#fff',
-            textAlign: 'right',
-          }}
-        >
+        <DrawerActionStyle>
           <Button onClick={onClose} type="danger">
             {`${intl.formatMessage({
               id: 'view.user.detail_list.cancel',
@@ -285,7 +275,7 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch }) => {
               id: 'view.user.detail_list.confirm',
             })}`}
           </Button>
-        </div>
+        </DrawerActionStyle>
       </Form>
     </div>
   );
