@@ -28,6 +28,7 @@ export default [
     path: '/',
     icon: 'home',
     name: 'home',
+    component: './home',
   },
   {
     path: '/map',
@@ -78,19 +79,6 @@ export default [
         icon: 'smile',
         path: '/setting-user/list-module',
         component: './setting-user/list-module',
-      },
-    ],
-  },
-  {
-    path: '/report',
-    icon: 'notification',
-    name: 'report',
-    routes: [
-      {
-        name: 'flow',
-        icon: 'smile',
-        path: '/report',
-        component: './report',
       },
     ],
   },
@@ -155,10 +143,6 @@ export default [
     icon: 'setting',
     component: './storage',
   },
-  // {
-  //   path: '/',
-  //   redirect: '/report',
-  // },
   {
     component: './exception/404',
   },
