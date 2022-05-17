@@ -35,10 +35,19 @@ const ReportApi = {
   // },
 
   getData: async (body) => {
-    let result;
     try {
-      result = await MyService.getRequest('/owl/api/v2/get-data-line', body);
-      return result.data.payload;
+      const { data } = await MyService.getRequest('/owl/api/v2/get-data-line', body);
+      return data.payload;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  },
+
+  getDataPieChart: async (body) => {
+    try {
+      const { data } = await MyService.getRequest('/owl/api/v2/get-data-pie', body);
+      return data.payload;
     } catch (error) {
       console.log(error);
       return [];
