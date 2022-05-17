@@ -65,6 +65,13 @@ export default {
   'pages.setting-user.list-user.search': 'Tìm kiếm',
   'pages.setting-user.list-user.nodata': 'Không có dữ liệu',
   'pages.setting-user.list-user.permissionCameraGroups': 'Phân quyền cho nhóm camera',
+  'pages.setting-user.list-user.permissionCamera': 'Phân quyền cho camera',
+  'pages.setting-user.list-user.cameraGroup': 'Nhóm camera',
+  'pages.setting-user.list-user.camera': 'Camera',
+  'pages.setting-user.list-user.view_online': 'Xem trực tiếp',
+  'pages.setting-user.list-user.view_offline': 'Xem lại',
+  'pages.setting-user.list-user.setup_preset': 'Cài đặt preset',
+  'pages.setting-user.list-user.ptz_control': 'Điều khiển PTZ',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Thành công',

@@ -6,23 +6,18 @@ import { Checkbox, Popconfirm, Space, Tooltip } from 'antd';
 import { connect } from 'dva';
 import React, { useEffect } from 'react';
 import { useIntl } from 'umi';
-import AddCameraGroupPermission from './AddCameraGroupPermission';
 
-function TableGroupCameraPermission({
-  id,
-  dispatch,
-  listCameraGroupPermission,
-  metadata,
-  listCameraGroupNotPermission,
-}) {
+function TableCameraPermission({ id, dispatch, listCameraPermission, metadata }) {
   const intl = useIntl();
 
   useEffect(() => {
     UserApi.getUserGroupById(id).then(async (result) => {
       localStorage.setItem(STORAGE.GROUP_CODE_SELECTED, result?.payload?.code);
       localStorage.setItem(STORAGE.GROUP_UUID_SELECTED, result?.payload?.uuid);
+
+      console.log('cameraPermissionInGroupUser/fetchAllPermissionCamera');
       dispatch({
-        type: 'groupCameraPermissionInGroupUser/fetchAllPermissionCameraGroups',
+        type: 'cameraPermissionInGroupUser/fetchAllPermissionCamera',
         payload: {
           code: result?.payload?.code,
         },
@@ -33,13 +28,13 @@ function TableGroupCameraPermission({
   async function onChange(e, name, cameraGroupId) {
     const data = {
       subject: `user_g@${localStorage.getItem(STORAGE.GROUP_CODE_SELECTED)}`,
-      object: `cam_g@${cameraGroupId}`,
+      object: `cam@${cameraGroupId}`,
       action: name,
     };
     if (e.target.checked) {
       //dispatch
       dispatch({
-        type: 'groupCameraPermissionInGroupUser/setPermisionCameraGroups',
+        type: 'cameraPermissionInGroupUser/setPermisionCamera',
         payload: data,
       });
 
@@ -50,12 +45,12 @@ function TableGroupCameraPermission({
     };
     //dispatch
     dispatch({
-      type: 'groupCameraPermissionInGroupUser/removePermisionCameraGroups',
+      type: 'cameraPermissionInGroupUser/removePermisionCamera',
       payload: dataRemove,
     });
   }
 
-  const removeAllPermmisionInCameraGroups = async (record) => {
+  const removeAllPermmisionInCamera = async (record) => {
     if (
       record?.view_online &&
       !record?.view_offline &&
@@ -65,7 +60,7 @@ function TableGroupCameraPermission({
       const data = [];
       data.push({
         subject: `user_g@${localStorage.getItem(STORAGE.GROUP_CODE_SELECTED)}`,
-        object: `cam_g@${record.cam_group_uuid}`,
+        object: `cam@${record.cam_uuid}`,
         action: 'view_online',
       });
 
@@ -75,7 +70,7 @@ function TableGroupCameraPermission({
 
       //dispatch
       dispatch({
-        type: 'groupCameraPermissionInGroupUser/removePermisionCameraGroups',
+        type: 'cameraPermissionInGroupUser/removePermisionCamera',
         payload: dataRemove,
       });
 
@@ -86,28 +81,28 @@ function TableGroupCameraPermission({
     if (record?.view_online) {
       data.push({
         subject: `user_g@${localStorage.getItem(STORAGE.GROUP_CODE_SELECTED)}`,
-        object: `cam_g@${record.cam_group_uuid}`,
+        object: `cam@${record.cam_uuid}`,
         action: 'view_online',
       });
     }
     if (record?.view_offline) {
       data.push({
         subject: `user_g@${localStorage.getItem(STORAGE.GROUP_CODE_SELECTED)}`,
-        object: `cam_g@${record.cam_group_uuid}`,
+        object: `cam@${record.cam_uuid}`,
         action: 'view_offline',
       });
     }
     if (record?.setup_preset) {
       data.push({
         subject: `user_g@${localStorage.getItem(STORAGE.GROUP_CODE_SELECTED)}`,
-        object: `cam_g@${record.cam_group_uuid}`,
+        object: `cam@${record.cam_uuid}`,
         action: 'setup_preset',
       });
     }
     if (record?.ptz_control) {
       data.push({
         subject: `user_g@${localStorage.getItem(STORAGE.GROUP_CODE_SELECTED)}`,
-        object: `cam_g@${record.cam_group_uuid}`,
+        object: `cam@${record.cam_uuid}`,
         action: 'ptz_control',
       });
     }
@@ -117,7 +112,7 @@ function TableGroupCameraPermission({
 
     //dispatch
     dispatch({
-      type: 'groupCameraPermissionInGroupUser/removePermisionCameraGroups',
+      type: 'cameraPermissionInGroupUser/removePermisionCamera',
       payload: dataRemove,
     });
   };
@@ -131,7 +126,7 @@ function TableGroupCameraPermission({
 
     return (
       <Checkbox
-        onChange={(e) => onChange(e, 'view_online', record.cam_group_uuid)}
+        onChange={(e) => onChange(e, 'view_online', record.cam_uuid)}
         checked={defaultChecked}
         disabled={record.isDisableRow}
       />
@@ -147,7 +142,7 @@ function TableGroupCameraPermission({
 
     return (
       <Checkbox
-        onChange={(e) => onChange(e, 'view_offline', record.cam_group_uuid)}
+        onChange={(e) => onChange(e, 'view_offline', record.cam_uuid)}
         checked={defaultChecked}
         disabled={record.isDisableRow}
       />
@@ -162,7 +157,7 @@ function TableGroupCameraPermission({
 
     return (
       <Checkbox
-        onChange={(e) => onChange(e, 'setup_preset', record.cam_group_uuid)}
+        onChange={(e) => onChange(e, 'setup_preset', record.cam_uuid)}
         checked={defaultChecked}
         disabled={record.isDisableRow}
       />
@@ -178,7 +173,7 @@ function TableGroupCameraPermission({
 
     return (
       <Checkbox
-        onChange={(e) => onChange(e, 'ptz_control', record.cam_group_uuid)}
+        onChange={(e) => onChange(e, 'ptz_control', record.cam_uuid)}
         checked={defaultChecked}
         disabled={record.isDisableRow}
       />
@@ -188,9 +183,9 @@ function TableGroupCameraPermission({
   const columns = [
     {
       title: intl.formatMessage({
-        id: 'pages.setting-user.list-user.cameraGroup',
+        id: 'pages.setting-user.list-user.camera',
       }),
-      dataIndex: 'cam_group_name',
+      dataIndex: 'cam_name',
       width: '15%',
     },
 
@@ -246,7 +241,7 @@ function TableGroupCameraPermission({
                 title={intl.formatMessage({
                   id: 'pages.setting-user.list-user.delete-confirm',
                 })}
-                onConfirm={() => removeAllPermmisionInCameraGroups(record)}
+                onConfirm={() => removeAllPermmisionInCamera(record)}
                 cancelText="Cancel"
                 okText="Ok"
               >
@@ -274,23 +269,18 @@ function TableGroupCameraPermission({
       <ProTable
         // loading={loading}
         headerTitle={intl.formatMessage({
-          id: 'pages.setting-user.list-user.permissionCameraGroups',
+          id: 'pages.setting-user.list-user.permissionCamera',
         })}
         rowKey="uuid"
         search={false}
-        dataSource={listCameraGroupPermission}
+        dataSource={listCameraPermission}
         columns={columns}
         // rowSelection={{}}
         options={false}
         toolbar={{
           multipleLine: true,
 
-          actions: [
-            <AddCameraGroupPermission
-              key="add-camera-group-permission"
-              listCameraGroupNotPermission={listCameraGroupNotPermission}
-            />,
-          ],
+          //   actions: [<AddUserIntoGroup key="add-user-into-group" />],
           style: { width: '100%' },
         }}
         pagination={{
@@ -300,7 +290,7 @@ function TableGroupCameraPermission({
             `${intl.formatMessage({
               id: 'pages.setting-user.list-user.total',
             })} ${total}`,
-          total: listCameraGroupPermission?.length,
+          total: listCameraPermission?.length,
           onChange: onPaginationChange,
           pageSize: 5,
           current: 1,
@@ -311,14 +301,12 @@ function TableGroupCameraPermission({
 }
 
 function mapStateToProps(state) {
-  const { listCameraGroupPermission, metadata, listCameraGroupNotPermission } =
-    state.groupCameraPermissionInGroupUser;
+  const { listCameraPermission, metadata } = state.cameraPermissionInGroupUser;
   return {
-    loading: state.loading.models.groupCameraPermissionInGroupUser,
-    listCameraGroupPermission,
+    loading: state.loading.models.cameraPermissionInGroupUser,
+    listCameraPermission,
     metadata,
-    listCameraGroupNotPermission,
   };
 }
 
-export default connect(mapStateToProps)(TableGroupCameraPermission);
+export default connect(mapStateToProps)(TableCameraPermission);

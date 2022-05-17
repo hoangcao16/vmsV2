@@ -103,11 +103,30 @@ const UserApi = {
     });
   },
 
+  getAllCamera: async (params) => {
+    return request.get(`/cctv-controller-svc/api/v1/cameras`, {
+      params,
+    });
+  },
+
   setPermisionCameraGroups: async (payloadAdd) => {
     return request.post('/authz/api/v0/authorization/add_permission', payloadAdd);
   },
-  removePermisionCameraGroups: async (payloadAdd) => {
-    return request.post('/authz/api/v0/authorization/remove_permission', payloadAdd);
+
+  setMultiPermisionCameraGroups: async (payloadAdd) => {
+    return request.post('/authz/api/v0/authorization/add_multi_permission', payloadAdd);
+  },
+
+  removePermisionCameraGroups: async (dataRemove) => {
+    return request.post('/authz/api/v0/authorization/remove_permission', dataRemove);
+  },
+
+  setPermisionCamera: async (payloadAdd) => {
+    return request.post('/authz/api/v0/authorization/add_permission', payloadAdd);
+  },
+
+  removePermisionCamera: async (dataRemove) => {
+    return request.post('/authz/api/v0/authorization/remove_permission', dataRemove);
   },
 };
 

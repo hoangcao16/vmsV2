@@ -65,6 +65,13 @@ export default {
   'pages.setting-user.list-user.search': 'Search',
   'pages.setting-user.list-user.nodata': 'No data',
   'pages.setting-user.list-user.permissionCameraGroups': 'Permissions For Camera Groups',
+  'pages.setting-user.list-user.permissionCamera': 'Permissions For Camera',
+  'pages.setting-user.list-user.cameraGroup': 'Camera Group',
+  'pages.setting-user.list-user.camera': 'Camera',
+  'pages.setting-user.list-user.view_online': 'View Online',
+  'pages.setting-user.list-user.view_offline': 'View Offline',
+  'pages.setting-user.list-user.setup_preset': 'Setup Preset',
+  'pages.setting-user.list-user.ptz_control': 'PTZ Control',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Success',

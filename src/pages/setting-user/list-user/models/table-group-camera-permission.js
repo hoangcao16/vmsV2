@@ -1,25 +1,44 @@
 import UserApi from '@/services/user/UserApi';
-import getCurrentLocale from '@/utils/Locale';
 import { isEmpty } from 'lodash';
 
 export default {
   namespace: 'groupCameraPermissionInGroupUser',
   state: {
     listCameraGroupPermission: [],
+    listCameraGroupNotPermission: [],
     metadata: {},
     groupCode: null,
   },
   reducers: {
-    save(state, { payload: { data: listCameraGroupPermission, metadata, groupCode } }) {
-      return { ...state, listCameraGroupPermission, metadata, groupCode };
+    save(
+      state,
+      {
+        payload: {
+          data: listCameraGroupPermission,
+          metadata,
+          groupCode,
+          listCameraGroupNotPermission,
+        },
+      },
+    ) {
+      return {
+        ...state,
+        listCameraGroupPermission,
+        metadata,
+        groupCode,
+        listCameraGroupNotPermission,
+      };
+    },
+
+    savePremissionNotInCameraGroup(state, { payload: { data: listCameraGroupNotPermission } }) {
+      return { ...state, listCameraGroupNotPermission };
     },
   },
   effects: {
     *fetchAllPermissionCameraGroups({ payload: { code } }, { call, put, select }) {
       try {
-        const resDataPermision = yield call(UserApi.getAllUserInGroupById, code);
-
         const allCameraGroups = yield call(UserApi.getAllCameraGroups, { page: 0, size: 10000 });
+        const resDataPermision = yield call(UserApi.getAllUserInGroupById, code);
 
         const listPermissionCameraGroups = resDataPermision?.payload?.p_camera_groups;
 
@@ -50,42 +69,37 @@ export default {
           cameraGroupsPerRows = convertDataRows(listPermissionCameraGroups);
         }
 
+        const checkedGroup = cameraGroupsPerRows.map((t) => t.cam_group_uuid);
+        const listCameraGroupNotPermission = allCameraGroups?.payload?.filter(
+          (r) => !checkedGroup.includes(r.uuid),
+        );
+
         yield put({
           type: 'save',
           payload: {
             data: cameraGroupsPerRows,
             metadata: { ...resDataPermision?.metadata },
             groupCode: resDataPermision?.payload?.group_code,
+            listCameraGroupNotPermission,
           },
         });
       } catch (error) {
         console.error(error);
       }
     },
-
-    // *fetchAllPermission({ payload: { lang } }, { call, put, select }) {
+    // *fetchAllPermissionNotInCameraGroups({ payload: { } }, { call, put, select }) {
     //   try {
-    //     const res = yield call(UserApi.getAllPermission, lang);
+    //     const cameraGroupsPerRows = yield select((state) => state.groupCameraPermissionInGroupUser.cameraGroupsPerRows);
 
-    //     const permissionRemoveMonitoring = res?.payload?.filter((r) => r.code !== 'monitoring');
+    //     const allCameraGroups = yield call(UserApi.getAllCameraGroups, { page: 0, size: 10000 });
 
-    //     const finalPermission = permissionRemoveMonitoring.map((p) => {
-    //       return {
-    //         code: p?.code,
-    //         name: p?.name,
-    //         children: p?.permissions.map((p) => {
-    //           return {
-    //             code: p?.code,
-    //             name: p?.name,
-    //           };
-    //         }),
-    //       };
-    //     });
+    //     const checkedGroup = cameraGroupsPerRows.map((t) => t.cam_group_uuid);
+    //     const listCameraGroupNotPermission = allCameraGroups?.payload?.filter((r) => !checkedGroup.includes(r.uuid));
 
     //     yield put({
-    //       type: 'saveAllPermission',
+    //       type: 'savePremissionNotInCameraGroup',
     //       payload: {
-    //         data: finalPermission,
+    //         data: listCameraGroupNotPermission,
     //       },
     //     });
     //   } catch (error) {
@@ -93,17 +107,16 @@ export default {
     //   }
     // },
 
-    // *remove({ payload: dataRemove }, { call, put }) {
-    //   try {
-    //     const res = yield call(UserApi.removePermissionInGroup, dataRemove);
-    //     yield put({ type: 'reload' });
-    //   } catch (error) {}
-    // },
-    // // ================================================================
-    // //set quyen le cho camera
     *removePermisionCameraGroups({ payload: dataRM }, { call, put }) {
       try {
         const res = yield call(UserApi.removePermisionCameraGroups, dataRM);
+        yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
+      } catch (error) {}
+    },
+
+    *setMultiPermisionCameraGroups({ payload: payloadAdd }, { call, put }) {
+      try {
+        const res = yield call(UserApi.setMultiPermisionCameraGroups, payloadAdd);
         yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
       } catch (error) {}
     },
@@ -116,15 +129,14 @@ export default {
     },
     // ==================================================================
 
-    // *reload(action, { put, select }) {
-    //   const code = yield select((state) => state.premissionInGroup.groupCode);
-
-    //   yield put({ type: 'fetchAllPermissionInGroup', payload: { code } });
-    // },
-
     *reloadFetchAllPermissionCameraGroups(action, { put, select }) {
       const code = yield select((state) => state.groupCameraPermissionInGroupUser.groupCode);
       yield put({ type: 'fetchAllPermissionCameraGroups', payload: { code } });
     },
+
+    // *fetchAllPermissionNotInCameraGroups(action, { put, select }) {
+    //   const code = yield select((state) => state.groupCameraPermissionInGroupUser.groupCode);
+    //   yield put({ type: 'fetchAllPermissionNotInCameraGroups', payload: { code } });
+    // },
   },
 };
