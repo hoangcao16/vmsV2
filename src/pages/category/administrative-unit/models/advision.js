@@ -1,3 +1,4 @@
+import { notify } from '@/components/Notify';
 import AdDivisionApi from '@/services/advision/AdDivision';
 
 export default {
@@ -35,9 +36,41 @@ export default {
     *add({ payload }, { call, put }) {
       try {
         const res = yield call(AdDivisionApi.addAdDivision, payload);
+        if (res?.code === 700 || res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'noti.successfully_add_administrative',
+          );
+        }
         yield put({ type: 'reload' });
       } catch (error) {
-        console.log(error);
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${res?.code}`,
+        );
+      }
+    },
+
+    *edit({ payload: { id, values } }, { call, put }) {
+      try {
+        const res = yield call(AdDivisionApi.editAdDivision, id, values);
+        if (res?.code === 700 || res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'noti.successfully_edit_administrative_unit',
+          );
+        }
+
+        yield put({ type: 'reload' });
+      } catch (error) {
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${res?.code}`,
+        );
       }
     },
 

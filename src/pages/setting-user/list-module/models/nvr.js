@@ -1,3 +1,4 @@
+import { notify } from '@/components/Notify';
 import ModuleApi from '@/services/module-api/ModuleApi';
 
 export default {
@@ -33,10 +34,20 @@ export default {
     *editNVR({ payload: { id, values } }, { call, put }) {
       try {
         const res = yield call(ModuleApi.editNVR, id, values);
-
+        if (res?.code === 700 || res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'noti.successfully_edit_nvr',
+          );
+        }
         yield put({ type: 'reload' });
       } catch (error) {
-        console.log(error);
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${res?.code}`,
+        );
       }
     },
 
