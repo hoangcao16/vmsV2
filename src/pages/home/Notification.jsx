@@ -184,7 +184,7 @@ const Notification = (props) => {
 
   return (
     <div>
-      <div className="noti">
+      <div className="home-notification">
         <Badge count={badge} className="wrapper-header">
           {intl.formatMessage({
             id: `pages.home.notification`,

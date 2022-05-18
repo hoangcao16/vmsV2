@@ -2,6 +2,7 @@ import React from 'react';
 import CameraStatistics from './components/cameraStatistics';
 import Chart from './components/chart';
 import { Row, Col } from 'antd';
+import ChartControl from './components/chartControl';
 
 const chartCol = {
   xs: 19,
@@ -27,16 +28,18 @@ const controlCol = {
 
 export default function Report() {
   return (
-    <>
+    <div className="report">
       <Row gutter={24}>
         <Col {...chartCol}>
           <CameraStatistics />
           <Chart />
         </Col>
         <Col {...controlCol}>
-          <div className="chartControl">Chart Control</div>
+          <div className="chartControl">
+            <ChartControl />
+          </div>
         </Col>
       </Row>
-    </>
+    </div>
   );
 }
