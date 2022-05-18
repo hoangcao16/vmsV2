@@ -2,24 +2,25 @@ import React from 'react';
 import Report from '@/pages/report/index';
 import { Row, Col } from 'antd';
 import Notification from './Notification';
+import './Home.less';
 
 const reportCol = {
-  xs: 20,
-  sm: 20,
-  md: 20,
-  lg: 20,
-  xl: 20,
+  xs: 24,
+  sm: 19,
+  md: 19,
+  lg: 19,
+  xl: 19,
   style: {
     marginBottom: 24,
   },
 };
 
 const notiCol = {
-  xs: 4,
-  sm: 4,
-  md: 4,
-  lg: 4,
-  xl: 4,
+  xs: 0,
+  sm: 5,
+  md: 5,
+  lg: 5,
+  xl: 5,
   style: {
     marginBottom: 24,
   },
@@ -32,7 +33,9 @@ export default function index() {
         <Report />
       </Col>
       <Col {...notiCol}>
-        <Notification />
+        <div className="noti">
+          <Notification />
+        </div>
       </Col>
     </Row>
   );

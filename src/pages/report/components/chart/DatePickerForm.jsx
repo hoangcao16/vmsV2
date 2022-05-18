@@ -106,7 +106,13 @@ const DatePickerForm = (props) => {
       }}
     >
       <Space>
-        <Form.Item name="typeDate">
+        <Form.Item
+          name="typeDate"
+          label={intl.formatMessage({
+            id: `pages.report.chart.by`,
+            defaultMessage: 'By',
+          })}
+        >
           <Select>
             <Option value="day">
               {intl.formatMessage({
@@ -134,10 +140,22 @@ const DatePickerForm = (props) => {
             </Option>
           </Select>
         </Form.Item>
-        <Form.Item name="startDate">
+        <Form.Item
+          name="startDate"
+          label={intl.formatMessage({
+            id: `pages.report.chart.from`,
+            defaultMessage: 'By',
+          })}
+        >
           <PickerWithType picker={form.getFieldValue('typeDate')} format={format} id="start" />
         </Form.Item>
-        <Form.Item name="endDate">
+        <Form.Item
+          name="endDate"
+          label={intl.formatMessage({
+            id: `pages.report.chart.to`,
+            defaultMessage: 'By',
+          })}
+        >
           <PickerWithType picker={form.getFieldValue('typeDate')} format={format} id="end" />
         </Form.Item>
       </Space>

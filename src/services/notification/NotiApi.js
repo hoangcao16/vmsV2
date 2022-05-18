@@ -6,6 +6,9 @@ const NotiApi = {
       params,
     });
   },
+  getBagde: async () => {
+    return request.get('/cctv-monitor-ctrl-svc/api/v1/message/get-badge');
+  },
 };
 
 export default NotiApi;
