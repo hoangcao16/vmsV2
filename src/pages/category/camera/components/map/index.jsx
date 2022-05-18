@@ -11,7 +11,7 @@ const MapAddCamera = ({ resultSearchMap, handleSelectMap, defaultLongLat, isEdit
   const mapboxRef = useRef(null);
   const mapBoxDrawRef = useRef(null);
   const [currentLan, setCurrentLan] = useState(null);
-  const zoom = 14;
+  const zoom = 13;
   //Khoi tao map
   const showViewMap = () => {
     try {

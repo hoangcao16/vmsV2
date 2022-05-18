@@ -20,9 +20,8 @@ const CameraApi = {
   getAllCameraTypes(data) {
     return request.request({
       method: 'GET',
-      url: `/cctv-controller-svc/api/v1/camera_types?name=${data?.name}${
-        data?.size ? `&size=${data?.size}` : ''
-      }`,
+      url: `/cctv-controller-svc/api/v1/camera_types`,
+      params: data,
     });
   },
   getAllGroupCamera(data) {

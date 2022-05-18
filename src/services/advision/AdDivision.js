@@ -5,9 +5,8 @@ const AdDivisionApi = {
   getAllAdDivision(data) {
     return request.request({
       method: 'GET',
-      url: `/cctv-controller-svc/api/v1/administrative_units?name=${data?.name}${
-        data?.size ? `&size=${data?.size}` : ''
-      }`,
+      url: `/cctv-controller-svc/api/v1/administrative_units`,
+      params: data,
     });
   },
 

@@ -16,31 +16,31 @@ import clearData from '@/utils/CleanData';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
 import { notify } from '@/components/Notify';
 import AddressApi from '@/services/address/AddressApi';
-import CameraApi from '@/services/camera/CameraApi';
-import ZoneApi from '@/services/zone/ZoneApi';
-import AdDivisionApi from '@/services/advision/AdDivision';
-import VendorApi from '@/services/vendor/VendorApi';
-import TagApi from '@/services/tag/tagApi';
 import VietMapApi from '@/services/vietmapApi';
 import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
 import getBase64 from '@/utils/getBase64';
+import { CustomSelect } from '@/components/select/CustomSelect';
 const { Dragger } = Upload;
 const formItemLayout = {
   wrapperCol: { span: 24 },
   labelCol: { span: 5 },
 };
-const AddCamera = ({ isAddNewDrawer, setIsAddNewDrawer, dispatch }) => {
+const AddCamera = ({
+  isAddNewDrawer,
+  setIsAddNewDrawer,
+  dispatch,
+  cameraTypesOptions,
+  groupCameraOptions,
+  zonesOptions,
+  adDivisionsOptions,
+  vendorsOptions,
+  tagsOptions,
+  provincesOptions,
+}) => {
   const [form] = Form.useForm();
   const intl = useIntl();
-  const [cameraTypesOptions, setCameraTypesOptions] = useState([]);
-  const [groupCameraOptions, setGroupCameraOptions] = useState([]);
-  const [zonesOptions, setZonesOptions] = useState([]);
-  const [adDivisionsOptions, setAdDivisionsOptions] = useState([]);
-  const [vendorsOptions, setVendorsOptions] = useState([]);
-  const [tagsOptions, setTagsOptions] = useState([]);
   const [avatarUrl, setAvatarUrl] = useState('');
   const [avatarFileName, setAvatarFileName] = useState('');
-  const [provinces, setProvinces] = useState([]);
   const [provinceId, setProvinceId] = useState(null);
   const [districts, setDistrict] = useState([]);
   const [districtId, setDistrictId] = useState(null);
@@ -51,38 +51,6 @@ const AddCamera = ({ isAddNewDrawer, setIsAddNewDrawer, dispatch }) => {
   const [isLoading, setLoading] = useState(false);
 
   const vietmapApiKey = REACT_APP_VIETMAP_APIKEY;
-
-  //get Data first mount
-  useEffect(() => {
-    const data = {
-      name: '',
-      id: '',
-      provinceId: '',
-      districtId: '',
-    };
-    AddressApi.getAllProvinces().then((res) => {
-      setProvinces(res?.payload);
-    });
-
-    CameraApi.getAllCameraTypes(data).then((res) => {
-      setCameraTypesOptions(res?.payload);
-    });
-    CameraApi.getAllGroupCamera(data).then((res) => {
-      setGroupCameraOptions(res?.payload);
-    });
-    ZoneApi.getAllZones(data).then((res) => {
-      setZonesOptions(res?.payload);
-    });
-    AdDivisionApi.getAllAdDivision(data).then((res) => {
-      setAdDivisionsOptions(res?.payload);
-    });
-    VendorApi.getAllVendor(data).then((res) => {
-      setVendorsOptions(res?.payload);
-    });
-    TagApi.getAllTags(data).then((res) => {
-      setTagsOptions(res?.payload);
-    });
-  }, []);
   // get districts when select province
   useEffect(() => {
     if (provinceId) {
@@ -366,7 +334,7 @@ const AddCamera = ({ isAddNewDrawer, setIsAddNewDrawer, dispatch }) => {
                         },
                       ]}
                     >
-                      <Select
+                      <CustomSelect
                         showSearch
                         dataSource={groupCameraOptions}
                         filterOption={filterOption}
@@ -419,7 +387,7 @@ const AddCamera = ({ isAddNewDrawer, setIsAddNewDrawer, dispatch }) => {
                         },
                       ]}
                     >
-                      <Select
+                      <CustomSelect
                         showSearch
                         dataSource={cameraTypesOptions}
                         filterOption={filterOption}
@@ -465,7 +433,7 @@ const AddCamera = ({ isAddNewDrawer, setIsAddNewDrawer, dispatch }) => {
                         },
                       ]}
                     >
-                      <Select
+                      <CustomSelect
                         showSearch
                         dataSource={vendorsOptions}
                         filterOption={filterOption}
@@ -662,12 +630,12 @@ const AddCamera = ({ isAddNewDrawer, setIsAddNewDrawer, dispatch }) => {
                       },
                     ]}
                   >
-                    <Select
+                    <CustomSelect
                       showSearch
-                      dataSource={provinces}
+                      dataSource={provincesOptions}
                       onChange={(cityId) => onChangeCity(cityId)}
                       filterOption={filterOption}
-                      options={normalizeOptions('name', 'provinceId', provinces)}
+                      options={normalizeOptions('name', 'provinceId', provincesOptions)}
                       placeholder={intl.formatMessage({
                         id: 'view.map.province_id',
                       })}
@@ -693,7 +661,7 @@ const AddCamera = ({ isAddNewDrawer, setIsAddNewDrawer, dispatch }) => {
                       },
                     ]}
                   >
-                    <Select
+                    <CustomSelect
                       showSearch
                       dataSource={districts}
                       onChange={(districtId) => onChangeDistrict(districtId)}
@@ -726,7 +694,7 @@ const AddCamera = ({ isAddNewDrawer, setIsAddNewDrawer, dispatch }) => {
                       },
                     ]}
                   >
-                    <Select
+                    <CustomSelect
                       showSearch
                       dataSource={wards}
                       filterOption={filterOption}
@@ -802,7 +770,7 @@ const AddCamera = ({ isAddNewDrawer, setIsAddNewDrawer, dispatch }) => {
                         },
                       ]}
                     >
-                      <Select
+                      <CustomSelect
                         showSearch
                         dataSource={zonesOptions}
                         filterOption={filterOption}
@@ -841,7 +809,7 @@ const AddCamera = ({ isAddNewDrawer, setIsAddNewDrawer, dispatch }) => {
                       })}
                       name={['administrativeUnitUuid']}
                     >
-                      <Select
+                      <CustomSelect
                         allowClear
                         showSearch
                         dataSource={adDivisionsOptions}
@@ -911,7 +879,7 @@ const AddCamera = ({ isAddNewDrawer, setIsAddNewDrawer, dispatch }) => {
                       name={['tags']}
                       rules={[]}
                     >
-                      <Select
+                      <CustomSelect
                         showSearch
                         dataSource={tagsOptions}
                         filterOption={filterOption}
@@ -1037,6 +1005,23 @@ const AddCamera = ({ isAddNewDrawer, setIsAddNewDrawer, dispatch }) => {
   );
 };
 function mapStateToProps(state) {
-  return {};
+  const {
+    cameraTypesOptions,
+    groupCameraOptions,
+    zonesOptions,
+    adDivisionsOptions,
+    vendorsOptions,
+    tagsOptions,
+    provincesOptions,
+  } = state.globalstore;
+  return {
+    cameraTypesOptions,
+    groupCameraOptions,
+    zonesOptions,
+    adDivisionsOptions,
+    vendorsOptions,
+    tagsOptions,
+    provincesOptions,
+  };
 }
 export default connect(mapStateToProps)(AddCamera);
