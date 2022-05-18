@@ -117,6 +117,10 @@ const UserApi = {
     return request.post('/authz/api/v0/authorization/add_multi_permission', payloadAdd);
   },
 
+  setMultiPermisionCameras: async (payloadAdd) => {
+    return request.post('/authz/api/v0/authorization/add_multi_permission', payloadAdd);
+  },
+
   removePermisionCameraGroups: async (dataRemove) => {
     return request.post('/authz/api/v0/authorization/remove_permission', dataRemove);
   },

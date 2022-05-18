@@ -73,6 +73,16 @@ export default {
   'pages.setting-user.list-user.setup_preset': 'Cài đặt preset',
   'pages.setting-user.list-user.ptz_control': 'Điều khiển PTZ',
 
+  'pages.setting-user.list-user.cameraTypeName': 'Loại camera',
+  'pages.setting-user.list-user.provinceName': 'Thành phố',
+  'pages.setting-user.list-user.districtName': 'Quận huyện',
+  'pages.setting-user.list-user.wardName': 'Phường xã',
+  'pages.setting-user.list-user.address': 'Địa chỉ',
+  'pages.setting-user.list-user.recordingStatus': 'Trạng thái',
+  'pages.setting-user.list-user.administrativeUnitName': 'Đơn vị hành chính',
+  'pages.setting-user.list-user.active': 'Đang hoạt động',
+  'pages.setting-user.list-user.inactive': 'Dừng hoạt động',
+
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Thành công',
   'pages..setting-user.list-user.titleErrors': 'Thất bại',

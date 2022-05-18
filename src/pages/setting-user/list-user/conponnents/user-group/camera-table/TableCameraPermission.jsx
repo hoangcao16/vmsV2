@@ -6,8 +6,15 @@ import { Checkbox, Popconfirm, Space, Tooltip } from 'antd';
 import { connect } from 'dva';
 import React, { useEffect } from 'react';
 import { useIntl } from 'umi';
+import AddCameraPermission from './AddCameraPermission';
 
-function TableCameraPermission({ id, dispatch, listCameraPermission, metadata }) {
+function TableCameraPermission({
+  id,
+  dispatch,
+  listCameraPermission,
+  metadata,
+  listCameraNotPermission,
+}) {
   const intl = useIntl();
 
   useEffect(() => {
@@ -15,7 +22,6 @@ function TableCameraPermission({ id, dispatch, listCameraPermission, metadata })
       localStorage.setItem(STORAGE.GROUP_CODE_SELECTED, result?.payload?.code);
       localStorage.setItem(STORAGE.GROUP_UUID_SELECTED, result?.payload?.uuid);
 
-      console.log('cameraPermissionInGroupUser/fetchAllPermissionCamera');
       dispatch({
         type: 'cameraPermissionInGroupUser/fetchAllPermissionCamera',
         payload: {
@@ -280,7 +286,12 @@ function TableCameraPermission({ id, dispatch, listCameraPermission, metadata })
         toolbar={{
           multipleLine: true,
 
-          //   actions: [<AddUserIntoGroup key="add-user-into-group" />],
+          actions: [
+            <AddCameraPermission
+              key="add-camera-permission"
+              listCameraNotPermission={listCameraNotPermission}
+            />,
+          ],
           style: { width: '100%' },
         }}
         pagination={{
@@ -301,11 +312,13 @@ function TableCameraPermission({ id, dispatch, listCameraPermission, metadata })
 }
 
 function mapStateToProps(state) {
-  const { listCameraPermission, metadata } = state.cameraPermissionInGroupUser;
+  const { listCameraPermission, metadata, listCameraNotPermission } =
+    state.cameraPermissionInGroupUser;
   return {
     loading: state.loading.models.cameraPermissionInGroupUser,
     listCameraPermission,
     metadata,
+    listCameraNotPermission,
   };
 }
 

@@ -5,12 +5,16 @@ export default {
   namespace: 'cameraPermissionInGroupUser',
   state: {
     listCameraPermission: [],
+    listCameraNotPermission: [],
     metadata: {},
     groupCode: null,
   },
   reducers: {
-    save(state, { payload: { data: listCameraPermission, metadata, groupCode } }) {
-      return { ...state, listCameraPermission, metadata, groupCode };
+    save(
+      state,
+      { payload: { data: listCameraPermission, metadata, groupCode, listCameraNotPermission } },
+    ) {
+      return { ...state, listCameraPermission, metadata, groupCode, listCameraNotPermission };
     },
   },
   effects: {
@@ -59,12 +63,18 @@ export default {
           cameraPerRows = convertDataRows(listPermissionCamera);
         }
 
+        const checkedGroup = cameraPerRows.map((t) => t.cam_uuid);
+        const listCameraNotPermission = allCamera?.payload?.filter(
+          (r) => !checkedGroup.includes(r.uuid),
+        );
+
         yield put({
           type: 'save',
           payload: {
             data: cameraPerRows,
             metadata: { ...resDataPermision?.metadata },
             groupCode: resDataPermision?.payload?.group_code,
+            listCameraNotPermission,
           },
         });
       } catch (error) {
@@ -82,6 +92,12 @@ export default {
     *setPermisionCamera({ payload: payloadAdd }, { call, put }) {
       try {
         const res = yield call(UserApi.setPermisionCamera, payloadAdd);
+        yield put({ type: 'reloadFetchAllPermissionCamera' });
+      } catch (error) {}
+    },
+    *setMultiPermisionCameras({ payload: payloadAdd }, { call, put }) {
+      try {
+        const res = yield call(UserApi.setMultiPermisionCameras, payloadAdd);
         yield put({ type: 'reloadFetchAllPermissionCamera' });
       } catch (error) {}
     },

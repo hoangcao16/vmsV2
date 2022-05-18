@@ -73,6 +73,16 @@ export default {
   'pages.setting-user.list-user.setup_preset': 'Setup Preset',
   'pages.setting-user.list-user.ptz_control': 'PTZ Control',
 
+  'pages.setting-user.list-user.cameraTypeName': 'Camera type',
+  'pages.setting-user.list-user.provinceName': 'Province name',
+  'pages.setting-user.list-user.districtName': 'District name',
+  'pages.setting-user.list-user.wardName': 'Ward name',
+  'pages.setting-user.list-user.address': 'Address',
+  'pages.setting-user.list-user.recordingStatus': 'Status',
+  'pages.setting-user.list-user.administrativeUnitName': 'AdministrativeUnit name',
+  'pages.setting-user.list-user.active': 'Active',
+  'pages.setting-user.list-user.inactive': 'Inactive',
+
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Success',
   'pages.setting-user.list-user.titleErrors': 'Errors',

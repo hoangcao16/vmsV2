@@ -5,7 +5,7 @@ import { connect } from 'dva';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { useIntl } from 'umi';
-import TableCameraPermission from './camera-group/TableCameraPermission';
+import TableCameraPermission from './camera-table/TableCameraPermission';
 import TableGroupCameraPermission from './group-camera-table/TableGroupCameraPermission';
 import TablePermissionInGroup from './TablePermissionInGroup';
 import TableUserInGroup from './TableUserInGroup';
