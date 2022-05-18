@@ -7,6 +7,8 @@ export const STORAGE = {
   REFRESH_TOKEN: 'refreshToken',
   GROUP_CODE_SELECTED: 'group_code_selected',
   GROUP_UUID_SELECTED: 'group_uuid_selected',
+  ROLE_CODE_SELECTED: 'role_code_selected',
+  ROLE_UUID_SELECTED: 'role_uuid_selected',
 };
 export const PAGE_SIZE = 20;
 export const STATUS_CODE = {
