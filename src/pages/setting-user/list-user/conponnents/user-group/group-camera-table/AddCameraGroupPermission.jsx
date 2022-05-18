@@ -4,26 +4,10 @@ import TableUtils from '@/utils/TableHelper';
 import ProTable from '@ant-design/pro-table';
 import { Button, Space } from 'antd';
 import { connect } from 'dva';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useIntl } from 'umi';
-function AddUserIntoGroup({
-  dispatch,
-  listUserNoIntoGroup,
-  listUuidCurrentUserInGroup,
-  openDrawer,
-  onClose,
-}) {
+function AddCameraGroupPermission({ dispatch, listCameraGroupNotPermission, onClose, openDrawer }) {
   const intl = useIntl();
-
-  useEffect(() => {
-    dispatch({
-      type: 'userInGroup/fetchAllUserNotInGroup',
-      payload: {
-        page: 1,
-        size: 1000000,
-      },
-    });
-  }, []);
 
   const columns = [
     {
@@ -35,30 +19,30 @@ function AddUserIntoGroup({
     },
 
     {
-      title: 'Email',
-      dataIndex: 'email',
-      // ...TableUtils.getColumnSearchProps('email'),
-      search: true,
-    },
-
-    {
       title: intl.formatMessage({
-        id: 'pages.setting-user.list-user.phone',
+        id: 'pages.setting-user.list-user.description',
       }),
-      dataIndex: 'phone',
+      dataIndex: 'description',
     },
   ];
 
   const onPaginationChange = (page, size) => {};
-  const handleAddUserIntoGroup = ({ selectedRowKeys }) => {
-    const dataAddMem = {
-      user_uuids: [...listUuidCurrentUserInGroup, ...selectedRowKeys],
-      group_uuid: localStorage.getItem(STORAGE.GROUP_UUID_SELECTED),
+  const handleAddCameraGroupPermission = ({ selectedRowKeys }) => {
+    const data = selectedRowKeys.map((s) => {
+      return {
+        subject: `user_g@${localStorage.getItem(STORAGE.GROUP_CODE_SELECTED)}`,
+        object: `cam_g@${s}`,
+        action: 'view_online',
+      };
+    });
+
+    const dataAdd = {
+      policies: data,
     };
 
     dispatch({
-      type: 'userInGroup/addMemberIntoGroups',
-      payload: dataAddMem,
+      type: 'groupCameraPermissionInGroupUser/setMultiPermisionCameraGroups',
+      payload: dataAdd,
     });
 
     onClose();
@@ -71,20 +55,20 @@ function AddUserIntoGroup({
           openDrawer={openDrawer}
           onClose={onClose}
           width={'50%'}
-          zIndex={1003}
+          zIndex={1006}
           title={intl.formatMessage({
-            id: 'pages.setting-user.list-user.list',
+            id: 'pages.setting-user.list-user.cameraGroup',
           })}
           placement="right"
         >
           <>
             <ProTable
               headerTitle={intl.formatMessage({
-                id: 'pages.setting-user.list-user.list',
+                id: 'pages.setting-user.list-user.cameraGroup',
               })}
               rowKey="uuid"
               search={false}
-              dataSource={listUserNoIntoGroup}
+              dataSource={listCameraGroupNotPermission}
               columns={columns}
               rowSelection={{}}
               tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => (
@@ -108,7 +92,10 @@ function AddUserIntoGroup({
               tableAlertOptionRender={(selectedRowKeys) => {
                 return (
                   <Space size={16}>
-                    <Button type="primary" onClick={() => handleAddUserIntoGroup(selectedRowKeys)}>
+                    <Button
+                      type="primary"
+                      onClick={() => handleAddCameraGroupPermission(selectedRowKeys)}
+                    >
                       {intl.formatMessage({
                         id: 'pages.setting-user.list-user.add',
                       })}
@@ -124,7 +111,7 @@ function AddUserIntoGroup({
                   `${intl.formatMessage({
                     id: 'pages.setting-user.list-user.total',
                   })} ${total}`,
-                total: listUserNoIntoGroup?.length,
+                total: listCameraGroupNotPermission?.length,
                 onChange: onPaginationChange,
                 pageSize: 5,
                 current: 1,
@@ -137,14 +124,6 @@ function AddUserIntoGroup({
   );
 }
 
-function mapStateToProps(state) {
-  const { listUserNoIntoGroup, metadata, list } = state.userInGroup;
-  return {
-    loading: state.loading.models.userInGroup,
-    listUserNoIntoGroup,
-    metadata,
-    listUuidCurrentUserInGroup: list?.map((l) => l.uuid),
-  };
-}
+function mapStateToProps(state) {}
 
-export default connect(mapStateToProps)(AddUserIntoGroup);
+export default connect(mapStateToProps)(AddCameraGroupPermission);

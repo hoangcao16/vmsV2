@@ -1,3 +1,4 @@
+import { notify } from '@/components/Notify';
 import { STORAGE } from '@/constants/common';
 import UserApi from '@/services/user/UserApi';
 
@@ -65,53 +66,50 @@ export default {
       }
     },
 
-    // *patch({ payload: { id, values } }, { call, put, select }) {
-    //   yield call(UserApi.updateUserGroup, id, values);
-    //   const oldList = yield select((state) => state.userGroup.list);
-    //   const metadata = yield select((state) => state.userGroup.metadata);
-
-    //   const userGroupIndex = oldList.findIndex((userG) => userG.uuid === id);
-
-    //   if (userGroupIndex >= 0) {
-    //     oldList[userGroupIndex] = { ...oldList[userGroupIndex], ...values };
-    //   }
-
-    //   const newList = [...oldList];
-
-    //   yield put({
-    //     type: 'save',
-    //     payload: {
-    //       data: newList,
-    //       metadata: metadata,
-    //     },
-    //   });
-    //   // yield put({ type: 'reload' });
-    // },
-
-    // *remove({ payload: id }, { call, put }) {
-    //   yield call(UserApi.deleteUserGroup, id);
-    //   yield put({ type: 'reload' });
-    // },
-
     *addMemberIntoGroups({ payload: dataAdd }, { call, put }) {
       try {
         const res = yield call(UserApi.addMemberIntoGroups, dataAdd);
+        if (res?.code == 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.addMemberIntoGroupSuccess',
+          );
 
-        console.log('res:', res);
-
-        yield put({ type: 'reload' });
-        yield put({ type: 'reloadFetchAllUserNotInGroup' });
-      } catch (error) {}
+          yield put({ type: 'reload' });
+          yield put({ type: 'reloadFetchAllUserNotInGroup' });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     *remove({ payload: dataRemove }, { call, put }) {
       try {
         const res = yield call(UserApi.removeUserInGroup, dataRemove);
 
-        console.log('res:', res);
+        if (res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.removeMemberIntoGroupSuccess',
+          );
 
-        yield put({ type: 'reload' });
-        yield put({ type: 'reloadFetchAllUserNotInGroup' });
+          yield put({ type: 'reload' });
+          yield put({ type: 'reloadFetchAllUserNotInGroup' });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
+        }
       } catch (error) {}
     },
 

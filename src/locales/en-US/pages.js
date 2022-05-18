@@ -74,9 +74,49 @@ export default {
   'pages.setting-user.list-user.select': 'Selected',
   'pages.setting-user.list-user.record': 'record',
   'pages.setting-user.list-user.clean': 'Clean All',
+  'pages.setting-user.list-user.list-permission': 'List permission',
+  'pages.setting-user.list-user.setting-per': 'Setting permission',
+  'pages.setting-user.list-user.save': 'Save',
+  'pages.setting-user.list-user.search': 'Search',
+  'pages.setting-user.list-user.nodata': 'No data',
+  'pages.setting-user.list-user.permissionCameraGroups': 'Permissions For Camera Groups',
+  'pages.setting-user.list-user.permissionCamera': 'Permissions For Camera',
+  'pages.setting-user.list-user.cameraGroup': 'Camera Group',
+  'pages.setting-user.list-user.camera': 'Camera',
+  'pages.setting-user.list-user.view_online': 'View Online',
+  'pages.setting-user.list-user.view_offline': 'View Offline',
+  'pages.setting-user.list-user.setup_preset': 'Setup Preset',
+  'pages.setting-user.list-user.ptz_control': 'PTZ Control',
+
+  'pages.setting-user.list-user.cameraTypeName': 'Camera type',
+  'pages.setting-user.list-user.provinceName': 'Province name',
+  'pages.setting-user.list-user.districtName': 'District name',
+  'pages.setting-user.list-user.wardName': 'Ward name',
+  'pages.setting-user.list-user.address': 'Address',
+  'pages.setting-user.list-user.recordingStatus': 'Status',
+  'pages.setting-user.list-user.administrativeUnitName': 'AdministrativeUnit name',
+  'pages.setting-user.list-user.active': 'Active',
+  'pages.setting-user.list-user.inactive': 'Inactive',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Success',
+  'pages.setting-user.list-user.updateUserGroupSuccess': 'Update user group success',
+  'pages.setting-user.list-user.removeUserGroupSuccess': 'Remove user group success',
+  'pages.setting-user.list-user.createUserGroupSuccess': 'Create user group success',
+  'pages.setting-user.list-user.addMemberIntoGroupSuccess': 'Add member into group success',
+  'pages.setting-user.list-user.removeMemberIntoGroupSuccess': 'Remove member into group success',
+  'pages.setting-user.list-user.updatePermisisionUserGroupSuccess':
+    'Updated Permisision User Group Success',
+  'pages.setting-user.list-user.removePermisisionUserGroupSuccess':
+    'Remove Permisision User Group Success',
+
+  'pages.setting-user.list-user.setPermisionCameraSuccess': 'Setting Permision Camera Success',
+  'pages.setting-user.list-user.removePermisionCameraSuccess': 'Remove Permision Camera Success',
+  'pages.setting-user.list-user.setPermisionCameraGroupSuccess':
+    'Setting Permision Camera Group Success',
+  'pages.setting-user.list-user.removePermisionCameraGroupSuccess':
+    'Remove Permision Camera Group Success',
+
   'pages.setting-user.list-user.titleErrors': 'Errors',
   'pages.setting-user.list-user.600': 'okok',
 

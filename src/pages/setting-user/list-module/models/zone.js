@@ -7,6 +7,7 @@ export default {
     metadata: {
       page: 1,
       size: 10,
+      name: '',
     },
   },
   reducers: {
@@ -40,6 +41,14 @@ export default {
     *editZone({ payload: { id, values } }, { call, put }) {
       try {
         const res = yield call(ModuleApi.editZone, id, values);
+        yield put({ type: 'reload' });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    *deleteZone({ payload: { id } }, { call, put }) {
+      try {
+        const res = yield call(ModuleApi.deleteZone, id);
         yield put({ type: 'reload' });
       } catch (error) {
         console.log(error);

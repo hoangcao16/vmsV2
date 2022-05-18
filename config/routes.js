@@ -57,11 +57,17 @@ export default [
         path: '/category/camera',
         component: './category/camera',
       },
+      {
+        name: 'administrative-unit',
+        icon: 'table',
+        path: '/category/administrative-unit',
+        component: './category/administrative-unit',
+      },
     ],
   },
   {
     path: '/setting-user',
-    name: 'setting-user',
+    name: 'setting',
     icon: 'setting',
     routes: [
       // {
@@ -81,6 +87,12 @@ export default [
         component: './setting-user/list-module',
       },
     ],
+  },
+  {
+    path: '/report',
+    icon: 'notification',
+    name: 'report',
+    component: './report',
   },
   {
     name: 'exception',
@@ -109,39 +121,8 @@ export default [
     ],
   },
   {
-    name: 'report',
-    icon: 'highlight',
-    path: '/report',
-    component: './report',
-  },
-  {
-    path: '/setting-user',
-    name: 'setting-user',
-    icon: 'setting',
-    routes: [
-      // {
-      //   path: '/setting-user',
-      //   redirect: '/setting-user/list-user',
-      // },
-      {
-        name: 'list-user',
-        icon: 'smile',
-        path: '/setting-user/list-user',
-        component: './setting-user/list-user',
-      },
-      {
-        name: 'list-modules',
-        icon: 'smile',
-        path: '/setting-user/list-module',
-        component: './setting-user/list-module',
-      },
-    ],
-  },
-  {
-    path: '/storage',
-    name: 'storage',
-    icon: 'setting',
-    component: './storage',
+    path: '/',
+    redirect: '/report',
   },
   {
     component: './exception/404',

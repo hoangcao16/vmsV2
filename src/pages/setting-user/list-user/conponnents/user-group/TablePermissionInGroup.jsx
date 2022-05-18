@@ -3,22 +3,22 @@ import UserApi from '@/services/user/UserApi';
 import permissionCheck from '@/utils/PermissionCheck';
 import { CloseOutlined } from '@ant-design/icons';
 import { EditableProTable } from '@ant-design/pro-table';
-import { Popconfirm, Space, Tag, Tooltip } from 'antd';
+import { Popconfirm, Space, Tooltip } from 'antd';
 import { connect } from 'dva';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
-import AddUserIntoGroup from './AddUserIntoGroup';
+import AddPermissionIntoGroup from './SettingPermissionGroup';
 
-function TableUserInGroup({ id, dispatch, list, loading }) {
-  const [showDrawerAdd, setOpenDrawerAdd] = useState(false);
-
+function TablePermissionInGroup({ id, dispatch, list, loading }) {
+  const [openDrawer, setOpenDrawer] = useState(false);
   const intl = useIntl();
+
   useEffect(() => {
     UserApi.getUserGroupById(id).then(async (result) => {
       localStorage.setItem(STORAGE.GROUP_CODE_SELECTED, result?.payload?.code);
       localStorage.setItem(STORAGE.GROUP_UUID_SELECTED, result?.payload?.uuid);
       dispatch({
-        type: 'userInGroup/fetchAllUserInGroup',
+        type: 'premissionInGroup/fetchAllPermissionInGroup',
         payload: {
           code: result?.payload?.code,
         },
@@ -26,12 +26,11 @@ function TableUserInGroup({ id, dispatch, list, loading }) {
     });
   }, []);
 
-  const showDrawerAddUserIntoGroup = () => {
-    setOpenDrawerAdd(true);
+  const showDrawer = () => {
+    setOpenDrawer(true);
   };
-
-  const closeDrawerAddUserIntoGroup = () => {
-    setOpenDrawerAdd(false);
+  const onClose = () => {
+    setOpenDrawer(false);
   };
 
   const columns = [
@@ -42,23 +41,10 @@ function TableUserInGroup({ id, dispatch, list, loading }) {
       dataIndex: 'name',
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-    },
-    {
       title: intl.formatMessage({
-        id: 'pages.setting-user.list-user.role',
+        id: 'pages.setting-user.list-user.description',
       }),
-      dataIndex: 'roles',
-      render: (_, record) => (
-        <Space>
-          {record.roles.map((r) => (
-            <Tag color="rgba(108, 117, 125, 0.12)" key={r}>
-              {r}
-            </Tag>
-          ))}
-        </Space>
-      ),
+      dataIndex: 'description',
     },
 
     {
@@ -75,7 +61,7 @@ function TableUserInGroup({ id, dispatch, list, loading }) {
                 title={intl.formatMessage({
                   id: 'pages.setting-user.list-user.delete-confirm',
                 })}
-                onConfirm={() => handleDeleteUserInGroup(record.uuid)}
+                onConfirm={() => handleDeletePermissionInGroup(record?.code)}
                 cancelText="Cancel"
                 okText="Ok"
               >
@@ -96,44 +82,44 @@ function TableUserInGroup({ id, dispatch, list, loading }) {
     },
   ];
 
-  const onPaginationChange = (page, size) => {
-    dispatch({
-      type: 'userInGroup/fetchAllUserInGroup',
-      payload: {
-        code: localStorage.getItem(STORAGE.GROUP_CODE_SELECTED),
-      },
-    });
-  };
+  const onPaginationChange = (page, size) => {};
 
-  const handleDeleteUserInGroup = async (userUuid) => {
-    let dataRemove = {
-      user_uuid: userUuid,
-      group_uuid: localStorage.getItem(STORAGE.GROUP_UUID_SELECTED),
+  const handleDeletePermissionInGroup = async (permissionCode) => {
+    const data = {
+      subject: `user_g@${localStorage.getItem(STORAGE.GROUP_CODE_SELECTED)}`,
+      object: `user_g@${localStorage.getItem(STORAGE.GROUP_CODE_SELECTED)}`,
+      action: permissionCode,
+    };
+
+    const dataRemove = {
+      policies: [data],
     };
 
     dispatch({
-      type: 'userInGroup/remove',
+      type: 'premissionInGroup/remove',
       payload: dataRemove,
     });
   };
 
   return (
     <div>
+      {' '}
       <EditableProTable
         loading={loading}
         headerTitle={intl.formatMessage({
-          id: 'pages.setting-user.list-user.listUserInGroup',
+          id: 'pages.setting-user.list-user.list-permission',
         })}
         rowKey="uuid"
         search={false}
         value={list}
         columns={columns}
+        // rowSelection={{}}
         options={false}
         recordCreatorProps={{
           creatorButtonText: intl.formatMessage({
-            id: 'pages.setting-user.list-user.add-user-in-group',
+            id: 'pages.setting-user.list-user.setting-per',
           }),
-          onClick: () => showDrawerAddUserIntoGroup(),
+          onClick: () => showDrawer(),
         }}
         pagination={{
           showQuickJumper: true,
@@ -141,29 +127,26 @@ function TableUserInGroup({ id, dispatch, list, loading }) {
           showTotal: (total) =>
             `${intl.formatMessage({
               id: 'pages.setting-user.list-user.total',
-            })} ${total} ${intl.formatMessage({
-              id: 'pages.setting-user.list-user.user',
-            })}`,
+            })} ${total} `,
           total: list?.length,
           onChange: onPaginationChange,
           pageSize: 5,
           current: 1,
         }}
       />
-      {showDrawerAdd && (
-        <AddUserIntoGroup onClose={closeDrawerAddUserIntoGroup} openDrawer={showDrawerAdd} />
-      )}
+      {openDrawer && <AddPermissionIntoGroup onClose={onClose} openDrawer={openDrawer} />}
     </div>
   );
 }
 
 function mapStateToProps(state) {
-  const { list, metadata } = state.userInGroup;
+  const { list, metadata } = state.premissionInGroup;
   return {
-    loading: state.loading.models.userInGroup,
+    loading: state.loading.models.premissionInGroup,
     list,
     metadata,
+    checkedPermission: list?.map((po) => po.code),
   };
 }
 
-export default connect(mapStateToProps)(TableUserInGroup);
+export default connect(mapStateToProps)(TablePermissionInGroup);

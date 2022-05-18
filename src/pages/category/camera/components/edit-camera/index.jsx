@@ -1,23 +1,41 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from 'dva';
 import { useState, useEffect } from 'react';
-import { StyledDrawer, StyledSpace } from './style';
-import { Space, Button, Card, Row, Col, Form, Input, Upload, Avatar, Select } from 'antd';
+import { StyledDrawer, StyledSpace, SpaceAddAvatar } from './style';
+import {
+  Space,
+  Button,
+  Card,
+  Row,
+  Col,
+  Form,
+  Input,
+  Upload,
+  Avatar,
+  Select,
+  Popconfirm,
+} from 'antd';
 import { useIntl } from 'umi';
-import { PlusOutlined, SaveOutlined, CloseOutlined, InboxOutlined } from '@ant-design/icons';
+import {
+  PlusOutlined,
+  SaveOutlined,
+  CloseOutlined,
+  InboxOutlined,
+  DeleteOutlined,
+  QuestionCircleOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import MapAddCamera from '../map';
 import { v4 as uuidV4 } from 'uuid';
 import clearData from '@/utils/CleanData';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
 import { notify } from '@/components/Notify';
 import AddressApi from '@/services/address/AddressApi';
-import CameraApi from '@/services/camera/CameraApi';
-import ZoneApi from '@/services/zone/ZoneApi';
-import AdDivisionApi from '@/services/advision/AdDivision';
-import VendorApi from '@/services/vendor/VendorApi';
-import TagApi from '@/services/tag/tagApi';
 import VietMapApi from '@/services/vietmapApi';
 import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
 import getBase64 from '@/utils/getBase64';
+import { isEmpty } from 'lodash';
+import { CustomSelect } from '@/components/select/CustomSelect';
 const { Dragger } = Upload;
 const formItemLayout = {
   wrapperCol: { span: 24 },
@@ -29,18 +47,19 @@ const EditCamera = ({
   dispatch,
   selectedUuidEdit,
   selectedCamera,
+  loading,
+  cameraTypesOptions,
+  groupCameraOptions,
+  zonesOptions,
+  adDivisionsOptions,
+  vendorsOptions,
+  tagsOptions,
+  provincesOptions,
 }) => {
   const [form] = Form.useForm();
   const intl = useIntl();
-  const [cameraTypesOptions, setCameraTypesOptions] = useState([]);
-  const [groupCameraOptions, setGroupCameraOptions] = useState([]);
-  const [zonesOptions, setZonesOptions] = useState([]);
-  const [adDivisionsOptions, setAdDivisionsOptions] = useState([]);
-  const [vendorsOptions, setVendorsOptions] = useState([]);
-  const [tagsOptions, setTagsOptions] = useState([]);
   const [avatarUrl, setAvatarUrl] = useState('');
   const [avatarFileName, setAvatarFileName] = useState('');
-  const [provinces, setProvinces] = useState([]);
   const [provinceId, setProvinceId] = useState(null);
   const [districts, setDistrict] = useState([]);
   const [districtId, setDistrictId] = useState(null);
@@ -48,39 +67,10 @@ const EditCamera = ({
   const [resultSearchMap, setResultSearchMap] = useState(null);
   const [currentLat, setCurrentLat] = useState(null);
   const [currentLng, setCurrentLng] = useState(null);
+  const [defaultLongLat, setDefaultLongLat] = useState(null);
+  const [isLoading, setLoading] = useState(false);
   const vietmapApiKey = REACT_APP_VIETMAP_APIKEY;
 
-  //get Data first mount
-  useEffect(() => {
-    const data = {
-      name: '',
-      id: '',
-      provinceId: '',
-      districtId: '',
-    };
-    AddressApi.getAllProvinces().then((res) => {
-      setProvinces(res?.payload);
-    });
-
-    CameraApi.getAllCameraTypes(data).then((res) => {
-      setCameraTypesOptions(res?.payload);
-    });
-    CameraApi.getAllGroupCamera(data).then((res) => {
-      setGroupCameraOptions(res?.payload);
-    });
-    ZoneApi.getAllZones(data).then((res) => {
-      setZonesOptions(res?.payload);
-    });
-    AdDivisionApi.getAllAdDivision(data).then((res) => {
-      setAdDivisionsOptions(res?.payload);
-    });
-    VendorApi.getAllVendor(data).then((res) => {
-      setVendorsOptions(res?.payload);
-    });
-    TagApi.getAllTags(data).then((res) => {
-      setTagsOptions(res?.payload);
-    });
-  }, []);
   // get districts when select province
   useEffect(() => {
     if (provinceId) {
@@ -99,6 +89,36 @@ const EditCamera = ({
       setWard([]);
     }
   }, [districtId]);
+  //Get data camera
+  useEffect(() => {
+    if (selectedUuidEdit !== '') {
+      dispatch({
+        type: 'camera/getCameraByUuid',
+        payload: selectedUuidEdit,
+      });
+    }
+  }, [dispatch, selectedUuidEdit]);
+  // Fill data to form
+  useEffect(() => {
+    if (!isEmpty(selectedCamera)) {
+      setProvinceId(selectedCamera?.provinceId);
+      setDistrictId(selectedCamera?.districtId);
+      setCurrentLat(selectedCamera?.lat_);
+      setCurrentLng(selectedCamera?.long_);
+      setAvatarFileName(selectedCamera?.setAvatarFileName);
+      setDefaultLongLat([selectedCamera?.long_, selectedCamera?.lat_]);
+      for (const key in selectedCamera) {
+        form.setFieldsValue({ [key]: selectedCamera[key] });
+      }
+      const customTags = selectedCamera?.tags?.map((item) => {
+        return {
+          label: item.key,
+          value: item.value[0],
+        };
+      });
+      form.setFieldsValue({ tags: customTags });
+    }
+  }, [selectedCamera]);
   const onChangeCity = (cityId) => {
     setProvinceId(cityId);
     form.setFieldsValue({ districtId: null, wardId: null });
@@ -106,6 +126,12 @@ const EditCamera = ({
   const onChangeDistrict = (districtId) => {
     setDistrictId(districtId);
     form.setFieldsValue({ wardId: null });
+  };
+  //upload avatar
+  const handleChange = (info) => {
+    if (info.file.status === 'uploading') {
+      setLoading(true);
+    }
   };
   function beforeUpload(file) {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -141,32 +167,57 @@ const EditCamera = ({
     listType: 'picture-card',
     beforeUpload: beforeUpload,
     customRequest: uploadImage,
+    onChange: handleChange,
+    showUploadList: false,
     multiple: false,
   };
+  // submit form
   const handleSubmit = async (data) => {
     if (currentLat === null) {
       notify('error', 'noti.ERROR', 'noti.please_select_lnglat_camera');
     } else {
+      const tags = data.tags.map((e) => {
+        return tagsOptions.find((tag) => tag.uuid === e);
+      });
+      const customTags = tags.map((item) => {
+        const ct = {
+          key: item?.key,
+          value: [item?.uuid],
+        };
+        return ct;
+      });
       const payload = {
+        ...selectedCamera,
         ...data,
         avatarFileName: avatarFileName,
         lat_: currentLat,
         long_: currentLng,
+        tags: customTags,
       };
       const clearPayload = clearData(payload);
       dispatch({
-        type: 'camera/addCamera',
+        type: 'camera/editCamera',
         payload: clearPayload,
+        uuid: selectedUuidEdit,
       });
     }
   };
+  //Search in map
   const handleSearchMap = async (value) => {
     const result = await VietMapApi.search(value, vietmapApiKey);
     setResultSearchMap(result);
   };
+  //Select location in map
   const handleSelectMap = (lng, lat) => {
     setCurrentLat(lat);
     setCurrentLng(lng);
+  };
+  //Delete camera
+  const handleDeleteCamera = () => {
+    dispatch({
+      type: 'camera/deleteCamera',
+      payload: selectedUuidEdit,
+    });
   };
   return (
     <StyledDrawer
@@ -187,6 +238,25 @@ const EditCamera = ({
             <SaveOutlined />
             {intl.formatMessage({ id: 'view.map.button_save' })}
           </Button>
+          <Popconfirm
+            icon={<QuestionCircleOutlined />}
+            title={intl.formatMessage(
+              {
+                id: 'noti.delete_camera',
+              },
+              {
+                this: intl.formatMessage({ id: 'this' }),
+                cam: intl.formatMessage({ id: 'camera' }),
+              },
+            )}
+            onConfirm={handleDeleteCamera}
+          >
+            <Button type="primary" danger>
+              <DeleteOutlined />
+              {intl.formatMessage({ id: 'view.ai_events.delete' })}
+            </Button>
+          </Popconfirm>
+
           <Button onClick={onClose}>
             <CloseOutlined />
             {intl.formatMessage({ id: 'view.map.cancel' })}
@@ -332,7 +402,7 @@ const EditCamera = ({
                           }),
                         },
                       )}
-                      name={['groupCameraUuid']}
+                      name={['cameraGroupUuid']}
                       rules={[
                         {
                           required: true,
@@ -342,7 +412,7 @@ const EditCamera = ({
                         },
                       ]}
                     >
-                      <Select
+                      <CustomSelect
                         showSearch
                         dataSource={groupCameraOptions}
                         filterOption={filterOption}
@@ -395,7 +465,7 @@ const EditCamera = ({
                         },
                       ]}
                     >
-                      <Select
+                      <CustomSelect
                         showSearch
                         dataSource={cameraTypesOptions}
                         filterOption={filterOption}
@@ -441,7 +511,7 @@ const EditCamera = ({
                         },
                       ]}
                     >
-                      <Select
+                      <CustomSelect
                         showSearch
                         dataSource={vendorsOptions}
                         filterOption={filterOption}
@@ -614,6 +684,8 @@ const EditCamera = ({
                   <MapAddCamera
                     resultSearchMap={resultSearchMap}
                     handleSelectMap={handleSelectMap}
+                    defaultLongLat={defaultLongLat}
+                    isEdit={true}
                   />
                 </Col>
               </Row>
@@ -637,12 +709,12 @@ const EditCamera = ({
                       },
                     ]}
                   >
-                    <Select
+                    <CustomSelect
                       showSearch
-                      dataSource={provinces}
+                      dataSource={provincesOptions}
                       onChange={(cityId) => onChangeCity(cityId)}
                       filterOption={filterOption}
-                      options={normalizeOptions('name', 'provinceId', provinces)}
+                      options={normalizeOptions('name', 'provinceId', provincesOptions)}
                       placeholder={intl.formatMessage({
                         id: 'view.map.province_id',
                       })}
@@ -668,7 +740,7 @@ const EditCamera = ({
                       },
                     ]}
                   >
-                    <Select
+                    <CustomSelect
                       showSearch
                       dataSource={districts}
                       onChange={(districtId) => onChangeDistrict(districtId)}
@@ -701,7 +773,7 @@ const EditCamera = ({
                       },
                     ]}
                   >
-                    <Select
+                    <CustomSelect
                       showSearch
                       dataSource={wards}
                       filterOption={filterOption}
@@ -777,7 +849,7 @@ const EditCamera = ({
                         },
                       ]}
                     >
-                      <Select
+                      <CustomSelect
                         showSearch
                         dataSource={zonesOptions}
                         filterOption={filterOption}
@@ -816,7 +888,7 @@ const EditCamera = ({
                       })}
                       name={['administrativeUnitUuid']}
                     >
-                      <Select
+                      <CustomSelect
                         allowClear
                         showSearch
                         dataSource={adDivisionsOptions}
@@ -886,7 +958,7 @@ const EditCamera = ({
                       name={['tags']}
                       rules={[]}
                     >
-                      <Select
+                      <CustomSelect
                         showSearch
                         dataSource={tagsOptions}
                         filterOption={filterOption}
@@ -896,6 +968,7 @@ const EditCamera = ({
                         })}
                         allowClear
                         getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                        mode="multiple"
                       />
                     </Form.Item>
                     <Button
@@ -960,27 +1033,47 @@ const EditCamera = ({
               <Row gutter={24}>
                 <Col span={24}>
                   <Form.Item
+                    name={['avatarUser']}
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 14 }}
                     label={intl.formatMessage({
                       id: 'view.map.add_image',
                     })}
                   >
-                    <Dragger {...DraggerProps}>
-                      <p className="ant-upload-drag-icon">
-                        <InboxOutlined />
-                      </p>
-                      <p className="ant-upload-text">
-                        {intl.formatMessage({
-                          id: 'view.map.dragger_title',
-                        })}
-                      </p>
-                      <p className="ant-upload-hint">
-                        {intl.formatMessage({
-                          id: 'view.map.dragger_sub_title',
-                        })}
-                      </p>
-                    </Dragger>
+                    <SpaceAddAvatar>
+                      {avatarUrl !== '' && (
+                        <div className=" d-flex justify-content-center">
+                          <Avatar
+                            icon={<UserOutlined />}
+                            src={avatarUrl}
+                            className="avatarUser"
+                            size={{
+                              xs: 14,
+                              sm: 22,
+                              md: 30,
+                              lg: 44,
+                              xl: 60,
+                              xxl: 100,
+                            }}
+                          />
+                        </div>
+                      )}
+                      <Dragger {...DraggerProps}>
+                        <p className="ant-upload-drag-icon">
+                          <InboxOutlined />
+                        </p>
+                        <p className="ant-upload-text">
+                          {intl.formatMessage({
+                            id: 'view.map.dragger_title',
+                          })}
+                        </p>
+                        <p className="ant-upload-hint">
+                          {intl.formatMessage({
+                            id: 'view.map.dragger_sub_title',
+                          })}
+                        </p>
+                      </Dragger>
+                    </SpaceAddAvatar>
                   </Form.Item>
                 </Col>
               </Row>
@@ -993,9 +1086,26 @@ const EditCamera = ({
 };
 function mapStateToProps(state) {
   const { selectedUuidEdit, selectedCamera } = state.camera;
+  const {
+    cameraTypesOptions,
+    groupCameraOptions,
+    zonesOptions,
+    adDivisionsOptions,
+    vendorsOptions,
+    tagsOptions,
+    provincesOptions,
+  } = state.globalstore;
   return {
+    loading: state.loading.models.camera,
     selectedUuidEdit,
     selectedCamera,
+    cameraTypesOptions,
+    groupCameraOptions,
+    zonesOptions,
+    adDivisionsOptions,
+    vendorsOptions,
+    tagsOptions,
+    provincesOptions,
   };
 }
 export default connect(mapStateToProps)(EditCamera);

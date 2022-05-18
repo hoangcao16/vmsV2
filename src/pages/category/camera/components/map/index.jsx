@@ -7,11 +7,11 @@ import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import mapboxgl from 'vietmaps-gl';
 import { MapContainer } from './style';
-const MapAddCamera = ({ resultSearchMap, handleSelectMap }) => {
+const MapAddCamera = ({ resultSearchMap, handleSelectMap, defaultLongLat, isEdit }) => {
   const mapboxRef = useRef(null);
   const mapBoxDrawRef = useRef(null);
   const [currentLan, setCurrentLan] = useState(null);
-  const zoom = 14;
+  const zoom = 13;
   //Khoi tao map
   const showViewMap = () => {
     try {
@@ -36,7 +36,9 @@ const MapAddCamera = ({ resultSearchMap, handleSelectMap }) => {
           }),
           NAVIGATION_CONTROL,
         );
-
+        mapboxRef.current.on('load', () => {
+          mapboxRef.current.resize();
+        });
         mapBoxDrawRef.current = new MapboxDraw({
           displayControlsDefault: false,
           userProperties: true,
@@ -81,6 +83,10 @@ const MapAddCamera = ({ resultSearchMap, handleSelectMap }) => {
             .addTo(mapboxRef.current);
         });
       });
+    return () => {
+      setCurrentLan(null);
+      mapboxRef.current && mapboxRef.current.remove();
+    };
   }, []);
   useEffect(() => {
     if (resultSearchMap) {
@@ -92,6 +98,29 @@ const MapAddCamera = ({ resultSearchMap, handleSelectMap }) => {
       });
     }
   }, [resultSearchMap]);
+  useEffect(() => {
+    if ((isEdit, defaultLongLat)) {
+      mapboxRef.current &&
+        mapboxRef.current.flyTo({
+          center: defaultLongLat,
+        });
+      new mapboxgl.Popup({
+        closeButton: false,
+        className: 'mapboxgl-popup',
+      })
+        .setLngLat(defaultLongLat)
+        .setHTML('Lng:' + defaultLongLat[0] + '<br/>' + 'Lat:' + defaultLongLat[1])
+        .addTo(mapboxRef.current);
+    }
+    return () => {
+      if (mapboxRef.current) {
+        const popups = document.getElementsByClassName('mapboxgl-popup');
+        if (popups.length) {
+          popups[0].remove();
+        }
+      }
+    };
+  }, [isEdit, defaultLongLat]);
   return (
     <>
       <MapContainer key="map" id="map"></MapContainer>

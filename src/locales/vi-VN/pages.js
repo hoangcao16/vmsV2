@@ -74,9 +74,47 @@ export default {
   'pages.setting-user.list-user.select': 'Đã chọn',
   'pages.setting-user.list-user.record': 'bản ghi',
   'pages.setting-user.list-user.clean': 'Bỏ chọn tất cả',
+  'pages.setting-user.list-user.list-permission': 'Danh sách quyền',
+  'pages.setting-user.list-user.setting-per': 'Chỉnh sửa quyền',
+  'pages.setting-user.list-user.save': 'Lưu',
+  'pages.setting-user.list-user.search': 'Tìm kiếm',
+  'pages.setting-user.list-user.nodata': 'Không có dữ liệu',
+  'pages.setting-user.list-user.permissionCameraGroups': 'Phân quyền cho nhóm camera',
+  'pages.setting-user.list-user.permissionCamera': 'Phân quyền cho camera',
+  'pages.setting-user.list-user.cameraGroup': 'Nhóm camera',
+  'pages.setting-user.list-user.camera': 'Camera',
+  'pages.setting-user.list-user.view_online': 'Xem trực tiếp',
+  'pages.setting-user.list-user.view_offline': 'Xem lại',
+  'pages.setting-user.list-user.setup_preset': 'Cài đặt preset',
+  'pages.setting-user.list-user.ptz_control': 'Điều khiển PTZ',
+
+  'pages.setting-user.list-user.cameraTypeName': 'Loại camera',
+  'pages.setting-user.list-user.provinceName': 'Thành phố',
+  'pages.setting-user.list-user.districtName': 'Quận huyện',
+  'pages.setting-user.list-user.wardName': 'Phường xã',
+  'pages.setting-user.list-user.address': 'Địa chỉ',
+  'pages.setting-user.list-user.recordingStatus': 'Trạng thái',
+  'pages.setting-user.list-user.administrativeUnitName': 'Đơn vị hành chính',
+  'pages.setting-user.list-user.active': 'Đang hoạt động',
+  'pages.setting-user.list-user.inactive': 'Dừng hoạt động',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Thành công',
+  'pages.setting-user.list-user.updateUserGroupSuccess': 'Sửa nhóm thành công',
+  'pages.setting-user.list-user.removeUserGroupSuccess': 'Xóa nhóm thành công',
+  'pages.setting-user.list-user.createUserGroupSuccess': 'Thêm nhóm thành công',
+  'pages.setting-user.list-user.addMemberIntoGroupSuccess': 'Thêm thành viên vào nhóm thành công',
+  'pages.setting-user.list-user.removeMemberIntoGroupSuccess': 'Xóa thành viên nhóm thành công',
+  'pages.setting-user.list-user.updatePermisisionUserGroupSuccess':
+    'Sửa quyền trong nhóm thành công',
+  'pages.setting-user.list-user.removePermisisionUserGroupSuccess':
+    'Xóa quyền trong nhóm thành công',
+  'pages.setting-user.list-user.setPermisionCameraSuccess': 'Thêm quyền cho camera thành công',
+  'pages.setting-user.list-user.removePermisionCameraSuccess': 'Xóa quyền cho camera thành công',
+  'pages.setting-user.list-user.setPermisionCameraGroupSuccess':
+    'Thêm quyền cho nhóm camera thành công',
+  'pages.setting-user.list-user.removePermisionCameraGroupSuccess':
+    'Xóa quyền cho nhóm camera thành công',
   'pages..setting-user.list-user.titleErrors': 'Thất bại',
   'pages.setting-user.list-user.600': 'okok',
 

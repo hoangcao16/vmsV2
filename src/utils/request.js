@@ -13,7 +13,7 @@ request.interceptors.request.use(
     if (token) {
       config.headers.Authorization = token;
     }
-
+    config.headers.charset = 'utf-8';
     return config;
   },
   function (error) {

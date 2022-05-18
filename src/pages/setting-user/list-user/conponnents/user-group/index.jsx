@@ -1,13 +1,13 @@
 import MSCustomizeDrawer from '@/components/Drawer';
 import permissionCheck from '@/utils/PermissionCheck';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import ProTable from '@ant-design/pro-table';
-import { Button, Popconfirm, Space, Tooltip } from 'antd';
+import TableUtils from '@/utils/TableHelper';
+import { EditableProTable } from '@ant-design/pro-table';
+import { Button, Space } from 'antd';
 import { connect } from 'dva';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import AddUserGroup from './AddEditUserGroup';
-function UserGroup({ dispatch, list, metadata }) {
+function UserGroup({ dispatch, list, metadata, loading }) {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [showDrawerAdd, setOpenDrawerAdd] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
@@ -47,61 +47,13 @@ function UserGroup({ dispatch, list, metadata }) {
         id: 'pages.setting-user.list-user.name',
       }),
       dataIndex: 'name',
+      ...TableUtils.getColumnSearchProps('name'),
     },
     {
       title: intl.formatMessage({
         id: 'pages.setting-user.list-user.description',
       }),
       dataIndex: 'description',
-    },
-
-    {
-      title: intl.formatMessage({
-        id: 'pages.setting-user.list-user.option',
-      }),
-      dataIndex: 'option',
-      valueType: 'option',
-      render: (text, record) => {
-        return (
-          <>
-            <Space>
-              {permissionCheck('edit_user_group') && (
-                <Tooltip
-                  placement="top"
-                  title={intl.formatMessage({
-                    id: 'pages.setting-user.list-user.edit',
-                  })}
-                  arrowPointAtCenter={true}
-                >
-                  <EditOutlined onClick={() => showDrawerAddUserGroup(record)} />
-                </Tooltip>
-              )}
-            </Space>
-            <Space>
-              {permissionCheck('delete_user_group') && (
-                <Popconfirm
-                  title={intl.formatMessage({
-                    id: 'pages.setting-user.list-user.delete-confirm',
-                  })}
-                  onConfirm={() => handleDeleteUserGroup(record.uuid)}
-                  cancelText="Cancel"
-                  okText="Ok"
-                >
-                  <Tooltip
-                    placement="top"
-                    title={intl.formatMessage({
-                      id: 'pages.setting-user.list-user.delete',
-                    })}
-                    arrowPointAtCenter={true}
-                  >
-                    <DeleteOutlined />
-                  </Tooltip>
-                </Popconfirm>
-              )}
-            </Space>
-          </>
-        );
-      },
     },
   ];
 
@@ -119,6 +71,8 @@ function UserGroup({ dispatch, list, metadata }) {
       type: 'userGroup/remove',
       payload: uuid,
     });
+
+    setOpenDrawerAdd(false);
   };
 
   return (
@@ -142,37 +96,32 @@ function UserGroup({ dispatch, list, metadata }) {
           placement="right"
         >
           <>
-            <ProTable
-              // loading={loading}
+            <EditableProTable
+              loading={loading}
               headerTitle={intl.formatMessage({
                 id: 'pages.setting-user.list-user.group-user-list',
               })}
-              rowKey="id"
+              rowKey="uuid"
               search={false}
-              dataSource={list}
+              value={list}
               columns={columns}
               // rowSelection={{}}
-              options={false}
-              toolbar={{
-                multipleLine: true,
-                // filter: (
-                //   <LightFilter>
-                //     <Search placeholder="Tìm kiếm theo tên nhóm người dùng" />
-                //   </LightFilter>
-                // ),
-                actions: [
-                  <Button
-                    key="add-user"
-                    type="primary"
-                    onClick={() => showDrawerAddUserGroup(null)}
-                  >
-                    {intl.formatMessage({
-                      id: 'pages.setting-user.list-user.add-user-group',
-                    })}
-                  </Button>,
-                ],
-                style: { width: '100%' },
+
+              onRow={(record, rowIndex) => {
+                return {
+                  onClick: (event) => {
+                    event.stopPropagation();
+                    permissionCheck('delete_user_group') && showDrawerAddUserGroup(record);
+                  },
+                };
               }}
+              recordCreatorProps={{
+                creatorButtonText: intl.formatMessage({
+                  id: 'pages.setting-user.list-user.add-user-group',
+                }),
+                onClick: () => showDrawerAddUserGroup(null),
+              }}
+              options={false}
               pagination={{
                 showQuickJumper: true,
                 showSizeChanger: true,
@@ -191,6 +140,7 @@ function UserGroup({ dispatch, list, metadata }) {
                 onClose={closeDrawerAddUserGroup}
                 openDrawer={showDrawerAdd}
                 selectedRecord={selectedRecord}
+                handleDeleteUserGroup={handleDeleteUserGroup}
               />
             )}
           </>

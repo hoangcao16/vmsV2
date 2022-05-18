@@ -1,13 +1,24 @@
 import MSCustomizeDrawer from '@/components/Drawer';
 import MSFormItem from '@/components/Form/Item';
-import { Button, Col, Form, Input, Row } from 'antd';
+import permissionCheck from '@/utils/PermissionCheck';
+import { CloseOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Input, Popconfirm, Row, Space, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { useIntl } from 'umi';
+import TableCameraPermission from './camera-table/TableCameraPermission';
+import TableGroupCameraPermission from './group-camera-table/TableGroupCameraPermission';
+import TablePermissionInGroup from './TablePermissionInGroup';
 import TableUserInGroup from './TableUserInGroup';
 
-function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
+function AddEditUserGroup({
+  dispatch,
+  onClose,
+  openDrawer,
+  selectedRecord,
+  handleDeleteUserGroup,
+}) {
   const intl = useIntl();
 
   const [form] = Form.useForm();
@@ -37,7 +48,7 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
       <MSCustomizeDrawer
         openDrawer={openDrawer}
         onClose={onClose}
-        width={isEmpty(selectedRecord) ? '20%' : '80%'}
+        width={isEmpty(selectedRecord) ? '25%' : '80%'}
         zIndex={1002}
         title={
           isEmpty(selectedRecord)
@@ -49,6 +60,50 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
               })
         }
         placement="right"
+        extra={
+          <Space>
+            <Button
+              type="primary"
+              htmlType="submit"
+              onClick={() => {
+                form.submit();
+              }}
+            >
+              <SaveOutlined />
+              {intl.formatMessage({ id: 'view.map.button_save' })}
+            </Button>
+            <Button onClick={onClose}>
+              <CloseOutlined />
+              {intl.formatMessage({ id: 'view.map.cancel' })}
+            </Button>
+
+            {!isEmpty(selectedRecord) && permissionCheck('delete_user_group') && (
+              <Popconfirm
+                title={intl.formatMessage({
+                  id: 'pages.setting-user.list-user.delete-confirm',
+                })}
+                onConfirm={() => {
+                  handleDeleteUserGroup(selectedRecord?.uuid);
+                }}
+                cancelText="Cancel"
+                okText="Ok"
+              >
+                <Tooltip
+                  placement="top"
+                  title={intl.formatMessage({
+                    id: 'pages.setting-user.list-user.delete',
+                  })}
+                  arrowPointAtCenter={true}
+                >
+                  <Button type="danger">
+                    <DeleteOutlined />
+                    {intl.formatMessage({ id: 'pages.setting-user.list-user.delete' })}
+                  </Button>
+                </Tooltip>
+              </Popconfirm>
+            )}
+          </Space>
+        }
       >
         <Form
           layout="vertical"
@@ -86,30 +141,15 @@ function AddEditUserGroup({ dispatch, onClose, openDrawer, selectedRecord }) {
               </MSFormItem>
             </Col>
           </Row>
-          <div
-            style={{
-              position: 'absolute',
-              right: 0,
-              bottom: 0,
-              width: '100%',
-              borderTop: '1px solid #e9e9e9',
-              padding: '10px 16px',
-              background: '#fff',
-              textAlign: 'right',
-            }}
-          >
-            <Button htmlType="submit" type="primary">
-              {isEmpty(selectedRecord)
-                ? intl.formatMessage({
-                    id: 'pages.setting-user.list-user.add',
-                  })
-                : intl.formatMessage({
-                    id: 'pages.setting-user.list-user.edit',
-                  })}
-            </Button>
-          </div>
         </Form>
-        {!isEmpty(selectedRecord) && <TableUserInGroup id={selectedRecord?.uuid} />}
+        {!isEmpty(selectedRecord) && (
+          <>
+            <TableUserInGroup id={selectedRecord?.uuid} />
+            <TablePermissionInGroup id={selectedRecord?.uuid} />
+            <TableGroupCameraPermission id={selectedRecord?.uuid} />
+            <TableCameraPermission id={selectedRecord?.uuid} />
+          </>
+        )}
       </MSCustomizeDrawer>
     </div>
   );
