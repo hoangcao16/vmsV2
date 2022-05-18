@@ -121,44 +121,9 @@ export default [
     ],
   },
   {
-    name: 'report',
-    icon: 'highlight',
-    path: '/report',
-    component: './report',
+    path: '/',
+    redirect: '/report',
   },
-  {
-    path: '/setting-user',
-    name: 'setting-user',
-    icon: 'setting',
-    routes: [
-      // {
-      //   path: '/setting-user',
-      //   redirect: '/setting-user/list-user',
-      // },
-      {
-        name: 'list-user',
-        icon: 'smile',
-        path: '/setting-user/list-user',
-        component: './setting-user/list-user',
-      },
-      {
-        name: 'list-modules',
-        icon: 'smile',
-        path: '/setting-user/list-module',
-        component: './setting-user/list-module',
-      },
-    ],
-  },
-  {
-    path: '/storage',
-    name: 'storage',
-    icon: 'setting',
-    component: './storage',
-  },
-  // {
-  //   path: '/',
-  //   redirect: '/report',
-  // },
   {
     component: './exception/404',
   },

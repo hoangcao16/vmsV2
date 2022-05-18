@@ -11,13 +11,21 @@ export default {
     },
     selectedUuidEdit: '',
     selectedCamera: {},
+    closeDrawerState: false,
   },
   reducers: {
     save(state, { payload: { data: list, metadata } }) {
       return { ...state, list, metadata };
     },
+    getOneCamera(state, { payload: { selectedCamera } }) {
+      return { ...state, selectedCamera };
+    },
     selectUuidEdit(state, { payload: selectedUuidEdit }) {
       return { ...state, selectedUuidEdit };
+    },
+    closeDrawer(state) {
+      console.log(state);
+      return { ...state, closeDrawerState: !state.closeDrawerState };
     },
   },
   effects: {
@@ -35,11 +43,72 @@ export default {
         console.log(error);
       }
     },
+    *getCameraByUuid({ payload }, { call, put }) {
+      try {
+        const request = yield call(cameraApi.get, payload);
+        yield put({
+          type: 'getOneCamera',
+          payload: {
+            selectedCamera: request?.payload,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
     *addCamera({ payload }, { call, put }) {
       try {
         const request = yield call(cameraApi.createNew, payload);
         console.log(request);
+        yield put({
+          type: 'fetchAllCamera',
+          payload: {
+            page: 1,
+            size: 10,
+          },
+        });
+        yield put({
+          type: 'closeDrawer',
+        });
         notify('success', 'noti.success', 'noti.successfully_add_camera');
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    *editCamera({ payload, uuid }, { call, put }) {
+      try {
+        const request = yield call(cameraApi.update, payload, uuid);
+        console.log(request);
+        yield put({
+          type: 'fetchAllCamera',
+          payload: {
+            page: 1,
+            size: 10,
+          },
+        });
+        yield put({
+          type: 'closeDrawer',
+        });
+        notify('success', 'noti.success', 'noti.successfully_edit_camera');
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    *deleteCamera({ payload: uuid }, { call, put }) {
+      try {
+        const request = yield call(cameraApi.delete, uuid);
+        console.log(request);
+        yield put({
+          type: 'fetchAllCamera',
+          payload: {
+            page: 1,
+            size: 10,
+          },
+        });
+        yield put({
+          type: 'closeDrawer',
+        });
+        notify('success', 'noti.success', 'noti.successfully_delete_camera');
       } catch (error) {
         console.log(error);
       }

@@ -15,4 +15,10 @@ export const ProTableStyle = styled(ProTable)`
   .ant-pro-table-list-toolbar-extra-line {
     max-width: 433px;
   }
+  .ant-table-row {
+    cursor: pointer;
+  }
+`;
+export const SpanCode = styled.span`
+  color: #1890ff;
 `;

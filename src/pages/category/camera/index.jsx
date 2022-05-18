@@ -2,13 +2,10 @@
 import { Button, Input } from 'antd';
 import { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { ProTableStyle } from './style';
+import { ProTableStyle, SpanCode } from './style';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
 import {
-  EyeOutlined,
-  EnvironmentOutlined,
-  EditOutlined,
   PlusOutlined,
   ExportOutlined,
   ScanOutlined,
@@ -18,7 +15,7 @@ import {
 import AddCamera from './components/add-camera';
 import EditCamera from './components/edit-camera';
 const { Search } = Input;
-const CameraList = ({ dispatch, list, metadata }) => {
+const CameraList = ({ dispatch, list, metadata, closeDrawerState }) => {
   const [isAddNewDrawer, setIsAddNewDrawer] = useState(false);
   const [isEditDrawer, setIsEditDrawer] = useState(false);
   const intl = useIntl();
@@ -26,7 +23,7 @@ const CameraList = ({ dispatch, list, metadata }) => {
     setIsEditDrawer(true);
     dispatch({
       type: 'camera/selectUuidEdit',
-      payload: { uuid },
+      payload: uuid,
     });
   };
 
@@ -40,6 +37,9 @@ const CameraList = ({ dispatch, list, metadata }) => {
       ),
       dataIndex: 'code',
       key: 'code',
+      render: (text) => {
+        return <SpanCode>{text}</SpanCode>;
+      },
     },
     {
       title: intl.formatMessage(
@@ -114,17 +114,6 @@ const CameraList = ({ dispatch, list, metadata }) => {
       },
       key: 'cameraStatus',
     },
-    {
-      title: '',
-      dataIndex: 'option',
-      valueType: 'option',
-      key: 'option',
-      render: (_, record) => [
-        <EyeOutlined key="view" />,
-        <EnvironmentOutlined key="map" />,
-        <EditOutlined onClick={() => handleEdit(record?.uuid)} key="edit" />,
-      ],
-    },
   ];
   const onPaginationChange = (page, size) => {
     dispatch({
@@ -144,6 +133,10 @@ const CameraList = ({ dispatch, list, metadata }) => {
       },
     });
   }, []);
+  useEffect(() => {
+    setIsAddNewDrawer(false);
+    setIsEditDrawer(false);
+  }, [closeDrawerState]);
   return (
     <PageContainer>
       <ProTableStyle
@@ -161,7 +154,14 @@ const CameraList = ({ dispatch, list, metadata }) => {
         search={false}
         dataSource={list}
         columns={columns}
-        rowSelection={{}}
+        // rowSelection={{}}
+        onRow={(record) => {
+          return {
+            onClick: (event) => {
+              handleEdit(record?.uuid);
+            },
+          };
+        }}
         options={false}
         toolbar={{
           multipleLine: true,
@@ -236,11 +236,12 @@ const CameraList = ({ dispatch, list, metadata }) => {
   );
 };
 function mapStateToProps(state) {
-  const { list, metadata } = state.camera;
+  const { list, metadata, closeDrawerState } = state.camera;
   return {
     loading: state.loading.models.camera,
     list,
     metadata,
+    closeDrawerState,
   };
 }
 

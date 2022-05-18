@@ -158,11 +158,22 @@ const AddCamera = ({ isAddNewDrawer, setIsAddNewDrawer, dispatch }) => {
     if (currentLat === null) {
       notify('error', 'noti.ERROR', 'noti.please_select_lnglat_camera');
     } else {
+      const tags = data.tags.map((e) => {
+        return tagsOptions.find((tag) => tag.uuid === e);
+      });
+      const customTags = tags.map((item) => {
+        const ct = {
+          key: item?.key,
+          value: [item?.uuid],
+        };
+        return ct;
+      });
       const payload = {
         ...data,
         avatarFileName: avatarFileName,
         lat_: currentLat,
         long_: currentLng,
+        tags: customTags,
       };
       const clearPayload = clearData(payload);
       dispatch({
@@ -627,6 +638,7 @@ const AddCamera = ({ isAddNewDrawer, setIsAddNewDrawer, dispatch }) => {
                   <MapAddCamera
                     resultSearchMap={resultSearchMap}
                     handleSelectMap={handleSelectMap}
+                    isEdit={false}
                   />
                 </Col>
               </Row>
@@ -909,6 +921,7 @@ const AddCamera = ({ isAddNewDrawer, setIsAddNewDrawer, dispatch }) => {
                         })}
                         allowClear
                         getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                        mode="multiple"
                       />
                     </Form.Item>
                     <Button

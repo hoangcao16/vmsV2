@@ -47,7 +47,6 @@ export default {
   'view.camera.camera_detail': 'Chi tiết {cam}',
   'view.camera.active_stt': 'Tình trạng hoạt động',
   'view.camera.close': 'Đóng',
-  'view.camera.edit_camera': 'Chỉnh sửa {cam}',
   'view.camera.choose_zone': 'Chọn khu vực',
   'view.camera.edit_camera_group': 'Chỉnh sửa {g} {cam}',
   'view.camera.add_cam_in_group': 'Thêm Camera vào nhóm',
