@@ -1,6 +1,7 @@
 import MSCustomizeDrawer from '@/components/Drawer';
 import { STORAGE } from '@/constants/common';
 import getCurrentLocale from '@/utils/Locale';
+import { CloseOutlined, SaveOutlined } from '@ant-design/icons';
 import { AutoComplete, Button, Space, Tree } from 'antd';
 import { connect } from 'dva';
 import { debounce, isEmpty } from 'lodash';
@@ -8,8 +9,7 @@ import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 const { TreeNode } = Tree;
 
-function SettingPermissionGroup({ dispatch, data, treeNodeList, checked }) {
-  const [openDrawer, setOpenDrawer] = useState(false);
+function SettingPermissionGroup({ dispatch, data, treeNodeList, checked, openDrawer, onClose }) {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [treeNodeCamList, setTreeNodeCamList] = useState([]);
   const [checkedPermission, setCheckedPermission] = useState([]);
@@ -23,14 +23,13 @@ function SettingPermissionGroup({ dispatch, data, treeNodeList, checked }) {
     defaultExpandAll: true,
   });
 
-  const { expandedKeys, autoExpandParent, defaultExpandAll } = option;
+  const { expandedKeys, autoExpandParent } = option;
 
   const intl = useIntl();
 
   useEffect(() => {
     dispatch({
       type: 'premissionInGroup/fetchAllPermission',
-      //đoạn này lấy tạm tiếng việt
       payload: {
         lang: getCurrentLocale(),
       },
@@ -42,13 +41,6 @@ function SettingPermissionGroup({ dispatch, data, treeNodeList, checked }) {
     setTreeData(data);
     setCheckedPermission(checked);
   }, [treeNodeList, data, checked]);
-
-  const showDrawer = () => {
-    setOpenDrawer(true);
-  };
-  const onClose = () => {
-    setOpenDrawer(false);
-  };
 
   const onExpand = (expandedKeys) => {
     setOption({
@@ -278,13 +270,6 @@ function SettingPermissionGroup({ dispatch, data, treeNodeList, checked }) {
 
   return (
     <>
-      <Space>
-        <Button type="primary" onClick={showDrawer}>
-          {intl.formatMessage({
-            id: 'pages.setting-user.list-user.setting-per',
-          })}
-        </Button>
-      </Space>
       {openDrawer && (
         <MSCustomizeDrawer
           openDrawer={openDrawer}
@@ -298,9 +283,14 @@ function SettingPermissionGroup({ dispatch, data, treeNodeList, checked }) {
           extra={
             <Space>
               <Button type="primary" onClick={handleSubmit}>
+                <SaveOutlined />
                 {intl.formatMessage({
                   id: 'pages.setting-user.list-user.save',
                 })}
+              </Button>
+              <Button onClick={onClose}>
+                <CloseOutlined />
+                {intl.formatMessage({ id: 'view.map.cancel' })}
               </Button>
             </Space>
           }

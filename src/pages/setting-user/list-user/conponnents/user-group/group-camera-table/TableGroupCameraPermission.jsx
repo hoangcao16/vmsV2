@@ -1,10 +1,10 @@
 import { STORAGE } from '@/constants/common';
 import UserApi from '@/services/user/UserApi';
 import { CloseOutlined } from '@ant-design/icons';
-import ProTable from '@ant-design/pro-table';
+import { EditableProTable } from '@ant-design/pro-table';
 import { Checkbox, Popconfirm, Space, Tooltip } from 'antd';
 import { connect } from 'dva';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import AddCameraGroupPermission from './AddCameraGroupPermission';
 
@@ -14,8 +14,17 @@ function TableGroupCameraPermission({
   listCameraGroupPermission,
   metadata,
   listCameraGroupNotPermission,
+  loading,
 }) {
   const intl = useIntl();
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const showDrawer = () => {
+    setOpenDrawer(true);
+  };
+  const onClose = () => {
+    setOpenDrawer(false);
+  };
 
   useEffect(() => {
     UserApi.getUserGroupById(id).then(async (result) => {
@@ -271,28 +280,23 @@ function TableGroupCameraPermission({
   return (
     <div>
       {' '}
-      <ProTable
-        // loading={loading}
+      <EditableProTable
+        loading={loading}
         headerTitle={intl.formatMessage({
           id: 'pages.setting-user.list-user.permissionCameraGroups',
         })}
+        recordCreatorProps={{
+          creatorButtonText: intl.formatMessage({
+            id: 'pages.setting-user.list-user.permissionCameraGroups',
+          }),
+          onClick: () => showDrawer(),
+        }}
         rowKey="uuid"
         search={false}
-        dataSource={listCameraGroupPermission}
+        value={listCameraGroupPermission}
         columns={columns}
         // rowSelection={{}}
         options={false}
-        toolbar={{
-          multipleLine: true,
-
-          actions: [
-            <AddCameraGroupPermission
-              key="add-camera-group-permission"
-              listCameraGroupNotPermission={listCameraGroupNotPermission}
-            />,
-          ],
-          style: { width: '100%' },
-        }}
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
@@ -306,6 +310,13 @@ function TableGroupCameraPermission({
           current: 1,
         }}
       />
+      {openDrawer && (
+        <AddCameraGroupPermission
+          listCameraGroupNotPermission={listCameraGroupNotPermission}
+          onClose={onClose}
+          openDrawer={openDrawer}
+        />
+      )}
     </div>
   );
 }

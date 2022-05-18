@@ -4,19 +4,10 @@ import TableUtils from '@/utils/TableHelper';
 import ProTable from '@ant-design/pro-table';
 import { Button, Space, Tag } from 'antd';
 import { connect } from 'dva';
-import React, { useState } from 'react';
+import React from 'react';
 import { useIntl } from 'umi';
-function AddCameraPermission({ dispatch, listCameraNotPermission }) {
-  const [openDrawer, setOpenDrawer] = useState(false);
-
+function AddCameraPermission({ dispatch, listCameraNotPermission, openDrawer, onClose }) {
   const intl = useIntl();
-
-  const showDrawer = () => {
-    setOpenDrawer(true);
-  };
-  const onClose = () => {
-    setOpenDrawer(false);
-  };
 
   const statusTag = (cellValue, row) => {
     if (cellValue !== 0) {
@@ -124,13 +115,6 @@ function AddCameraPermission({ dispatch, listCameraNotPermission }) {
 
   return (
     <>
-      <Space>
-        <Button type="primary" onClick={showDrawer}>
-          {intl.formatMessage({
-            id: 'pages.setting-user.list-user.add',
-          })}
-        </Button>
-      </Space>
       {openDrawer && (
         <MSCustomizeDrawer
           openDrawer={openDrawer}

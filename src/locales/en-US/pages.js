@@ -85,6 +85,23 @@ export default {
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Success',
+  'pages.setting-user.list-user.updateUserGroupSuccess': 'Update user group success',
+  'pages.setting-user.list-user.removeUserGroupSuccess': 'Remove user group success',
+  'pages.setting-user.list-user.createUserGroupSuccess': 'Create user group success',
+  'pages.setting-user.list-user.addMemberIntoGroupSuccess': 'Add member into group success',
+  'pages.setting-user.list-user.removeMemberIntoGroupSuccess': 'Remove member into group success',
+  'pages.setting-user.list-user.updatePermisisionUserGroupSuccess':
+    'Updated Permisision User Group Success',
+  'pages.setting-user.list-user.removePermisisionUserGroupSuccess':
+    'Remove Permisision User Group Success',
+
+  'pages.setting-user.list-user.setPermisionCameraSuccess': 'Setting Permision Camera Success',
+  'pages.setting-user.list-user.removePermisionCameraSuccess': 'Remove Permision Camera Success',
+  'pages.setting-user.list-user.setPermisionCameraGroupSuccess':
+    'Setting Permision Camera Group Success',
+  'pages.setting-user.list-user.removePermisionCameraGroupSuccess':
+    'Remove Permision Camera Group Success',
+
   'pages.setting-user.list-user.titleErrors': 'Errors',
   'pages.setting-user.list-user.600': 'okok',
 

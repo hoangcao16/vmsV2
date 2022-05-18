@@ -1,10 +1,10 @@
 import { STORAGE } from '@/constants/common';
 import UserApi from '@/services/user/UserApi';
 import { CloseOutlined } from '@ant-design/icons';
-import ProTable from '@ant-design/pro-table';
+import { EditableProTable } from '@ant-design/pro-table';
 import { Checkbox, Popconfirm, Space, Tooltip } from 'antd';
 import { connect } from 'dva';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import AddCameraPermission from './AddCameraPermission';
 
@@ -14,8 +14,18 @@ function TableCameraPermission({
   listCameraPermission,
   metadata,
   listCameraNotPermission,
+  loading,
 }) {
   const intl = useIntl();
+
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const showDrawer = () => {
+    setOpenDrawer(true);
+  };
+  const onClose = () => {
+    setOpenDrawer(false);
+  };
 
   useEffect(() => {
     UserApi.getUserGroupById(id).then(async (result) => {
@@ -272,27 +282,22 @@ function TableCameraPermission({
   return (
     <div>
       {' '}
-      <ProTable
-        // loading={loading}
+      <EditableProTable
+        loading={loading}
         headerTitle={intl.formatMessage({
           id: 'pages.setting-user.list-user.permissionCamera',
         })}
         rowKey="uuid"
         search={false}
-        dataSource={listCameraPermission}
+        value={listCameraPermission}
         columns={columns}
         // rowSelection={{}}
         options={false}
-        toolbar={{
-          multipleLine: true,
-
-          actions: [
-            <AddCameraPermission
-              key="add-camera-permission"
-              listCameraNotPermission={listCameraNotPermission}
-            />,
-          ],
-          style: { width: '100%' },
+        recordCreatorProps={{
+          creatorButtonText: intl.formatMessage({
+            id: 'pages.setting-user.list-user.permissionCamera',
+          }),
+          onClick: () => showDrawer(),
         }}
         pagination={{
           showQuickJumper: true,
@@ -307,6 +312,13 @@ function TableCameraPermission({
           current: 1,
         }}
       />
+      {openDrawer && (
+        <AddCameraPermission
+          listCameraNotPermission={listCameraNotPermission}
+          onClose={onClose}
+          openDrawer={openDrawer}
+        />
+      )}
     </div>
   );
 }

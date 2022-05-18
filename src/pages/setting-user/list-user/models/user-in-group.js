@@ -1,3 +1,4 @@
+import { notify } from '@/components/Notify';
 import { STORAGE } from '@/constants/common';
 import UserApi from '@/services/user/UserApi';
 
@@ -68,18 +69,47 @@ export default {
     *addMemberIntoGroups({ payload: dataAdd }, { call, put }) {
       try {
         const res = yield call(UserApi.addMemberIntoGroups, dataAdd);
+        if (res?.code == 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.addMemberIntoGroupSuccess',
+          );
 
-        yield put({ type: 'reload' });
-        yield put({ type: 'reloadFetchAllUserNotInGroup' });
-      } catch (error) {}
+          yield put({ type: 'reload' });
+          yield put({ type: 'reloadFetchAllUserNotInGroup' });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     *remove({ payload: dataRemove }, { call, put }) {
       try {
         const res = yield call(UserApi.removeUserInGroup, dataRemove);
 
-        yield put({ type: 'reload' });
-        yield put({ type: 'reloadFetchAllUserNotInGroup' });
+        if (res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.removeMemberIntoGroupSuccess',
+          );
+
+          yield put({ type: 'reload' });
+          yield put({ type: 'reloadFetchAllUserNotInGroup' });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
+        }
       } catch (error) {}
     },
 
