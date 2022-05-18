@@ -67,61 +67,20 @@ function TableRoleGroupCameraPermission({
   }
 
   const removeAllPermmisionInCameraGroups = async (record) => {
-    if (
-      record?.view_online &&
-      !record?.view_offline &&
-      !record?.setup_preset &&
-      !record?.ptz_control
-    ) {
-      const data = [];
-      data.push({
-        subject: `role@${localStorage.getItem(STORAGE.ROLE_CODE_SELECTED)}`,
-        object: `cam_g@${record.cam_group_uuid}`,
-        action: 'view_online',
-      });
+    const per = ['view_online', 'view_offline', 'setup_preset', 'ptz_control'];
 
-      const dataRemove = {
-        policies: data,
-      };
+    let data = [];
 
-      //dispatch
-      dispatch({
-        type: 'groupCameraPermissionInRole/removePermisionCameraGroups',
-        payload: dataRemove,
-      });
-
-      return;
+    for (let name of per) {
+      if (record[name]) {
+        data.push({
+          subject: `role@${localStorage.getItem(STORAGE.ROLE_CODE_SELECTED)}`,
+          object: `cam_g@${record.cam_group_uuid}`,
+          action: name,
+        });
+      }
     }
 
-    const data = [];
-    if (record?.view_online) {
-      data.push({
-        subject: `role@${localStorage.getItem(STORAGE.ROLE_CODE_SELECTED)}`,
-        object: `cam_g@${record.cam_group_uuid}`,
-        action: 'view_online',
-      });
-    }
-    if (record?.view_offline) {
-      data.push({
-        subject: `role@${localStorage.getItem(STORAGE.ROLE_CODE_SELECTED)}`,
-        object: `cam_g@${record.cam_group_uuid}`,
-        action: 'view_offline',
-      });
-    }
-    if (record?.setup_preset) {
-      data.push({
-        subject: `role@${localStorage.getItem(STORAGE.ROLE_CODE_SELECTED)}`,
-        object: `cam_g@${record.cam_group_uuid}`,
-        action: 'setup_preset',
-      });
-    }
-    if (record?.ptz_control) {
-      data.push({
-        subject: `role@${localStorage.getItem(STORAGE.ROLE_CODE_SELECTED)}`,
-        object: `cam_g@${record.cam_group_uuid}`,
-        action: 'ptz_control',
-      });
-    }
     const dataRemove = {
       policies: data,
     };
@@ -133,64 +92,17 @@ function TableRoleGroupCameraPermission({
     });
   };
 
-  const viewOnline = (record) => {
+  const renderCheckbox = (record, namePer) => {
     let defaultChecked = true;
 
-    if (record.view_online === undefined) {
+    if (record[namePer] === undefined) {
       defaultChecked = false;
     }
 
     return (
       <Checkbox
-        onChange={(e) => onChange(e, 'view_online', record.cam_group_uuid)}
-        checked={defaultChecked}
-        disabled={record.isDisableRow}
-      />
-    );
-  };
-
-  const viewOffline = (record) => {
-    let defaultChecked = true;
-
-    if (record.view_offline === undefined) {
-      defaultChecked = false;
-    }
-
-    return (
-      <Checkbox
-        onChange={(e) => onChange(e, 'view_offline', record.cam_group_uuid)}
-        checked={defaultChecked}
-        disabled={record.isDisableRow}
-      />
-    );
-  };
-  const setupPreset = (record) => {
-    let defaultChecked = true;
-
-    if (record.setup_preset === undefined) {
-      defaultChecked = false;
-    }
-
-    return (
-      <Checkbox
-        onChange={(e) => onChange(e, 'setup_preset', record.cam_group_uuid)}
-        checked={defaultChecked}
-        disabled={record.isDisableRow}
-      />
-    );
-  };
-
-  const ptzControl = (record) => {
-    let defaultChecked = true;
-
-    if (record.ptz_control === undefined) {
-      defaultChecked = false;
-    }
-
-    return (
-      <Checkbox
-        onChange={(e) => onChange(e, 'ptz_control', record.cam_group_uuid)}
-        checked={defaultChecked}
+        onChange={(e) => onChange(e, namePer, record.cam_uuid)}
+        defaultChecked={defaultChecked}
         disabled={record.isDisableRow}
       />
     );
@@ -211,7 +123,7 @@ function TableRoleGroupCameraPermission({
       }),
       dataIndex: 'view_online',
       render: (text, record) => {
-        return <Space>{viewOnline(record)}</Space>;
+        return <Space>{renderCheckbox(record, 'view_online')}</Space>;
       },
       width: '15%',
     },
@@ -221,7 +133,7 @@ function TableRoleGroupCameraPermission({
       }),
       dataIndex: 'view_offline',
       render: (text, record) => {
-        return <Space>{viewOffline(record)}</Space>;
+        return <Space>{renderCheckbox(record, 'view_offline')}</Space>;
       },
       width: '15%',
     },
@@ -231,7 +143,7 @@ function TableRoleGroupCameraPermission({
       }),
       dataIndex: 'setup_preset',
       render: (text, record) => {
-        return <Space>{setupPreset(record)}</Space>;
+        return <Space>{renderCheckbox(record, 'setup_preset')}</Space>;
       },
     },
     {
@@ -240,7 +152,7 @@ function TableRoleGroupCameraPermission({
       }),
       dataIndex: 'ptz_control',
       render: (text, record) => {
-        return <Space>{ptzControl(record)}</Space>;
+        return <Space>{renderCheckbox(record, 'ptz_control')}</Space>;
       },
     },
     {

@@ -79,7 +79,7 @@ function AddUser({ dispatch, onClose }) {
                 },
               ]}
             >
-              <DatePicker inputReadOnly={true} format="DD/MM/YYYY" width="100%" />
+              <DatePicker inputReadOnly={true} format="DD/MM/YYYY" style={{ width: '100%' }} />
             </Form.Item>
           </Col>
           <Col span={24}>

@@ -10,19 +10,13 @@ function AddCameraPermission({ dispatch, listCameraNotPermission, openDrawer, on
   const intl = useIntl();
 
   const statusTag = (cellValue, row) => {
-    if (cellValue !== 0) {
-      return (
-        <Tag color="success">
-          {intl.formatMessage({
-            id: 'pages.setting-user.list-user.active',
-          })}
-        </Tag>
-      );
-    }
     return (
-      <Tag color="error">
+      <Tag color={cellValue == 0 ? 'error' : 'success'}>
         {intl.formatMessage({
-          id: 'pages.setting-user.list-user.inactive',
+          id:
+            cellValue == 0
+              ? 'pages.setting-user.list-user.inactive'
+              : 'pages.setting-user.list-user.active',
         })}
       </Tag>
     );
