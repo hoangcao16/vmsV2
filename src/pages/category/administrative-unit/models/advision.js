@@ -31,5 +31,19 @@ export default {
         console.log(error);
       }
     },
+
+    *add({ payload }, { call, put }) {
+      try {
+        const res = yield call(AdDivisionApi.addAdDivision, payload);
+        yield put({ type: 'reload' });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    *reload(action, { put, select }) {
+      const size = yield select((state) => state.advision.size);
+      yield put({ type: 'fetchAll', payload: { size } });
+    },
   },
 };

@@ -1,11 +1,16 @@
 import { PageContainer } from '@ant-design/pro-layout';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import { connect } from 'dva';
 import { ProTableStyle } from './style';
+import { Button } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import AddEditAdministrativeUnit from './components/AddEditAdministrativeUnit';
 
 const AdministrativeUnit = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
+  const [openDrawerAddEdit, setOpenDrawerAddEdit] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
 
   useEffect(() => {
     dispatch({
@@ -26,7 +31,6 @@ const AdministrativeUnit = ({ dispatch, list, metadata }) => {
       width: '15%',
       render: (text, record, index) => index + 1,
     },
-
     {
       title: intl.formatMessage({
         id: 'view.category.administrative_unit',
@@ -35,31 +39,74 @@ const AdministrativeUnit = ({ dispatch, list, metadata }) => {
       key: 'name',
       ellipsis: true,
     },
+    {
+      title: intl.formatMessage({
+        id: 'view.map.address',
+      }),
+      dataIndex: 'address',
+      key: 'address',
+      width: '30%',
+    },
   ];
 
   return (
-    <PageContainer>
-      <ProTableStyle
-        headerTitle={`${intl.formatMessage({
-          id: 'view.category.administrative_unit',
-        })}`}
-        rowKey="id"
-        search={false}
-        dataSource={list}
-        columns={columns}
-        options={false}
-        pagination={{
-          showSizeChanger: true,
-          showTotal: (total) =>
-            `${intl.formatMessage({
-              id: 'view.camera.total',
-            })} ${total}`,
-          total: metadata?.total,
-          pageSize: 10,
-          current: metadata?.page,
-        }}
-      />
-    </PageContainer>
+    <>
+      <PageContainer>
+        <ProTableStyle
+          headerTitle={`${intl.formatMessage({
+            id: 'view.category.administrative_unit',
+          })}`}
+          rowKey="id"
+          search={false}
+          dataSource={list}
+          columns={columns}
+          options={false}
+          onRow={(record) => {
+            return {
+              onClick: () => {
+                setOpenDrawerAddEdit(true);
+                setSelectedRecord(record);
+              },
+            };
+          }}
+          toolbar={{
+            multipleLine: true,
+
+            actions: [
+              <Button
+                key="add"
+                type="primary"
+                onClick={() => {
+                  setOpenDrawerAddEdit(true);
+                  setSelectedRecord(null);
+                }}
+              >
+                <PlusOutlined />
+                {intl.formatMessage({ id: 'view.camera.add_new' })}
+              </Button>,
+            ],
+          }}
+          pagination={{
+            showSizeChanger: true,
+            showTotal: (total) =>
+              `${intl.formatMessage({
+                id: 'view.camera.total',
+              })} ${total}`,
+            total: metadata?.total,
+            pageSize: 10,
+            current: metadata?.page,
+          }}
+        />
+      </PageContainer>
+      {openDrawerAddEdit && (
+        <AddEditAdministrativeUnit
+          onClose={() => setOpenDrawerAddEdit(false)}
+          dispatch={dispatch}
+          selectedRecord={selectedRecord}
+          openDrawer={openDrawerAddEdit}
+        />
+      )}
+    </>
   );
 };
 

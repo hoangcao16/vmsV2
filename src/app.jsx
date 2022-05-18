@@ -6,6 +6,7 @@ import { history } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 import { IntlGlobalProvider } from './components/IntlGlobalProvider';
 import AuthZApi from './services/authz/AuthZApi';
+import 'react-phone-number-input/style.css';
 
 const loginPath = '/user/login';
 

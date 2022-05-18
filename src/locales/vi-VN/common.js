@@ -80,6 +80,7 @@ export default {
   'view.category.no': 'STT',
   'view.category.category_name': 'Tên danh mục',
   'view.category.edit_administrative_unit': 'Chỉnh sửa đơn vị hành chính',
+  'view.category.add_administrative_unit': 'Thêm đơn vị hành chính',
   'view.category.administrative_unit_name': 'Tên đơn vị hành chính',
   'view.category.administrative_unit': 'Đơn vị hành chính',
   'view.category.plsEnter_administrative_unit_name': '{plsEnter} tên đơn vị hành chính',

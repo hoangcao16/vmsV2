@@ -80,6 +80,7 @@ export default {
   'view.category.no': 'No.',
   'view.category.category_name': 'Category Name',
   'view.category.edit_administrative_unit': 'Edit administrative unit',
+  'view.category.add_administrative_unit': 'Add administrative unit',
   'view.category.administrative_unit_name': 'Administrative unit name',
   'view.category.administrative_unit': 'Administrative unit',
   'view.category.plsEnter_administrative_unit_name': '{plsEnter} administrative unit name',
