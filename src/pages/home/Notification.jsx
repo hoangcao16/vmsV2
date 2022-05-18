@@ -15,6 +15,7 @@ const Notification = (props) => {
   const [hasMore, setHasMore] = useState(true);
   const [badge, setBadge] = useState(0);
   const intl = useIntl();
+  const warningDisk = 'WARNING_DISK';
 
   useEffect(() => {
     fetchData();
@@ -63,12 +64,11 @@ const Notification = (props) => {
 
   const renderTitle = (type) => {
     if (!isEmpty(type)) {
-      if (type === 'WARNING_DISK') {
+      if (type === warningDisk) {
         return (
           <Text>
             {intl.formatMessage({
               id: `pages.home.hardDriveFull`,
-              defaultMessage: 'Hard drive full',
             })}
           </Text>
         );
@@ -77,7 +77,6 @@ const Notification = (props) => {
         <Text>
           {intl.formatMessage({
             id: `pages.home.camera`,
-            defaultMessage: 'Camera',
           })}
         </Text>
       );
@@ -88,48 +87,43 @@ const Notification = (props) => {
           ? estimatedTime
           : intl.formatMessage({
               id: `pages.home.unknownName`,
-              defaultMessage: 'Unknown Name',
             })}
       </Text>
     );
   };
 
   const renderContent = (type, name, percentUsed, estimatedTime, status) => {
-    if (type === 'WARNING_DISK') {
+    if (type === warningDisk) {
       return (
         <Text>
-          {intl.formatMessage({
-            id: `pages.home.hardDrive`,
-            defaultMessage: 'Hard drive',
-          })}{' '}
-          {!isEmpty(name)
-            ? name
-            : intl.formatMessage({
-                id: `pages.home.unknownName`,
-                defaultMessage: 'Unknown Name',
-              })}{' '}
-          {intl.formatMessage({
-            id: `pages.home.wasUsed`,
-            defaultMessage: 'was used',
-          })}{' '}
-          {!isEmpty(percentUsed)
-            ? percentUsed
-            : intl.formatMessage({
-                id: `pages.home.unknown`,
-                defaultMessage: 'unknown',
-              })}
-          %.{' '}
-          {intl.formatMessage({
-            id: `pages.home.estimatedRemaining`,
-            defaultMessage: 'estimated remaining',
-          })}{' '}
-          {!isEmpty(estimatedTime)
-            ? estimatedTime
-            : intl.formatMessage({
-                id: `pages.home.unknown`,
-                defaultMessage: 'unknown',
-              })}
-          .
+          {intl.formatMessage(
+            {
+              id: `pages.home.hardDriveWarning`,
+            },
+            {
+              name: `${
+                !isEmpty(name)
+                  ? name
+                  : `${intl.formatMessage({
+                      id: `pages.home.unknownName`,
+                    })}`
+              }`,
+              percentUsed: `${
+                !isEmpty(percentUsed)
+                  ? percentUsed
+                  : `${intl.formatMessage({
+                      id: `pages.home.unknown`,
+                    })}`
+              }`,
+              estimatedTime: `${
+                !isEmpty(estimatedTime)
+                  ? estimatedTime
+                  : `${intl.formatMessage({
+                      id: `pages.home.unknown`,
+                    })}`
+              }`,
+            },
+          )}
         </Text>
       );
     }
@@ -140,16 +134,13 @@ const Notification = (props) => {
           ? name
           : intl.formatMessage({
               id: `pages.home.unknownName`,
-              defaultMessage: 'Unknown Name',
             })}{' '}
         {status
           ? intl.formatMessage({
               id: `pages.home.active`,
-              defaultMessage: 'active',
             })
           : intl.formatMessage({
               id: `pages.home.inactive`,
-              defaultMessage: 'inactive',
             })}
         .
       </Text>
@@ -169,7 +160,6 @@ const Notification = (props) => {
           ? estimatedTime
           : intl.formatMessage({
               id: `pages.home.unknown`,
-              defaultMessage: 'Hard drive',
             })}
       </Text>
     );
@@ -194,9 +184,11 @@ const Notification = (props) => {
 
   return (
     <div>
-      <div className="wrapper">
+      <div className="noti">
         <Badge count={badge} className="wrapper-header">
-          Thông báo
+          {intl.formatMessage({
+            id: `pages.home.notification`,
+          })}
         </Badge>
         <InfiniteScroll
           dataLength={props?.list.length}
@@ -207,14 +199,24 @@ const Notification = (props) => {
           {props?.list ? (
             <ul className="noti-list">
               {isEmpty(props?.list) ? (
-                <div className="noti-list--empty">Không có thông tin</div>
+                <div className="noti-list--empty">
+                  {' '}
+                  {intl.formatMessage({
+                    id: `pages.home.noInfo`,
+                  })}
+                </div>
               ) : (
                 listItems
               )}
             </ul>
           ) : (
             <div className="noti-list-error">
-              <b>Có lỗi khi tải thông báo</b>
+              <b>
+                {' '}
+                {intl.formatMessage({
+                  id: `pages.home.errorLoadingNoti`,
+                })}
+              </b>
             </div>
           )}
         </InfiniteScroll>

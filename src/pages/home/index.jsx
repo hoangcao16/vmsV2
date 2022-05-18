@@ -1,8 +1,10 @@
 import React from 'react';
-import Report from '@/pages/report/index';
 import { Row, Col } from 'antd';
 import Notification from './Notification';
 import './Home.less';
+import LineChart from '../report/components/chart/LineChart';
+import PieChart from '../report/components/chart/PieChart';
+import CameraStatistics from '../report/components/cameraStatistics';
 
 const reportCol = {
   xs: 24,
@@ -30,7 +32,15 @@ export default function index() {
   return (
     <Row gutter={24}>
       <Col {...reportCol}>
-        <Report />
+        <CameraStatistics />
+        <div>
+          <div className="chart-background">
+            <LineChart />
+          </div>
+          <div className="chart-background">
+            <PieChart />
+          </div>
+        </div>
       </Col>
       <Col {...notiCol}>
         <div className="noti">

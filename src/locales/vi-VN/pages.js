@@ -12,16 +12,17 @@ export default {
   'pages.login.forgotPassword': 'Quên mật khẩu?',
 
   //Home
+  'pages.home.notification': 'Thông báo',
   'pages.home.hardDriveFull': 'Cảnh báo: Ổ cứng đầy',
   'pages.home.camera': 'Cảnh báo: Camera',
-  'pages.home.noInfo': 'Không có thông tin',
-  'pages.home.hardDrive': 'Ổ cứng',
-  'pages.home.wasUsed': 'đã được sử dụng',
-  'pages.home.estimatedRemaining': 'Thời gian dự kiến còn lại',
+  'pages.home.noInfo': 'Không có thông báo',
   'pages.home.active': 'hoạt động',
   'pages.home.inactive': 'không hoạt động',
   'pages.home.unknownName': 'Không rõ tên',
   'pages.home.unknown': 'không rõ',
+  'pages.home.errorLoadingNoti': 'Có lỗi khi tải thông báo',
+  'pages.home.hardDriveWarning':
+    'Ổ cứng {name} đã được sử dụng {percentUsed}%. Thời gian dự kiến còn lại: {estimatedTime}.',
 
   //Report
 

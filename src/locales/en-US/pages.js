@@ -12,6 +12,7 @@ export default {
   'pages.login.forgotPassword': 'Forgot password?',
 
   //Home
+  'pages.home.notification': 'Notification',
   'pages.home.hardDriveFull': 'Warning: Hard drive is full',
   'pages.home.camera': 'Warning: Camera',
   'pages.home.noInfo': 'No Infomation',
@@ -22,6 +23,9 @@ export default {
   'pages.home.inactive': 'inactive',
   'pages.home.unknownName': 'Unknown Name',
   'pages.home.unknown': 'unknown',
+  'pages.home.errorLoadingNoti': 'Error loading notification',
+  'pages.home.hardDriveWarning':
+    'Hard drive {name} has been used {percentUsed}%. Estimated remaining usable time: {estimatedTime}.',
 
   //Report
 
