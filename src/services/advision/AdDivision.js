@@ -10,6 +10,11 @@ const AdDivisionApi = {
       }`,
     });
   },
+
+  getAll(params) {
+    return request.get(`/cctv-controller-svc/api/v1/administrative_units`, { params: params });
+  },
+
   getAdDivisionByUuid(uuid) {
     return request.request({
       method: 'GET',
