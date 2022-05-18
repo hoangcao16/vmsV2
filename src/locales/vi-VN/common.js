@@ -51,6 +51,7 @@ export default {
   'view.camera.edit_camera_group': 'Chỉnh sửa {g} {cam}',
   'view.camera.add_cam_in_group': 'Thêm Camera vào nhóm',
   'view.camera.add_new_cam_in_group': 'Thêm mới Camera vào nhóm',
+  'view.camera.scannable_successfully': 'Quét thành công',
   'view.camera.scannable_camera': 'Danh sách Camera quét được',
   'view.camera.camera_scan': 'Quét Camera',
   'view.camera.filter_camera_by': 'Lọc Camera theo: ',
@@ -841,6 +842,9 @@ export default {
   'noti.please_select_lnglat_camera': 'Vui lòng chọn vị trí camera',
   'noti.error_code': 'Lỗi {code}',
   'noti.upload_failed': 'Tải tệp không thành công',
+  'noti.start_ip_less_end_ip': 'IP kết thúc phải lớn hơn IP bắt đầu',
+  'noti.unknown_device': 'Thiết bị không xác định',
+  'noti.device_type': 'Loại thiết bị',
   //breadcrumd
   'breadcrumd.report': 'Quản lý báo cáo',
   'breadcrumd.info': 'Thông tin cá nhân',

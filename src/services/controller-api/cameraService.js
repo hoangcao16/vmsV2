@@ -3,6 +3,7 @@ const CAMERA_ENDPOINT = '/cctv-controller-svc/api/v1/cameras';
 const CAMERA_ENDPOINT_AI = '/cctv-controller-svc/api/v1/cameras/ai';
 const CAMERA_SEARCH_ENDPOINT = '/cctv-controller-svc/api/v1/cameras/search';
 const CAMERA_BY_TRACKING_POINT = '/cctv-controller-svc/api/v1/cameras/find_by_points';
+const CAMERA_SCAN_ENDPOINT = '/ptz-ctrl/api/v1/scan-camera';
 const cameraApi = {
   getAll(queryParams) {
     return request.request({
@@ -56,6 +57,13 @@ const cameraApi = {
       method: 'POST',
       url: CAMERA_BY_TRACKING_POINT,
       data: bodyJson,
+    });
+  },
+  scanCameraByIp(payload) {
+    return request.request({
+      method: 'GET',
+      url: CAMERA_SCAN_ENDPOINT,
+      params: payload,
     });
   },
 };
