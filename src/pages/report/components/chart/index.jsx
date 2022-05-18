@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import LineChart from './LineChart';
 import PieChart from './PieChart';
 import BarChart from './BarChart';
@@ -8,19 +8,13 @@ export default function Chart() {
   return (
     <>
       <div className="chart-background">
-        <Suspense fallback={null}>
-          <LineChart />
-        </Suspense>
+        <LineChart />
       </div>
       <div className="chart-background">
-        <Suspense fallback={null}>
-          <PieChart />
-        </Suspense>
+        <PieChart />
       </div>
       <div className="chart-background">
-        <Suspense fallback={null}>
-          <BarChart />
-        </Suspense>
+        <BarChart />
       </div>
     </>
   );

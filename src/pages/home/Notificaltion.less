@@ -1,0 +1,62 @@
+.home-notification {
+  padding: 16px;
+  background-color: #211f1f;
+
+  &-header {
+    display: flex;
+    align-items: center;
+
+    h3 {
+      margin: 0;
+      margin-right: 8px;
+      font-size: 16px;
+    }
+  }
+
+  .noti-list {
+    padding-left: 0;
+
+    &--empty {
+      margin-top: 20px;
+      color: white;
+      font-size: 18px;
+      text-align: center;
+    }
+
+    .noti-item {
+      margin: 12px 16px 12px 0;
+      padding: 12px;
+      background-color: #000;
+
+      &--title {
+        margin-bottom: 5px;
+        font-size: 16px;
+
+        .ant-typography {
+          color: rgba(255, 255, 255, 0.85) !important;
+        }
+      }
+
+      &--content {
+        .ant-typography {
+          color: rgba(255, 255, 255, 0.45) !important;
+        }
+      }
+
+      &--time {
+        margin: 6px 0;
+        font-size: 12px;
+
+        .ant-typography {
+          color: blue;
+        }
+      }
+    }
+  }
+
+  .noti-list-error {
+    margin-top: 20px;
+    font-size: 18px;
+    text-align: center;
+  }
+}

@@ -34,13 +34,13 @@ const ReportApi = {
   //   return result;
   // },
 
-  getData(params) {
+  getData: async (params) => {
     return request.get(`/owl/api/v2/get-data-line`, {
       params,
     });
   },
 
-  getDataPieChart(params) {
+  getDataPieChart: async (params) => {
     return request.get(`/owl/api/v2/get-data-pie`, {
       params,
     });

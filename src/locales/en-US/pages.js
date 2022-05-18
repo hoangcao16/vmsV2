@@ -11,6 +11,19 @@ export default {
   'pages.login.rememberMe': 'Remember password',
   'pages.login.forgotPassword': 'Forgot password?',
 
+  //Home
+  'pages.home.notification': 'Notification',
+  'pages.home.hardDriveFull': 'Warning: Hard drive is full',
+  'pages.home.camera': 'Warning: Camera',
+  'pages.home.noInfo': 'No Infomation',
+  'pages.home.active': 'active',
+  'pages.home.inactive': 'inactive',
+  'pages.home.unknownName': 'Unknown Name',
+  'pages.home.unknown': 'unknown',
+  'pages.home.errorLoadingNoti': 'Error loading notification',
+  'pages.home.hardDriveWarning':
+    'Hard drive {name} has been used {percentUsed}%. Estimated remaining usable time: {estimatedTime}.',
+
   //Report
 
   'pages.report.cameraStatistics.totalCamera': 'Total Camera',
@@ -19,6 +32,9 @@ export default {
   'pages.report.cameraStatistics.cameraIsNotWorking': 'Camera is not working',
   'pages.report.chart.lineTitle': 'Traffic violations happening statistics',
   'pages.report.chart.pieTitle': 'Type of traffic violations statistics',
+  'pages.report.chart.by': 'By',
+  'pages.report.chart.from': 'From',
+  'pages.report.chart.to': 'To',
   'pages.report.chart.day': 'Day',
   'pages.report.chart.week': 'Week',
   'pages.report.chart.month': 'Month',
