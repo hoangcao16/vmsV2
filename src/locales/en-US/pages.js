@@ -90,10 +90,13 @@ export default {
   'pages.setting-user.list-user.createUserGroupSuccess': 'Create user group success',
   'pages.setting-user.list-user.addMemberIntoGroupSuccess': 'Add member into group success',
   'pages.setting-user.list-user.removeMemberIntoGroupSuccess': 'Remove member into group success',
-  'pages.setting-user.list-user.updatePermisisionUserGroupSuccess':
-    'Updated Permisision User Group Success',
-  'pages.setting-user.list-user.removePermisisionUserGroupSuccess':
-    'Remove Permisision User Group Success',
+
+  'pages.setting-user.list-user.createRoleSuccess': 'Create role success',
+  'pages.setting-user.list-user.updateRoleSuccess': 'Update role success',
+  'pages.setting-user.list-user.removeRoleSuccess': 'Remove role success',
+
+  'pages.setting-user.list-user.updatePermisisionUserGroupSuccess': 'Updated Permisision Success',
+  'pages.setting-user.list-user.removePermisisionUserGroupSuccess': 'Remove Permisision Success',
 
   'pages.setting-user.list-user.setPermisionCameraSuccess': 'Setting Permision Camera Success',
   'pages.setting-user.list-user.removePermisionCameraSuccess': 'Remove Permision Camera Success',

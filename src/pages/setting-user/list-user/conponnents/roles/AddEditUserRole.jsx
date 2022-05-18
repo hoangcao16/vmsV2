@@ -1,12 +1,17 @@
 import MSCustomizeDrawer from '@/components/Drawer';
 import MSFormItem from '@/components/Form/Item';
-import { Button, Col, Form, Input, Row } from 'antd';
-import React from 'react';
-import { useIntl } from 'umi';
+import permissionCheck from '@/utils/PermissionCheck';
+import { CloseOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Input, Popconfirm, Row, Space, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { isEmpty } from 'lodash';
+import React from 'react';
+import { useIntl } from 'umi';
+import TableRoleCameraPermission from './camera-table/TableRoleCameraPermission';
+import TableRoleGroupCameraPermission from './group-camera-table/TableRoleGroupCameraPermission';
+import TablePermissionInRole from './TablePermissionInRole';
 
-function AddEditUserRole({ dispatch, onClose, openDrawer, selectedRecord }) {
+function AddEditUserRole({ dispatch, onClose, openDrawer, selectedRecord, handleDeleteRole }) {
   const intl = useIntl();
 
   const [form] = Form.useForm();
@@ -36,7 +41,7 @@ function AddEditUserRole({ dispatch, onClose, openDrawer, selectedRecord }) {
       <MSCustomizeDrawer
         openDrawer={openDrawer}
         onClose={onClose}
-        width={'20%'}
+        width={isEmpty(selectedRecord) ? '25%' : '80%'}
         zIndex={1002}
         title={
           isEmpty(selectedRecord)
@@ -48,6 +53,50 @@ function AddEditUserRole({ dispatch, onClose, openDrawer, selectedRecord }) {
               })
         }
         placement="right"
+        extra={
+          <Space>
+            <Button
+              type="primary"
+              htmlType="submit"
+              onClick={() => {
+                form.submit();
+              }}
+            >
+              <SaveOutlined />
+              {intl.formatMessage({ id: 'view.map.button_save' })}
+            </Button>
+            <Button onClick={onClose}>
+              <CloseOutlined />
+              {intl.formatMessage({ id: 'view.map.cancel' })}
+            </Button>
+
+            {!isEmpty(selectedRecord) && permissionCheck('delete_role') && (
+              <Popconfirm
+                title={intl.formatMessage({
+                  id: 'pages.setting-user.list-user.delete-confirm',
+                })}
+                onConfirm={() => {
+                  handleDeleteRole(selectedRecord?.uuid);
+                }}
+                cancelText="Cancel"
+                okText="Ok"
+              >
+                <Tooltip
+                  placement="top"
+                  title={intl.formatMessage({
+                    id: 'pages.setting-user.list-user.delete',
+                  })}
+                  arrowPointAtCenter={true}
+                >
+                  <Button type="danger">
+                    <DeleteOutlined />
+                    {intl.formatMessage({ id: 'pages.setting-user.list-user.delete' })}
+                  </Button>
+                </Tooltip>
+              </Popconfirm>
+            )}
+          </Space>
+        }
       >
         <Form
           layout="vertical"
@@ -56,7 +105,7 @@ function AddEditUserRole({ dispatch, onClose, openDrawer, selectedRecord }) {
           initialValues={selectedRecord ?? {}}
         >
           <Row gutter={16}>
-            <Col span={24}>
+            <Col span={isEmpty(selectedRecord) ? 24 : 12}>
               <MSFormItem
                 label={intl.formatMessage({
                   id: 'pages.setting-user.list-user.name',
@@ -70,7 +119,7 @@ function AddEditUserRole({ dispatch, onClose, openDrawer, selectedRecord }) {
                 <Input autoComplete="new-password" />
               </MSFormItem>
             </Col>
-            <Col span={24}>
+            <Col span={isEmpty(selectedRecord) ? 24 : 12}>
               <MSFormItem
                 label={intl.formatMessage({
                   id: 'pages.setting-user.list-user.description',
@@ -85,29 +134,15 @@ function AddEditUserRole({ dispatch, onClose, openDrawer, selectedRecord }) {
               </MSFormItem>
             </Col>
           </Row>
-          <div
-            style={{
-              position: 'absolute',
-              right: 0,
-              bottom: 0,
-              width: '100%',
-              borderTop: '1px solid #e9e9e9',
-              padding: '10px 16px',
-              background: '#fff',
-              textAlign: 'right',
-            }}
-          >
-            <Button htmlType="submit" type="primary">
-              {isEmpty(selectedRecord)
-                ? intl.formatMessage({
-                    id: 'pages.setting-user.list-user.add',
-                  })
-                : intl.formatMessage({
-                    id: 'pages.setting-user.list-user.edit',
-                  })}
-            </Button>
-          </div>
         </Form>
+
+        {!isEmpty(selectedRecord) && (
+          <>
+            <TablePermissionInRole id={selectedRecord?.uuid} />
+            <TableRoleGroupCameraPermission id={selectedRecord?.uuid} />
+            <TableRoleCameraPermission id={selectedRecord?.uuid} />
+          </>
+        )}
       </MSCustomizeDrawer>
     </div>
   );
