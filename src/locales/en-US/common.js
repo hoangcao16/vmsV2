@@ -51,6 +51,7 @@ export default {
   'view.camera.edit_camera_group': 'Edit {cam} {G}',
   'view.camera.add_cam_in_group': 'Add Camera to Camera group',
   'view.camera.add_new_cam_in_group': 'Add New Camera to Camera group',
+  'view.camera.scannable_successfully': 'Scan Successfully',
   'view.camera.scannable_camera': 'Scannable Camera',
   'view.camera.camera_scan': 'Camera Scan',
   'view.camera.filter_camera_by': 'Filter Camera by:',
@@ -840,6 +841,9 @@ export default {
   'noti.please_select_lnglat_camera': 'Please select the location camera',
   'noti.error_code': 'Error {code}',
   'noti.upload_failed': 'Upload file failed',
+  'noti.start_ip_less_end_ip': 'End IP must be greater than start IP',
+  'noti.unknown_device': 'Unknown device',
+  'noti.device_type': 'Device type',
   // breadcrumd
   'breadcrumd.report': 'Report Management',
   'breadcrumd.info': 'Information',
