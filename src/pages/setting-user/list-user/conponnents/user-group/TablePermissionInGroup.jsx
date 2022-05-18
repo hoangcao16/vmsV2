@@ -2,14 +2,15 @@ import { STORAGE } from '@/constants/common';
 import UserApi from '@/services/user/UserApi';
 import permissionCheck from '@/utils/PermissionCheck';
 import { CloseOutlined } from '@ant-design/icons';
-import ProTable from '@ant-design/pro-table';
+import { EditableProTable } from '@ant-design/pro-table';
 import { Popconfirm, Space, Tooltip } from 'antd';
 import { connect } from 'dva';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import AddPermissionIntoGroup from './SettingPermissionGroup';
 
-function TablePermissionInGroup({ id, dispatch, list, checkedPermission }) {
+function TablePermissionInGroup({ id, dispatch, list, loading }) {
+  const [openDrawer, setOpenDrawer] = useState(false);
   const intl = useIntl();
 
   useEffect(() => {
@@ -24,6 +25,13 @@ function TablePermissionInGroup({ id, dispatch, list, checkedPermission }) {
       });
     });
   }, []);
+
+  const showDrawer = () => {
+    setOpenDrawer(true);
+  };
+  const onClose = () => {
+    setOpenDrawer(false);
+  };
 
   const columns = [
     {
@@ -96,31 +104,22 @@ function TablePermissionInGroup({ id, dispatch, list, checkedPermission }) {
   return (
     <div>
       {' '}
-      <ProTable
-        // loading={loading}
+      <EditableProTable
+        loading={loading}
         headerTitle={intl.formatMessage({
           id: 'pages.setting-user.list-user.list-permission',
         })}
-        rowKey="id"
+        rowKey="uuid"
         search={false}
-        dataSource={list}
+        value={list}
         columns={columns}
         // rowSelection={{}}
         options={false}
-        toolbar={{
-          multipleLine: true,
-
-          actions: [
-            // <AddPermissionIntoGroup
-            //   key="add-permission-into-group"
-            //   checkedPermission={checkedPermission}
-            // />,
-            <AddPermissionIntoGroup
-              key="add-permission-into-group"
-              // checkedPermission={checkedPermission}
-            />,
-          ],
-          style: { width: '100%' },
+        recordCreatorProps={{
+          creatorButtonText: intl.formatMessage({
+            id: 'pages.setting-user.list-user.setting-per',
+          }),
+          onClick: () => showDrawer(),
         }}
         pagination={{
           showQuickJumper: true,
@@ -135,6 +134,7 @@ function TablePermissionInGroup({ id, dispatch, list, checkedPermission }) {
           current: 1,
         }}
       />
+      {openDrawer && <AddPermissionIntoGroup onClose={onClose} openDrawer={openDrawer} />}
     </div>
   );
 }

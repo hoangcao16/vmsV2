@@ -4,11 +4,15 @@ import TableUtils from '@/utils/TableHelper';
 import ProTable from '@ant-design/pro-table';
 import { Button, Space } from 'antd';
 import { connect } from 'dva';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useIntl } from 'umi';
-function AddUserIntoGroup({ dispatch, listUserNoIntoGroup, listUuidCurrentUserInGroup }) {
-  const [openDrawer, setOpenDrawer] = useState(false);
-
+function AddUserIntoGroup({
+  dispatch,
+  listUserNoIntoGroup,
+  listUuidCurrentUserInGroup,
+  openDrawer,
+  onClose,
+}) {
   const intl = useIntl();
 
   useEffect(() => {
@@ -20,13 +24,6 @@ function AddUserIntoGroup({ dispatch, listUserNoIntoGroup, listUuidCurrentUserIn
       },
     });
   }, []);
-
-  const showDrawer = () => {
-    setOpenDrawer(true);
-  };
-  const onClose = () => {
-    setOpenDrawer(false);
-  };
 
   const columns = [
     {
@@ -69,13 +66,6 @@ function AddUserIntoGroup({ dispatch, listUserNoIntoGroup, listUuidCurrentUserIn
 
   return (
     <>
-      <Space>
-        <Button type="primary" onClick={showDrawer}>
-          {intl.formatMessage({
-            id: 'pages.setting-user.list-user.add-user-in-group',
-          })}
-        </Button>
-      </Space>
       {openDrawer && (
         <MSCustomizeDrawer
           openDrawer={openDrawer}

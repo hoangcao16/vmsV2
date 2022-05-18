@@ -85,6 +85,21 @@ export default {
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Thành công',
+  'pages.setting-user.list-user.updateUserGroupSuccess': 'Sửa nhóm thành công',
+  'pages.setting-user.list-user.removeUserGroupSuccess': 'Xóa nhóm thành công',
+  'pages.setting-user.list-user.createUserGroupSuccess': 'Thêm nhóm thành công',
+  'pages.setting-user.list-user.addMemberIntoGroupSuccess': 'Thêm thành viên vào nhóm thành công',
+  'pages.setting-user.list-user.removeMemberIntoGroupSuccess': 'Xóa thành viên nhóm thành công',
+  'pages.setting-user.list-user.updatePermisisionUserGroupSuccess':
+    'Sửa quyền trong nhóm thành công',
+  'pages.setting-user.list-user.removePermisisionUserGroupSuccess':
+    'Xóa quyền trong nhóm thành công',
+  'pages.setting-user.list-user.setPermisionCameraSuccess': 'Thêm quyền cho camera thành công',
+  'pages.setting-user.list-user.removePermisionCameraSuccess': 'Xóa quyền cho camera thành công',
+  'pages.setting-user.list-user.setPermisionCameraGroupSuccess':
+    'Thêm quyền cho nhóm camera thành công',
+  'pages.setting-user.list-user.removePermisionCameraGroupSuccess':
+    'Xóa quyền cho nhóm camera thành công',
   'pages..setting-user.list-user.titleErrors': 'Thất bại',
   'pages.setting-user.list-user.600': 'okok',
 

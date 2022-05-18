@@ -1,3 +1,4 @@
+import { notify } from '@/components/Notify';
 import UserApi from '@/services/user/UserApi';
 import getCurrentLocale from '@/utils/Locale';
 
@@ -68,7 +69,21 @@ export default {
     *remove({ payload: dataRemove }, { call, put }) {
       try {
         const res = yield call(UserApi.removePermissionInGroup, dataRemove);
-        yield put({ type: 'reload' });
+
+        if (res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.removePermisisionUserGroupSuccess',
+          );
+          yield put({ type: 'reload' });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
+        }
       } catch (error) {}
     },
     // ================================================================
@@ -76,17 +91,47 @@ export default {
     *removePermisionGroup({ payload: dataRM }, { call, put }) {
       try {
         const res = yield call(UserApi.removePermisionGroup, dataRM);
-        yield put({ type: 'reload' });
-        yield put({ type: 'reloadFetchAllPermission' });
-      } catch (error) {}
+        if (res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.updatePermisisionUserGroupSuccess',
+          );
+          yield put({ type: 'reload' });
+          yield put({ type: 'reloadFetchAllPermission' });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
     //set quyen le cho camera
     *setPermisionGroup({ payload: payloadAdd }, { call, put }) {
       try {
         const res = yield call(UserApi.setPermisionGroup, payloadAdd);
-        yield put({ type: 'reload' });
-        yield put({ type: 'reloadFetchAllPermission' });
-      } catch (error) {}
+        if (res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.updatePermisisionUserGroupSuccess',
+          );
+          yield put({ type: 'reload' });
+          yield put({ type: 'reloadFetchAllPermission' });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
     // ==================================================================
 

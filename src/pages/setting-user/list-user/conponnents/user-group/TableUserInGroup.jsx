@@ -2,16 +2,17 @@ import { STORAGE } from '@/constants/common';
 import UserApi from '@/services/user/UserApi';
 import permissionCheck from '@/utils/PermissionCheck';
 import { CloseOutlined } from '@ant-design/icons';
-import ProTable from '@ant-design/pro-table';
+import { EditableProTable } from '@ant-design/pro-table';
 import { Popconfirm, Space, Tag, Tooltip } from 'antd';
 import { connect } from 'dva';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import AddUserIntoGroup from './AddUserIntoGroup';
 
-function TableUserInGroup({ id, dispatch, list, metadata }) {
-  const intl = useIntl();
+function TableUserInGroup({ id, dispatch, list, loading }) {
+  const [showDrawerAdd, setOpenDrawerAdd] = useState(false);
 
+  const intl = useIntl();
   useEffect(() => {
     UserApi.getUserGroupById(id).then(async (result) => {
       localStorage.setItem(STORAGE.GROUP_CODE_SELECTED, result?.payload?.code);
@@ -24,6 +25,14 @@ function TableUserInGroup({ id, dispatch, list, metadata }) {
       });
     });
   }, []);
+
+  const showDrawerAddUserIntoGroup = () => {
+    setOpenDrawerAdd(true);
+  };
+
+  const closeDrawerAddUserIntoGroup = () => {
+    setOpenDrawerAdd(false);
+  };
 
   const columns = [
     {
@@ -110,23 +119,21 @@ function TableUserInGroup({ id, dispatch, list, metadata }) {
 
   return (
     <div>
-      {' '}
-      <ProTable
-        // loading={loading}
+      <EditableProTable
+        loading={loading}
         headerTitle={intl.formatMessage({
           id: 'pages.setting-user.list-user.listUserInGroup',
         })}
-        rowKey="id"
+        rowKey="uuid"
         search={false}
-        dataSource={list}
+        value={list}
         columns={columns}
-        // rowSelection={{}}
         options={false}
-        toolbar={{
-          multipleLine: true,
-
-          actions: [<AddUserIntoGroup key="add-user-into-group" />],
-          style: { width: '100%' },
+        recordCreatorProps={{
+          creatorButtonText: intl.formatMessage({
+            id: 'pages.setting-user.list-user.add-user-in-group',
+          }),
+          onClick: () => showDrawerAddUserIntoGroup(),
         }}
         pagination={{
           showQuickJumper: true,
@@ -143,6 +150,9 @@ function TableUserInGroup({ id, dispatch, list, metadata }) {
           current: 1,
         }}
       />
+      {showDrawerAdd && (
+        <AddUserIntoGroup onClose={closeDrawerAddUserIntoGroup} openDrawer={showDrawerAdd} />
+      )}
     </div>
   );
 }

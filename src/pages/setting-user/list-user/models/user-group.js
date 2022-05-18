@@ -1,4 +1,4 @@
-import { Notification } from '@/components/Notify';
+import { notify } from '@/components/Notify';
 import UserApi from '@/services/user/UserApi';
 
 export default {
@@ -36,24 +36,38 @@ export default {
       try {
         const res = yield call(UserApi.updateUserGroup, id, values);
         //check res==>push notif
-        const oldList = yield select((state) => state.userGroup.list);
-        const metadata = yield select((state) => state.userGroup.metadata);
 
-        const userGroupIndex = oldList.findIndex((userG) => userG.uuid === id);
+        if (res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.updateUserGroupSuccess',
+          );
+          const oldList = yield select((state) => state.userGroup.list);
+          const metadata = yield select((state) => state.userGroup.metadata);
 
-        if (userGroupIndex >= 0) {
-          oldList[userGroupIndex] = { ...oldList[userGroupIndex], ...values };
+          const userGroupIndex = oldList.findIndex((userG) => userG.uuid === id);
+
+          if (userGroupIndex >= 0) {
+            oldList[userGroupIndex] = { ...oldList[userGroupIndex], ...values };
+          }
+
+          const newList = [...oldList];
+
+          yield put({
+            type: 'save',
+            payload: {
+              data: newList,
+              metadata: metadata,
+            },
+          });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
         }
-
-        const newList = [...oldList];
-
-        yield put({
-          type: 'save',
-          payload: {
-            data: newList,
-            metadata: metadata,
-          },
-        });
 
         // Notification('success', 'titleSuccess', '600');
       } catch (error) {
@@ -65,7 +79,20 @@ export default {
       try {
         const res = yield call(UserApi.deleteUserGroup, id);
         //check res==>push notif
-        yield put({ type: 'reload' });
+        if (res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.removeUserGroupSuccess',
+          );
+          yield put({ type: 'reload' });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
+        }
       } catch (error) {
         console.log(error);
       }
@@ -75,7 +102,20 @@ export default {
       try {
         const res = yield call(UserApi.createUserGroup, values);
         //check res==>push notif
-        yield put({ type: 'reload' });
+        if (res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.createUserGroupSuccess',
+          );
+          yield put({ type: 'reload' });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
+        }
       } catch (error) {
         console.log(error);
       }

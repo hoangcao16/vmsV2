@@ -1,3 +1,4 @@
+import { notify } from '@/components/Notify';
 import UserApi from '@/services/user/UserApi';
 import { isEmpty } from 'lodash';
 
@@ -91,21 +92,65 @@ export default {
     *removePermisionCameraGroups({ payload: dataRM }, { call, put }) {
       try {
         const res = yield call(UserApi.removePermisionCameraGroups, dataRM);
-        yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
-      } catch (error) {}
+        if (res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.removePermisionCameraGroupSuccess',
+          );
+          yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     *setMultiPermisionCameraGroups({ payload: payloadAdd }, { call, put }) {
       try {
         const res = yield call(UserApi.setMultiPermisionCameraGroups, payloadAdd);
-        yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
-      } catch (error) {}
+
+        if (res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.setPermisionCameraGroupSuccess',
+          );
+          yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     *setPermisionCameraGroups({ payload: payloadAdd }, { call, put }) {
       try {
         const res = yield call(UserApi.setPermisionCameraGroups, payloadAdd);
-        yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
+        if (res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.setPermisionCameraGroupSuccess',
+          );
+          yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
+        }
       } catch (error) {}
     },
     // ==================================================================
