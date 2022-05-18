@@ -26,3 +26,14 @@ export const StyledSpace = styled(Space)`
     /* width: calc(100% - 12px); */
   }
 `;
+export const SpaceAddAvatar = styled.div`
+  width: 100%;
+  display: flex;
+  .avatarUser {
+    margin-right: 12px;
+  }
+  .ant-upload-drag {
+    min-width: 400px;
+    background-color: rgb(0 0 0);
+  }
+`;

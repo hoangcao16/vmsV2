@@ -34,7 +34,7 @@ export default defineConfig({
   access: {},
 
   theme: {
-    'root-entry-name': 'variable',
+    primaryColor: '#1890ff',
   },
 
   esbuild: {},
