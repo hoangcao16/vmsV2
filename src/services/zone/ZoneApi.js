@@ -4,16 +4,11 @@ export const removeEmpty = (obj) => {
   return obj;
 };
 const ZoneApi = {
-  getAllZones(dataSearch) {
-    const data = {
-      ...dataSearch,
-      provinceId: dataSearch?.provinceId === undefined ? '' : dataSearch?.provinceId,
-      districtId: dataSearch?.districtId === undefined ? '' : dataSearch?.districtId,
-      id: dataSearch?.id === undefined ? '' : dataSearch?.id,
-    };
+  getAllZones(data) {
     return request.request({
       method: 'GET',
-      url: `/cctv-controller-svc/api/v1/zones?provinceId=${data?.provinceId}&districtId=${data?.districtId}&wardId=${data?.id}&name=${data?.name}`,
+      url: `/cctv-controller-svc/api/v1/zones`,
+      params: data,
     });
   },
   getAllZonesWithTotal(dataSearch) {

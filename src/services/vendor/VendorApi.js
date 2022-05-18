@@ -6,9 +6,8 @@ const VendorApi = {
   getAllVendor(data) {
     return request.request({
       method: 'GET',
-      url: `/cctv-controller-svc/api/v1/vendors?name=${data?.name}${
-        data?.size ? `&size=${data?.size}` : ''
-      }`,
+      url: `/cctv-controller-svc/api/v1/vendors`,
+      params: data,
     });
   },
   getVendorByUuid(uuid) {

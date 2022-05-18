@@ -31,15 +31,11 @@ import clearData from '@/utils/CleanData';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
 import { notify } from '@/components/Notify';
 import AddressApi from '@/services/address/AddressApi';
-import CameraApi from '@/services/camera/CameraApi';
-import ZoneApi from '@/services/zone/ZoneApi';
-import AdDivisionApi from '@/services/advision/AdDivision';
-import VendorApi from '@/services/vendor/VendorApi';
-import TagApi from '@/services/tag/tagApi';
 import VietMapApi from '@/services/vietmapApi';
 import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
 import getBase64 from '@/utils/getBase64';
 import { isEmpty } from 'lodash';
+import { CustomSelect } from '@/components/select/CustomSelect';
 const { Dragger } = Upload;
 const formItemLayout = {
   wrapperCol: { span: 24 },
@@ -52,18 +48,18 @@ const EditCamera = ({
   selectedUuidEdit,
   selectedCamera,
   loading,
+  cameraTypesOptions,
+  groupCameraOptions,
+  zonesOptions,
+  adDivisionsOptions,
+  vendorsOptions,
+  tagsOptions,
+  provincesOptions,
 }) => {
   const [form] = Form.useForm();
   const intl = useIntl();
-  const [cameraTypesOptions, setCameraTypesOptions] = useState([]);
-  const [groupCameraOptions, setGroupCameraOptions] = useState([]);
-  const [zonesOptions, setZonesOptions] = useState([]);
-  const [adDivisionsOptions, setAdDivisionsOptions] = useState([]);
-  const [vendorsOptions, setVendorsOptions] = useState([]);
-  const [tagsOptions, setTagsOptions] = useState([]);
   const [avatarUrl, setAvatarUrl] = useState('');
   const [avatarFileName, setAvatarFileName] = useState('');
-  const [provinces, setProvinces] = useState([]);
   const [provinceId, setProvinceId] = useState(null);
   const [districts, setDistrict] = useState([]);
   const [districtId, setDistrictId] = useState(null);
@@ -74,40 +70,7 @@ const EditCamera = ({
   const [defaultLongLat, setDefaultLongLat] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const vietmapApiKey = REACT_APP_VIETMAP_APIKEY;
-  //get Data first mount
-  useEffect(() => {
-    const data = {
-      name: '',
-      id: '',
-      provinceId: '',
-      districtId: '',
-    };
-    AddressApi.getAllProvinces().then((res) => {
-      setProvinces(res?.payload);
-    });
-    CameraApi.getAllCameraTypes(data).then((res) => {
-      setCameraTypesOptions(res?.payload);
-    });
-    CameraApi.getAllGroupCamera(data).then((res) => {
-      setGroupCameraOptions(res?.payload);
-    });
-    ZoneApi.getAllZones(data).then((res) => {
-      setZonesOptions(res?.payload);
-    });
-    AdDivisionApi.getAllAdDivision(data).then((res) => {
-      setAdDivisionsOptions(res?.payload);
-    });
-    VendorApi.getAllVendor(data).then((res) => {
-      setVendorsOptions(res?.payload);
-    });
-    TagApi.getAllTags(data).then((res) => {
-      setTagsOptions(res?.payload);
-    });
-    return () => {
-      setCurrentLat(null);
-      setCurrentLng(null);
-    };
-  }, []);
+
   // get districts when select province
   useEffect(() => {
     if (provinceId) {
@@ -449,7 +412,7 @@ const EditCamera = ({
                         },
                       ]}
                     >
-                      <Select
+                      <CustomSelect
                         showSearch
                         dataSource={groupCameraOptions}
                         filterOption={filterOption}
@@ -502,7 +465,7 @@ const EditCamera = ({
                         },
                       ]}
                     >
-                      <Select
+                      <CustomSelect
                         showSearch
                         dataSource={cameraTypesOptions}
                         filterOption={filterOption}
@@ -548,7 +511,7 @@ const EditCamera = ({
                         },
                       ]}
                     >
-                      <Select
+                      <CustomSelect
                         showSearch
                         dataSource={vendorsOptions}
                         filterOption={filterOption}
@@ -746,12 +709,12 @@ const EditCamera = ({
                       },
                     ]}
                   >
-                    <Select
+                    <CustomSelect
                       showSearch
-                      dataSource={provinces}
+                      dataSource={provincesOptions}
                       onChange={(cityId) => onChangeCity(cityId)}
                       filterOption={filterOption}
-                      options={normalizeOptions('name', 'provinceId', provinces)}
+                      options={normalizeOptions('name', 'provinceId', provincesOptions)}
                       placeholder={intl.formatMessage({
                         id: 'view.map.province_id',
                       })}
@@ -777,7 +740,7 @@ const EditCamera = ({
                       },
                     ]}
                   >
-                    <Select
+                    <CustomSelect
                       showSearch
                       dataSource={districts}
                       onChange={(districtId) => onChangeDistrict(districtId)}
@@ -810,7 +773,7 @@ const EditCamera = ({
                       },
                     ]}
                   >
-                    <Select
+                    <CustomSelect
                       showSearch
                       dataSource={wards}
                       filterOption={filterOption}
@@ -886,7 +849,7 @@ const EditCamera = ({
                         },
                       ]}
                     >
-                      <Select
+                      <CustomSelect
                         showSearch
                         dataSource={zonesOptions}
                         filterOption={filterOption}
@@ -925,7 +888,7 @@ const EditCamera = ({
                       })}
                       name={['administrativeUnitUuid']}
                     >
-                      <Select
+                      <CustomSelect
                         allowClear
                         showSearch
                         dataSource={adDivisionsOptions}
@@ -995,7 +958,7 @@ const EditCamera = ({
                       name={['tags']}
                       rules={[]}
                     >
-                      <Select
+                      <CustomSelect
                         showSearch
                         dataSource={tagsOptions}
                         filterOption={filterOption}
@@ -1070,6 +1033,7 @@ const EditCamera = ({
               <Row gutter={24}>
                 <Col span={24}>
                   <Form.Item
+                    name={['avatarUser']}
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 14 }}
                     label={intl.formatMessage({
@@ -1122,10 +1086,26 @@ const EditCamera = ({
 };
 function mapStateToProps(state) {
   const { selectedUuidEdit, selectedCamera } = state.camera;
+  const {
+    cameraTypesOptions,
+    groupCameraOptions,
+    zonesOptions,
+    adDivisionsOptions,
+    vendorsOptions,
+    tagsOptions,
+    provincesOptions,
+  } = state.globalstore;
   return {
     loading: state.loading.models.camera,
     selectedUuidEdit,
     selectedCamera,
+    cameraTypesOptions,
+    groupCameraOptions,
+    zonesOptions,
+    adDivisionsOptions,
+    vendorsOptions,
+    tagsOptions,
+    provincesOptions,
   };
 }
 export default connect(mapStateToProps)(EditCamera);

@@ -5,9 +5,8 @@ const TagApi = {
   getAllTags(data) {
     return request.request({
       method: 'GET',
-      url: `/cctv-controller-svc/api/v1/tags_key?key=${data?.name}${
-        data?.size ? `&size=${data?.size}` : ''
-      }`,
+      url: `/cctv-controller-svc/api/v1/tags_key`,
+      params: data,
     });
   },
   getTagById(tagId) {

@@ -91,14 +91,7 @@ export default [
     path: '/report',
     icon: 'notification',
     name: 'report',
-    routes: [
-      {
-        name: 'flow',
-        icon: 'smile',
-        path: '/report',
-        component: './report',
-      },
-    ],
+    component: './report',
   },
   {
     name: 'exception',
