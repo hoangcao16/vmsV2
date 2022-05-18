@@ -183,44 +183,45 @@ const Notification = (props) => {
   ));
 
   return (
-    <div>
-      <div className="home-notification">
-        <Badge count={badge} className="wrapper-header">
+    <div className="home-notification">
+      <div className="home-notification-header">
+        <h3>
           {intl.formatMessage({
             id: `pages.home.notification`,
           })}
-        </Badge>
-        <InfiniteScroll
-          dataLength={props?.list.length}
-          next={handleNext}
-          hasMore={hasMore}
-          height={820}
-        >
-          {props?.list ? (
-            <ul className="noti-list">
-              {isEmpty(props?.list) ? (
-                <div className="noti-list--empty">
-                  {' '}
-                  {intl.formatMessage({
-                    id: `pages.home.noInfo`,
-                  })}
-                </div>
-              ) : (
-                listItems
-              )}
-            </ul>
-          ) : (
-            <div className="noti-list-error">
-              <b>
+        </h3>
+        <Badge count={badge} />
+      </div>
+      <InfiniteScroll
+        dataLength={props?.list.length}
+        next={handleNext}
+        hasMore={hasMore}
+        height={820}
+      >
+        {props?.list ? (
+          <ul className="noti-list">
+            {isEmpty(props?.list) ? (
+              <div className="noti-list--empty">
                 {' '}
                 {intl.formatMessage({
-                  id: `pages.home.errorLoadingNoti`,
+                  id: `pages.home.noInfo`,
                 })}
-              </b>
-            </div>
-          )}
-        </InfiniteScroll>
-      </div>
+              </div>
+            ) : (
+              listItems
+            )}
+          </ul>
+        ) : (
+          <div className="noti-list-error">
+            <b>
+              {' '}
+              {intl.formatMessage({
+                id: `pages.home.errorLoadingNoti`,
+              })}
+            </b>
+          </div>
+        )}
+      </InfiniteScroll>
     </div>
   );
 };
