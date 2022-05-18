@@ -61,6 +61,10 @@ export default {
   'menu.setting-user.list-modules': 'System Modules',
   'menu.list-modules': 'System Modules',
 
+  // Category / administrative-unit
+  'menu.category.administrative-unit': 'Administrative Unit',
+  'menu.administrative-unit': 'Administrative Unit',
+
   // Storage
   'menu.storage': 'Storage',
 

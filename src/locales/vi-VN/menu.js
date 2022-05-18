@@ -53,13 +53,17 @@ export default {
   'menu.report': 'Báo cáo',
 
   //user
-  'menu.setting-user': 'Cài đặt',
-  'menu.setting-user.list-user': 'Danh sách người dùng',
+  'menu.setting': 'Cài đặt',
+  'menu.setting.list-user': 'Danh sách người dùng',
   'menu.list-user': 'Danh sách người dùng',
 
   // Modules
-  'menu.setting-user.list-modules': 'Modules hệ thống',
+  'menu.setting.list-modules': 'Modules hệ thống',
   'menu.list-modules': 'Modules hệ thống',
+
+  // Category
+  'menu.category.administrative-unit': 'Đơn vị hành chính',
+  'menu.administrative-unit': 'Đơn vị hành chính',
 
   // Storage
   'menu.storage': 'Lưu trữ',

@@ -56,11 +56,17 @@ export default [
         path: '/category/camera',
         component: './category/camera',
       },
+      {
+        name: 'administrative-unit',
+        icon: 'table',
+        path: '/category/administrative-unit',
+        component: './category/administrative-unit',
+      },
     ],
   },
   {
     path: '/setting-user',
-    name: 'setting-user',
+    name: 'setting',
     icon: 'setting',
     routes: [
       // {
