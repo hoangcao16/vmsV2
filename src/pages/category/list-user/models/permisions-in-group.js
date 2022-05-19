@@ -70,69 +70,63 @@ export default {
 
     *remove({ payload: dataRemove }, { call, put }) {
       try {
-        const res = yield call(UserApi.removePermissionInGroup, dataRemove);
+        yield call(UserApi.removePermissionInGroup, dataRemove);
 
-        if (res?.code === 600) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'pages.setting-user.list-user.removePermisisionUserGroupSuccess',
-          );
-          yield put({ type: 'reload' });
-        } else {
-          notify(
-            'error',
-            'pages.setting-user.list-user.titleErrors',
-            `pages.setting-user.list-user.${res?.code}`,
-          );
-        }
-      } catch (error) {}
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'pages.setting-user.list-user.removePermisisionUserGroupSuccess',
+        );
+        yield put({ type: 'reload' });
+      } catch (error) {
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
+      }
     },
     // ================================================================
     //set quyen le cho camera
     *removePermisionGroup({ payload: dataRM }, { call, put }) {
       try {
-        const res = yield call(UserApi.removePermisionGroup, dataRM);
-        if (res?.code === 600) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'pages.setting-user.list-user.updatePermisisionUserGroupSuccess',
-          );
-          yield put({ type: 'reload' });
-          yield put({ type: 'reloadFetchAllPermission' });
-        } else {
-          notify(
-            'error',
-            'pages.setting-user.list-user.titleErrors',
-            `pages.setting-user.list-user.${res?.code}`,
-          );
-        }
+        yield call(UserApi.removePermisionGroup, dataRM);
+
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'pages.setting-user.list-user.updatePermisisionUserGroupSuccess',
+        );
+        yield put({ type: 'reload' });
+        yield put({ type: 'reloadFetchAllPermission' });
       } catch (error) {
         console.log(error);
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
     //set quyen le cho camera
     *setPermisionGroup({ payload: payloadAdd }, { call, put }) {
       try {
-        const res = yield call(UserApi.setPermisionGroup, payloadAdd);
-        if (res?.code === 600) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'pages.setting-user.list-user.updatePermisisionUserGroupSuccess',
-          );
-          yield put({ type: 'reload' });
-          yield put({ type: 'reloadFetchAllPermission' });
-        } else {
-          notify(
-            'error',
-            'pages.setting-user.list-user.titleErrors',
-            `pages.setting-user.list-user.${res?.code}`,
-          );
-        }
+        yield call(UserApi.setPermisionGroup, payloadAdd);
+
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'pages.setting-user.list-user.updatePermisisionUserGroupSuccess',
+        );
+        yield put({ type: 'reload' });
+        yield put({ type: 'reloadFetchAllPermission' });
       } catch (error) {
         console.log(error);
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
     // ==================================================================

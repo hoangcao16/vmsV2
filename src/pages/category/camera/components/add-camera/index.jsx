@@ -121,7 +121,7 @@ const AddCamera = ({
     setIsAddNewDrawer(false);
     form.resetFields();
     dispatch({
-      type: 'scanCamera/setSelectedIp',
+      type: 'scanCamera/saveSelectedIp',
       payload: null,
     });
   };
