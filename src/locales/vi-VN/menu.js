@@ -63,7 +63,8 @@ export default {
 
   // Category
   'menu.category.administrative-unit': 'Đơn vị hành chính',
-  'menu.administrative-unit': 'Đơn vị hành chính',
+  'menu.category.list-modules': 'Modules hệ thống',
+  'menu.category.list-user': 'Danh sách người dùng',
 
   // Storage
   'menu.storage': 'Lưu trữ',
