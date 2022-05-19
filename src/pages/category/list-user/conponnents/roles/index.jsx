@@ -1,16 +1,24 @@
 import MSCustomizeDrawer from '@/components/Drawer';
+import MSFormItem from '@/components/Form/Item';
+import { SpanCode } from '@/pages/category/camera/style';
 import permissionCheck from '@/utils/PermissionCheck';
+import TableUtils from '@/utils/TableHelper';
+import { ClusterOutlined } from '@ant-design/icons';
 import { EditableProTable } from '@ant-design/pro-table';
-import { Button, Space } from 'antd';
+import { AutoComplete, Button, Form, Space } from 'antd';
 import { connect } from 'dva';
+import { debounce } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
+import { ContainerFilter } from '../../style';
 import AddEditUserRole from './AddEditUserRole';
 function UserRole({ dispatch, list, metadata, loading }) {
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [showDrawerAdd, setOpenDrawerAdd] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [search, setSearch] = useState('');
+  const [form] = Form.useForm();
 
   useEffect(() => {
     dispatch({
@@ -54,6 +62,10 @@ function UserRole({ dispatch, list, metadata, loading }) {
         id: 'pages.setting-user.list-user.name',
       }),
       dataIndex: 'name',
+      render: (text) => {
+        return <SpanCode>{text}</SpanCode>;
+      },
+      ...TableUtils.getColumnSearchProps('name'),
     },
     {
       title: intl.formatMessage({
@@ -72,11 +84,25 @@ function UserRole({ dispatch, list, metadata, loading }) {
       },
     });
   };
+  const handleSearch = async (value) => {
+    setSearch(value);
+    if (search !== null) {
+      dispatch({
+        type: 'userRole/fetchAllUserRole',
+        payload: {
+          filter: value,
+          page: metadata?.page,
+          size: metadata?.size,
+        },
+      });
+    }
+  };
 
   return (
     <>
       <Space>
-        <Button type="primary" onClick={showDrawer}>
+        <Button onClick={showDrawer}>
+          <ClusterOutlined />
           {intl.formatMessage({
             id: 'pages.setting-user.list-user.role',
           })}
@@ -100,6 +126,26 @@ function UserRole({ dispatch, list, metadata, loading }) {
                 id: 'pages.setting-user.list-user.list-role',
               })}
               rowKey="uuid"
+              toolbar={{
+                multipleLine: true,
+                filter: (
+                  <ContainerFilter>
+                    <Form className="" name="basic" autoComplete="off" form={form}>
+                      <div className="collapse-filter">
+                        <MSFormItem type="input" minLength={5} maxLength={255}>
+                          <AutoComplete
+                            placeholder={intl.formatMessage({
+                              id: 'pages.setting-user.list-user.search-by-name',
+                            })}
+                            onSearch={debounce(handleSearch, 1000)}
+                          />
+                        </MSFormItem>
+                      </div>
+                    </Form>
+                  </ContainerFilter>
+                ),
+                style: { width: '100%' },
+              }}
               search={false}
               value={list}
               columns={columns}

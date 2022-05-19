@@ -66,6 +66,20 @@ const cameraApi = {
       params: payload,
     });
   },
+  getAllCameraTypes(data) {
+    return request.request({
+      method: 'GET',
+      url: `/cctv-controller-svc/api/v1/camera_types`,
+      params: data,
+    });
+  },
+  getAllGroupCamera(data) {
+    return request.request({
+      method: 'GET',
+      url: `/cctv-controller-svc/api/v1/camera_groups`,
+      params: data,
+    });
+  },
 };
 
 export default cameraApi;
