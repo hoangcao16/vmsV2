@@ -38,6 +38,7 @@ const CameraList = ({
   adDivisionsOptions,
   vendorsOptions,
   provincesOptions,
+  selectedIp,
 }) => {
   const [form] = Form.useForm();
   const [isAddNewDrawer, setIsAddNewDrawer] = useState(false);
@@ -68,7 +69,17 @@ const CameraList = ({
   const onFinish = (values) => {
     handleGetListCamera(searchParam);
   };
-
+  const handleAddCameraScan = async (ip) => {
+    await dispatch({
+      type: 'scanCamera/saveSelectedIp',
+      payload: ip,
+    });
+  };
+  useEffect(() => {
+    if (selectedIp) {
+      setIsAddNewDrawer(true);
+    }
+  }, [selectedIp]);
   const handleGetListCamera = (searchParam) => {
     dispatch({
       type: 'camera/fetchAllCamera',
@@ -535,13 +546,18 @@ const CameraList = ({
       />
       <AddCamera isAddNewDrawer={isAddNewDrawer} setIsAddNewDrawer={setIsAddNewDrawer} />
       <EditCamera isEditDrawer={isEditDrawer} setIsEditDrawer={setIsEditDrawer} />
-      <ScanCamera isScanDrawer={isScanDrawer} setIsScanDrawer={setIsScanDrawer} />
+      <ScanCamera
+        isScanDrawer={isScanDrawer}
+        setIsScanDrawer={setIsScanDrawer}
+        handleAddCameraScan={handleAddCameraScan}
+      />
     </PageContainer>
   );
 };
 function mapStateToProps(state) {
   const { list, metadata, closeDrawerState } = state.camera;
   const { adDivisionsOptions, vendorsOptions, provincesOptions } = state.globalstore;
+  const { selectedIp } = state.scanCamera;
   return {
     loading: state.loading.models.camera,
     list,
@@ -550,6 +566,7 @@ function mapStateToProps(state) {
     adDivisionsOptions,
     vendorsOptions,
     provincesOptions,
+    selectedIp,
   };
 }
 
