@@ -1,17 +1,23 @@
 import MSCustomizeDrawer from '@/components/Drawer';
+import MSFormItem from '@/components/Form/Item';
+import { SpanCode } from '@/pages/category/camera/style';
 import permissionCheck from '@/utils/PermissionCheck';
 import TableUtils from '@/utils/TableHelper';
+import { TeamOutlined } from '@ant-design/icons';
 import { EditableProTable } from '@ant-design/pro-table';
-import { Button, Space } from 'antd';
+import { AutoComplete, Button, Form, Space } from 'antd';
 import { connect } from 'dva';
+import { debounce } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
+import { ContainerFilter } from '../../style';
 import AddUserGroup from './AddEditUserGroup';
 function UserGroup({ dispatch, list, metadata, loading }) {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [showDrawerAdd, setOpenDrawerAdd] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
-
+  const [search, setSearch] = useState('');
+  const [form] = Form.useForm();
   const intl = useIntl();
 
   useEffect(() => {
@@ -47,6 +53,9 @@ function UserGroup({ dispatch, list, metadata, loading }) {
         id: 'pages.setting-user.list-user.name',
       }),
       dataIndex: 'name',
+      render: (text) => {
+        return <SpanCode>{text}</SpanCode>;
+      },
       ...TableUtils.getColumnSearchProps('name'),
     },
     {
@@ -75,10 +84,25 @@ function UserGroup({ dispatch, list, metadata, loading }) {
     setOpenDrawerAdd(false);
   };
 
+  const handleSearch = async (value) => {
+    setSearch(value);
+    if (search !== null) {
+      dispatch({
+        type: 'userGroup/fetchAllUserGroup',
+        payload: {
+          filter: value,
+          page: metadata?.page,
+          size: metadata?.size,
+        },
+      });
+    }
+  };
+
   return (
     <>
       <Space>
-        <Button type="primary" onClick={showDrawer}>
+        <Button onClick={showDrawer}>
+          <TeamOutlined />
           {intl.formatMessage({
             id: 'pages.setting-user.list-user.group-user',
           })}
@@ -105,8 +129,26 @@ function UserGroup({ dispatch, list, metadata, loading }) {
               search={false}
               value={list}
               columns={columns}
-              // rowSelection={{}}
-
+              toolbar={{
+                multipleLine: true,
+                filter: (
+                  <ContainerFilter>
+                    <Form className="" name="basic" autoComplete="off" form={form}>
+                      <div className="collapse-filter">
+                        <MSFormItem type="input" minLength={5} maxLength={255}>
+                          <AutoComplete
+                            placeholder={intl.formatMessage({
+                              id: 'pages.setting-user.list-user.search-by-name',
+                            })}
+                            onSearch={debounce(handleSearch, 1000)}
+                          />
+                        </MSFormItem>
+                      </div>
+                    </Form>
+                  </ContainerFilter>
+                ),
+                style: { width: '100%' },
+              }}
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (event) => {

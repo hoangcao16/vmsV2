@@ -88,6 +88,7 @@ export default {
   'pages.setting-user.list-user.view_offline': 'View Offline',
   'pages.setting-user.list-user.setup_preset': 'Setup Preset',
   'pages.setting-user.list-user.ptz_control': 'PTZ Control',
+  'pages.setting-user.list-user.search-by-name': 'Search by name',
 
   'pages.setting-user.list-user.cameraTypeName': 'Camera type',
   'pages.setting-user.list-user.provinceName': 'Province name',
@@ -122,7 +123,17 @@ export default {
     'Remove Permision Camera Group Success',
 
   'pages.setting-user.list-user.titleErrors': 'Errors',
-  'pages.setting-user.list-user.600': 'okok',
+
+  // Code AUTH
+  'pages.setting-user.list-user.601': 'BadRequest',
+  'pages.setting-user.list-user.602': 'Unauthorized',
+  'pages.setting-user.list-user.603': 'NotFound',
+  'pages.setting-user.list-user.604': 'Conflict',
+  'pages.setting-user.list-user.605': 'Forbidden',
+  'pages.setting-user.list-user.606': 'InternalServerError',
+  'pages.setting-user.list-user.607': 'WrongPass',
+  'pages.setting-user.list-user.608': 'AccountNotExists',
+  'pages.setting-user.list-user.609': 'AccountAlreadyExists or AccountNotActive',
 
   //Storage
   'pages.storage.dailyArchive.total': 'Total',
