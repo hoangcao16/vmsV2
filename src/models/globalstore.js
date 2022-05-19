@@ -1,5 +1,5 @@
 import AddressApi from '@/services/address/AddressApi';
-import CameraApi from '@/services/camera/CameraApi';
+import cameraApi from '@/services/controller-api/cameraService';
 import ZoneApi from '@/services/zone/ZoneApi';
 import AdDivisionApi from '@/services/advision/AdDivision';
 import VendorApi from '@/services/vendor/VendorApi';
@@ -15,6 +15,7 @@ export default {
     vendorsOptions: [],
     tagsOptions: [],
     provincesOptions: [],
+    groupCameraParentOptions: [],
   },
 
   reducers: {
@@ -57,12 +58,18 @@ export default {
     saveProvinces(state, { payload }) {
       return { ...state, provincesOptions: payload };
     },
+    saveGroupCameraParent(state, { payload }) {
+      return {
+        ...state,
+        groupCameraParentOptions: payload,
+      };
+    },
   },
 
   effects: {
     *fetchAllCameraTypes({ payload }, { call, put }) {
       try {
-        const response = yield call(CameraApi.getAllCameraTypes, payload);
+        const response = yield call(cameraApi.getAllCameraTypes, payload);
         yield put({
           type: 'saveCameraTypes',
           payload: response?.payload,
@@ -73,7 +80,7 @@ export default {
     },
     *fetchAllGroupCamera({ payload }, { call, put }) {
       try {
-        const response = yield call(CameraApi.getAllGroupCamera, payload);
+        const response = yield call(cameraApi.getAllGroupCamera, payload);
         yield put({
           type: 'saveGroupCamera',
           payload: response?.payload,
@@ -131,6 +138,17 @@ export default {
         const response = yield call(AddressApi.getAllProvinces, payload);
         yield put({
           type: 'saveProvinces',
+          payload: response?.payload,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    *fetchAllGroupCameraParent({ payload }, { call, put }) {
+      try {
+        const response = yield call(cameraApi.getAllGroupCamera, payload);
+        yield put({
+          type: 'saveGroupCameraParent',
           payload: response?.payload,
         });
       } catch (error) {
