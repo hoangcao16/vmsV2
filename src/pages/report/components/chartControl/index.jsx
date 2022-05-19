@@ -19,13 +19,14 @@ moment.locale('en-gb', {
 const { Option } = Select;
 
 const ChartControl = (props) => {
+  const defaultProvinceId = '2';
   const [format, setFormat] = useState('DD/MM/YYYY');
   const [formatParams, setFormatParams] = useState('DDMMYYYY');
   const [form] = Form.useForm();
+  const [provinceId, setProvinceId] = useState([defaultProvinceId]);
   const [allDistricts, setAllDistricts] = useState([]);
   const [allWards, setAllWards] = useState([]);
   const intl = useIntl();
-  const defaultProvinceId = '2';
 
   useEffect(() => {
     form.submit();
@@ -61,17 +62,19 @@ const ChartControl = (props) => {
     }
   };
 
-  const handleFilter = ({ typeDate, dateRange, ProvinceId, DistrictId }) => {
+  const handleFilter = ({ typeDate, dateRange, ProvinceId, DistrictId, WardId }) => {
     let params = {
       typeTime: typeDate.toUpperCase(),
       startDate: moment(dateRange[0]).format(formatParams),
       endDate: moment(dateRange[1]).format(formatParams),
       provinceIds: ProvinceId.toString(),
-      districtIds: '',
-      wardIds: '',
+      districtIds: DistrictId.toString(),
+      wardIds: WardId.toString(),
       eventUuids: '57353610-dc42-4096-8a51-9da12ee8b85e,bf943458-8cd3-4bc5-8f8b-e3b583c25f47',
       cameraUuids: '',
     };
+
+    console.log('params', params);
 
     props.dispatch({
       type: 'chart/changeReportHeaderDataPieChart',
@@ -112,11 +115,21 @@ const ChartControl = (props) => {
       }
     }
 
-    console.log('ProvinceId', ProvinceId);
-
     if (ProvinceId && ProvinceId.length == 1) {
       getDistricts();
       setAllWards([]);
+      setProvinceId(ProvinceId);
+    } else if (ProvinceId && ProvinceId.length < 1) {
+      form.setFieldsValue({
+        ProvinceId: provinceId,
+      });
+    }
+    if (ProvinceId && ProvinceId.length > 1) {
+      setProvinceId(ProvinceId);
+      form.setFieldsValue({
+        DistrictId: undefined,
+        WardId: undefined,
+      });
     }
 
     if (DistrictId && DistrictId.length == 1) {
@@ -193,25 +206,28 @@ const ChartControl = (props) => {
                 placeholder="Provinces"
               />
             </Form.Item>
-            <Form.Item name="DistrictId" label="Districts">
-              <Select
-                mode="multiple"
-                allowClear={false}
-                showSearch
-                datasource={allDistricts}
-                filterOption={filterOption}
-                options={normalizeOptions('name', 'districtId', allDistricts)}
-                placeholder="Districts"
-              />
-            </Form.Item>
+            {provinceId.length == 1 && (
+              <Form.Item name="DistrictId" label="Districts">
+                <Select
+                  mode="multiple"
+                  allowClear={false}
+                  showSearch
+                  datasource={allDistricts}
+                  filterOption={filterOption}
+                  options={normalizeOptions('name', 'districtId', allDistricts)}
+                  placeholder="Districts"
+                />
+              </Form.Item>
+            )}
+
             <Form.Item name="WardId" label="Wards">
               <Select
                 mode="multiple"
                 allowClear={false}
                 showSearch
-                datasource={allDistricts}
+                datasource={allWards}
                 filterOption={filterOption}
-                options={normalizeOptions('name', 'WardId', allWards)}
+                options={normalizeOptions('name', 'id', allWards)}
                 placeholder="Wards"
               />
             </Form.Item>
