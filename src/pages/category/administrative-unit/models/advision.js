@@ -35,42 +35,30 @@ export default {
 
     *add({ payload }, { call, put }) {
       try {
-        const res = yield call(AdDivisionApi.addAdDivision, payload);
-        if (res?.code === 700 || res?.code === 800) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'noti.successfully_add_administrative',
-          );
-        }
+        yield call(AdDivisionApi.addAdDivision, payload);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'noti.successfully_add_administrative',
+        );
         yield put({ type: 'reload' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${res?.code}`,
-        );
+        notify('error', 'pages.setting-user.list-user.titleErrors');
       }
     },
 
     *edit({ payload: { id, values } }, { call, put }) {
       try {
-        const res = yield call(AdDivisionApi.editAdDivision, id, values);
-        if (res?.code === 700 || res?.code === 800) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'noti.successfully_edit_administrative_unit',
-          );
-        }
+        yield call(AdDivisionApi.editAdDivision, id, values);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'noti.successfully_edit_administrative_unit',
+        );
 
         yield put({ type: 'reload' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${res?.code}`,
-        );
+        notify('error', 'pages.setting-user.list-user.titleErrors');
       }
     },
 
