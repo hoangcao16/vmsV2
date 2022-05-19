@@ -81,6 +81,7 @@ export default [
     path: '/setting-user',
     name: 'setting',
     icon: 'setting',
+    component: './setting',
   },
   {
     path: '/report',
