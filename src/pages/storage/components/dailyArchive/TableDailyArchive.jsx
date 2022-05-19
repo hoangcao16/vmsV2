@@ -3,14 +3,15 @@ import AddressApi from '@/services/address/AddressApi';
 import AdDivisionApi from '@/services/advision/AdDivision';
 import DailyArchiveApi from '@/services/dailyArchive/DailyArchiveApi';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
-import ProTable from '@ant-design/pro-table';
 import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import locale from 'antd/lib/date-picker/locale/vi_VN';
+import { connect } from 'dva';
 import debounce from 'lodash/debounce';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
-import { CellCreateTime, ContainerFilterDailyArchive } from './style';
+import DrawerViewCapture from './components/DrawViewCapture/DrawerViewCapture';
+import { CellCreateTime, ContainerFilterDailyArchive, ProTableStyled } from './style';
 
 const layoutLong = {
   labelCol: { span: 6 },
@@ -22,32 +23,12 @@ const layoutShort = {
   wrapperCol: { span: 12 },
 };
 
-const searchCaptureFileParamDefault = {
-  page: 1,
-  size: 10,
-  startRecordTime: -1,
-  endRecordTime: -1,
-  address: '',
-  provinceId: '',
-  districtId: '',
-  wardId: '',
-  administrativeUnitUuid: '',
-  fileType: 0,
-  cameraGroupUuid: '',
-  cameraUuid: '',
-  type: -1,
-  eventUuid: '',
-  searchType: '',
-  searchValue: '',
-};
-
-function TableDailyArchive() {
+function TableDailyArchive({ list, dispatch, metadata, loading }) {
   const [form] = Form.useForm();
   const intl = useIntl();
 
-  const [collapse, setCollapse] = useState(false);
+  const [collapse, setCollapse] = useState(true);
 
-  const [searchParam, setSearchParam] = useState(searchCaptureFileParamDefault);
   const [cameraGroupList, setCameraGroupList] = useState([]);
   const [cameraList, setCameraList] = useState([]);
 
@@ -59,13 +40,26 @@ function TableDailyArchive() {
   const [wardList, setWardList] = useState([]);
   const [adminUnitList, setAdminUnitList] = useState([]);
 
-  const [list, setList] = useState([]);
-  const [total, setTotal] = useState(0);
+  const [isOpenView, setIsOpenView] = useState(false);
+  const [captureSelected, setCaptureSelected] = useState(null);
+
+  const handleOpenDrawerView = (value) => {
+    setIsOpenView(true);
+    setCaptureSelected(value);
+  };
+
+  const handleCloseDrawerView = () => {
+    setIsOpenView(false);
+    setCaptureSelected(null);
+  };
 
   const onPaginationChange = (page, size) => {
-    const dataParam = Object.assign({ ...searchParam, page, size });
-    setSearchParam(dataParam);
-    handleGetListDailyArchive(dataParam);
+    const dataParam = Object.assign({ ...metadata, page, size });
+
+    dispatch({
+      type: 'dailyArchive/fetchAllDailyArchive',
+      payload: dataParam,
+    });
   };
 
   const getAllCamera = (cameraGroupUuid) => {
@@ -96,8 +90,11 @@ function TableDailyArchive() {
   };
 
   const onChangeCamera = (cameraUuid) => {
-    const dataParam = Object.assign({ ...searchParam, cameraUuid: cameraUuid });
-    setSearchParam(dataParam);
+    const dataParam = Object.assign({ ...metadata, cameraUuid: cameraUuid });
+    dispatch({
+      type: 'dailyArchive/saveSearchParam',
+      payload: dataParam,
+    });
   };
 
   const onChangeCameraGroup = (cameraGroupUuid) => {
@@ -106,12 +103,16 @@ function TableDailyArchive() {
     });
 
     const dataParam = Object.assign({
-      ...searchParam,
+      ...metadata,
       cameraGroupUuid: cameraGroupUuid,
       cameraUuid: null,
     });
-    setSearchParam(dataParam);
+
     getAllCamera(cameraGroupUuid);
+    dispatch({
+      type: 'dailyArchive/saveSearchParam',
+      payload: dataParam,
+    });
   };
 
   const onChangeStartDate = (moment) => {
@@ -125,22 +126,31 @@ function TableDailyArchive() {
           startDate: null,
         });
         const dataParam = Object.assign({
-          ...searchParam,
+          ...metadata,
           startRecordTime: -1,
         });
-        setSearchParam(dataParam);
+        dispatch({
+          type: 'dailyArchive/saveSearchParam',
+          payload: dataParam,
+        });
         setStartDate(null);
       } else {
         const dataParam = Object.assign({
-          ...searchParam,
+          ...metadata,
           startRecordTime: +moment.unix(),
         });
-        setSearchParam(dataParam);
+        dispatch({
+          type: 'dailyArchive/saveSearchParam',
+          payload: dataParam,
+        });
         setStartDate(moment);
       }
     } else {
-      const dataParam = Object.assign({ ...searchParam, startRecordTime: -1 });
-      setSearchParam(dataParam);
+      const dataParam = Object.assign({ ...metadata, startRecordTime: -1 });
+      dispatch({
+        type: 'dailyArchive/saveSearchParam',
+        payload: dataParam,
+      });
     }
   };
 
@@ -155,22 +165,31 @@ function TableDailyArchive() {
           endDate: null,
         });
         const dataParam = Object.assign({
-          ...searchParam,
+          ...metadata,
           endRecordTime: -1,
         });
-        setSearchParam(dataParam);
+        dispatch({
+          type: 'dailyArchive/saveSearchParam',
+          payload: dataParam,
+        });
         setEndDate(null);
       } else {
         const dataParam = Object.assign({
-          ...searchParam,
+          ...metadata,
           endRecordTime: +moment.unix(),
         });
-        setSearchParam(dataParam);
+        dispatch({
+          type: 'dailyArchive/saveSearchParam',
+          payload: dataParam,
+        });
         setEndDate(moment);
       }
     } else {
-      const dataParam = Object.assign({ ...searchParam, endRecordTime: -1 });
-      setSearchParam(dataParam);
+      const dataParam = Object.assign({ ...metadata, endRecordTime: -1 });
+      dispatch({
+        type: 'dailyArchive/saveSearchParam',
+        payload: dataParam,
+      });
     }
   };
 
@@ -187,8 +206,11 @@ function TableDailyArchive() {
           console.log(err);
         });
     }
-    const dataParam = Object.assign({ ...searchParam, provinceId: cityId });
-    setSearchParam(dataParam);
+    const dataParam = Object.assign({ ...metadata, provinceId: cityId });
+    dispatch({
+      type: 'dailyArchive/saveSearchParam',
+      payload: dataParam,
+    });
   };
 
   const onChangeDistrict = (districtId) => {
@@ -203,19 +225,28 @@ function TableDailyArchive() {
           console.log(err);
         });
     }
-    const dataParam = Object.assign({ ...searchParam, districtId: districtId });
-    setSearchParam(dataParam);
+    const dataParam = Object.assign({ ...metadata, districtId: districtId });
+    dispatch({
+      type: 'dailyArchive/saveSearchParam',
+      payload: dataParam,
+    });
   };
 
   const onChangeWard = (wardId) => {
-    const dataParam = Object.assign({ ...searchParam, wardId: wardId });
-    setSearchParam(dataParam);
+    const dataParam = Object.assign({ ...metadata, wardId: wardId });
+    dispatch({
+      type: 'dailyArchive/saveSearchParam',
+      payload: dataParam,
+    });
   };
 
   const onChangeAddress = (event) => {
     let value = event.target.value;
-    const dataParam = Object.assign({ ...searchParam, address: value });
-    setSearchParam(dataParam);
+    const dataParam = Object.assign({ ...metadata, address: value });
+    dispatch({
+      type: 'dailyArchive/saveSearchParam',
+      payload: dataParam,
+    });
   };
 
   const handleAddressBlur = (event) => {
@@ -227,10 +258,13 @@ function TableDailyArchive() {
 
   const onChangeUnit = (unitId) => {
     const dataParam = Object.assign({
-      ...searchParam,
+      ...metadata,
       administrativeUnitUuid: unitId,
     });
-    setSearchParam(dataParam);
+    dispatch({
+      type: 'dailyArchive/saveSearchParam',
+      payload: dataParam,
+    });
   };
 
   const handleQuickSearchPaste = (event) => {
@@ -251,27 +285,28 @@ function TableDailyArchive() {
     const value = e.target.value.trim();
 
     const dataParam = Object.assign({
-      ...searchParam,
+      ...metadata,
       searchType: 'all',
       searchValue: value,
       page: 1,
       size: 10,
     });
 
-    handleGetListDailyArchive(dataParam);
-    setSearchParam(dataParam);
+    dispatch({
+      type: 'dailyArchive/saveSearchParam',
+      payload: dataParam,
+    });
+
+    dispatch({
+      type: 'dailyArchive/fetchAllDailyArchive',
+      payload: dataParam,
+    });
   };
 
   const onFinish = (values) => {
-    // console.log('Success:', values);
-    handleGetListDailyArchive(searchParam);
-  };
-
-  const handleGetListDailyArchive = (searchParam) => {
-    DailyArchiveApi.getAllDailyArchive(searchParam).then((res) => {
-      setList(res.payload);
-
-      setTotal(res.metadata.total);
+    dispatch({
+      type: 'dailyArchive/fetchAllDailyArchive',
+      payload: metadata,
     });
   };
 
@@ -312,7 +347,13 @@ function TableDailyArchive() {
   }, []);
 
   useEffect(() => {
-    handleGetListDailyArchive(searchParam);
+    dispatch({
+      type: 'dailyArchive/fetchAllDailyArchive',
+      payload: {
+        page: 1,
+        size: 10,
+      },
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -368,12 +409,14 @@ function TableDailyArchive() {
 
   return (
     <div>
-      <ProTable
+      <ProTableStyled
+        loading={loading}
         rowKey={'id'}
         search={false}
         options={false}
         dataSource={list}
         columns={columns}
+        // Filter
         toolbar={{
           multipleLine: true,
           filter: (
@@ -605,6 +648,15 @@ function TableDailyArchive() {
             </ContainerFilterDailyArchive>
           ),
         }}
+        // End Filter
+
+        onRow={(record) => {
+          return {
+            onClick: (event) => {
+              handleOpenDrawerView(record);
+            },
+          };
+        }}
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
@@ -615,14 +667,31 @@ function TableDailyArchive() {
             })} ${total} ${intl.formatMessage({
               id: 'pages.storage.dailyArchive.camera',
             })}`,
-          total: total,
+          total: metadata?.total,
           // onChange: onPaginationChange,
-          pageSize: searchParam.size,
-          current: searchParam.page,
+          pageSize: metadata?.size,
+          current: metadata?.page,
         }}
       />
+
+      {captureSelected !== null && (
+        <DrawerViewCapture
+          isOpenView={isOpenView}
+          data={captureSelected}
+          onClose={handleCloseDrawerView}
+        />
+      )}
     </div>
   );
 }
 
-export default TableDailyArchive;
+function mapStateToProps(state) {
+  const { list, metadata } = state.dailyArchive;
+  return {
+    loading: state.loading.models.dailyArchive,
+    list,
+    metadata,
+  };
+}
+
+export default connect(mapStateToProps)(TableDailyArchive);
