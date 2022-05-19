@@ -85,6 +85,8 @@
         "react-dom": "^17.0.0",
         "react-fittext": "^1.0.0",
         "react-helmet-async": "^1.2.0",
+        "react-hls-player": "^3.0.7",
+        "react-icons": "^4.3.1",
         "react-phone-number-input": "^3.1.52",
         "react-infinite-scroll-component": "^6.1.0",
         "react-router": "^4.3.1",
