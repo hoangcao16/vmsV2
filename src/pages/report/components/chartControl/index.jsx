@@ -22,10 +22,10 @@ const ChartControl = (props) => {
   const [format, setFormat] = useState('DD/MM/YYYY');
   const [formatParams, setFormatParams] = useState('DDMMYYYY');
   const [form] = Form.useForm();
-  const [allProvinces, setAllProvinces] = useState([]);
   const [allDistricts, setAllDistricts] = useState([]);
   const [allWards, setAllWards] = useState([]);
   const intl = useIntl();
+  const defaultProvinceId = '2';
 
   useEffect(() => {
     form.submit();
@@ -33,28 +33,35 @@ const ChartControl = (props) => {
 
   useEffect(() => {
     try {
-      AddressApi.getAllProvinces().then((result) => {
-        setAllProvinces(result?.payload);
+      AddressApi.getDistrictByProvinceId(defaultProvinceId).then((result) => {
+        setAllDistricts(result?.payload);
       });
     } catch (error) {
       console.log(error);
     }
   }, []);
 
-  useEffect(() => {
-    console.log('Province has change');
+  const getDistricts = () => {
     try {
       AddressApi.getDistrictByProvinceId(form.getFieldValue('ProvinceId')).then((result) => {
-        console.log('result', result);
         setAllDistricts(result?.payload);
       });
     } catch (error) {
       console.log(error);
     }
-  }, [form.getFieldValue('ProvinceId')]);
+  };
+
+  const getWards = () => {
+    try {
+      AddressApi.getWardByDistrictId(form.getFieldValue('DistrictId')).then((result) => {
+        setAllWards(result?.payload);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleFilter = ({ typeDate, dateRange, ProvinceId, DistrictId }) => {
-    console.log('ProvinceId', ProvinceId);
     let params = {
       typeTime: typeDate.toUpperCase(),
       startDate: moment(dateRange[0]).format(formatParams),
@@ -105,6 +112,17 @@ const ChartControl = (props) => {
       }
     }
 
+    console.log('ProvinceId', ProvinceId);
+
+    if (ProvinceId && ProvinceId.length == 1) {
+      getDistricts();
+      setAllWards([]);
+    }
+
+    if (DistrictId && DistrictId.length == 1) {
+      getWards();
+    }
+
     form.submit();
   };
 
@@ -127,7 +145,7 @@ const ChartControl = (props) => {
           initialValues={{
             typeDate: 'day',
             dateRange: [moment().subtract(7, 'days'), moment()],
-            ProvinceId: '2',
+            ProvinceId: defaultProvinceId,
           }}
         >
           <div className="chartControl-filter-items">
@@ -160,29 +178,18 @@ const ChartControl = (props) => {
                 </Option>
               </Select>
             </Form.Item>
-            {/* <Form.Item name="dateRange" label="Khoảng thời gian">
-              <ConfigProvider locale={locale}>
-                <RangePicker
-                  picker={form.getFieldValue('typeDate')}
-                  allowClear={false}
-                  format={format}
-                  onChange={rangePicker}
-                  // value={form.getFieldValue('dateRange')}
-                />
-              </ConfigProvider>
-            </Form.Item> */}
             <Form.Item name="dateRange" label="Khoảng thời gian">
               <PickerWithType picker={form.getFieldValue('typeDate')} format={format} />
             </Form.Item>
             <Form.Item name="ProvinceId" label="Provinces">
               <Select
-                defaultValue={['2']}
+                defaultValue={[defaultProvinceId]}
                 mode="multiple"
                 allowClear={false}
                 showSearch
-                datasource={allProvinces}
+                datasource={props?.allProvinces}
                 filterOption={filterOption}
-                options={normalizeOptions('name', 'provinceId', allProvinces)}
+                options={normalizeOptions('name', 'provinceId', props?.allProvinces)}
                 placeholder="Provinces"
               />
             </Form.Item>
@@ -197,6 +204,17 @@ const ChartControl = (props) => {
                 placeholder="Districts"
               />
             </Form.Item>
+            <Form.Item name="WardId" label="Wards">
+              <Select
+                mode="multiple"
+                allowClear={false}
+                showSearch
+                datasource={allDistricts}
+                filterOption={filterOption}
+                options={normalizeOptions('name', 'WardId', allWards)}
+                placeholder="Wards"
+              />
+            </Form.Item>
           </div>
         </Form>
       </div>
@@ -205,7 +223,7 @@ const ChartControl = (props) => {
 };
 
 function mapStateToProps(state) {
-  return {};
+  return { allProvinces: state?.globalstore?.provincesOptions };
 }
 
 export default connect(mapStateToProps)(ChartControl);
