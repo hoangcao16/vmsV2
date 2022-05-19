@@ -33,59 +33,41 @@ export default {
     },
     *addZone({ payload }, { call, put }) {
       try {
-        const res = yield call(ModuleApi.addZone, payload);
-        if (res?.code === 700 || res?.code === 800) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'noti.successfully_add_zone',
-          );
-        }
+        yield call(ModuleApi.addZone, payload);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'noti.successfully_add_zone',
+        );
         yield put({ type: 'reload' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${res?.code}`,
-        );
+        notify('error', 'pages.setting-user.list-user.titleErrors');
       }
     },
     *editZone({ payload: { id, values } }, { call, put }) {
       try {
-        const res = yield call(ModuleApi.editZone, id, values);
-        if (res?.code === 700 || res?.code === 800) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'noti.successfully_edit_zone',
-          );
-        }
+        yield call(ModuleApi.editZone, id, values);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'noti.successfully_edit_zone',
+        );
         yield put({ type: 'reload' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${res?.code}`,
-        );
+        notify('error', 'pages.setting-user.list-user.titleErrors');
       }
     },
     *deleteZone({ payload: { id } }, { call, put }) {
       try {
-        const res = yield call(ModuleApi.deleteZone, id);
-        if (res?.code === 700 || res?.code === 800) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'noti.successfully_delete_zone',
-          );
-        }
+        yield call(ModuleApi.deleteZone, id);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'noti.successfully_delete_zone',
+        );
         yield put({ type: 'reload' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${res?.code}`,
-        );
+        notify('error', 'pages.setting-user.list-user.titleErrors');
       }
     },
     *reload(action, { put, select }) {

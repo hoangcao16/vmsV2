@@ -34,21 +34,15 @@ export default {
     },
     *editPlayback({ payload: { id, values } }, { call, put }) {
       try {
-        const res = yield call(ModuleApi.editPlayback, id, values);
-        if (res?.code === 700 || res?.code === 800) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'noti.successfully_edit_playback',
-          );
-        }
+        yield call(ModuleApi.editPlayback, id, values);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'noti.successfully_edit_playback',
+        );
         yield put({ type: 'reload' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${res?.code}`,
-        );
+        notify('error', 'pages.setting-user.list-user.titleErrors');
       }
     },
     *reload(action, { put, select }) {

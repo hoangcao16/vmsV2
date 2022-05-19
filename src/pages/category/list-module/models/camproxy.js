@@ -33,17 +33,15 @@ export default {
     },
     *editCamproxy({ payload: { id, values } }, { call, put }) {
       try {
-        const res = yield call(ModuleApi.editCamproxy, id, values);
-        if (res?.code === 700 || res?.code === 800) {
-          notify('success', 'noti.success', 'noti.successfully_edit_camproxy');
-        }
+        yield call(ModuleApi.editCamproxy, id, values);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'noti.successfully_edit_camproxy',
+        );
         yield put({ type: 'reload' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${res?.code}`,
-        );
+        notify('error', 'pages.setting-user.list-user.titleErrors');
       }
     },
     *reload(action, { put, select }) {
