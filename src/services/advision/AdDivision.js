@@ -42,6 +42,9 @@ const AdDivisionApi = {
   editAdDivision: async (uuid, values) => {
     return request.put(`/cctv-controller-svc/api/v1/administrative_units/${uuid}`, values);
   },
+  deleteAdDivision: async (uuid) => {
+    return request.delete(`/cctv-controller-svc/api/v1/administrative_units/${uuid}`);
+  },
 
   delete(uuid) {
     return request.request({

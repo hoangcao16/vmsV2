@@ -35,11 +35,7 @@ export default {
       try {
         const res = yield call(ModuleApi.editCamproxy, id, values);
         if (res?.code === 700 || res?.code === 800) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'noti.successfully_edit_camproxy',
-          );
+          notify('success', 'noti.success', 'noti.successfully_edit_camproxy');
         }
         yield put({ type: 'reload' });
       } catch (error) {

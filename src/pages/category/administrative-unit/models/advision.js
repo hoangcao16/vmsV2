@@ -37,11 +37,7 @@ export default {
       try {
         const res = yield call(AdDivisionApi.addAdDivision, payload);
         if (res?.code === 700 || res?.code === 800) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'noti.successfully_add_administrative',
-          );
+          notify('success', 'noti.success', 'noti.successfully_add_administrative');
         }
         yield put({ type: 'reload' });
       } catch (error) {
@@ -57,11 +53,24 @@ export default {
       try {
         const res = yield call(AdDivisionApi.editAdDivision, id, values);
         if (res?.code === 700 || res?.code === 800) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'noti.successfully_edit_administrative_unit',
-          );
+          notify('success', 'noti.success', 'noti.successfully_edit_administrative_unit');
+        }
+
+        yield put({ type: 'reload' });
+      } catch (error) {
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${res?.code}`,
+        );
+      }
+    },
+
+    *delete({ id }, { call, put }) {
+      try {
+        const res = yield call(AdDivisionApi.deleteAdDivision, id);
+        if (res?.code === 700 || res?.code === 800) {
+          notify('success', 'noti.success', 'noti.successfully_delete_administrative');
         }
 
         yield put({ type: 'reload' });

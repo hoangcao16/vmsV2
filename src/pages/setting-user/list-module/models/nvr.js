@@ -37,7 +37,7 @@ export default {
         if (res?.code === 700 || res?.code === 800) {
           notify(
             'success',
-            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.titleErrors',
             'noti.successfully_edit_nvr',
           );
         }
