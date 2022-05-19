@@ -44,6 +44,24 @@ export const StyledCard = styled(Card)`
     }
   }
 
+  .setting-warn {
+    margin-top: 12px;
+    .ant-radio-group {
+      width: 100%;
+    }
+
+    .gutter {
+      margin-bottom: 36px;
+    }
+    .label {
+      justify-content: end;
+    }
+    .note {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.45);
+    }
+  }
+
   .ant-card-body {
     .ant-select {
       width: 100%;

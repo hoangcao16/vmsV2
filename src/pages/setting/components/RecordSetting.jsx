@@ -1,18 +1,21 @@
 import { FieldTimeOutlined } from '@ant-design/icons';
 import { Col, Row, Select } from 'antd';
 import React from 'react';
+import { useIntl } from 'umi';
 import { StyledCard } from '../style';
 
 const { Option } = Select;
 
 const RecordSetting = () => {
+  const intl = useIntl();
+
   const titleCard = (
     <Row>
       <Col span={1} className="icon">
         <FieldTimeOutlined />
       </Col>
       <Col span={23} className="title">
-        <h4>Thiết lập độ dài tối đa tệp lưu trữ</h4>
+        <h4>{intl.formatMessage({ id: 'view.storage.set_max_archive_file_length' })}</h4>
         <p>Thiết lập thời lượng ghi hình tối đa cho video lưu trữ</p>
       </Col>
     </Row>

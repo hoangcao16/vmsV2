@@ -46,7 +46,7 @@ const CleanSetting = () => {
             <Col span={8}>
               <Row>
                 <Col className="label">
-                  <p>Tệp đã chụp :</p>
+                  <p>{intl.formatMessage({ id: 'view.storage.file_capture' })} :</p>
                 </Col>
                 <Col span={8}>
                   <Input />

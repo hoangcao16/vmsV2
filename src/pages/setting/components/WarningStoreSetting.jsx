@@ -1,10 +1,11 @@
 import { GatewayOutlined } from '@ant-design/icons';
-import { Col, Row, Select } from 'antd';
-import React from 'react';
+import { Col, Radio, Row, Select, Switch } from 'antd';
+import React, { useState } from 'react';
 import { StyledCard } from '../style';
 const { Option } = Select;
 
 const WarningStoreSetting = () => {
+  const [valueRadio, setValueRadio] = useState(0);
   const titleCard = (
     <Row>
       <Col span={1} className="icon">
@@ -41,32 +42,81 @@ const WarningStoreSetting = () => {
   return (
     <>
       <StyledCard title={titleCard}>
-        <Row>
+        <Row className="setting-warn">
           <Col span={12}>
-            <Row>
-              <Col className="label">
-                <p>Độ dài tối đa :</p>
+            <Row className="gutter">
+              <Col span={5} className="label">
+                <p>Nhận cảnh báo lưu ý :</p>
               </Col>
-              <Col span={4}></Col>
+              <Col span={8}>
+                <Switch defaultChecked />
+              </Col>
             </Row>
-            <Row>
-              <Col className="label">
-                <p>Độ dài tối đa :</p>
+            <Row className="gutter">
+              <Col span={5} className="label">
+                <p>Ngưỡng cảnh báo lưu ý :</p>
               </Col>
-              <Col span={4}>
+              <Col span={8}>
                 <Select defaultValue={70}>{percentOption}</Select>
+                <p className="note">Khi dung lượng ổ cứng từ</p>
               </Col>
             </Row>
-            <Row>
-              <Col className="label">
-                <p>Độ dài tối đa :</p>
+            <Row className="gutter">
+              <Col span={5} className="label">
+                <p>Tần suất cảnh báo :</p>
               </Col>
-              <Col span={4}>
+              <Col span={8}>
                 <Select defaultValue={3}>{hourOption}</Select>
+                <p className="note">Chu kỳ gửi lại cảnh báo</p>
               </Col>
             </Row>
           </Col>
-          <Col span={12}></Col>
+          <Col span={12}>
+            <Row className="gutter">
+              <Col span={6} className="label">
+                <p>Nhận cảnh báo nguy hiểm :</p>
+              </Col>
+              <Col span={8}>
+                <Switch defaultChecked />
+              </Col>
+            </Row>
+            <Row className="gutter">
+              <Col span={6} className="label">
+                <p>Ngưỡng cảnh báo nguy hiểm :</p>
+              </Col>
+              <Col span={8}>
+                <Select defaultValue={70}>{percentOption}</Select>
+                <p className="note">Khi dung lượng ổ cứng từ</p>
+              </Col>
+            </Row>
+
+            <Row className="gutter">
+              <Col span={6} className="label">
+                <p>Tần suất cảnh báo :</p>
+              </Col>
+              <Col span={8}>
+                <Select defaultValue={3}>{hourOption}</Select>
+                <p className="note">Chu kỳ gửi lại cảnh báo</p>
+              </Col>
+            </Row>
+          </Col>
+
+          <Col span={24}>
+            <Radio.Group
+              value={valueRadio}
+              className="autoDelete"
+              onChange={(e) => setValueRadio(e.target.value)}
+            >
+              <Row justify="space-around">
+                <Col span={7}>
+                  <Radio value={0}>Tự động xóa còn 95% khi bộ nhớ đầy</Radio>
+                </Col>
+                <Col span={6}>
+                  <Radio value={1}>Tự động xóa còn 5GB khi bộ nhớ đầy</Radio>
+                </Col>
+              </Row>
+            </Radio.Group>
+          </Col>
         </Row>
       </StyledCard>
     </>

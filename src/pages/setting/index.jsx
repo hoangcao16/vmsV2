@@ -4,6 +4,7 @@ import { Button } from 'antd';
 import React from 'react';
 import { useIntl } from 'umi';
 import CleanSetting from './components/CleanSetting';
+import EmailConfig from './components/EmailConfig';
 import RecordSetting from './components/RecordSetting';
 import WarningStoreSetting from './components/WarningStoreSetting';
 
@@ -28,6 +29,7 @@ const Setting = () => {
       <RecordSetting />
       <CleanSetting />
       <WarningStoreSetting />
+      <EmailConfig />
     </PageContainer>
   );
 };
