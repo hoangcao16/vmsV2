@@ -12,6 +12,7 @@ export const STORAGE = {
 };
 export const PAGE_SIZE = 20;
 export const STATUS_CODE = {
+  LIST_SUCCESS_CODE: [201, 202, 600, 700, 800],
   SUCCESS: 700,
   CREATED: 201,
   UPDATED: 202,
