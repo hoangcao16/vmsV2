@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DatePicker, Select, ConfigProvider, Form } from 'antd';
+import { DatePicker, Select, ConfigProvider, Form, Tag } from 'antd';
 import moment from 'moment';
 import 'moment/locale/en-gb';
 import locale from 'antd/es/locale/en_GB';
@@ -7,7 +7,12 @@ import { connect } from 'dva';
 import { useIntl } from 'umi';
 import './ChartControl.less';
 import AddressApi from '@/services/address/AddressApi';
-import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
+import {
+  disableOptions,
+  filterOptionForChart,
+  normalizeOptions,
+} from '@/components/select/CustomSelect';
+import cameraApi from '@/services/controller-api/cameraService';
 const { RangePicker } = DatePicker;
 
 moment.locale('en-gb', {
@@ -23,9 +28,10 @@ const ChartControl = (props) => {
   const [format, setFormat] = useState('DD/MM/YYYY');
   const [formatParams, setFormatParams] = useState('DDMMYYYY');
   const [form] = Form.useForm();
-  const [provinceId, setProvinceId] = useState([defaultProvinceId]);
+  const [formValue, setFormValue] = useState({});
   const [allDistricts, setAllDistricts] = useState([]);
   const [allWards, setAllWards] = useState([]);
+  const [allAiCamera, setAllAiCamera] = useState([]);
   const intl = useIntl();
 
   useEffect(() => {
@@ -42,9 +48,26 @@ const ChartControl = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    const params = {
+      provinceIds: defaultProvinceId,
+      districtIds: '',
+      wardIds: '',
+      size: 100000,
+      page: 1,
+    };
+    try {
+      cameraApi.getAllAI(params).then((result) => {
+        setAllAiCamera(result?.payload);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   const getDistricts = () => {
     try {
-      AddressApi.getDistrictByProvinceId(form.getFieldValue('ProvinceId')).then((result) => {
+      AddressApi.getDistrictByProvinceId(form.getFieldValue('provinceId')).then((result) => {
         setAllDistricts(result?.payload);
       });
     } catch (error) {
@@ -54,7 +77,7 @@ const ChartControl = (props) => {
 
   const getWards = () => {
     try {
-      AddressApi.getWardByDistrictId(form.getFieldValue('DistrictId')).then((result) => {
+      AddressApi.getWardByDistrictId(form.getFieldValue('districtId')).then((result) => {
         setAllWards(result?.payload);
       });
     } catch (error) {
@@ -62,19 +85,34 @@ const ChartControl = (props) => {
     }
   };
 
-  const handleFilter = ({ typeDate, dateRange, ProvinceId, DistrictId, WardId }) => {
+  const getAiCamera = () => {
+    const params = {
+      provinceIds: form.getFieldValue('provinceId').toString(),
+      districtIds: form.getFieldValue('districtId').toString(),
+      wardIds: form.getFieldValue('wardId').toString(),
+      size: 100000,
+      page: 1,
+    };
+    try {
+      cameraApi.getAllAI(params).then((result) => {
+        setAllAiCamera(result?.payload);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleFilter = ({ typeDate, dateRange, provinceId, districtId, wardId }) => {
     let params = {
       typeTime: typeDate.toUpperCase(),
       startDate: moment(dateRange[0]).format(formatParams),
       endDate: moment(dateRange[1]).format(formatParams),
-      provinceIds: ProvinceId.toString(),
-      districtIds: DistrictId.toString(),
-      wardIds: WardId.toString(),
+      provinceIds: provinceId?.toString(),
+      districtIds: districtId?.toString(),
+      wardIds: wardId?.toString(),
       eventUuids: '57353610-dc42-4096-8a51-9da12ee8b85e,bf943458-8cd3-4bc5-8f8b-e3b583c25f47',
       cameraUuids: '',
     };
-
-    console.log('params', params);
 
     props.dispatch({
       type: 'chart/changeReportHeaderDataPieChart',
@@ -86,7 +124,8 @@ const ChartControl = (props) => {
     });
   };
 
-  const onValuesChange = ({ typeDate, ProvinceId, DistrictId }) => {
+  const onValuesChange = ({ typeDate, provinceId, districtId, wardId, ...values }) => {
+    setFormValue({ typeDate, provinceId, districtId, wardId, ...values });
     if (typeDate) {
       if (typeDate == 'week') {
         setFormat('WW-YYYY');
@@ -115,25 +154,33 @@ const ChartControl = (props) => {
       }
     }
 
-    if (ProvinceId && ProvinceId.length == 1) {
+    if (provinceId && provinceId.length == 1) {
       getDistricts();
       setAllWards([]);
-      setProvinceId(ProvinceId);
-    } else if (ProvinceId && ProvinceId.length < 1) {
-      form.setFieldsValue({
-        ProvinceId: provinceId,
-      });
     }
-    if (ProvinceId && ProvinceId.length > 1) {
-      setProvinceId(ProvinceId);
+
+    if (provinceId && provinceId.length > 1) {
       form.setFieldsValue({
-        DistrictId: undefined,
-        WardId: undefined,
+        districtId: [],
+        wardId: [],
       });
     }
 
-    if (DistrictId && DistrictId.length == 1) {
+    if (districtId && districtId.length == 1) {
       getWards();
+    }
+
+    if (districtId && districtId.length !== 1) {
+      form.setFieldsValue({
+        wardId: [],
+      });
+    }
+
+    if (provinceId || districtId || wardId) {
+      form.setFieldsValue({
+        aiCamera: [],
+      });
+      getAiCamera();
     }
 
     form.submit();
@@ -158,7 +205,9 @@ const ChartControl = (props) => {
           initialValues={{
             typeDate: 'day',
             dateRange: [moment().subtract(7, 'days'), moment()],
-            ProvinceId: defaultProvinceId,
+            provinceId: defaultProvinceId,
+            districtId: [],
+            wardId: [],
           }}
         >
           <div className="chartControl-filter-items">
@@ -194,42 +243,97 @@ const ChartControl = (props) => {
             <Form.Item name="dateRange" label="Khoảng thời gian">
               <PickerWithType picker={form.getFieldValue('typeDate')} format={format} />
             </Form.Item>
-            <Form.Item name="ProvinceId" label="Provinces">
+            <Form.Item name="provinceId" label="Provinces">
               <Select
-                defaultValue={[defaultProvinceId]}
                 mode="multiple"
                 allowClear={false}
                 showSearch
                 datasource={props?.allProvinces}
-                filterOption={filterOption}
-                options={normalizeOptions('name', 'provinceId', props?.allProvinces)}
+                filterOption={filterOptionForChart}
+                tagRender={(prop) => (
+                  <Tag
+                    closable={form.getFieldValue('provinceId')?.length > 1}
+                    onClose={prop.onClose}
+                  >
+                    {prop.label}
+                  </Tag>
+                )}
                 placeholder="Provinces"
-              />
+              >
+                {normalizeOptions('name', 'provinceId', props?.allProvinces).map(
+                  ({ label, value }) => (
+                    <Select.Option
+                      disabled={disableOptions(form.getFieldValue('provinceId'), value, 5)}
+                      value={value}
+                    >
+                      {label}
+                    </Select.Option>
+                  ),
+                )}
+              </Select>
             </Form.Item>
-            {provinceId.length == 1 && (
-              <Form.Item name="DistrictId" label="Districts">
+            {form.getFieldValue('provinceId')?.length == 1 && (
+              <Form.Item name="districtId" label="Districts">
                 <Select
                   mode="multiple"
                   allowClear={false}
                   showSearch
                   datasource={allDistricts}
-                  filterOption={filterOption}
-                  options={normalizeOptions('name', 'districtId', allDistricts)}
+                  filterOption={filterOptionForChart}
                   placeholder="Districts"
-                />
+                >
+                  {normalizeOptions('name', 'districtId', allDistricts).map(({ label, value }) => (
+                    <Select.Option
+                      disabled={disableOptions(form.getFieldValue('districtId'), value, 5)}
+                      value={value}
+                    >
+                      {label}
+                    </Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
             )}
-
-            <Form.Item name="WardId" label="Wards">
+            {form.getFieldValue('provinceId')?.length == 1 &&
+              form.getFieldValue('districtId')?.length <= 1 && (
+                <Form.Item name="wardId" label="Wards">
+                  <Select
+                    mode="multiple"
+                    allowClear={false}
+                    showSearch
+                    datasource={allWards}
+                    filterOption={filterOptionForChart}
+                    // options={normalizeOptions('name', 'id', allWards)}
+                    placeholder="Wards"
+                  >
+                    {normalizeOptions('name', 'id', allWards).map(({ label, value }) => (
+                      <Select.Option
+                        disabled={disableOptions(form.getFieldValue('wardId'), value, 5)}
+                        value={value}
+                      >
+                        {label}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              )}
+            <Form.Item name="aiCamera" label="AiCamera">
               <Select
                 mode="multiple"
                 allowClear={false}
                 showSearch
-                datasource={allWards}
-                filterOption={filterOption}
-                options={normalizeOptions('name', 'id', allWards)}
-                placeholder="Wards"
-              />
+                datasource={allAiCamera}
+                filterOption={filterOptionForChart}
+                placeholder="AiCamera"
+              >
+                {normalizeOptions('name', 'uuid', allAiCamera).map(({ label, value }) => (
+                  <Select.Option
+                    disabled={disableOptions(form.getFieldValue('aiCamera'), value, 100000)}
+                    value={value}
+                  >
+                    {label}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
           </div>
         </Form>

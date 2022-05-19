@@ -18,6 +18,17 @@ export function filterOption(input, option) {
   );
 }
 
+export function filterOptionForChart(input, option) {
+  let array = {
+    label: option?.children,
+    value: option?.value,
+  };
+  return (
+    array.label.match(new RegExp(input, 'i')) ||
+    removeAccents(array.label).match(new RegExp(input, 'i'))
+  );
+}
+
 export function normalizeOptions(labelField, valueField, dataSource) {
   if (dataSource != null) {
     return dataSource
@@ -28,6 +39,13 @@ export function normalizeOptions(labelField, valueField, dataSource) {
       }));
   }
   return [];
+}
+
+export function disableOptions(label, value, validateNumber) {
+  if (label && label.length >= validateNumber && !label.includes(value)) {
+    return true;
+  }
+  return false;
 }
 
 export function CustomSelect(props) {
