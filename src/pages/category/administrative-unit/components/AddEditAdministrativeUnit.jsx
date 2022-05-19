@@ -148,6 +148,14 @@ const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDraw
     onClose();
   };
 
+  const onDeleteRecord = () => {
+    dispatch({
+      type: 'advision/delete',
+      id: selectedRecord?.uuid,
+    });
+    onClose();
+  };
+
   return (
     <StyledDrawer
       openDrawer={openDrawer}
@@ -170,8 +178,8 @@ const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDraw
           {!isEmpty(selectedRecord) && (
             <Popconfirm
               placement="bottom"
-              title={intl.formatMessage({ id: 'noti.delete_zone' })}
-              //   onConfirm={onDeleteRecord}
+              title={intl.formatMessage({ id: 'noti.delete' })}
+              onConfirm={onDeleteRecord}
               okText="Yes"
               cancelText="No"
             >

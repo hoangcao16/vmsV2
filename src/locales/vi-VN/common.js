@@ -733,6 +733,7 @@ export default {
   'noti.successfully_delete_human': '{delete} thành công người',
   'noti.no_valid_results_found': 'Không tìm thấy kết quả hợp lệ',
   'noti.successfully_add_administrative': 'Bạn đã thêm thành công đơn vị hành chính',
+  'noti.successfully_delete_administrative': 'Bạn đã xóa thành công đơn vị hành chính',
   'noti.phone_number_format_is_not_correct': 'Định dạng số điện thoại chưa đúng',
   'noti.successfully_add_camera': 'Bạn đã thêm thành công Camera',
   'noti.successfully_edit_name': 'Chỉnh sửa thành công',
@@ -742,6 +743,7 @@ export default {
   'noti.delete_zone': 'Bạn chắc chắn muốn xóa Zone này?',
   'noti.delete_img': 'Bạn chắc chắn muốn xóa ảnh này?',
   'noti.delete_camera_group': 'Bạn chắc chắn muốn xóa nhóm Camera này',
+  'noti.delete': 'Bạn chắc chắn muốn xóa?',
 
   'noti.choose_favorite_screen': 'Chọn màn hình ưa thích',
   'noti.no_camera_in_screen': 'Không tồn tại bất kỳ Camera nào trong màn hình này',
@@ -749,7 +751,6 @@ export default {
   'noti.camera_not_exist': 'Không tồn tại Camera này',
   'noti.view_screen_list': 'Xem danh sách màn hình',
   'noti.delete_screen': 'Xóa màn hình',
-  'noti.delete': 'Xóa màn hình ',
   'noti.screen_success': ' thành công',
   'noti.screen_failed': ' thất bại. Lỗi ',
   'noti.setting_default_screen': 'Cài đặt màn hình mặc định ',

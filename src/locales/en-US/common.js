@@ -733,6 +733,7 @@ export default {
   'noti.no_valid_results_found': 'No valid results found',
 
   'noti.successfully_add_administrative': 'Successfully add new administrative',
+  'noti.successfully_delete_administrative': 'Successfully deleted administrative',
   'noti.phone_number_format_is_not_correct': 'Phone number format is not correct',
   'noti.successfully_add_camera': 'Successfully add new Camera',
   'noti.successfully_edit_name': 'Successfully edit',

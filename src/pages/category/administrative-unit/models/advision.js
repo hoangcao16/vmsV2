@@ -50,11 +50,18 @@ export default {
     *edit({ payload: { id, values } }, { call, put }) {
       try {
         yield call(AdDivisionApi.editAdDivision, id, values);
-        notify(
-          'success',
-          'pages.setting-user.list-user.titleSuccess',
-          'noti.successfully_edit_administrative_unit',
-        );
+        notify('success', 'noti.success', 'noti.successfully_edit_administrative_unit');
+
+        yield put({ type: 'reload' });
+      } catch (error) {
+        notify('error', 'pages.setting-user.list-user.titleErrors');
+      }
+    },
+
+    *delete({ id }, { call, put }) {
+      try {
+        yield call(AdDivisionApi.deleteAdDivision, id);
+        notify('success', 'noti.success', 'noti.successfully_delete_administrative');
 
         yield put({ type: 'reload' });
       } catch (error) {

@@ -63,30 +63,24 @@ export default [
         path: '/category/administrative-unit',
         component: './category/administrative-unit',
       },
+      {
+        name: 'list-modules',
+        icon: 'smile',
+        path: '/category/list-module',
+        component: './category/list-module',
+      },
+      {
+        name: 'list-user',
+        icon: 'smile',
+        path: '/category/list-user',
+        component: './category/list-user',
+      },
     ],
   },
   {
     path: '/setting-user',
     name: 'setting',
     icon: 'setting',
-    routes: [
-      // {
-      //   path: '/setting-user',
-      //   redirect: '/setting-user/list-user',
-      // },
-      {
-        name: 'list-user',
-        icon: 'smile',
-        path: '/setting-user/list-user',
-        component: './setting-user/list-user',
-      },
-      {
-        name: 'list-modules',
-        icon: 'smile',
-        path: '/setting-user/list-module',
-        component: './setting-user/list-module',
-      },
-    ],
   },
   {
     path: '/report',
