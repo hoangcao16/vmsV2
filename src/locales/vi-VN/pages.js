@@ -11,6 +11,19 @@ export default {
   'pages.login.rememberMe': 'Nhớ mật khẩu',
   'pages.login.forgotPassword': 'Quên mật khẩu?',
 
+  //Home
+  'pages.home.notification': 'Thông báo',
+  'pages.home.hardDriveFull': 'Cảnh báo: Ổ cứng đầy',
+  'pages.home.camera': 'Cảnh báo: Camera',
+  'pages.home.noInfo': 'Không có thông báo',
+  'pages.home.active': 'hoạt động',
+  'pages.home.inactive': 'không hoạt động',
+  'pages.home.unknownName': 'Không rõ tên',
+  'pages.home.unknown': 'không rõ',
+  'pages.home.errorLoadingNoti': 'Có lỗi khi tải thông báo',
+  'pages.home.hardDriveWarning':
+    'Ổ cứng {name} đã được sử dụng {percentUsed}%. Thời gian dự kiến còn lại: {estimatedTime}.',
+
   //Report
 
   'pages.report.cameraStatistics.totalCamera': 'Tổng số Camera',
@@ -19,6 +32,9 @@ export default {
   'pages.report.cameraStatistics.cameraIsNotWorking': 'Camera không hoạt động',
   'pages.report.chart.lineTitle': 'Thống kê diễn biến vi phạm giao thông',
   'pages.report.chart.pieTitle': 'Thống kê loại vi phạm giao thông',
+  'pages.report.chart.by': 'Theo',
+  'pages.report.chart.from': 'Từ',
+  'pages.report.chart.to': 'Đến',
   'pages.report.chart.day': 'Ngày',
   'pages.report.chart.week': 'Tuần',
   'pages.report.chart.month': 'Tháng',
@@ -90,10 +106,8 @@ export default {
   'pages.setting-user.list-user.createUserGroupSuccess': 'Thêm nhóm thành công',
   'pages.setting-user.list-user.addMemberIntoGroupSuccess': 'Thêm thành viên vào nhóm thành công',
   'pages.setting-user.list-user.removeMemberIntoGroupSuccess': 'Xóa thành viên nhóm thành công',
-  'pages.setting-user.list-user.updatePermisisionUserGroupSuccess':
-    'Sửa quyền trong nhóm thành công',
-  'pages.setting-user.list-user.removePermisisionUserGroupSuccess':
-    'Xóa quyền trong nhóm thành công',
+  'pages.setting-user.list-user.updatePermisisionUserGroupSuccess': 'Sửa quyền thành công',
+  'pages.setting-user.list-user.removePermisisionUserGroupSuccess': 'Xóa quyền thành công',
   'pages.setting-user.list-user.setPermisionCameraSuccess': 'Thêm quyền cho camera thành công',
   'pages.setting-user.list-user.removePermisionCameraSuccess': 'Xóa quyền cho camera thành công',
   'pages.setting-user.list-user.setPermisionCameraGroupSuccess':
@@ -102,6 +116,10 @@ export default {
     'Xóa quyền cho nhóm camera thành công',
   'pages..setting-user.list-user.titleErrors': 'Thất bại',
   'pages.setting-user.list-user.600': 'okok',
+
+  'pages.setting-user.list-user.createRoleSuccess': 'Tạo vai trò thành công',
+  'pages.setting-user.list-user.updateRoleSuccess': 'Cập nhập vai trò thành công',
+  'pages.setting-user.list-user.removeRoleSuccess': 'Xóa vai trò thành công',
 
   //Storage
   'pages.storage.dailyArchive.total': 'Tổng',

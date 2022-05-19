@@ -1,3 +1,4 @@
+import { notify } from '@/components/Notify';
 import UserApi from '@/services/user/UserApi';
 
 export default {
@@ -35,24 +36,37 @@ export default {
       try {
         const res = yield call(UserApi.updateUserRole, id, values);
         //check res==>push notif
-        const oldList = yield select((state) => state.userRole.list);
-        const metadata = yield select((state) => state.userRole.metadata);
+        if (res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.updateRoleSuccess',
+          );
+          const oldList = yield select((state) => state.userRole.list);
+          const metadata = yield select((state) => state.userRole.metadata);
 
-        const roleIndex = oldList.findIndex((role) => role.uuid === id);
+          const roleIndex = oldList.findIndex((role) => role.uuid === id);
 
-        if (roleIndex >= 0) {
-          oldList[roleIndex] = { ...oldList[roleIndex], ...values };
+          if (roleIndex >= 0) {
+            oldList[roleIndex] = { ...oldList[roleIndex], ...values };
+          }
+
+          const newList = [...oldList];
+
+          yield put({
+            type: 'save',
+            payload: {
+              data: newList,
+              metadata: metadata,
+            },
+          });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
         }
-
-        const newList = [...oldList];
-
-        yield put({
-          type: 'save',
-          payload: {
-            data: newList,
-            metadata: metadata,
-          },
-        });
         // yield put({ type: 'reload' });
       } catch (error) {
         console.log(error);
@@ -63,7 +77,20 @@ export default {
       try {
         const res = yield call(UserApi.deleteRole, id);
         //check res==>push notif
-        yield put({ type: 'reload' });
+        if (res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.removeRoleSuccess',
+          );
+          yield put({ type: 'reload' });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
+        }
       } catch (error) {
         console.log(error);
       }
@@ -72,8 +99,20 @@ export default {
     *create({ payload: values }, { call, put }) {
       try {
         const res = yield call(UserApi.createRole, values);
-        //check res==>push notif
-        yield put({ type: 'reload' });
+        if (res?.code === 600) {
+          notify(
+            'success',
+            'pages.setting-user.list-user.titleSuccess',
+            'pages.setting-user.list-user.createRoleSuccess',
+          );
+          yield put({ type: 'reload' });
+        } else {
+          notify(
+            'error',
+            'pages.setting-user.list-user.titleErrors',
+            `pages.setting-user.list-user.${res?.code}`,
+          );
+        }
       } catch (error) {
         console.log(error);
       }

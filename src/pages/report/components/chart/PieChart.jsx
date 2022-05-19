@@ -80,7 +80,6 @@ const PieChart = (props) => {
       <ChartHeader
         title={intl.formatMessage({
           id: `pages.report.chart.pieTitle`,
-          defaultMessage: 'name',
         })}
         typeChart={'pie'}
       />

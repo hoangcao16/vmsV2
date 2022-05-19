@@ -38,7 +38,6 @@ const LineChart = (props) => {
       <ChartHeader
         title={intl.formatMessage({
           id: `pages.report.chart.lineTitle`,
-          defaultMessage: 'name',
         })}
         typeChart={'line'}
       />

@@ -1,4 +1,5 @@
 import { notify } from '@/components/Notify';
+import { STORAGE } from '@/constants/common';
 import UserApi from '@/services/user/UserApi';
 import { isEmpty } from 'lodash';
 
@@ -74,7 +75,9 @@ export default {
           payload: {
             data: cameraPerRows,
             metadata: { ...resDataPermision?.metadata },
-            groupCode: resDataPermision?.payload?.group_code,
+            groupCode:
+              resDataPermision?.payload?.group_code ||
+              localStorage.getItem(STORAGE.GROUP_CODE_SELECTED),
             listCameraNotPermission,
           },
         });
@@ -150,7 +153,11 @@ export default {
     // ==================================================================
 
     *reloadFetchAllPermissionCamera(action, { put, select }) {
-      const code = yield select((state) => state.cameraPermissionInGroupUser.groupCode);
+      const code = yield select(
+        (state) =>
+          state.cameraPermissionInGroupUser.groupCode ||
+          localStorage.getItem(STORAGE.GROUP_CODE_SELECTED),
+      );
       yield put({ type: 'fetchAllPermissionCamera', payload: { code } });
     },
   },

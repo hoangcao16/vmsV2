@@ -16,6 +16,7 @@ import { connect } from 'dva';
 import { useIntl } from 'umi';
 import AddCamera from './components/add-camera';
 import EditCamera from './components/edit-camera';
+import ScanCamera from './components/scan-camera';
 import debounce from 'lodash/debounce';
 import { CAMERASTATUS } from '@/constants/common';
 
@@ -41,6 +42,7 @@ const CameraList = ({
   const [form] = Form.useForm();
   const [isAddNewDrawer, setIsAddNewDrawer] = useState(false);
   const [isEditDrawer, setIsEditDrawer] = useState(false);
+  const [isScanDrawer, setIsScanDrawer] = useState(false);
   const [collapse, setCollapse] = useState(false);
   const [searchParam, setSearchParam] = useState(searchCaptureFileParamDefault);
   const [districtList, setDistrictList] = useState([]);
@@ -492,7 +494,7 @@ const CameraList = ({
               <Button
                 icon={<ScanOutlined />}
                 onClick={() => {
-                  alert('scan');
+                  setIsScanDrawer(true);
                 }}
               />
             </Tooltip>,
@@ -533,6 +535,7 @@ const CameraList = ({
       />
       <AddCamera isAddNewDrawer={isAddNewDrawer} setIsAddNewDrawer={setIsAddNewDrawer} />
       <EditCamera isEditDrawer={isEditDrawer} setIsEditDrawer={setIsEditDrawer} />
+      <ScanCamera isScanDrawer={isScanDrawer} setIsScanDrawer={setIsScanDrawer} />
     </PageContainer>
   );
 };

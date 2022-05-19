@@ -250,57 +250,7 @@ const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDraw
                       {intl.formatMessage({ id: 'view.ai_humans.phone' })}
                     </span>
                   </div>
-                  <Form.Item
-                    name={['tel']}
-                    rules={[
-                      () => ({
-                        validator(_, value) {
-                          const valiValue = document.getElementById('tel').value;
-                          if (!valiValue.length) {
-                            return Promise.reject(
-                              intl.formatMessage({ id: 'view.map.required_field' }),
-                            );
-                          }
-
-                          if (!valiValue.startsWith('0')) {
-                            if (valiValue.length < 10) {
-                              return Promise.reject(
-                                new Error(intl.formatMessage({ id: 'noti.at_least_9_characters' })),
-                              );
-                            } else if (valiValue.length > 19) {
-                              return Promise.reject(
-                                new Error(
-                                  intl.formatMessage(
-                                    { id: 'noti.max_characters' },
-                                    {
-                                      max: 19,
-                                    },
-                                  ),
-                                ),
-                              );
-                            }
-                          } else {
-                            if (valiValue.length < 11) {
-                              return Promise.reject(new Error(t('noti.at_least_10_characters')));
-                            } else if (valiValue.length > 20) {
-                              return Promise.reject(
-                                new Error(
-                                  intl.formatMessage(
-                                    { id: 'noti.max_characters' },
-                                    {
-                                      max: 29,
-                                    },
-                                  ),
-                                ),
-                              );
-                            }
-                          }
-
-                          return Promise.resolve();
-                        },
-                      }),
-                    ]}
-                  >
+                  <MSFormItem type="tel" name="tel">
                     <PhoneInput
                       international={false}
                       defaultCountry="VN"
@@ -313,7 +263,7 @@ const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDraw
                         },
                       )}
                     />
-                  </Form.Item>
+                  </MSFormItem>
                 </Col>
               </Row>
             </Col>
@@ -400,41 +350,13 @@ const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDraw
             </Col>
 
             <Col span={12}>
-              <Form.Item
+              <MSFormItem
                 label={`${intl.formatMessage({
                   id: 'view.map.longitude',
                 })}`}
                 name="long_"
+                type="long_"
                 maxLength={255}
-                rules={[
-                  ({ getFieldValue }) => ({
-                    validator(rule, value) {
-                      const data = getFieldValue(['long_']);
-                      if (data) {
-                        if (
-                          isFinite(data) &&
-                          Math.abs(data) <= 180 &&
-                          data[0] !== '.' &&
-                          data[data.length - 1] !== '.'
-                        ) {
-                          return Promise.resolve();
-                        } else {
-                          return Promise.reject(
-                            `${intl.formatMessage({
-                              id: 'view.map.long_error',
-                            })}`,
-                          );
-                        }
-                      } else {
-                        return Promise.resolve(
-                          `${intl.formatMessage({
-                            id: 'view.map.required_field',
-                          })}`,
-                        );
-                      }
-                    },
-                  }),
-                ]}
               >
                 <Input
                   placeholder={intl.formatMessage(
@@ -446,44 +368,16 @@ const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDraw
                     },
                   )}
                 />
-              </Form.Item>
+              </MSFormItem>
             </Col>
             <Col span={12}>
-              <Form.Item
+              <MSFormItem
                 label={`${intl.formatMessage({
                   id: 'view.map.latitude',
                 })}`}
                 name="lat_"
+                type="lat_"
                 maxLength={255}
-                rules={[
-                  ({ getFieldValue }) => ({
-                    validator(rule, value) {
-                      const data = getFieldValue(['lat_']);
-                      if (data) {
-                        if (
-                          isFinite(data) &&
-                          Math.abs(data) <= 90 &&
-                          data[0] !== '.' &&
-                          data[data.length - 1] !== '.'
-                        ) {
-                          return Promise.resolve();
-                        } else {
-                          return Promise.reject(
-                            `${intl.formatMessage({
-                              id: 'view.map.lat_error',
-                            })}`,
-                          );
-                        }
-                      } else {
-                        return Promise.resolve(
-                          `${intl.formatMessage({
-                            id: 'view.map.required_field',
-                          })}`,
-                        );
-                      }
-                    },
-                  }),
-                ]}
               >
                 <Input
                   placeholder={intl.formatMessage(
@@ -495,7 +389,7 @@ const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDraw
                     },
                   )}
                 />
-              </Form.Item>
+              </MSFormItem>
             </Col>
           </Row>
         </Form>
@@ -505,7 +399,7 @@ const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDraw
 };
 
 async function fetchSelectOptions() {
-  const provinces = await (await AddressApi.getAllProvinces()).payload;
+  const { payload: provinces } = await AddressApi.getAllProvinces();
   return {
     provinces,
   };

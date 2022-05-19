@@ -28,7 +28,8 @@ export default {
           payload: {
             data: res?.payload?.users,
             metadata: { ...res?.metadata },
-            groupCode: res?.payload?.group_code,
+            groupCode:
+              res?.payload?.group_code || localStorage.getItem(STORAGE.GROUP_CODE_SELECTED),
           },
         });
       } catch (error) {
@@ -114,7 +115,9 @@ export default {
     },
 
     *reload(action, { put, select }) {
-      const code = yield select((state) => state.userInGroup.groupCode);
+      const code = yield select(
+        (state) => state.userInGroup.groupCode || localStorage.getItem(STORAGE.GROUP_CODE_SELECTED),
+      );
 
       yield put({ type: 'fetchAllUserInGroup', payload: { code } });
     },
