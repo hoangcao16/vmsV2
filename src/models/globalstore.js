@@ -147,7 +147,7 @@ export default {
           provinceId: '',
           districtId: '',
         };
-        if (pathname !== '/user/login' || pathname !== '/user/register') {
+        if (pathname !== '/user/login' && pathname !== '/user/register') {
           dispatch({ type: 'fetchAllCameraTypes', payload: data });
           dispatch({ type: 'fetchAllGroupCamera', payload: data });
           dispatch({ type: 'fetchAllZones', payload: data });

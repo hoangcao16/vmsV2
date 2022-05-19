@@ -37,7 +37,6 @@ const AuthZApi = {
       history.push(loginPath);
       localStorage.clear();
     } catch (error) {
-      console.log(error);
       history.push(loginPath);
       localStorage.clear();
       return {};
@@ -51,8 +50,6 @@ const AuthZApi = {
       localStorage.setItem(STORAGE.REFRESH_TOKEN, data.refreshToken);
       return data;
     } catch (error) {
-      console.log(error);
-
       history.push(loginPath);
       localStorage.clear();
       return {};
