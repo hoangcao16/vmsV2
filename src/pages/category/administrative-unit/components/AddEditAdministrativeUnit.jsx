@@ -139,7 +139,10 @@ const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDraw
         payload: payload,
       });
     } else {
-      console.log(value);
+      dispatch({
+        type: 'advision/edit',
+        payload: { id: selectedRecord?.uuid, values: { ...payload } },
+      });
     }
 
     onClose();

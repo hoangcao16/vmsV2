@@ -1,3 +1,4 @@
+import { notify } from '@/components/Notify';
 import ModuleApi from '@/services/module-api/ModuleApi';
 
 export default {
@@ -32,26 +33,41 @@ export default {
     },
     *addZone({ payload }, { call, put }) {
       try {
-        const res = yield call(ModuleApi.addZone, payload);
+        yield call(ModuleApi.addZone, payload);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'noti.successfully_add_zone',
+        );
         yield put({ type: 'reload' });
       } catch (error) {
-        console.log(error);
+        notify('error', 'pages.setting-user.list-user.titleErrors');
       }
     },
     *editZone({ payload: { id, values } }, { call, put }) {
       try {
-        const res = yield call(ModuleApi.editZone, id, values);
+        yield call(ModuleApi.editZone, id, values);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'noti.successfully_edit_zone',
+        );
         yield put({ type: 'reload' });
       } catch (error) {
-        console.log(error);
+        notify('error', 'pages.setting-user.list-user.titleErrors');
       }
     },
     *deleteZone({ payload: { id } }, { call, put }) {
       try {
-        const res = yield call(ModuleApi.deleteZone, id);
+        yield call(ModuleApi.deleteZone, id);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'noti.successfully_delete_zone',
+        );
         yield put({ type: 'reload' });
       } catch (error) {
-        console.log(error);
+        notify('error', 'pages.setting-user.list-user.titleErrors');
       }
     },
     *reload(action, { put, select }) {

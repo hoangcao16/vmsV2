@@ -71,7 +71,6 @@ export default {
   'pages.setting-user.list-user.edit-role': 'Sửa vai trò',
   'pages.setting-user.list-user.listUserInGroup': 'Danh sách thành viên',
   'pages.setting-user.list-user.add-user-in-group': 'Thêm thành viên vào nhóm',
-  'pages.setting-user.list-user.add-user-in-group': 'Thêm',
   'pages.setting-user.list-user.select': 'Đã chọn',
   'pages.setting-user.list-user.record': 'bản ghi',
   'pages.setting-user.list-user.clean': 'Bỏ chọn tất cả',
@@ -115,7 +114,9 @@ export default {
     'Thêm quyền cho nhóm camera thành công',
   'pages.setting-user.list-user.removePermisionCameraGroupSuccess':
     'Xóa quyền cho nhóm camera thành công',
-  'pages..setting-user.list-user.titleErrors': 'Thất bại',
+
+  'pages.setting-user.list-user.titleErrors': 'Thất bại',
+
   'pages.setting-user.list-user.createRoleSuccess': 'Tạo vai trò thành công',
   'pages.setting-user.list-user.updateRoleSuccess': 'Cập nhập vai trò thành công',
   'pages.setting-user.list-user.removeRoleSuccess': 'Xóa vai trò thành công',
