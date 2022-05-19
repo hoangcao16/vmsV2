@@ -1,13 +1,12 @@
 import MSCustomizeDrawer from '@/components/Drawer';
 import permissionCheck from '@/utils/PermissionCheck';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import ProTable from '@ant-design/pro-table';
-import { Button, Popconfirm, Space, Tooltip } from 'antd';
+import { EditableProTable } from '@ant-design/pro-table';
+import { Button, Space } from 'antd';
 import { connect } from 'dva';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import AddEditUserRole from './AddEditUserRole';
-function UserRole({ dispatch, list, metadata }) {
+function UserRole({ dispatch, list, metadata, loading }) {
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [showDrawerAdd, setOpenDrawerAdd] = useState(false);
@@ -45,6 +44,8 @@ function UserRole({ dispatch, list, metadata }) {
       type: 'userRole/remove',
       payload: id,
     });
+
+    setOpenDrawerAdd(false);
   };
 
   const columns = [
@@ -59,55 +60,6 @@ function UserRole({ dispatch, list, metadata }) {
         id: 'pages.setting-user.list-user.description',
       }),
       dataIndex: 'description',
-    },
-
-    {
-      title: intl.formatMessage({
-        id: 'pages.setting-user.list-user.option',
-      }),
-      dataIndex: 'option',
-      valueType: 'option',
-      render: (text, record) => {
-        return (
-          <>
-            <Space>
-              {permissionCheck('edit_role') && (
-                <Tooltip
-                  placement="top"
-                  title={intl.formatMessage({
-                    id: 'pages.setting-user.list-user.edit',
-                  })}
-                  arrowPointAtCenter={true}
-                >
-                  <EditOutlined onClick={() => showDrawerAddUserRole(record)} />
-                </Tooltip>
-              )}
-            </Space>
-            <Space>
-              {permissionCheck('delete_role') && (
-                <Popconfirm
-                  title={intl.formatMessage({
-                    id: 'pages.setting-user.list-user.delete-confirm',
-                  })}
-                  onConfirm={() => handleDeleteRole(record.uuid)}
-                  cancelText="Cancel"
-                  okText="Ok"
-                >
-                  <Tooltip
-                    placement="top"
-                    title={intl.formatMessage({
-                      id: 'pages.setting-user.list-user.delete',
-                    })}
-                    arrowPointAtCenter={true}
-                  >
-                    <DeleteOutlined />
-                  </Tooltip>
-                </Popconfirm>
-              )}
-            </Space>
-          </>
-        );
-      },
     },
   ];
 
@@ -142,31 +94,29 @@ function UserRole({ dispatch, list, metadata }) {
           placement="right"
         >
           <>
-            <ProTable
-              // loading={loading}
+            <EditableProTable
+              loading={loading}
               headerTitle={intl.formatMessage({
                 id: 'pages.setting-user.list-user.list-role',
               })}
-              rowKey="id"
+              rowKey="uuid"
               search={false}
-              dataSource={list}
+              value={list}
               columns={columns}
               options={false}
-              toolbar={{
-                multipleLine: true,
-                // filter: (
-                //   <LightFilter>
-                //     <Search placeholder="Tìm kiếm theo tên vai trò" />
-                //   </LightFilter>
-                // ),
-                actions: [
-                  <Button key="add-role" type="primary" onClick={() => showDrawerAddUserRole(null)}>
-                    {intl.formatMessage({
-                      id: 'pages.setting-user.list-user.add-role',
-                    })}
-                  </Button>,
-                ],
-                style: { width: '100%' },
+              onRow={(record, rowIndex) => {
+                return {
+                  onClick: (event) => {
+                    event.stopPropagation();
+                    permissionCheck('delete_role') && showDrawerAddUserRole(record);
+                  },
+                };
+              }}
+              recordCreatorProps={{
+                creatorButtonText: intl.formatMessage({
+                  id: 'pages.setting-user.list-user.add-role',
+                }),
+                onClick: () => showDrawerAddUserRole(null),
               }}
               pagination={{
                 showQuickJumper: true,
@@ -186,6 +136,7 @@ function UserRole({ dispatch, list, metadata }) {
                 onClose={closeDrawerAddRole}
                 openDrawer={showDrawerAdd}
                 selectedRecord={selectedRecord}
+                handleDeleteRole={handleDeleteRole}
               />
             )}
           </>

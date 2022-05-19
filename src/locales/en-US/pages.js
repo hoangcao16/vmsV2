@@ -16,9 +16,6 @@ export default {
   'pages.home.hardDriveFull': 'Warning: Hard drive is full',
   'pages.home.camera': 'Warning: Camera',
   'pages.home.noInfo': 'No Infomation',
-  'pages.home.hardDrive': 'Hard drive',
-  'pages.home.wasUsed': 'was used',
-  'pages.home.estimatedRemaining': 'Estimated remaining usable time is',
   'pages.home.active': 'active',
   'pages.home.inactive': 'inactive',
   'pages.home.unknownName': 'Unknown Name',
@@ -109,10 +106,13 @@ export default {
   'pages.setting-user.list-user.createUserGroupSuccess': 'Create user group success',
   'pages.setting-user.list-user.addMemberIntoGroupSuccess': 'Add member into group success',
   'pages.setting-user.list-user.removeMemberIntoGroupSuccess': 'Remove member into group success',
-  'pages.setting-user.list-user.updatePermisisionUserGroupSuccess':
-    'Updated Permisision User Group Success',
-  'pages.setting-user.list-user.removePermisisionUserGroupSuccess':
-    'Remove Permisision User Group Success',
+
+  'pages.setting-user.list-user.createRoleSuccess': 'Create role success',
+  'pages.setting-user.list-user.updateRoleSuccess': 'Update role success',
+  'pages.setting-user.list-user.removeRoleSuccess': 'Remove role success',
+
+  'pages.setting-user.list-user.updatePermisisionUserGroupSuccess': 'Updated Permisision Success',
+  'pages.setting-user.list-user.removePermisisionUserGroupSuccess': 'Remove Permisision Success',
 
   'pages.setting-user.list-user.setPermisionCameraSuccess': 'Setting Permision Camera Success',
   'pages.setting-user.list-user.removePermisionCameraSuccess': 'Remove Permision Camera Success',

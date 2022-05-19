@@ -30,23 +30,25 @@ const notiCol = {
 
 export default function index() {
   return (
-    <Row gutter={24}>
-      <Col {...reportCol}>
-        <CameraStatistics />
-        <div>
-          <div className="chart-background">
-            <LineChart />
+    <div className="home">
+      <Row gutter={24}>
+        <Col {...reportCol}>
+          <CameraStatistics />
+          <div>
+            <div className="chart-background">
+              <LineChart />
+            </div>
+            <div className="chart-background">
+              <PieChart />
+            </div>
           </div>
-          <div className="chart-background">
-            <PieChart />
+        </Col>
+        <Col {...notiCol}>
+          <div className="noti">
+            <Notification />
           </div>
-        </div>
-      </Col>
-      <Col {...notiCol}>
-        <div className="noti">
-          <Notification />
-        </div>
-      </Col>
-    </Row>
+        </Col>
+      </Row>
+    </div>
   );
 }

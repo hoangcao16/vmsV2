@@ -106,10 +106,8 @@ export default {
   'pages.setting-user.list-user.createUserGroupSuccess': 'Thêm nhóm thành công',
   'pages.setting-user.list-user.addMemberIntoGroupSuccess': 'Thêm thành viên vào nhóm thành công',
   'pages.setting-user.list-user.removeMemberIntoGroupSuccess': 'Xóa thành viên nhóm thành công',
-  'pages.setting-user.list-user.updatePermisisionUserGroupSuccess':
-    'Sửa quyền trong nhóm thành công',
-  'pages.setting-user.list-user.removePermisisionUserGroupSuccess':
-    'Xóa quyền trong nhóm thành công',
+  'pages.setting-user.list-user.updatePermisisionUserGroupSuccess': 'Sửa quyền thành công',
+  'pages.setting-user.list-user.removePermisisionUserGroupSuccess': 'Xóa quyền thành công',
   'pages.setting-user.list-user.setPermisionCameraSuccess': 'Thêm quyền cho camera thành công',
   'pages.setting-user.list-user.removePermisionCameraSuccess': 'Xóa quyền cho camera thành công',
   'pages.setting-user.list-user.setPermisionCameraGroupSuccess':
@@ -118,6 +116,10 @@ export default {
     'Xóa quyền cho nhóm camera thành công',
   'pages..setting-user.list-user.titleErrors': 'Thất bại',
   'pages.setting-user.list-user.600': 'okok',
+
+  'pages.setting-user.list-user.createRoleSuccess': 'Tạo vai trò thành công',
+  'pages.setting-user.list-user.updateRoleSuccess': 'Cập nhập vai trò thành công',
+  'pages.setting-user.list-user.removeRoleSuccess': 'Xóa vai trò thành công',
 
   //Storage
   'pages.storage.dailyArchive.total': 'Tổng',

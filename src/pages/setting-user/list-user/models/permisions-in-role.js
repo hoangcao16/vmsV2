@@ -4,33 +4,32 @@ import UserApi from '@/services/user/UserApi';
 import getCurrentLocale from '@/utils/Locale';
 
 export default {
-  namespace: 'premissionInGroup',
+  namespace: 'premissionInRole',
   state: {
     list: [],
     metadata: {},
-    groupCode: null,
+    roleCode: null,
     allPermission: [],
   },
   reducers: {
-    save(state, { payload: { data: list, metadata, groupCode } }) {
-      return { ...state, list, metadata, groupCode };
+    save(state, { payload: { data: list, metadata, roleCode } }) {
+      return { ...state, list, metadata, roleCode };
     },
     saveAllPermission(state, { payload: { data: allPermission } }) {
       return { ...state, allPermission };
     },
   },
   effects: {
-    *fetchAllPermissionInGroup({ payload: { code } }, { call, put, select }) {
+    *fetchAllPermissionInRole({ payload: { code } }, { call, put, select }) {
       try {
-        const res = yield call(UserApi.getAllUserInGroupById, code);
+        const res = yield call(UserApi.getRoleByRoleCode, code);
 
         yield put({
           type: 'save',
           payload: {
             data: res?.payload?.p_others,
             metadata: { ...res?.metadata },
-            groupCode:
-              res?.payload?.group_code || localStorage.getItem(STORAGE.GROUP_CODE_SELECTED),
+            roleCode: res?.payload?.role_code || localStorage.getItem(STORAGE.ROLE_CODE_SELECTED),
           },
         });
       } catch (error) {
@@ -70,7 +69,7 @@ export default {
 
     *remove({ payload: dataRemove }, { call, put }) {
       try {
-        const res = yield call(UserApi.removePermissionInGroup, dataRemove);
+        const res = yield call(UserApi.removePermissionInRole, dataRemove);
 
         if (res?.code === 600) {
           notify(
@@ -90,9 +89,9 @@ export default {
     },
     // ================================================================
     //set quyen le cho camera
-    *removePermisionGroup({ payload: dataRM }, { call, put }) {
+    *removePermisionRole({ payload: dataRM }, { call, put }) {
       try {
-        const res = yield call(UserApi.removePermisionGroup, dataRM);
+        const res = yield call(UserApi.removePermisionRole, dataRM);
         if (res?.code === 600) {
           notify(
             'success',
@@ -113,9 +112,9 @@ export default {
       }
     },
     //set quyen le cho camera
-    *setPermisionGroup({ payload: payloadAdd }, { call, put }) {
+    *setPermisionRole({ payload: payloadAdd }, { call, put }) {
       try {
-        const res = yield call(UserApi.setPermisionGroup, payloadAdd);
+        const res = yield call(UserApi.setPermisionRole, payloadAdd);
         if (res?.code === 600) {
           notify(
             'success',
@@ -140,10 +139,10 @@ export default {
     *reload(action, { put, select }) {
       const code = yield select(
         (state) =>
-          state.premissionInGroup.groupCode || localStorage.getItem(STORAGE.GROUP_CODE_SELECTED),
+          state.premissionInRole.roleCode || localStorage.getItem(STORAGE.ROLE_CODE_SELECTED),
       );
 
-      yield put({ type: 'fetchAllPermissionInGroup', payload: { code } });
+      yield put({ type: 'fetchAllPermissionInRole', payload: { code } });
     },
 
     *reloadFetchAllPermission(action, { put, select }) {

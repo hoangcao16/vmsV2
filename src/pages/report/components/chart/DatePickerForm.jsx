@@ -110,32 +110,27 @@ const DatePickerForm = (props) => {
           name="typeDate"
           label={intl.formatMessage({
             id: `pages.report.chart.by`,
-            defaultMessage: 'By',
           })}
         >
           <Select>
             <Option value="day">
               {intl.formatMessage({
                 id: `pages.report.chart.day`,
-                defaultMessage: 'name',
               })}
             </Option>
             <Option value="week">
               {intl.formatMessage({
                 id: `pages.report.chart.week`,
-                defaultMessage: 'name',
               })}
             </Option>
             <Option value="month">
               {intl.formatMessage({
                 id: `pages.report.chart.month`,
-                defaultMessage: 'name',
               })}
             </Option>
             <Option value="year">
               {intl.formatMessage({
                 id: `pages.report.chart.year`,
-                defaultMessage: 'name',
               })}
             </Option>
           </Select>
@@ -144,7 +139,6 @@ const DatePickerForm = (props) => {
           name="startDate"
           label={intl.formatMessage({
             id: `pages.report.chart.from`,
-            defaultMessage: 'By',
           })}
         >
           <PickerWithType picker={form.getFieldValue('typeDate')} format={format} id="start" />
@@ -153,7 +147,6 @@ const DatePickerForm = (props) => {
           name="endDate"
           label={intl.formatMessage({
             id: `pages.report.chart.to`,
-            defaultMessage: 'By',
           })}
         >
           <PickerWithType picker={form.getFieldValue('typeDate')} format={format} id="end" />
