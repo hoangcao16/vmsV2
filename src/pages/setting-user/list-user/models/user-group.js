@@ -34,90 +34,81 @@ export default {
 
     *patch({ payload: { id, values } }, { call, put, select }) {
       try {
-        const res = yield call(UserApi.updateUserGroup, id, values);
+        yield call(UserApi.updateUserGroup, id, values);
         //check res==>push notif
 
-        if (res?.code === 600) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'pages.setting-user.list-user.updateUserGroupSuccess',
-          );
-          const oldList = yield select((state) => state.userGroup.list);
-          const metadata = yield select((state) => state.userGroup.metadata);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'pages.setting-user.list-user.updateUserGroupSuccess',
+        );
+        const oldList = yield select((state) => state.userGroup.list);
+        const metadata = yield select((state) => state.userGroup.metadata);
 
-          const userGroupIndex = oldList.findIndex((userG) => userG.uuid === id);
+        const userGroupIndex = oldList.findIndex((userG) => userG.uuid === id);
 
-          if (userGroupIndex >= 0) {
-            oldList[userGroupIndex] = { ...oldList[userGroupIndex], ...values };
-          }
-
-          const newList = [...oldList];
-
-          yield put({
-            type: 'save',
-            payload: {
-              data: newList,
-              metadata: metadata,
-            },
-          });
-        } else {
-          notify(
-            'error',
-            'pages.setting-user.list-user.titleErrors',
-            `pages.setting-user.list-user.${res?.code}`,
-          );
+        if (userGroupIndex >= 0) {
+          oldList[userGroupIndex] = { ...oldList[userGroupIndex], ...values };
         }
 
-        // Notification('success', 'titleSuccess', '600');
+        const newList = [...oldList];
+
+        yield put({
+          type: 'save',
+          payload: {
+            data: newList,
+            metadata: metadata,
+          },
+        });
       } catch (error) {
         console.log(error);
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 
     *remove({ payload: id }, { call, put }) {
       try {
-        const res = yield call(UserApi.deleteUserGroup, id);
+        yield call(UserApi.deleteUserGroup, id);
         //check res==>push notif
-        if (res?.code === 600) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'pages.setting-user.list-user.removeUserGroupSuccess',
-          );
-          yield put({ type: 'reload' });
-        } else {
-          notify(
-            'error',
-            'pages.setting-user.list-user.titleErrors',
-            `pages.setting-user.list-user.${res?.code}`,
-          );
-        }
+
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'pages.setting-user.list-user.removeUserGroupSuccess',
+        );
+        yield put({ type: 'reload' });
       } catch (error) {
         console.log(error);
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 
     *create({ payload: values }, { call, put }) {
       try {
-        const res = yield call(UserApi.createUserGroup, values);
+        yield call(UserApi.createUserGroup, values);
         //check res==>push notif
-        if (res?.code === 600) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'pages.setting-user.list-user.createUserGroupSuccess',
-          );
-          yield put({ type: 'reload' });
-        } else {
-          notify(
-            'error',
-            'pages.setting-user.list-user.titleErrors',
-            `pages.setting-user.list-user.${res?.code}`,
-          );
-        }
+
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'pages.setting-user.list-user.createUserGroupSuccess',
+        );
+        yield put({ type: 'reload' });
       } catch (error) {
         console.log(error);
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 

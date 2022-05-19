@@ -97,6 +97,7 @@ export default {
   'pages.setting-user.list-user.administrativeUnitName': 'Đơn vị hành chính',
   'pages.setting-user.list-user.active': 'Đang hoạt động',
   'pages.setting-user.list-user.inactive': 'Dừng hoạt động',
+  'pages.setting-user.list-user.search-by-name': 'Tìm kiếm theo tên',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Thành công',
@@ -113,12 +114,23 @@ export default {
     'Thêm quyền cho nhóm camera thành công',
   'pages.setting-user.list-user.removePermisionCameraGroupSuccess':
     'Xóa quyền cho nhóm camera thành công',
+
   'pages.setting-user.list-user.titleErrors': 'Thất bại',
-  'pages.setting-user.list-user.600': 'okok',
 
   'pages.setting-user.list-user.createRoleSuccess': 'Tạo vai trò thành công',
   'pages.setting-user.list-user.updateRoleSuccess': 'Cập nhập vai trò thành công',
   'pages.setting-user.list-user.removeRoleSuccess': 'Xóa vai trò thành công',
+
+  // Code AUTH
+  'pages.setting-user.list-user.601': 'Yêu cầu không hợp lệ',
+  'pages.setting-user.list-user.602': 'Bạn không có quyền',
+  'pages.setting-user.list-user.603': 'Không tìm thấy',
+  'pages.setting-user.list-user.604': 'Yêu cầu không hợp lệ',
+  'pages.setting-user.list-user.605': 'Yêu cầu không hợp lệ',
+  'pages.setting-user.list-user.606': 'Lỗi máy chủ nội bộ',
+  'pages.setting-user.list-user.607': 'Vui lòng kiểm tra lại Mật khẩu',
+  'pages.setting-user.list-user.608': 'Email không tồn tại trong hệ thống',
+  'pages.setting-user.list-user.609': 'Email đã tồn tại trong hệ thống',
 
   //Storage
   'pages.storage.dailyArchive.total': 'Tổng',

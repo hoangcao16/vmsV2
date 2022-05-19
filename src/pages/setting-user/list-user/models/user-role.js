@@ -34,87 +34,82 @@ export default {
 
     *patch({ payload: { id, values } }, { call, put, select }) {
       try {
-        const res = yield call(UserApi.updateUserRole, id, values);
+        yield call(UserApi.updateUserRole, id, values);
         //check res==>push notif
-        if (res?.code === 600) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'pages.setting-user.list-user.updateRoleSuccess',
-          );
-          const oldList = yield select((state) => state.userRole.list);
-          const metadata = yield select((state) => state.userRole.metadata);
 
-          const roleIndex = oldList.findIndex((role) => role.uuid === id);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'pages.setting-user.list-user.updateRoleSuccess',
+        );
+        const oldList = yield select((state) => state.userRole.list);
+        const metadata = yield select((state) => state.userRole.metadata);
 
-          if (roleIndex >= 0) {
-            oldList[roleIndex] = { ...oldList[roleIndex], ...values };
-          }
+        const roleIndex = oldList.findIndex((role) => role.uuid === id);
 
-          const newList = [...oldList];
-
-          yield put({
-            type: 'save',
-            payload: {
-              data: newList,
-              metadata: metadata,
-            },
-          });
-        } else {
-          notify(
-            'error',
-            'pages.setting-user.list-user.titleErrors',
-            `pages.setting-user.list-user.${res?.code}`,
-          );
+        if (roleIndex >= 0) {
+          oldList[roleIndex] = { ...oldList[roleIndex], ...values };
         }
+
+        const newList = [...oldList];
+
+        yield put({
+          type: 'save',
+          payload: {
+            data: newList,
+            metadata: metadata,
+          },
+        });
+
         // yield put({ type: 'reload' });
       } catch (error) {
         console.log(error);
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 
     *remove({ payload: id }, { call, put }) {
       try {
-        const res = yield call(UserApi.deleteRole, id);
+        yield call(UserApi.deleteRole, id);
         //check res==>push notif
-        if (res?.code === 600) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'pages.setting-user.list-user.removeRoleSuccess',
-          );
-          yield put({ type: 'reload' });
-        } else {
-          notify(
-            'error',
-            'pages.setting-user.list-user.titleErrors',
-            `pages.setting-user.list-user.${res?.code}`,
-          );
-        }
+
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'pages.setting-user.list-user.removeRoleSuccess',
+        );
+        yield put({ type: 'reload' });
       } catch (error) {
         console.log(error);
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 
     *create({ payload: values }, { call, put }) {
       try {
-        const res = yield call(UserApi.createRole, values);
-        if (res?.code === 600) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'pages.setting-user.list-user.createRoleSuccess',
-          );
-          yield put({ type: 'reload' });
-        } else {
-          notify(
-            'error',
-            'pages.setting-user.list-user.titleErrors',
-            `pages.setting-user.list-user.${res?.code}`,
-          );
-        }
+        yield call(UserApi.createRole, values);
+
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'pages.setting-user.list-user.createRoleSuccess',
+        );
+        yield put({ type: 'reload' });
       } catch (error) {
         console.log(error);
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 

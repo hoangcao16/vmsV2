@@ -93,67 +93,61 @@ export default {
 
     *removePermisionCameraGroups({ payload: dataRM }, { call, put }) {
       try {
-        const res = yield call(UserApi.removePermisionCameraGroups, dataRM);
-        if (res?.code === 600) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'pages.setting-user.list-user.removePermisionCameraGroupSuccess',
-          );
-          yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
-        } else {
-          notify(
-            'error',
-            'pages.setting-user.list-user.titleErrors',
-            `pages.setting-user.list-user.${res?.code}`,
-          );
-        }
+        yield call(UserApi.removePermisionCameraGroups, dataRM);
+
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'pages.setting-user.list-user.removePermisionCameraGroupSuccess',
+        );
+        yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
       } catch (error) {
         console.log(error);
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 
     *setMultiPermisionCameraGroups({ payload: payloadAdd }, { call, put }) {
       try {
-        const res = yield call(UserApi.setMultiPermisionCameraGroups, payloadAdd);
+        yield call(UserApi.setMultiPermisionCameraGroups, payloadAdd);
 
-        if (res?.code === 600) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'pages.setting-user.list-user.setPermisionCameraGroupSuccess',
-          );
-          yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
-        } else {
-          notify(
-            'error',
-            'pages.setting-user.list-user.titleErrors',
-            `pages.setting-user.list-user.${res?.code}`,
-          );
-        }
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'pages.setting-user.list-user.setPermisionCameraGroupSuccess',
+        );
+        yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
       } catch (error) {
         console.log(error);
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 
     *setPermisionCameraGroups({ payload: payloadAdd }, { call, put }) {
       try {
-        const res = yield call(UserApi.setPermisionCameraGroups, payloadAdd);
-        if (res?.code === 600) {
-          notify(
-            'success',
-            'pages.setting-user.list-user.titleSuccess',
-            'pages.setting-user.list-user.setPermisionCameraGroupSuccess',
-          );
-          yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
-        } else {
-          notify(
-            'error',
-            'pages.setting-user.list-user.titleErrors',
-            `pages.setting-user.list-user.${res?.code}`,
-          );
-        }
-      } catch (error) {}
+        yield call(UserApi.setPermisionCameraGroups, payloadAdd);
+
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'pages.setting-user.list-user.setPermisionCameraGroupSuccess',
+        );
+        yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
+      } catch (error) {
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
+      }
     },
     // ==================================================================
 

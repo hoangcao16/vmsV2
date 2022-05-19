@@ -1,33 +1,36 @@
 import MSCustomizeDrawer from '@/components/Drawer';
-import MSFormItem from '@/components/Form/Item';
+import { SpanCode } from '@/pages/category/camera/style';
 import permissionCheck from '@/utils/PermissionCheck';
 import {
   CheckOutlined,
   CloseOutlined,
   DeleteOutlined,
+  DownOutlined,
   EditOutlined,
-  PlusOutlined,
+  RightOutlined,
+  UserAddOutlined,
 } from '@ant-design/icons';
-import { LightFilter } from '@ant-design/pro-form';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import { Button, Col, Form, Input, Popconfirm, Row, Select, Space, Switch, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
-import AddUser from './conponnents/AddUser';
 import UserRole from './conponnents/roles';
 import UserGroup from './conponnents/user-group';
-import styles from './styles.less';
-const { Option } = Select;
-const { Search } = Input;
+import AddUser from './conponnents/user/AddUser';
+import { ContainerFilter } from './style';
+
+const layoutLong = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 18 },
+};
 
 const UserList = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
-
-  const [visible, setVisible] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [form] = Form.useForm();
+  const [collapse, setCollapse] = useState(false);
 
   useEffect(() => {
     dispatch({
@@ -73,6 +76,9 @@ const UserList = ({ dispatch, list, metadata }) => {
         id: 'pages.setting-user.list-user.list',
       }),
       dataIndex: 'name',
+      render: (text) => {
+        return <SpanCode>{text}</SpanCode>;
+      },
     },
     {
       title: 'Email',
@@ -170,64 +176,10 @@ const UserList = ({ dispatch, list, metadata }) => {
     });
   };
 
-  const handlaExpand = (e) => {
-    setVisible(!visible);
-  };
-
   const handleSubmit = () => {
     const a = form.getFieldsValue(true);
 
     console.log(a);
-  };
-  const formItemLayout = {
-    wrapperCol: { span: 24 },
-    labelCol: { span: 24 },
-  };
-
-  const RenderFilter = () => {
-    return (
-      <>
-        <Form layout="horizontal" form={form} onFinish={handleSubmit} {...formItemLayout}>
-          <Row gutter={16} span={24} className={styles.expandRow}>
-            <Col span={18}>
-              <MSFormItem type="input" name="name" minLength={5} maxLength={255} required={true}>
-                <Search />
-              </MSFormItem>
-            </Col>
-            <Col span={6}>
-              <h4 onClick={handlaExpand}>{visible ? 'Ẩn bộ lọc' : 'Thêm bộ lọc'}</h4>
-            </Col>
-          </Row>
-
-          {visible && (
-            <div className={styles.formExpand}>
-              <Row gutter={16}>
-                <Col className="gutter-row" span={12}>
-                  <MSFormItem label="Chức vụ" type="input" name="test">
-                    <Select />
-                  </MSFormItem>
-                </Col>
-                <Col className="gutter-row" span={12}>
-                  <MSFormItem label="Vai trò" type="input" name="test1">
-                    <Select />
-                  </MSFormItem>
-                </Col>
-                <Col className="gutter-row" span={12}>
-                  <MSFormItem label="Đơn vị" type="input" name="test2">
-                    <Select />
-                  </MSFormItem>
-                </Col>
-                <Col className="gutter-row" span={12}>
-                  <MSFormItem label="Nhóm người dùng" type="input" name="test3">
-                    <Select />
-                  </MSFormItem>
-                </Col>
-              </Row>
-            </div>
-          )}
-        </Form>
-      </>
-    );
   };
 
   return (
@@ -245,15 +197,85 @@ const UserList = ({ dispatch, list, metadata }) => {
         toolbar={{
           multipleLine: true,
           filter: (
-            <LightFilter wrapperCol={24}>
-              <RenderFilter />
-            </LightFilter>
+            <ContainerFilter>
+              <Form
+                className=""
+                name="basic"
+                onFinish={handleSubmit}
+                autoComplete="off"
+                form={form}
+              >
+                <div className="collapse-filter">
+                  <Form.Item name="quickSearch">
+                    <Input.Search
+                      placeholder="Tìm kiếm theo tên, địa chỉ"
+                      maxLength={255}
+                      onSearch={() => {
+                        form.submit();
+                      }}
+                    />
+                  </Form.Item>
+
+                  {collapse === true && (
+                    <Button
+                      type="link"
+                      onClick={() => {
+                        setCollapse(false);
+                      }}
+                    >
+                      {intl.formatMessage({
+                        id: 'view.storage.filter',
+                      })}{' '}
+                      <RightOutlined />
+                    </Button>
+                  )}
+
+                  {collapse === false && (
+                    <Button
+                      type="link"
+                      onClick={() => {
+                        setCollapse(true);
+                      }}
+                    >
+                      {intl.formatMessage({
+                        id: 'view.storage.hide_filter',
+                      })}{' '}
+                      <DownOutlined />
+                    </Button>
+                  )}
+                </div>
+
+                {collapse === false && (
+                  <div className="extra-filter">
+                    <Row justify="space-between">
+                      <Col span={12}>
+                        <Form.Item {...layoutLong} label="Chức vụ" name="cameraUuid">
+                          <Select />
+                        </Form.Item>
+
+                        <Form.Item {...layoutLong} label="Đơn vị" name="cameraGroupUuid">
+                          <Select />
+                        </Form.Item>
+                      </Col>
+                      <Col span={12}>
+                        <Form.Item {...layoutLong} label="Vai trò" name="provinceId">
+                          <Select />
+                        </Form.Item>
+                        <Form.Item {...layoutLong} label="Nhóm người dùng" name="districtId">
+                          <Select />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </div>
+                )}
+              </Form>
+            </ContainerFilter>
           ),
           actions: [
-            <UserGroup key="user-group" />,
             <UserRole key="user-role" />,
+            <UserGroup key="user-group" />,
             <Button key="add" type="primary" onClick={showDrawer}>
-              <PlusOutlined />
+              <UserAddOutlined />
               {intl.formatMessage({
                 id: 'pages.setting-user.list-user.new-user',
               })}

@@ -1,8 +1,8 @@
 import MSFormItem from '@/components/Form/Item';
 import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd';
-import React from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
+import React from 'react';
 import { useIntl } from 'umi';
 const { Option } = Select;
 function AddUser({ dispatch, onClose }) {
