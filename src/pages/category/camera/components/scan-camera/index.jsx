@@ -11,14 +11,26 @@ const formItemLayout = {
   wrapperCol: { span: 24 },
   labelCol: { span: 24 },
 };
-const ScanCamera = ({ isScanDrawer, setIsScanDrawer, dispatch, loading, list, zonesOptions }) => {
+const ScanCamera = ({
+  isScanDrawer,
+  setIsScanDrawer,
+  dispatch,
+  loading,
+  list,
+  zonesOptions,
+  handleAddCameraScan,
+}) => {
   const [form] = Form.useForm();
   const intl = useIntl();
   const onClose = () => {
     setIsScanDrawer(false);
+    form.resetFields();
+    dispatch({
+      type: 'scanCamera/save',
+      payload: [],
+    });
   };
   const handleSubmit = async (value) => {
-    console.log(value);
     const payload = {
       ...value,
     };
@@ -32,6 +44,9 @@ const ScanCamera = ({ isScanDrawer, setIsScanDrawer, dispatch, loading, list, zo
       type: 'scanCamera/scanAllCamera',
       payload: payloadConverted,
     });
+  };
+  const handleAdd = (record) => {
+    handleAddCameraScan(record?.ip);
   };
   const columns = [
     {
@@ -66,7 +81,7 @@ const ScanCamera = ({ isScanDrawer, setIsScanDrawer, dispatch, loading, list, zo
             },
           )}
         >
-          <PlusSquareOutlined className="plusIcon" />
+          <PlusSquareOutlined className="plusIcon" onClick={() => handleAdd(record)} />
         </Tooltip>
       ),
     },
@@ -76,7 +91,7 @@ const ScanCamera = ({ isScanDrawer, setIsScanDrawer, dispatch, loading, list, zo
       openDrawer={isScanDrawer}
       onClose={onClose}
       width={'80%'}
-      zIndex={1001}
+      zIndex={1000}
       placement="right"
       extra={
         <Space>
