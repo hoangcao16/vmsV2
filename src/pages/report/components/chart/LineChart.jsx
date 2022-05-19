@@ -6,13 +6,17 @@ import moment from 'moment';
 import reportApi from '@/services/report/ReportApi';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
+import { isEmpty } from 'lodash';
 
 const LineChart = (props) => {
   const [data, setData] = useState([]);
   const intl = useIntl();
 
   useEffect(() => {
-    if (props.data) {
+    if (!isEmpty(props.data)) {
+      props.data.forEach((item) => {
+        item.value = parseInt(item.value);
+      });
       setData(props.data);
     }
   }, [props.data]);
