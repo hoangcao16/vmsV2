@@ -114,7 +114,7 @@ export default {
     'Thêm quyền cho nhóm camera thành công',
   'pages.setting-user.list-user.removePermisionCameraGroupSuccess':
     'Xóa quyền cho nhóm camera thành công',
-  'pages..setting-user.list-user.titleErrors': 'Thất bại',
+  'pages.setting-user.list-user.titleErrors': 'Thất bại',
   'pages.setting-user.list-user.600': 'okok',
 
   'pages.setting-user.list-user.createRoleSuccess': 'Tạo vai trò thành công',
