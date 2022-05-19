@@ -34,7 +34,7 @@ export default {
     *addZone({ payload }, { call, put }) {
       try {
         const res = yield call(ModuleApi.addZone, payload);
-        if (res?.code === 700 || res?.code === 600) {
+        if (res?.code === 700 || res?.code === 800) {
           notify(
             'success',
             'pages.setting-user.list-user.titleSuccess',
@@ -53,7 +53,7 @@ export default {
     *editZone({ payload: { id, values } }, { call, put }) {
       try {
         const res = yield call(ModuleApi.editZone, id, values);
-        if (res?.code === 700 || res?.code === 600) {
+        if (res?.code === 700 || res?.code === 800) {
           notify(
             'success',
             'pages.setting-user.list-user.titleSuccess',
@@ -72,7 +72,7 @@ export default {
     *deleteZone({ payload: { id } }, { call, put }) {
       try {
         const res = yield call(ModuleApi.deleteZone, id);
-        if (res?.code === 700 || res?.code === 600) {
+        if (res?.code === 700 || res?.code === 800) {
           notify(
             'success',
             'pages.setting-user.list-user.titleSuccess',

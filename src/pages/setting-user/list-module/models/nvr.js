@@ -34,7 +34,7 @@ export default {
     *editNVR({ payload: { id, values } }, { call, put }) {
       try {
         const res = yield call(ModuleApi.editNVR, id, values);
-        if (res?.code === 700 || res?.code === 600) {
+        if (res?.code === 700 || res?.code === 800) {
           notify(
             'success',
             'pages.setting-user.list-user.titleSuccess',

@@ -36,7 +36,7 @@ export default {
     *add({ payload }, { call, put }) {
       try {
         const res = yield call(AdDivisionApi.addAdDivision, payload);
-        if (res?.code === 700 || res?.code === 600) {
+        if (res?.code === 700 || res?.code === 800) {
           notify(
             'success',
             'pages.setting-user.list-user.titleSuccess',
@@ -56,7 +56,7 @@ export default {
     *edit({ payload: { id, values } }, { call, put }) {
       try {
         const res = yield call(AdDivisionApi.editAdDivision, id, values);
-        if (res?.code === 700 || res?.code === 600) {
+        if (res?.code === 700 || res?.code === 800) {
           notify(
             'success',
             'pages.setting-user.list-user.titleSuccess',
