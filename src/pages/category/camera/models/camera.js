@@ -60,17 +60,19 @@ export default {
       try {
         const request = yield call(cameraApi.createNew, payload);
         console.log(request);
-        yield put({
-          type: 'fetchAllCamera',
-          payload: {
-            page: 1,
-            size: 10,
-          },
-        });
-        yield put({
-          type: 'closeDrawer',
-        });
-        notify('success', 'noti.success', 'noti.successfully_add_camera');
+        if (request?.code === 700) {
+          yield put({
+            type: 'fetchAllCamera',
+            payload: {
+              page: 1,
+              size: 10,
+            },
+          });
+          yield put({
+            type: 'closeDrawer',
+          });
+          notify('success', 'noti.success', 'noti.successfully_add_camera');
+        }
       } catch (error) {
         console.log(error);
       }
@@ -79,17 +81,19 @@ export default {
       try {
         const request = yield call(cameraApi.update, payload, uuid);
         console.log(request);
-        yield put({
-          type: 'fetchAllCamera',
-          payload: {
-            page: 1,
-            size: 10,
-          },
-        });
-        yield put({
-          type: 'closeDrawer',
-        });
-        notify('success', 'noti.success', 'noti.successfully_edit_camera');
+        if (request?.code === 700) {
+          yield put({
+            type: 'fetchAllCamera',
+            payload: {
+              page: 1,
+              size: 10,
+            },
+          });
+          yield put({
+            type: 'closeDrawer',
+          });
+          notify('success', 'noti.success', 'noti.successfully_edit_camera');
+        }
       } catch (error) {
         console.log(error);
       }
@@ -98,17 +102,19 @@ export default {
       try {
         const request = yield call(cameraApi.delete, uuid);
         console.log(request);
-        yield put({
-          type: 'fetchAllCamera',
-          payload: {
-            page: 1,
-            size: 10,
-          },
-        });
-        yield put({
-          type: 'closeDrawer',
-        });
-        notify('success', 'noti.success', 'noti.successfully_delete_camera');
+        if (request?.code === 700) {
+          yield put({
+            type: 'fetchAllCamera',
+            payload: {
+              page: 1,
+              size: 10,
+            },
+          });
+          yield put({
+            type: 'closeDrawer',
+          });
+          notify('success', 'noti.success', 'noti.successfully_delete_camera');
+        }
       } catch (error) {
         console.log(error);
       }

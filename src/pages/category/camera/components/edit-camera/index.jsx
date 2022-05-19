@@ -35,7 +35,6 @@ import VietMapApi from '@/services/vietmapApi';
 import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
 import getBase64 from '@/utils/getBase64';
 import { isEmpty } from 'lodash';
-import { CustomSelect } from '@/components/select/CustomSelect';
 const { Dragger } = Upload;
 const formItemLayout = {
   wrapperCol: { span: 24 },
@@ -412,9 +411,8 @@ const EditCamera = ({
                         },
                       ]}
                     >
-                      <CustomSelect
+                      <Select
                         showSearch
-                        dataSource={groupCameraOptions}
                         filterOption={filterOption}
                         options={normalizeOptions('name', 'uuid', groupCameraOptions)}
                         placeholder={intl.formatMessage(
@@ -465,9 +463,8 @@ const EditCamera = ({
                         },
                       ]}
                     >
-                      <CustomSelect
+                      <Select
                         showSearch
-                        dataSource={cameraTypesOptions}
                         filterOption={filterOption}
                         options={normalizeOptions('name', 'uuid', cameraTypesOptions)}
                         placeholder={intl.formatMessage(
@@ -511,9 +508,8 @@ const EditCamera = ({
                         },
                       ]}
                     >
-                      <CustomSelect
+                      <Select
                         showSearch
-                        dataSource={vendorsOptions}
                         filterOption={filterOption}
                         options={normalizeOptions('name', 'uuid', vendorsOptions)}
                         placeholder={intl.formatMessage({
@@ -709,9 +705,8 @@ const EditCamera = ({
                       },
                     ]}
                   >
-                    <CustomSelect
+                    <Select
                       showSearch
-                      dataSource={provincesOptions}
                       onChange={(cityId) => onChangeCity(cityId)}
                       filterOption={filterOption}
                       options={normalizeOptions('name', 'provinceId', provincesOptions)}
@@ -740,9 +735,8 @@ const EditCamera = ({
                       },
                     ]}
                   >
-                    <CustomSelect
+                    <Select
                       showSearch
-                      dataSource={districts}
                       onChange={(districtId) => onChangeDistrict(districtId)}
                       filterOption={filterOption}
                       options={normalizeOptions('name', 'districtId', districts)}
@@ -773,9 +767,8 @@ const EditCamera = ({
                       },
                     ]}
                   >
-                    <CustomSelect
+                    <Select
                       showSearch
-                      dataSource={wards}
                       filterOption={filterOption}
                       options={normalizeOptions('name', 'id', wards)}
                       placeholder={intl.formatMessage({
@@ -849,9 +842,8 @@ const EditCamera = ({
                         },
                       ]}
                     >
-                      <CustomSelect
+                      <Select
                         showSearch
-                        dataSource={zonesOptions}
                         filterOption={filterOption}
                         options={normalizeOptions('name', 'uuid', zonesOptions)}
                         placeholder={intl.formatMessage(
@@ -888,10 +880,9 @@ const EditCamera = ({
                       })}
                       name={['administrativeUnitUuid']}
                     >
-                      <CustomSelect
+                      <Select
                         allowClear
                         showSearch
-                        dataSource={adDivisionsOptions}
                         filterOption={filterOption}
                         options={normalizeOptions('name', 'uuid', adDivisionsOptions)}
                         placeholder={intl.formatMessage({
@@ -958,9 +949,8 @@ const EditCamera = ({
                       name={['tags']}
                       rules={[]}
                     >
-                      <CustomSelect
+                      <Select
                         showSearch
-                        dataSource={tagsOptions}
                         filterOption={filterOption}
                         options={normalizeOptions('key', 'uuid', tagsOptions)}
                         placeholder={intl.formatMessage({

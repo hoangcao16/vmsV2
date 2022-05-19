@@ -6,14 +6,15 @@ import { useIntl } from 'umi';
 export default function CameraStatisticsItem(props) {
   const intl = useIntl();
   return (
-    <Card className={`card ${props?.color}`}>
-      <div className="card--title">
-        {intl.formatMessage({
-          id: `pages.report.cameraStatistics.${props.cameraName}`,
-          defaultMessage: 'name',
-        })}
-      </div>
-      <div className="card--info">{props.totalCamera}</div>
-    </Card>
+    <div className="cameraStatisticsItem">
+      <Card className={`card ${props?.color}`}>
+        <div className="card--title">
+          {intl.formatMessage({
+            id: `pages.report.cameraStatistics.${props.cameraName}`,
+          })}
+        </div>
+        <div className="card--info">{props.totalCamera}</div>
+      </Card>
+    </div>
   );
 }

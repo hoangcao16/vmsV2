@@ -28,6 +28,7 @@ export default [
     path: '/',
     icon: 'home',
     name: 'home',
+    component: './home',
   },
   {
     path: '/map',

@@ -89,7 +89,7 @@ function AddCameraPermission({ dispatch, listCameraNotPermission, openDrawer, on
   const handleAddCameraPermission = ({ selectedRowKeys }) => {
     const data = selectedRowKeys.map((s) => {
       return {
-        subject: `user_g@${localStorage.getItem(STORAGE.GROUP_CODE_SELECTED)}`,
+        subject: `role@${localStorage.getItem(STORAGE.ROLE_CODE_SELECTED)}`,
         object: `cam@${s}`,
         action: 'view_online',
       };
@@ -100,7 +100,7 @@ function AddCameraPermission({ dispatch, listCameraNotPermission, openDrawer, on
     };
 
     dispatch({
-      type: 'cameraPermissionInGroupUser/setMultiPermisionCameras',
+      type: 'cameraPermissionInRole/setMultiPermisionCameras',
       payload: dataAdd,
     });
 

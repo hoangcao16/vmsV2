@@ -6,14 +6,28 @@ import locale from 'antd/es/locale/en_GB';
 import './ChartHeader.less';
 import { connect } from 'dva';
 import DatePickerForm from './DatePickerForm';
+import { useHistory } from 'react-router-dom';
 
 const ChartHeader = (props) => {
+  const [currentPathIsReport, setCurrentPathIsReport] = useState(false);
+  let url = useHistory();
+
+  useEffect(() => {
+    if (url.location.pathname == '/report') {
+      setCurrentPathIsReport(true);
+    }
+  }, []);
+
   return (
     <div className="chart-header">
       <div className="chart-header-title">{props.title}</div>
-      <div className="chart-header-date">
-        <DatePickerForm title={props.title} typeChart={props.typeChart} />
-      </div>
+      {currentPathIsReport ? (
+        ''
+      ) : (
+        <div className="chart-header-date">
+          <DatePickerForm title={props.title} typeChart={props.typeChart} />
+        </div>
+      )}
     </div>
   );
 };

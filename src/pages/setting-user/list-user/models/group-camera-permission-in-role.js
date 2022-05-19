@@ -1,14 +1,15 @@
 import { notify } from '@/components/Notify';
+import { STORAGE } from '@/constants/common';
 import UserApi from '@/services/user/UserApi';
 import { isEmpty } from 'lodash';
 
 export default {
-  namespace: 'groupCameraPermissionInGroupUser',
+  namespace: 'groupCameraPermissionInRole',
   state: {
     listCameraGroupPermission: [],
     listCameraGroupNotPermission: [],
     metadata: {},
-    groupCode: null,
+    roleCode: null,
   },
   reducers: {
     save(
@@ -17,7 +18,7 @@ export default {
         payload: {
           data: listCameraGroupPermission,
           metadata,
-          groupCode,
+          roleCode,
           listCameraGroupNotPermission,
         },
       },
@@ -26,7 +27,7 @@ export default {
         ...state,
         listCameraGroupPermission,
         metadata,
-        groupCode,
+        roleCode,
         listCameraGroupNotPermission,
       };
     },
@@ -39,7 +40,7 @@ export default {
     *fetchAllPermissionCameraGroups({ payload: { code } }, { call, put, select }) {
       try {
         const allCameraGroups = yield call(UserApi.getAllCameraGroups, { page: 0, size: 10000 });
-        const resDataPermision = yield call(UserApi.getAllUserInGroupById, code);
+        const resDataPermision = yield call(UserApi.getRoleByRoleCode, code);
 
         const listPermissionCameraGroups = resDataPermision?.payload?.p_camera_groups;
 
@@ -80,7 +81,9 @@ export default {
           payload: {
             data: cameraGroupsPerRows,
             metadata: { ...resDataPermision?.metadata },
-            groupCode: resDataPermision?.payload?.group_code,
+            roleCode:
+              resDataPermision?.payload?.role_code ||
+              localStorage.getItem(STORAGE.ROLE_CODE_SELECTED),
             listCameraGroupNotPermission,
           },
         });
@@ -156,7 +159,11 @@ export default {
     // ==================================================================
 
     *reloadFetchAllPermissionCameraGroups(action, { put, select }) {
-      const code = yield select((state) => state.groupCameraPermissionInGroupUser.groupCode);
+      const code = yield select(
+        (state) =>
+          state.groupCameraPermissionInRole.roleCode ||
+          localStorage.getItem(STORAGE.ROLE_CODE_SELECTED),
+      );
       yield put({ type: 'fetchAllPermissionCameraGroups', payload: { code } });
     },
   },

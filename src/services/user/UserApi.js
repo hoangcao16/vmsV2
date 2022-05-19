@@ -41,6 +41,7 @@ const UserApi = {
   getUserGroupById: async (uuid) => {
     return request.get(`/authz/api/v0/groups/${uuid}`);
   },
+
   //get all permission
   getAllPermission: async (params) => {
     return request.get(`/authz/api/v0/permission_groups`, { params });
@@ -130,6 +131,26 @@ const UserApi = {
   },
 
   removePermisionCamera: async (dataRemove) => {
+    return request.post('/authz/api/v0/authorization/remove_permission', dataRemove);
+  },
+
+  getRoleByUuid: async (uuid) => {
+    return request.get(`/authz/api/v0/roles/${uuid}`);
+  },
+
+  getRoleByRoleCode: async (code) => {
+    return request.get(`/authz/api/v0/authorization/get_permission?subject=role@${code}`);
+  },
+
+  setPermisionRole: async (payloadAdd) => {
+    return request.post('/authz/api/v0/authorization/add_permission', payloadAdd);
+  },
+
+  removePermisionRole: async (dataRemove) => {
+    return request.post('/authz/api/v0/authorization/remove_permission', dataRemove);
+  },
+
+  removePermissionInRole: async (dataRemove) => {
     return request.post('/authz/api/v0/authorization/remove_permission', dataRemove);
   },
 };
