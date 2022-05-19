@@ -20,21 +20,32 @@ const AdDivisionApi = {
       url: `/cctv-controller-svc/api/v1/administrative_units/${uuid}`,
     });
   },
-  editAdDivision(uuid, advisionPayload) {
-    return request.request({
-      method: 'PUT',
-      url: `/cctv-controller-svc/api/v1/administrative_units/${uuid}`,
-      data: advisionPayload,
-    });
+  // editAdDivision(uuid, advisionPayload) {
+  //   return request.request({
+  //     method: 'PUT',
+  //     url: `/cctv-controller-svc/api/v1/administrative_units/${uuid}`,
+  //     data: advisionPayload,
+  //   });
+  // },
+
+  // addAdDivision(adDivisionPayload) {
+  //   return request.request({
+  //     method: 'POST',
+  //     url: `/cctv-controller-svc/api/v1/administrative_units`,
+  //     data: adDivisionPayload,
+  //   });
+  // },
+  addAdDivision: async (values) => {
+    return request.post('/cctv-controller-svc/api/v1/administrative_units', values);
   },
 
-  addAdDivision(adDivisionPayload) {
-    return request.request({
-      method: 'POST',
-      url: `/cctv-controller-svc/api/v1/administrative_units`,
-      data: adDivisionPayload,
-    });
+  editAdDivision: async (uuid, values) => {
+    return request.put(`/cctv-controller-svc/api/v1/administrative_units/${uuid}`, values);
   },
+  deleteAdDivision: async (uuid) => {
+    return request.delete(`/cctv-controller-svc/api/v1/administrative_units/${uuid}`);
+  },
+
   delete(uuid) {
     return request.request({
       method: 'DELETE',

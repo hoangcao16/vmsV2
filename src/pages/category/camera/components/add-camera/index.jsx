@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from 'dva';
 import { useState, useEffect } from 'react';
 import { StyledDrawer, StyledSpace, SpaceAddAvatar } from './style';
@@ -35,6 +36,7 @@ const AddCamera = ({
   vendorsOptions,
   tagsOptions,
   provincesOptions,
+  selectedIp,
 }) => {
   const [form] = Form.useForm();
   const intl = useIntl();
@@ -50,6 +52,14 @@ const AddCamera = ({
   const [isLoading, setLoading] = useState(false);
 
   const vietmapApiKey = REACT_APP_VIETMAP_APIKEY;
+  // Check Ip scan to add
+  useEffect(() => {
+    if (selectedIp) {
+      form.setFieldsValue({
+        ip: selectedIp,
+      });
+    }
+  }, [selectedIp]);
   // get districts when select province
   useEffect(() => {
     if (provinceId) {
@@ -109,6 +119,11 @@ const AddCamera = ({
   };
   const onClose = () => {
     setIsAddNewDrawer(false);
+    form.resetFields();
+    dispatch({
+      type: 'scanCamera/saveSelectedIp',
+      payload: null,
+    });
   };
   const DraggerProps = {
     name: 'avatar',
@@ -1004,6 +1019,7 @@ function mapStateToProps(state) {
     tagsOptions,
     provincesOptions,
   } = state.globalstore;
+  const { selectedIp } = state.scanCamera;
   return {
     cameraTypesOptions,
     groupCameraOptions,
@@ -1012,6 +1028,7 @@ function mapStateToProps(state) {
     vendorsOptions,
     tagsOptions,
     provincesOptions,
+    selectedIp,
   };
 }
 export default connect(mapStateToProps)(AddCamera);

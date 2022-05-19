@@ -1,5 +1,22 @@
 import DailyArchiveApi from '@/services/dailyArchive/DailyArchiveApi';
 
+export const initSearchCaptureFileParam = {
+  startRecordTime: -1,
+  endRecordTime: -1,
+  address: '',
+  provinceId: '',
+  districtId: '',
+  wardId: '',
+  administrativeUnitUuid: '',
+  fileType: 0,
+  cameraGroupUuid: '',
+  cameraUuid: '',
+  type: -1,
+  eventUuid: '',
+  searchType: '',
+  searchValue: '',
+};
+
 export default {
   namespace: 'dailyArchive',
   state: {
@@ -7,12 +24,18 @@ export default {
     metadata: {
       page: 1,
       size: 10,
+      total: 0,
+      ...initSearchCaptureFileParam,
     },
   },
 
   reducers: {
     save(state, { payload: { data: list, metadata } }) {
-      return { ...state, list, metadata };
+      return { ...state, list, metadata: { ...state.metadata, ...metadata } };
+    },
+
+    saveSearchParam(state, { payload }) {
+      return { ...state, metadata: { ...state.metadata, ...payload } };
     },
   },
 
@@ -30,20 +53,6 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },
-  },
-
-  subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen(({ pathname, query }) => {
-        const metadata = {
-          page: query.page || 1,
-          size: query.size || 10,
-        };
-        if (pathname === '/storage') {
-          dispatch({ type: 'fetchAllDailyArchive', payload: metadata });
-        }
-      });
     },
   },
 };

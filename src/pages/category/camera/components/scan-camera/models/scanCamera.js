@@ -3,11 +3,15 @@ import cameraApi from '@/services/controller-api/cameraService';
 export default {
   namespace: 'scanCamera',
   state: {
-    list: null,
+    list: [],
+    selectedIp: null,
   },
   reducers: {
     save(state, { payload: { data: list } }) {
       return { ...state, list };
+    },
+    saveSelectedIp(state, { payload }) {
+      return { ...state, selectedIp: payload };
     },
   },
   effects: {
@@ -16,7 +20,7 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            data: null,
+            data: [],
           },
         });
         const request = yield call(cameraApi.scanCameraByIp, payload);

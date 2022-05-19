@@ -1,38 +1,39 @@
 import { Drawer } from 'antd';
 import React from 'react';
+import { CloseOutlined } from '@ant-design/icons';
+import styled from 'styled-components';
+
+function CustomCloseIcon() {
+  return <CloseOutlined style={{ color: '#ffffff', fontSize: '20px' }} />;
+}
 
 export default function MSCustomizeDrawer(props) {
-  const {
-    className,
-    children,
-    width,
-    onClose,
-    openDrawer,
-    title,
-    placement,
-    extra,
-    zIndex = 1001,
-  } = props;
-
-  const onCloseDrawer = () => {
-    onClose();
-  };
+  const { children, openDrawer, zIndex = 1001, closeIcon, ...rest } = props;
 
   return (
-    <>
-      <Drawer
-        className={className}
-        title={title}
-        placement={placement}
-        width={width}
-        onClose={onCloseDrawer}
-        visible={openDrawer}
-        extra={extra}
-        zIndex={zIndex}
-        destroyOnClose={true}
-      >
-        {children}
-      </Drawer>
-    </>
+    <DrawerStyled
+      visible={openDrawer}
+      destroyOnClose={true}
+      zIndex={zIndex}
+      closeIcon={closeIcon || <CustomCloseIcon />}
+      {...rest}
+      // minWidth={'100%'}
+    >
+      {children}
+    </DrawerStyled>
   );
 }
+
+const DrawerStyled = styled(Drawer)`
+  @media screen and (max-width: 768px) {
+    .ant-drawer-content-wrapper {
+      min-width: 50%;
+    }
+  }
+
+  @media screen and (max-width: 425px) {
+    .ant-drawer-content-wrapper {
+      min-width: 100%;
+    }
+  }
+`;

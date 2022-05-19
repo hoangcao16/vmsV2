@@ -17,20 +17,6 @@ const CameraApi = {
       url: `/owl/api/v1/get-report-camera`,
     });
   },
-  getAllCameraTypes(data) {
-    return request.request({
-      method: 'GET',
-      url: `/cctv-controller-svc/api/v1/camera_types`,
-      params: data,
-    });
-  },
-  getAllGroupCamera(data) {
-    return request.request({
-      method: 'GET',
-      url: `/cctv-controller-svc/api/v1/camera_groups`,
-      data,
-    });
-  },
 };
 
 export default CameraApi;

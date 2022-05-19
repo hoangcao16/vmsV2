@@ -63,7 +63,8 @@ export default {
 
   // Category / administrative-unit
   'menu.category.administrative-unit': 'Administrative Unit',
-  'menu.administrative-unit': 'Administrative Unit',
+  'menu.category.list-modules': 'System Modules',
+  'menu.category.list-user': 'List user',
 
   // Storage
   'menu.storage': 'Storage',
