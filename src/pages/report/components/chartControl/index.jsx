@@ -13,6 +13,7 @@ import {
   normalizeOptions,
 } from '@/components/select/CustomSelect';
 import cameraApi from '@/services/controller-api/cameraService';
+import FieldEventApi from '@/services/fieldEvent/FieldEventApi';
 const { RangePicker } = DatePicker;
 
 moment.locale('en-gb', {
@@ -28,10 +29,16 @@ const ChartControl = (props) => {
   const [format, setFormat] = useState('DD/MM/YYYY');
   const [formatParams, setFormatParams] = useState('DDMMYYYY');
   const [form] = Form.useForm();
+  console.log('form', form.getFieldValue());
   const [formValue, setFormValue] = useState({});
   const [allDistricts, setAllDistricts] = useState([]);
   const [allWards, setAllWards] = useState([]);
   const [allAiCamera, setAllAiCamera] = useState([]);
+  const [allFields, setAllFields] = useState([]);
+  console.log('allFields', allFields[allFields?.length - 1]?.uuid);
+  console.log('allFields', allFields);
+
+  const [events, setEvents] = useState([]);
   const intl = useIntl();
 
   useEffect(() => {
@@ -59,6 +66,16 @@ const ChartControl = (props) => {
     try {
       cameraApi.getAllAI(params).then((result) => {
         setAllAiCamera(result?.payload);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      FieldEventApi.getAllFieldEvent().then((result) => {
+        setAllFields(result?.payload);
       });
     } catch (error) {
       console.log(error);
@@ -124,8 +141,9 @@ const ChartControl = (props) => {
     });
   };
 
-  const onValuesChange = ({ typeDate, provinceId, districtId, wardId, ...values }) => {
-    setFormValue({ typeDate, provinceId, districtId, wardId, ...values });
+  const onValuesChange = ({ typeDate, provinceId, districtId, wardId, fieldId, ...values }) => {
+    setFormValue({ typeDate, provinceId, districtId, wardId, fieldId, ...values });
+    console.log('fieldId', fieldId);
     if (typeDate) {
       if (typeDate == 'week') {
         setFormat('WW-YYYY');
@@ -208,6 +226,7 @@ const ChartControl = (props) => {
             provinceId: defaultProvinceId,
             districtId: [],
             wardId: [],
+            fieldId: allFields[0]?.uuid || '',
           }}
         >
           <div className="chartControl-filter-items">
@@ -328,6 +347,24 @@ const ChartControl = (props) => {
                 {normalizeOptions('name', 'uuid', allAiCamera).map(({ label, value }) => (
                   <Select.Option
                     disabled={disableOptions(form.getFieldValue('aiCamera'), value, 100000)}
+                    value={value}
+                  >
+                    {label}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item name="fieldId" label="Field">
+              <Select
+                allowClear={false}
+                showSearch
+                datasource={allFields}
+                filterOption={filterOptionForChart}
+                placeholder="Field"
+              >
+                {normalizeOptions('name', 'uuid', allFields).map(({ label, value }) => (
+                  <Select.Option
+                    disabled={disableOptions(form.getFieldValue('fieldId'), value, 100000)}
                     value={value}
                   >
                     {label}
