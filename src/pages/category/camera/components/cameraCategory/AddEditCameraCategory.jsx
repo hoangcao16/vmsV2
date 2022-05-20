@@ -34,10 +34,10 @@ const AddEditCameraCategory = ({ onClose, selectedRecord, dispatch, openDrawer, 
           payload: payload,
         });
       } else {
-        // dispatch({
-        //   type: 'cameraCategory/editVendor',
-        //   payload: { id: selectedRecord?.uuid, values: { ...payload } },
-        // });
+        dispatch({
+          type: 'cameraCategory/editType',
+          payload: { id: selectedRecord?.uuid, values: { ...payload } },
+        });
       }
     }
 

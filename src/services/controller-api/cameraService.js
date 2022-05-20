@@ -78,7 +78,7 @@ const cameraApi = {
   editCameraTypes(uuid, data) {
     return request.request({
       method: 'PUT',
-      url: `CAMERA_TYPES_ENDPOINT/${uuid}`,
+      url: `${CAMERA_TYPES_ENDPOINT}/${uuid}`,
       data: data,
     });
   },
@@ -92,7 +92,7 @@ const cameraApi = {
   deleteCameraTypes(uuid) {
     return request.request({
       method: 'DELETE',
-      url: `CAMERA_TYPES_ENDPOINT/${uuid}`,
+      url: `${CAMERA_TYPES_ENDPOINT}/${uuid}`,
     });
   },
   getAllGroupCamera(data) {

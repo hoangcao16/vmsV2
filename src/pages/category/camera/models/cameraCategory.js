@@ -132,6 +132,23 @@ export default {
         );
       }
     },
+    *editType({ payload: { id, values } }, { call, put }) {
+      try {
+        yield call(cameraApi.editCameraTypes, id, values);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'noti.successfully_edit_name',
+        );
+        yield put({ type: 'reloadType' });
+      } catch (error) {
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
+      }
+    },
 
     *reloadType(action, { put, select }) {
       yield put({ type: 'fetchAllType', payload: { size: 100 } });
