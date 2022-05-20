@@ -50,6 +50,11 @@ const AddEditCameraCategory = ({ onClose, selectedRecord, dispatch, openDrawer, 
         type: 'cameraCategory/deleteVendor',
         id: selectedRecord?.uuid,
       });
+    } else if (type === 'camera_type') {
+      dispatch({
+        type: 'cameraCategory/deleteType',
+        id: selectedRecord?.uuid,
+      });
     }
 
     onClose();

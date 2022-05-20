@@ -150,6 +150,22 @@ export default {
       }
     },
 
+    *deleteType({ id }, { call, put }) {
+      try {
+        yield call(cameraApi.deleteCameraTypes, id);
+        notify('success', 'pages.setting-user.list-user.titleSuccess', 'noti.delete_successful');
+        yield put({ type: 'reloadType' });
+      } catch (error) {
+        console.log('error', error);
+
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
+      }
+    },
+
     *reloadType(action, { put, select }) {
       yield put({ type: 'fetchAllType', payload: { size: 100 } });
     },
