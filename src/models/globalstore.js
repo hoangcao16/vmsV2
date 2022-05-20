@@ -15,7 +15,6 @@ export default {
     vendorsOptions: [],
     tagsOptions: [],
     provincesOptions: [],
-    groupCameraParentOptions: [],
   },
 
   reducers: {
@@ -57,12 +56,6 @@ export default {
     },
     saveProvinces(state, { payload }) {
       return { ...state, provincesOptions: payload };
-    },
-    saveGroupCameraParent(state, { payload }) {
-      return {
-        ...state,
-        groupCameraParentOptions: payload,
-      };
     },
   },
 
@@ -138,17 +131,6 @@ export default {
         const response = yield call(AddressApi.getAllProvinces, payload);
         yield put({
           type: 'saveProvinces',
-          payload: response?.payload,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    *fetchAllGroupCameraParent({ payload }, { call, put }) {
-      try {
-        const response = yield call(cameraApi.getAllGroupCamera, payload);
-        yield put({
-          type: 'saveGroupCameraParent',
           payload: response?.payload,
         });
       } catch (error) {
