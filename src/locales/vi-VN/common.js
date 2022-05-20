@@ -770,7 +770,7 @@ export default {
   'noti.update_status_successful': 'Update trạng thái thành công',
   'noti.error_camera_address': 'Lỗi không nhận địa chỉ Camproxy',
   'noti.successfully_config': 'Cấu hình thành công',
-  'noti.successfully_add_camera_group': 'Thêm nhóm Camera thàng công',
+  'noti.successfully_add_camera_group': 'Thêm nhóm Camera thành công',
   'noti.edit_camera_failed': 'Chỉnh sửa Camera thất bại ',
   'noti.successfully_add_camera_to_group': 'Thêm thành công Camera vào nhóm',
   'noti.successfully_delete_camera': 'Xóa Camera thành công',
