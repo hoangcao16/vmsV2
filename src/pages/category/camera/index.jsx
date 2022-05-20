@@ -10,7 +10,7 @@ import TableCameraCategory from './components/cameraCategory/TableCameraCategory
 import { useState } from 'react';
 const CameraDevice = ({}) => {
   const intl = useIntl();
-  const [type, setType] = useState('camera_tags');
+  const [type, setType] = useState('camera');
   return (
     <PageContainer>
       <Tabs defaultActiveKey={type} onChange={(key) => setType(key)}>

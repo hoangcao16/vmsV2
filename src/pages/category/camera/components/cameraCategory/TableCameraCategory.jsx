@@ -84,7 +84,9 @@ const TableVendorType = ({
       <ProTableStyle
         headerTitle={`${intl.formatMessage(
           {
-            id: 'view.category.camera_vendor',
+            id: `view.${
+              type === 'camera_vendor' ? 'category.camera_vendor' : 'camera.camera_type'
+            }`,
           },
           {
             cam: intl.formatMessage({
@@ -157,7 +159,9 @@ const TableVendorType = ({
               id: 'view.camera.total',
             })} ${total} ${intl.formatMessage(
               {
-                id: 'view.category.camera_vendor',
+                id: `view.${
+                  type === 'camera_vendor' ? 'category.camera_vendor' : 'camera.camera_type'
+                }`,
               },
               {
                 cam: intl.formatMessage({
