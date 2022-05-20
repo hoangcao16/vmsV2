@@ -8,15 +8,7 @@ import { connect } from 'dva';
 import { useIntl } from 'umi';
 import { isEmpty } from 'lodash';
 import styled from 'styled-components';
-
-// const TimeoutChart = styled.div`
-//   text-align: center;
-//   font-size: 32px;
-//   font-weight: bold;
-//   margin-bottom: 24px;
-//   padding: 128px 32px;
-//   background-color: #1f1f1f;
-// `;
+import { TimeoutChart } from '../../style';
 
 const LineChart = (props) => {
   const [data, setData] = useState([]);
@@ -57,7 +49,15 @@ const LineChart = (props) => {
         typeChart={'line'}
       />
       <Divider />
-      {!props.timeout ? <Line {...config} /> : ''}
+      {!props.timeout ? (
+        <Line {...config} />
+      ) : (
+        <TimeoutChart>
+          {intl.formatMessage({
+            id: `pages.report.chart.dateRangeError`,
+          })}
+        </TimeoutChart>
+      )}
     </>
   );
 };

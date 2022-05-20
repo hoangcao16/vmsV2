@@ -30,7 +30,7 @@ export default function Report() {
   return (
     <div className="report">
       <Row gutter={24}>
-        {/* <Col {...chartCol}>
+        <Col {...chartCol}>
           <CameraStatistics />
           <Chart />
         </Col>
@@ -38,7 +38,7 @@ export default function Report() {
           <div className="chartControl">
             <ChartControl />
           </div>
-        </Col> */}
+        </Col>
       </Row>
     </div>
   );

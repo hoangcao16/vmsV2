@@ -4,27 +4,18 @@ import PieChart from './PieChart';
 import BarChart from './BarChart';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
-import styled from 'styled-components';
-
-const timeoutScreen = styled.div`
-  text-align: center;
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 24px;
-  padding: 256px 32px;
-  background-color: '#1f1f1f';
-`;
+import { TimeoutChart } from '../../style';
 
 const Chart = ({ timeoutData }) => {
   const intl = useIntl();
   return (
     <div className="chart">
       {timeoutData ? (
-        <span>
+        <TimeoutChart paddingY={256}>
           {intl.formatMessage({
             id: `pages.report.chart.dateRangeError`,
           })}
-        </span>
+        </TimeoutChart>
       ) : (
         <>
           <div className="chart-background">

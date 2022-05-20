@@ -5,15 +5,8 @@ import { Divider } from 'antd';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
 import { isEmpty } from 'lodash';
-
-const TimeoutChart = styled.div`
-  text-align: center;
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 24px;
-  padding: 128px 32px;
-  background-color: #1f1f1f;
-`;
+import styled from 'styled-components';
+import { TimeoutChart } from '../../style';
 
 const PieChart = (props) => {
   const intl = useIntl();
@@ -93,13 +86,21 @@ const PieChart = (props) => {
         typeChart={'pie'}
       />
       <Divider />
-      <Pie {...config} />
+      {!props.timeout ? (
+        <Pie {...config} />
+      ) : (
+        <TimeoutChart>
+          {intl.formatMessage({
+            id: `pages.report.chart.dateRangeError`,
+          })}
+        </TimeoutChart>
+      )}
     </>
   );
 };
 
 function mapStateToProps(state) {
-  const { chart } = state;
+  const { chart, home } = state;
   return { data: chart?.listPieChart, timeout: home?.timeoutDataPieChart };
 }
 
