@@ -77,7 +77,7 @@ export default {
   'view.category.camera_vendor': 'Hãng {cam}',
   'view.category.field': 'Lĩnh vực',
   'view.category.event_type': 'Loại sự kiện',
-  'view.category.tags': 'Loại nhãn',
+  'view.category.tags': 'Nhãn {cam}',
   'view.category.no': 'STT',
   'view.category.category_name': 'Tên danh mục',
   'view.category.edit_administrative_unit': 'Chỉnh sửa đơn vị hành chính',

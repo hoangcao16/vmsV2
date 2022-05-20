@@ -4,6 +4,8 @@ const CAMERA_ENDPOINT_AI = '/cctv-controller-svc/api/v1/cameras/ai';
 const CAMERA_SEARCH_ENDPOINT = '/cctv-controller-svc/api/v1/cameras/search';
 const CAMERA_BY_TRACKING_POINT = '/cctv-controller-svc/api/v1/cameras/find_by_points';
 const CAMERA_SCAN_ENDPOINT = '/ptz-ctrl/api/v1/scan-camera';
+const CAMERA_TYPES_ENDPOINT = '/cctv-controller-svc/api/v1/camera_types';
+const CAMERA_GROUP_ENDPOINT = '/cctv-controller-svc/api/v1/camera_groups';
 const cameraApi = {
   getAll(queryParams) {
     return request.request({
@@ -69,15 +71,41 @@ const cameraApi = {
   getAllCameraTypes(data) {
     return request.request({
       method: 'GET',
-      url: `/cctv-controller-svc/api/v1/camera_types`,
+      url: CAMERA_TYPES_ENDPOINT,
       params: data,
     });
   },
   getAllGroupCamera(data) {
     return request.request({
       method: 'GET',
-      url: `/cctv-controller-svc/api/v1/camera_groups`,
+      url: CAMERA_GROUP_ENDPOINT,
       params: data,
+    });
+  },
+  getGroupCameraByUuid(uuid) {
+    return request.request({
+      method: 'GET',
+      url: `${CAMERA_GROUP_ENDPOINT}/${uuid}`,
+    });
+  },
+  createNewGroupCamera(data) {
+    return request.request({
+      method: 'POST',
+      url: CAMERA_GROUP_ENDPOINT,
+      data,
+    });
+  },
+  updateGroupCamera(data, uuid) {
+    return request.request({
+      method: 'PUT',
+      url: `${CAMERA_GROUP_ENDPOINT}/${uuid}`,
+      data,
+    });
+  },
+  deleteGroupCamera(uuid) {
+    return request.request({
+      method: 'DELETE',
+      url: `${CAMERA_GROUP_ENDPOINT}/${uuid}`,
     });
   },
 };
