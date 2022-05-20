@@ -1,8 +1,8 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { useIntl } from 'umi';
 import { connect } from 'dva';
+import { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
 import AddEditCameraCategory from './AddEditCameraCategory';
 

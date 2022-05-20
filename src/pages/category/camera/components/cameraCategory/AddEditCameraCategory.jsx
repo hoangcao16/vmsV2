@@ -2,7 +2,6 @@ import MSFormItem from '@/components/Form/Item';
 import { CloseOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Form, Input, Popconfirm, Row, Space } from 'antd';
 import { isEmpty } from 'lodash';
-import React from 'react';
 import { useIntl } from 'umi';
 import { StyledDrawer } from '../../style';
 
