@@ -100,6 +100,21 @@ export default {
         );
       }
     },
+    *deleteVendor({ id }, { call, put }) {
+      try {
+        yield call(VendorApi.delete, id);
+        notify('success', 'pages.setting-user.list-user.titleSuccess', 'noti.delete_successful');
+        yield put({ type: 'reloadVendor' });
+      } catch (error) {
+        console.log('error', error);
+
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
+      }
+    },
 
     *reloadVendor(action, { put, select }) {
       yield put({ type: 'fetchAllVendor', payload: { size: 100 } });

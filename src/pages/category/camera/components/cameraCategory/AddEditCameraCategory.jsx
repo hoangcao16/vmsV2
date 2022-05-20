@@ -32,6 +32,17 @@ const AddEditCameraCategory = ({ onClose, selectedRecord, dispatch, openDrawer, 
     onClose();
   };
 
+  const onDeleteRecord = () => {
+    if (type === 'camera_vendor') {
+      dispatch({
+        type: 'category/deleteVendor',
+        id: selectedRecord?.uuid,
+      });
+    }
+
+    onClose();
+  };
+
   return (
     <StyledDrawer
       openDrawer={openDrawer}
@@ -55,7 +66,7 @@ const AddEditCameraCategory = ({ onClose, selectedRecord, dispatch, openDrawer, 
             <Popconfirm
               placement="bottom"
               title={intl.formatMessage({ id: 'noti.delete' })}
-              //   onConfirm={onDeleteRecord}
+              onConfirm={onDeleteRecord}
               okText="Yes"
               cancelText="No"
             >
