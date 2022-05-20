@@ -70,8 +70,7 @@ export default {
     },
 
     *reload(action, { put, select }) {
-      const size = yield select((state) => state.advision.size);
-      yield put({ type: 'fetchAll', payload: { size } });
+      yield put({ type: 'fetchAll', payload: { size: 100 } });
     },
   },
 };
