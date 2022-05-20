@@ -23,7 +23,7 @@ const AddEditCameraCategory = ({ onClose, selectedRecord, dispatch, openDrawer, 
         });
       } else {
         dispatch({
-          type: 'category/editZone',
+          type: 'category/editVendor',
           payload: { id: selectedRecord?.uuid, values: { ...payload } },
         });
       }
