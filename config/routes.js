@@ -40,6 +40,7 @@ export default [
     path: '/live',
     icon: 'videoCamera',
     name: 'live_mode',
+    component: './live/index',
   },
   {
     path: '/storage',

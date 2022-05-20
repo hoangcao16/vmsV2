@@ -160,4 +160,14 @@ export default {
   //Storage
   'pages.storage.dailyArchive.total': 'Total',
   'pages.storage.dailyArchive.camera': 'camera',
+
+  'pages.live-mode.list.favorite': 'Favorite screens',
+  'pages.live-mode.list.camera': 'List camera',
+  'pages.live-mode.mode.live': 'Live view',
+  'pages.live-mode.mode.review': 'Playback view',
+  'pages.live-mode.action.favorite': 'Favorite screen:',
+  'pages.live-mode.action.choose': 'Choose screen',
+  'pages.live-mode.action.save': 'Save',
+  'pages.live-mode.action.edit': 'Edit',
+  'pages.live-mode.action.delete': 'Delete',
 };
