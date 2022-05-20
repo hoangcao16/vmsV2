@@ -75,6 +75,26 @@ const cameraApi = {
       params: data,
     });
   },
+  editCameraTypes(uuid, data) {
+    return request.request({
+      method: 'PUT',
+      url: `CAMERA_TYPES_ENDPOINT/${uuid}`,
+      data: data,
+    });
+  },
+  addCameraTypes(data) {
+    return request.request({
+      method: 'POST',
+      url: CAMERA_TYPES_ENDPOINT,
+      data: data,
+    });
+  },
+  deleteCameraTypes(uuid) {
+    return request.request({
+      method: 'DELETE',
+      url: `CAMERA_TYPES_ENDPOINT/${uuid}`,
+    });
+  },
   getAllGroupCamera(data) {
     return request.request({
       method: 'GET',

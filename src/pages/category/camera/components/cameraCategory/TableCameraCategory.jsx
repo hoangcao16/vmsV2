@@ -13,21 +13,21 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
 
   useEffect(() => {
     dispatch({
-      type: 'category/fetchAllVendor',
+      type: 'cameraCategory/fetchAllVendor',
       payload: {
         name: metadata?.name,
         size: metadata?.size,
       },
     });
     dispatch({
-      type: 'category/fetchAllType',
+      type: 'cameraCategory/fetchAllType',
       payload: {
         name: metadata?.name,
         size: metadata?.size,
       },
     });
     dispatch({
-      type: 'category/fetchAllTags',
+      type: 'cameraCategory/fetchAllTags',
       payload: {
         name: metadata?.name,
         size: metadata?.size,
@@ -167,9 +167,9 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
 };
 
 function mapStateToProps(state) {
-  const { metadata, listVendor, listType, listTags } = state.category;
+  const { metadata, listVendor, listType, listTags } = state.cameraCategory;
   return {
-    loading: state.loading.models.category,
+    loading: state.loading.models.cameraCategory,
     metadata,
     listVendor,
     listType,

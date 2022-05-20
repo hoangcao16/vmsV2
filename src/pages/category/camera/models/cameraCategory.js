@@ -4,7 +4,7 @@ import TagApi from '@/services/tag/tagApi';
 import VendorApi from '@/services/vendor/VendorApi';
 
 export default {
-  namespace: 'category',
+  namespace: 'cameraCategory',
   state: {
     listVendor: [],
     listType: [],
@@ -115,9 +115,26 @@ export default {
         );
       }
     },
-
     *reloadVendor(action, { put, select }) {
       yield put({ type: 'fetchAllVendor', payload: { size: 100 } });
+    },
+
+    *addType({ payload }, { call, put }) {
+      try {
+        yield call(cameraApi.addCameraTypes, payload);
+        notify('success', 'pages.setting-user.list-user.titleSuccess', 'noti.successfully_add');
+        yield put({ type: 'reloadType' });
+      } catch (error) {
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
+      }
+    },
+
+    *reloadType(action, { put, select }) {
+      yield put({ type: 'fetchAllType', payload: { size: 100 } });
     },
   },
 };

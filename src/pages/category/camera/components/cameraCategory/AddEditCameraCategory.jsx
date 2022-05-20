@@ -18,14 +18,26 @@ const AddEditCameraCategory = ({ onClose, selectedRecord, dispatch, openDrawer, 
     if (type === 'camera_vendor') {
       if (isEmpty(selectedRecord)) {
         dispatch({
-          type: 'category/addVendor',
+          type: 'cameraCategory/addVendor',
           payload: payload,
         });
       } else {
         dispatch({
-          type: 'category/editVendor',
+          type: 'cameraCategory/editVendor',
           payload: { id: selectedRecord?.uuid, values: { ...payload } },
         });
+      }
+    } else if (type === 'camera_type') {
+      if (isEmpty(selectedRecord)) {
+        dispatch({
+          type: 'cameraCategory/addType',
+          payload: payload,
+        });
+      } else {
+        // dispatch({
+        //   type: 'cameraCategory/editVendor',
+        //   payload: { id: selectedRecord?.uuid, values: { ...payload } },
+        // });
       }
     }
 
@@ -35,7 +47,7 @@ const AddEditCameraCategory = ({ onClose, selectedRecord, dispatch, openDrawer, 
   const onDeleteRecord = () => {
     if (type === 'camera_vendor') {
       dispatch({
-        type: 'category/deleteVendor',
+        type: 'cameraCategory/deleteVendor',
         id: selectedRecord?.uuid,
       });
     }
