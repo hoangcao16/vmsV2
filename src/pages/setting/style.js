@@ -2,9 +2,8 @@ import { Card } from 'antd';
 import styled from 'styled-components';
 
 export const StyledCard = styled(Card)`
-  border: 0;
-  margin-bottom: 24px;
-
+  border: 0 !important;
+  margin-bottom: 24px !important;
   p {
     margin-bottom: 0;
     font-weight: 400;
