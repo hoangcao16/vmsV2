@@ -1,8 +1,8 @@
 import React from 'react';
-import CameraStatistics from './components/cameraStatistics';
-import Chart from './components/chart';
+import CameraStatistics from './components/CameraStatistics';
+import Chart from './components/Chart';
 import { Row, Col } from 'antd';
-import ChartControl from './components/chartControl';
+import ChartControl from './components/ChartControl';
 
 const chartCol = {
   xs: 19,
@@ -30,7 +30,7 @@ export default function Report() {
   return (
     <div className="report">
       <Row gutter={24}>
-        <Col {...chartCol}>
+        {/* <Col {...chartCol}>
           <CameraStatistics />
           <Chart />
         </Col>
@@ -38,7 +38,7 @@ export default function Report() {
           <div className="chartControl">
             <ChartControl />
           </div>
-        </Col>
+        </Col> */}
       </Row>
     </div>
   );

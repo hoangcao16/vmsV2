@@ -134,8 +134,8 @@ const ChartControl = (props) => {
       (typeDate == typeTime.YEAR && moment(end).diff(moment(start), 'years') >= 5)
     ) {
       props.dispatch({
-        type: 'chart/getData',
-        boolean: false,
+        type: 'chart/timeoutData',
+        boolean: true,
       });
     } else {
       let params = {
@@ -157,8 +157,8 @@ const ChartControl = (props) => {
         payload: params,
       });
       props.dispatch({
-        type: 'chart/getData',
-        boolean: true,
+        type: 'chart/timeoutData',
+        boolean: false,
       });
     }
   };
@@ -409,7 +409,6 @@ const ChartControl = (props) => {
 };
 
 function mapStateToProps(state) {
-  console.log('state', state);
   return { allProvinces: state?.globalstore?.provincesOptions };
 }
 

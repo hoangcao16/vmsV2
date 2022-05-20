@@ -7,10 +7,21 @@ import reportApi from '@/services/report/ReportApi';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
 import { isEmpty } from 'lodash';
+import styled from 'styled-components';
+
+// const TimeoutChart = styled.div`
+//   text-align: center;
+//   font-size: 32px;
+//   font-weight: bold;
+//   margin-bottom: 24px;
+//   padding: 128px 32px;
+//   background-color: #1f1f1f;
+// `;
 
 const LineChart = (props) => {
   const [data, setData] = useState([]);
   const intl = useIntl();
+  console.log('props', props.timeout);
 
   useEffect(() => {
     if (!isEmpty(props.data)) {
@@ -46,14 +57,14 @@ const LineChart = (props) => {
         typeChart={'line'}
       />
       <Divider />
-      <Line {...config} />
+      {!props.timeout ? <Line {...config} /> : ''}
     </>
   );
 };
 
 function mapStateToProps(state) {
-  const { chart } = state;
-  return { data: chart?.list };
+  const { chart, home } = state;
+  return { data: chart?.list, timeout: home?.timeoutDataLineChart };
 }
 
 export default connect(mapStateToProps)(LineChart);

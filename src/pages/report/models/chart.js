@@ -7,18 +7,17 @@ export default {
   state: {
     list: [],
     listPieChart: [],
-    getData: true,
+    timeoutData: false,
   },
   reducers: {
-    save(state, { payload: { data: list, dataPieChart: listPieChart, getData } }) {
-      console.log('getData', getData);
+    save(state, { payload: { data: list, dataPieChart: listPieChart, ...rest } }) {
       if (!isEmpty(list)) {
         state.list = list;
       }
       if (!isEmpty(listPieChart)) {
         state.listPieChart = listPieChart;
       }
-      return { ...state, getData };
+      return { ...state, ...rest };
     },
   },
   effects: {
@@ -48,12 +47,11 @@ export default {
         console.log(error);
       }
     },
-    *getData({ boolean }, { put }) {
-      console.log('boolean', boolean);
+    *timeoutData({ boolean }, { put }) {
       yield put({
         type: 'save',
         payload: {
-          getData: boolean,
+          timeoutData: boolean,
         },
       });
     },

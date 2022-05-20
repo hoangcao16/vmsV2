@@ -39,6 +39,7 @@ export default {
   'pages.report.chart.week': 'Tuần',
   'pages.report.chart.month': 'Tháng',
   'pages.report.chart.year': 'Năm',
+  'pages.report.chart.dateRangeError': 'Hãy kiểm tra lại khoảng thời gian',
 
   //User
 

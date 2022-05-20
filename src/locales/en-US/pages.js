@@ -39,6 +39,7 @@ export default {
   'pages.report.chart.week': 'Week',
   'pages.report.chart.month': 'Month',
   'pages.report.chart.year': 'Year',
+  'pages.report.chart.dateRangeError': 'Please check date range again',
 
   //User
 

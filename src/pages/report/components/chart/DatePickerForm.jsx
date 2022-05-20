@@ -15,6 +15,18 @@ moment.locale('en-gb', {
 
 const { Option } = Select;
 
+const typeTime = {
+  DAY: 'day',
+  MONTH: 'month',
+  WEEK: 'week',
+  YEAR: 'year',
+};
+
+const typeChart = {
+  PIE: 'pie',
+  LINE: 'line',
+};
+
 const PickerWithType = (props) => {
   return (
     <ConfigProvider locale={locale}>
@@ -34,27 +46,62 @@ const DatePickerForm = (props) => {
   }, []);
 
   const handleFilter = ({ typeDate, startDate, endDate }) => {
-    let params = {
-      typeTime: typeDate.toUpperCase(),
-      startDate: moment(startDate).format(formatParams),
-      endDate: moment(endDate).format(formatParams),
-      provinceIds: '2',
-      districtIds: '',
-      wardIds: '',
-      eventUuids: '57353610-dc42-4096-8a51-9da12ee8b85e,bf943458-8cd3-4bc5-8f8b-e3b583c25f47',
-      cameraUuids: '',
-    };
-
-    if (props.typeChart == 'pie') {
-      props.dispatch({
-        type: 'chart/changeReportHeaderDataPieChart',
-        payload: params,
-      });
+    if (
+      (typeDate == typeTime.DAY && moment(endDate).diff(moment(startDate), 'days') >= 12) ||
+      (typeDate == typeTime.WEEK &&
+        moment(endDate).endOf('weeks').diff(moment(startDate).startOf('weeks'), 'days') >=
+          12 * 7) ||
+      (typeDate == typeTime.MONTH && moment(endDate).diff(moment(startDate), 'months') >= 12) ||
+      (typeDate == typeTime.YEAR && moment(endDate).diff(moment(startDate), 'years') >= 5)
+    ) {
+      if (props.typeChart == typeChart.PIE) {
+        props.dispatch({
+          type: 'home/timeoutDataPieChart',
+          boolean: true,
+        });
+      }
+      if (props.typeChart == typeChart.LINE) {
+        props.dispatch({
+          type: 'home/timeoutDataLineChart',
+          boolean: true,
+        });
+      }
     } else {
-      props.dispatch({
-        type: 'chart/changeReportHeaderData',
-        payload: params,
-      });
+      let params = {
+        typeTime: typeDate.toUpperCase(),
+        startDate: moment(startDate).format(formatParams),
+        endDate: moment(endDate).format(formatParams),
+        provinceIds: '2',
+        districtIds: '',
+        wardIds: '',
+        eventUuids: '57353610-dc42-4096-8a51-9da12ee8b85e,bf943458-8cd3-4bc5-8f8b-e3b583c25f47',
+        cameraUuids: '',
+      };
+
+      if (props.typeChart == typeChart.PIE) {
+        props.dispatch({
+          type: 'home/timeoutDataPieChart',
+          boolean: false,
+        });
+      }
+      if (props.typeChart == typeChart.LINE) {
+        props.dispatch({
+          type: 'home/timeoutDataLineChart',
+          boolean: false,
+        });
+      }
+
+      if (props.typeChart == typeChart.PIE) {
+        props.dispatch({
+          type: 'chart/changeReportHeaderDataPieChart',
+          payload: params,
+        });
+      } else {
+        props.dispatch({
+          type: 'chart/changeReportHeaderData',
+          payload: params,
+        });
+      }
     }
   };
 

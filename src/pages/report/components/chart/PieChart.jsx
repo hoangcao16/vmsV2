@@ -6,6 +6,15 @@ import { connect } from 'dva';
 import { useIntl } from 'umi';
 import { isEmpty } from 'lodash';
 
+const TimeoutChart = styled.div`
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 24px;
+  padding: 128px 32px;
+  background-color: #1f1f1f;
+`;
+
 const PieChart = (props) => {
   const intl = useIntl();
   const [data, setData] = useState([]);
@@ -91,7 +100,7 @@ const PieChart = (props) => {
 
 function mapStateToProps(state) {
   const { chart } = state;
-  return { data: chart?.listPieChart };
+  return { data: chart?.listPieChart, timeout: home?.timeoutDataPieChart };
 }
 
 export default connect(mapStateToProps)(PieChart);
