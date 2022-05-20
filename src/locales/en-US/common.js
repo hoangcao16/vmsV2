@@ -736,6 +736,7 @@ export default {
   'noti.successfully_delete_administrative': 'Successfully deleted administrative',
   'noti.phone_number_format_is_not_correct': 'Phone number format is not correct',
   'noti.successfully_add_camera': 'Successfully add new Camera',
+  'noti.successfully_add_vendor': 'Successfully add new Camera vendor',
   'noti.successfully_edit_name': 'Successfully edit',
   'noti.successfully_add': 'Successfully add new',
   'noti.success': 'Success',
