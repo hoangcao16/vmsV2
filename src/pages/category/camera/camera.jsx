@@ -39,6 +39,7 @@ const CameraList = ({
   provincesOptions,
   selectedIp,
 }) => {
+  console.log('closeDrawerState', closeDrawerState);
   const [form] = Form.useForm();
   const [isAddNewDrawer, setIsAddNewDrawer] = useState(false);
   const [isEditDrawer, setIsEditDrawer] = useState(false);

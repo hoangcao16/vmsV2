@@ -7,16 +7,18 @@ export default {
   state: {
     list: [],
     listPieChart: [],
+    getData: true,
   },
   reducers: {
-    save(state, { payload: { data: list, dataPieChart: listPieChart } }) {
+    save(state, { payload: { data: list, dataPieChart: listPieChart, getData } }) {
+      console.log('getData', getData);
       if (!isEmpty(list)) {
         state.list = list;
       }
       if (!isEmpty(listPieChart)) {
         state.listPieChart = listPieChart;
       }
-      return { ...state };
+      return { ...state, getData };
     },
   },
   effects: {
@@ -45,6 +47,15 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    *getData({ boolean }, { put }) {
+      console.log('boolean', boolean);
+      yield put({
+        type: 'save',
+        payload: {
+          getData: boolean,
+        },
+      });
     },
   },
 };

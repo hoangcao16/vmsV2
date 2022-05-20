@@ -24,19 +24,23 @@ moment.locale('en-gb', {
 
 const { Option } = Select;
 
+const typeTime = {
+  DAY: 'day',
+  MONTH: 'month',
+  WEEK: 'week',
+  YEAR: 'year',
+};
+
 const ChartControl = (props) => {
   const defaultProvinceId = '2';
   const [format, setFormat] = useState('DD/MM/YYYY');
   const [formatParams, setFormatParams] = useState('DDMMYYYY');
   const [form] = Form.useForm();
-  console.log('form', form.getFieldValue());
   const [formValue, setFormValue] = useState({});
   const [allDistricts, setAllDistricts] = useState([]);
   const [allWards, setAllWards] = useState([]);
   const [allAiCamera, setAllAiCamera] = useState([]);
   const [allFields, setAllFields] = useState([]);
-  console.log('allFields', allFields[allFields?.length - 1]?.uuid);
-  console.log('allFields', allFields);
 
   const [events, setEvents] = useState([]);
   const intl = useIntl();
@@ -120,44 +124,69 @@ const ChartControl = (props) => {
   };
 
   const handleFilter = ({ typeDate, dateRange, provinceId, districtId, wardId }) => {
-    let params = {
-      typeTime: typeDate.toUpperCase(),
-      startDate: moment(dateRange[0]).format(formatParams),
-      endDate: moment(dateRange[1]).format(formatParams),
-      provinceIds: provinceId?.toString(),
-      districtIds: districtId?.toString(),
-      wardIds: wardId?.toString(),
-      eventUuids: '57353610-dc42-4096-8a51-9da12ee8b85e,bf943458-8cd3-4bc5-8f8b-e3b583c25f47',
-      cameraUuids: '',
-    };
-
-    props.dispatch({
-      type: 'chart/changeReportHeaderDataPieChart',
-      payload: params,
-    });
-    props.dispatch({
-      type: 'chart/changeReportHeaderData',
-      payload: params,
-    });
+    const start = moment(dateRange[0]);
+    const end = moment(dateRange[1]);
+    if (
+      (typeDate == typeTime.DAY && moment(end).diff(moment(start), 'days') >= 12) ||
+      (typeDate == typeTime.WEEK &&
+        moment(end).endOf('weeks').diff(moment(start).startOf('weeks'), 'days') >= 12 * 7) ||
+      (typeDate == typeTime.MONTH && moment(end).diff(moment(start), 'months') >= 12) ||
+      (typeDate == typeTime.YEAR && moment(end).diff(moment(start), 'years') >= 5)
+    ) {
+      props.dispatch({
+        type: 'chart/getData',
+        boolean: false,
+      });
+    } else {
+      let params = {
+        typeTime: typeDate.toUpperCase(),
+        startDate: moment(dateRange[0]).format(formatParams),
+        endDate: moment(dateRange[1]).format(formatParams),
+        provinceIds: provinceId?.toString(),
+        districtIds: districtId?.toString(),
+        wardIds: wardId?.toString(),
+        eventUuids: '57353610-dc42-4096-8a51-9da12ee8b85e,bf943458-8cd3-4bc5-8f8b-e3b583c25f47',
+        cameraUuids: '',
+      };
+      props.dispatch({
+        type: 'chart/changeReportHeaderDataPieChart',
+        payload: params,
+      });
+      props.dispatch({
+        type: 'chart/changeReportHeaderData',
+        payload: params,
+      });
+      props.dispatch({
+        type: 'chart/getData',
+        boolean: true,
+      });
+    }
   };
 
-  const onValuesChange = ({ typeDate, provinceId, districtId, wardId, fieldId, ...values }) => {
-    setFormValue({ typeDate, provinceId, districtId, wardId, fieldId, ...values });
-    console.log('fieldId', fieldId);
+  const onValuesChange = ({
+    typeDate,
+    dateRange,
+    provinceId,
+    districtId,
+    wardId,
+    fieldId,
+    ...values
+  }) => {
+    setFormValue({ typeDate, dateRange, provinceId, districtId, wardId, fieldId, ...values });
     if (typeDate) {
-      if (typeDate == 'week') {
+      if (typeDate == typeTime.WEEK) {
         setFormat('WW-YYYY');
         setFormatParams('WWYYYY');
         form.setFieldsValue({
           dateRange: [moment().subtract(4, 'weeks'), moment()],
         });
-      } else if (typeDate == 'month') {
+      } else if (typeDate == typeTime.MONTH) {
         setFormat('MM/YYYY');
         setFormatParams('MMYYYY');
         form.setFieldsValue({
           dateRange: [moment().subtract(11, 'months'), moment()],
         });
-      } else if (typeDate == 'year') {
+      } else if (typeDate == typeTime.YEAR) {
         setFormat('YYYY');
         setFormatParams('YYYY');
         form.setFieldsValue({
@@ -380,6 +409,7 @@ const ChartControl = (props) => {
 };
 
 function mapStateToProps(state) {
+  console.log('state', state);
   return { allProvinces: state?.globalstore?.provincesOptions };
 }
 
