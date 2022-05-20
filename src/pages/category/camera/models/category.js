@@ -6,15 +6,23 @@ import VendorApi from '@/services/vendor/VendorApi';
 export default {
   namespace: 'category',
   state: {
-    list: [],
+    listVendor: [],
+    listType: [],
+    listTags: [],
     metadata: {
       name: '',
       size: 100,
     },
   },
   reducers: {
-    save(state, { payload: { data: list, metadata } }) {
-      return { ...state, list, metadata };
+    saveVendor(state, { payload: { data: listVendor, metadata } }) {
+      return { ...state, listVendor, metadata };
+    },
+    saveType(state, { payload: { data: listType, metadata } }) {
+      return { ...state, listType, metadata };
+    },
+    saveTags(state, { payload: { data: listTags, metadata } }) {
+      return { ...state, listTags, metadata };
     },
   },
   effects: {
@@ -22,7 +30,7 @@ export default {
       try {
         const response = yield call(VendorApi.getAllVendor, payload);
         yield put({
-          type: 'save',
+          type: 'saveVendor',
           payload: {
             data: response?.payload,
             metadata: response?.metadata,
@@ -37,7 +45,7 @@ export default {
       try {
         const response = yield call(cameraApi.getAllCameraTypes, payload);
         yield put({
-          type: 'save',
+          type: 'saveType',
           payload: {
             data: response?.payload,
             metadata: response?.metadata,
@@ -51,7 +59,7 @@ export default {
       try {
         const response = yield call(TagApi.getAllTags, payload);
         yield put({
-          type: 'save',
+          type: 'saveTags',
           payload: {
             data: response?.payload,
             metadata: response?.metadata,
@@ -60,6 +68,28 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+
+    *addVendor({ payload }, { call, put }) {
+      try {
+        yield call(VendorApi.addVendor, payload);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'noti.successfully_add_vendor',
+        );
+        yield put({ type: 'reloadVendor' });
+      } catch (error) {
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
+      }
+    },
+
+    *reloadVendor(action, { put, select }) {
+      yield put({ type: 'fetchAllVendor', payload: { size: 100 } });
     },
   },
 };

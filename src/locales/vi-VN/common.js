@@ -736,6 +736,7 @@ export default {
   'noti.successfully_delete_administrative': 'Bạn đã xóa thành công đơn vị hành chính',
   'noti.phone_number_format_is_not_correct': 'Định dạng số điện thoại chưa đúng',
   'noti.successfully_add_camera': 'Bạn đã thêm thành công Camera',
+  'noti.successfully_add_vendor': 'Bạn đã thêm thành công hãng Camera',
   'noti.successfully_edit_name': 'Chỉnh sửa thành công',
   'noti.successfully_add': 'Bạn đã thêm thành công',
   'noti.success': 'Thành công',
