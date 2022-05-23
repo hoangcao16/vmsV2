@@ -8,6 +8,10 @@ const UserApi = {
     });
   },
 
+  getDetailUser: async (uuid) => {
+    return request.get(`/authz/api/v0/users/${uuid}`);
+  },
+
   createUser: async (values) => {
     return request.post('/authz/api/v0/users', values);
   },

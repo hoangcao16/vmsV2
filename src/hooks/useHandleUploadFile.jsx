@@ -12,7 +12,7 @@ const useHandleUploadFile = (fileName) => {
 
   useEffect(() => {
     setImgFileName(fileName);
-    const loadImageFileHanleler = (fileName) => {
+    const loadImageFileHanler = (fileName) => {
       if (!isEmpty(fileName)) {
         ExportEventFileApi.getAvatar(fileName).then((result) => {
           if (result.data) {
@@ -27,7 +27,7 @@ const useHandleUploadFile = (fileName) => {
         setImageUrl('');
       }
     };
-    loadImageFileHanleler(fileName);
+    loadImageFileHanler(fileName);
   }, [fileName]);
   const handleChange = (info) => {
     if (info.file.status === 'uploading') {
