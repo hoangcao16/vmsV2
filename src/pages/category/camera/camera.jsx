@@ -353,9 +353,9 @@ const CameraList = ({
                       }}
                     >
                       {intl.formatMessage({
-                        id: 'view.storage.filter',
-                      })}{' '}
-                      <RightOutlined />
+                        id: 'view.storage.hide_filter',
+                      })}
+                      <DownOutlined />
                     </Button>
                   ) : (
                     <Button
@@ -365,9 +365,9 @@ const CameraList = ({
                       }}
                     >
                       {intl.formatMessage({
-                        id: 'view.storage.hide_filter',
-                      })}{' '}
-                      <DownOutlined />
+                        id: 'view.storage.filter',
+                      })}
+                      <RightOutlined />
                     </Button>
                   )}
                 </div>

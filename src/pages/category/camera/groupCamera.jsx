@@ -17,6 +17,35 @@ import CircleIcon from '@/assets/img/iconO';
 import GroupCameraDrawer from './components/group-camera-drawer';
 const { Search } = Input;
 
+const unflatten = (array, parent, tree) => {
+  tree = typeof tree !== 'undefined' ? tree : [];
+  parent = typeof parent !== 'undefined' ? parent : { key: 0 };
+  var children = _.filter(array, function (child) {
+    return child.parentId == parent.key;
+  });
+  if (!_.isEmpty(children)) {
+    if (parent.key == 0) {
+      tree = children;
+    } else {
+      const newchildren = children.map((child) => {
+        return {
+          ...child,
+          icon: <CircleIcon />,
+        };
+      });
+      parent['children'] = children;
+    }
+    _.each(children, function (child) {
+      unflatten(array, child);
+    });
+  }
+  tree.map((item) => {
+    if (item?.children && !isEmpty(item?.children)) {
+      unflatten(array, item);
+    }
+  });
+  return tree;
+};
 const GroupCamera = ({ dispatch, groupCameraParentOptions }) => {
   const intl = useIntl();
   const [option, setOption] = useState({
@@ -44,30 +73,6 @@ const GroupCamera = ({ dispatch, groupCameraParentOptions }) => {
   }, []);
   // format treenode data
   useEffect(() => {
-    const unflatten = (array, parent, tree) => {
-      tree = typeof tree !== 'undefined' ? tree : [];
-      parent = typeof parent !== 'undefined' ? parent : { key: 0 };
-      var children = _.filter(array, function (child) {
-        return child.parentId == parent.key;
-      });
-      if (!_.isEmpty(children)) {
-        if (parent.key == 0) {
-          tree = children;
-        } else {
-          const newchildren = children.map((child) => {
-            return {
-              ...child,
-              icon: <CircleIcon />,
-            };
-          });
-          parent['children'] = newchildren;
-        }
-        _.each(children, function (child) {
-          unflatten(array, child);
-        });
-      }
-      return tree;
-    };
     const treeDataConverted = groupCameraParentOptions.map((p) => {
       return {
         title: p?.name,
@@ -75,7 +80,22 @@ const GroupCamera = ({ dispatch, groupCameraParentOptions }) => {
         parentId: isEmpty(p?.parent) ? '0' : p?.parent,
       };
     });
-    const data = unflatten(treeDataConverted);
+    const parentUuidList = treeDataConverted.map((item) => {
+      if (item?.parentId && item?.parentId !== '0') {
+        return item?.parentId;
+      }
+    });
+    const formatTreeData = treeDataConverted.map((child) => {
+      if (!parentUuidList.includes(child?.key)) {
+        return {
+          ...child,
+          icon: <CircleIcon />,
+        };
+      } else {
+        return child;
+      }
+    });
+    const data = unflatten(formatTreeData);
     setTreeNodeCamList(data);
   }, [groupCameraParentOptions]);
   //renderTitle

@@ -9,3 +9,6 @@ export const StyledDrawer = styled(MSCustomizeDrawer)`
     flex: none;
   }
 `;
+export const SpanCode = styled.span`
+  color: #1890ff;
+`;
