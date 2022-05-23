@@ -35,6 +35,11 @@ import SettingPermissionUser from './SettingPermissionUser';
 import { StyledDragger } from './style';
 const { TabPane } = Tabs;
 
+const TABS_SELECTED = {
+  INFO: '1',
+  PERMISSION: '2',
+};
+
 function AddEditUser({
   dispatch,
   onClose,
@@ -49,7 +54,7 @@ function AddEditUser({
   const [imgFile, setImgFile] = useState('');
   const [imageUrl, imgFileName, loading, handleChange, uploadImage, beforeUpload] =
     useHandleUploadFile(imgFile);
-  const [keyActive, setKeyActive] = useState('1');
+  const [keyActive, setKeyActive] = useState(TABS_SELECTED.INFO);
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -80,7 +85,7 @@ function AddEditUser({
         type: 'user/create',
         payload: payload,
       });
-      setKeyActive('2');
+      setKeyActive(TABS_SELECTED.PERMISSION);
     } else {
       dispatch({
         type: 'user/patch',
@@ -110,7 +115,7 @@ function AddEditUser({
         placement="right"
         extra={
           <Space>
-            {isEmpty(userAddingUuid) && keyActive === '1' && (
+            {isEmpty(userAddingUuid) && keyActive === TABS_SELECTED.INFO && (
               <Button
                 type="primary"
                 htmlType="submit"
@@ -155,8 +160,14 @@ function AddEditUser({
           </Space>
         }
       >
-        <Tabs defaultActiveKey="1" activeKey={keyActive} onChange={onChange}>
-          <TabPane tab="Thông tin" key="1" disabled={!isEmpty(userAddingUuid)}>
+        <Tabs defaultActiveKey={TABS_SELECTED.INFO} activeKey={keyActive} onChange={onChange}>
+          <TabPane
+            tab={intl.formatMessage({
+              id: 'pages.setting-user.list-user.information',
+            })}
+            key={TABS_SELECTED.INFO}
+            disabled={!isEmpty(userAddingUuid)}
+          >
             {' '}
             <Form
               // layout="vertical"
@@ -352,8 +363,10 @@ function AddEditUser({
             </Form>
           </TabPane>
           <TabPane
-            tab="Phân quyền"
-            key="2"
+            tab={intl.formatMessage({
+              id: 'pages.setting-user.list-user.permission',
+            })}
+            key={TABS_SELECTED.PERMISSION}
             disabled={isEmpty(selectedRecord) && isEmpty(userAddingUuid)}
           >
             <SettingPermissionUser id={userAddingUuid ?? selectedRecord?.uuid} />

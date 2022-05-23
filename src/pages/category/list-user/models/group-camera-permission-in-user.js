@@ -349,6 +349,7 @@ export default {
     *reloadFetchAllPermissionCameraGroups(action, { put, select }) {
       const uuid = yield select((state) => localStorage.getItem(STORAGE.USER_UUID_SELECTED));
       yield put({ type: 'fetchAllPermissionCameraGroups', payload: { uuid } });
+      yield put({ type: 'cameraPermissionInUser/reloadFetchAllPermissionCamera', payload: {} });
     },
   },
 };

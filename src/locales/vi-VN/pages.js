@@ -101,6 +101,8 @@ export default {
   'pages.setting-user.list-user.edit-user': 'Sửa người dùng',
   'pages.setting-user.list-user.imageUrl': 'Ảnh',
   'pages.setting-user.list-user.permission-by': 'Phân quyền theo:',
+  'pages.setting-user.list-user.permission': 'Phân quyền',
+  'pages.setting-user.list-user.information': 'Thông tin',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Thành công',

@@ -68,7 +68,11 @@ function SettingPermissionUser({
 
   return (
     <div>
-      <h4>Phân quyền</h4>
+      <h4>
+        {intl.formatMessage({
+          id: 'pages.setting-user.list-user.permission',
+        })}
+      </h4>
 
       <Form
         // layout="vertical"
