@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import ProTable from '@ant-design/pro-table';
 import { Tabs, Tree, Row } from 'antd';
+import MSCustomizeDrawer from '@/components/Drawer';
 const { TabPane } = Tabs;
 
 export const ProTableStyle = styled(ProTable)`
@@ -91,5 +92,21 @@ export const CameraGroupSearch = styled.div`
   margin-bottom: 40px;
   .btnAddUser {
     margin-left: 12px;
+  }
+`;
+
+export const StyledDrawer = styled(MSCustomizeDrawer)`
+  .ant-drawer-header {
+    flex-direction: row-reverse;
+  }
+
+  .ant-drawer-header-title {
+    flex: none;
+  }
+  .ant-drawer-body {
+    padding: 0;
+  }
+  .ant-card-bordered {
+    border: 0;
   }
 `;
