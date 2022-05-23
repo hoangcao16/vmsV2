@@ -6,6 +6,8 @@ import locale from 'antd/es/locale/en_GB';
 import './ChartHeader.less';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
+import { isEmpty } from 'lodash';
+import FieldEventApi from '@/services/fieldEvent/FieldEventApi';
 
 moment.locale('en-gb', {
   week: {
@@ -14,6 +16,14 @@ moment.locale('en-gb', {
 });
 
 const { Option } = Select;
+
+const feildData = {
+  feild: 'giaothong',
+  event: {
+    daudo: 'daudosaiquydinh',
+    vuotdendo: 'vuotdendo',
+  },
+};
 
 const typeTime = {
   DAY: 'day',
@@ -39,11 +49,71 @@ const DatePickerForm = (props) => {
   const [format, setFormat] = useState('DD/MM/YYYY');
   const [formatParams, setFormatParams] = useState('DDMMYYYY');
   const [form] = Form.useForm();
+  const [allFields, setAllFields] = useState([]);
+  const [eventsUuid, setEventsUuid] = useState([]);
+  console.log('eventsUuid', eventsUuid);
   const intl = useIntl();
 
   useEffect(() => {
     form.submit();
   }, []);
+
+  useEffect(() => {
+    try {
+      FieldEventApi.getAllFieldEvent().then((result) => {
+        setAllFields(result?.payload);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isEmpty(allFields)) {
+      props.dispatch({
+        type: 'chartControl/emptyFieldId',
+        boolean: true,
+      });
+      props.dispatch({
+        type: 'chartControl/emptyEventIds',
+        boolean: true,
+      });
+    } else {
+      const fieldFilter = allFields.filter((item) => item.nameNoAccent == feildData.feild);
+      if (!isEmpty(fieldFilter)) {
+        const eventsFilter = fieldFilter[0]?.eventList.filter(
+          (item) =>
+            item.nameNoAccent == feildData.event.daudo ||
+            item.nameNoAccent == feildData.event.vuotdendo,
+        );
+        if (!isEmpty(eventsFilter)) {
+          setEventsUuid([eventsFilter[0]?.uuid, eventsFilter[1]?.uuid] || [eventsFilter[0]?.uuid]);
+          props.dispatch({
+            type: 'chartControl/emptyEventIds',
+            boolean: false,
+          });
+        }
+      } else {
+        setEventsUuid(allFields[0]?.eventList[0]?.uuid || []);
+        if (isEmpty(allFields[0]?.eventList[0]?.uuid)) {
+          props.dispatch({
+            type: 'chartControl/emptyEventIds',
+            boolean: true,
+          });
+        } else {
+          props.dispatch({
+            type: 'chartControl/emptyEventIds',
+            boolean: false,
+          });
+        }
+      }
+      props.dispatch({
+        type: 'chartControl/emptyFieldId',
+        boolean: false,
+      });
+    }
+    form.submit();
+  }, [allFields]);
 
   const handleFilter = ({ typeDate, startDate, endDate }) => {
     if (
@@ -74,7 +144,7 @@ const DatePickerForm = (props) => {
         provinceIds: '2',
         districtIds: '',
         wardIds: '',
-        eventUuids: '57353610-dc42-4096-8a51-9da12ee8b85e,bf943458-8cd3-4bc5-8f8b-e3b583c25f47',
+        eventUuids: eventsUuid.toString(),
         cameraUuids: '',
       };
 

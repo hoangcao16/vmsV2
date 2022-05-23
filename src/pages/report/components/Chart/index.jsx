@@ -9,7 +9,7 @@ import { Tabs } from 'antd';
 
 const { TabPane } = Tabs;
 
-const Chart = ({ timeoutData }) => {
+const Chart = ({ timeoutData, chartDisable }) => {
   const intl = useIntl();
   return (
     <div className="chart">
@@ -35,6 +35,7 @@ const Chart = ({ timeoutData }) => {
                 id: `pages.report.chart.pieChart`,
               })}
               key="2"
+              disabled={chartDisable?.pieChartDisable}
             >
               <PieChart />
             </TabPane>
@@ -43,6 +44,7 @@ const Chart = ({ timeoutData }) => {
                 id: `pages.report.chart.barChart`,
               })}
               key="3"
+              disabled={chartDisable?.barChartDisable}
             >
               <BarChart />
             </TabPane>
@@ -54,7 +56,7 @@ const Chart = ({ timeoutData }) => {
 };
 
 function mapStateToProps(state) {
-  return { timeoutData: state?.chart?.timeoutData };
+  return { timeoutData: state?.chart?.timeoutData, chartDisable: state?.chartDisable };
 }
 
 export default connect(mapStateToProps)(Chart);

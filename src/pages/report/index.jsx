@@ -3,6 +3,9 @@ import CameraStatistics from './components/CameraStatistics';
 import Chart from './components/Chart';
 import { Row, Col } from 'antd';
 import ChartControl from './components/ChartControl';
+import { connect } from 'dva';
+import { useIntl } from 'umi';
+import { TimeoutChart } from './style';
 
 const chartCol = {
   xs: 19,
@@ -26,13 +29,28 @@ const controlCol = {
   },
 };
 
-export default function Report() {
+const Report = ({ timeoutFieldData, timeoutEventData }) => {
+  const intl = useIntl();
   return (
     <div className="report">
       <Row gutter={24}>
         <Col {...chartCol}>
           <CameraStatistics />
-          <Chart />
+          {timeoutFieldData ? (
+            <TimeoutChart>
+              {intl.formatMessage({
+                id: `pages.report.chart.emptyField`,
+              })}
+            </TimeoutChart>
+          ) : timeoutEventData ? (
+            <TimeoutChart>
+              {intl.formatMessage({
+                id: `pages.report.chart.emptyEvent`,
+              })}
+            </TimeoutChart>
+          ) : (
+            <Chart />
+          )}
         </Col>
         <Col {...controlCol}>
           <div className="chartControl">
@@ -42,4 +60,13 @@ export default function Report() {
       </Row>
     </div>
   );
+};
+
+function mapStateToProps(state) {
+  return {
+    timeoutFieldData: state?.chartControl?.timeoutFieldData,
+    timeoutEventData: state?.chartControl?.timeoutEventData,
+  };
 }
+
+export default connect(mapStateToProps)(Report);

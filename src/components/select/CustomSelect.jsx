@@ -29,14 +29,20 @@ export function filterOptionForChart(input, option) {
   );
 }
 
-export function normalizeOptions(labelField, valueField, dataSource) {
+export function normalizeOptions(labelField, valueField, dataSource, sortable = true) {
   if (dataSource != null) {
-    return dataSource
-      .sort((a, b) => defaultTo(get(a, labelField), '').localeCompare(get(b, labelField)))
-      .map((r) => ({
-        value: get(r, valueField),
-        label: get(r, labelField),
-      }));
+    if (sortable) {
+      return dataSource
+        .sort((a, b) => defaultTo(get(a, labelField), '').localeCompare(get(b, labelField)))
+        .map((r) => ({
+          value: get(r, valueField),
+          label: get(r, labelField),
+        }));
+    }
+    return dataSource.map((r) => ({
+      value: get(r, valueField),
+      label: get(r, labelField),
+    }));
   }
   return [];
 }

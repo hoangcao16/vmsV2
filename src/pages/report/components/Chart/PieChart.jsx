@@ -86,7 +86,19 @@ const PieChart = (props) => {
         typeChart={'pie'}
       />
       <Divider />
-      {!props.timeout ? (
+      {props.timeoutFieldData ? (
+        <TimeoutChart>
+          {intl.formatMessage({
+            id: `pages.report.chart.emptyField`,
+          })}
+        </TimeoutChart>
+      ) : props.timeoutEventData ? (
+        <TimeoutChart>
+          {intl.formatMessage({
+            id: `pages.report.chart.emptyEvent`,
+          })}
+        </TimeoutChart>
+      ) : !props.timeout ? (
         <Pie {...config} />
       ) : (
         <TimeoutChart>
@@ -101,7 +113,12 @@ const PieChart = (props) => {
 
 function mapStateToProps(state) {
   const { chart, home } = state;
-  return { data: chart?.listPieChart, timeout: home?.timeoutDataPieChart };
+  return {
+    data: chart?.listPieChart,
+    timeout: home?.timeoutDataPieChart,
+    timeoutFieldData: state?.chartControl?.timeoutFieldData,
+    timeoutEventData: state?.chartControl?.timeoutEventData,
+  };
 }
 
 export default connect(mapStateToProps)(PieChart);

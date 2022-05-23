@@ -1,6 +1,3 @@
-import NotiApi from '@/services/notification/NotiApi';
-import { isEmpty } from 'lodash';
-
 export default {
   namespace: 'home',
   state: {

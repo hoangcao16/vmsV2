@@ -15,6 +15,8 @@ import {
 import cameraApi from '@/services/controller-api/cameraService';
 import FieldEventApi from '@/services/fieldEvent/FieldEventApi';
 import { isEmpty } from 'lodash';
+import styled from 'styled-components';
+
 const { RangePicker } = DatePicker;
 
 moment.locale('en-gb', {
@@ -26,12 +28,30 @@ moment.locale('en-gb', {
 const { Option } = Select;
 const CheckboxGroup = Checkbox.Group;
 
+const feildData = {
+  feild: 'giaothong',
+  event: {
+    daudo: 'daudosaiquydinh',
+    vuotdendo: 'vuotdendo',
+  },
+};
+
 const typeTime = {
   DAY: 'day',
   MONTH: 'month',
   WEEK: 'week',
   YEAR: 'year',
 };
+
+const CheckAll = styled.div`
+  background-color: #434343;
+  padding: 0 12px;
+  margin: 12px 0 6px;
+`;
+
+const TypeWapper = styled.div`
+  padding: 12px 24px;
+`;
 
 const ChartControl = (props) => {
   const defaultProvinceId = '2';
@@ -45,9 +65,8 @@ const ChartControl = (props) => {
   const [allFields, setAllFields] = useState([]);
   const [indeterminate, setIndeterminate] = useState(false);
   const [checkAll, setCheckAll] = useState(false);
-
   const [events, setEvents] = useState([]);
-  console.log('events', events);
+  const [currentEvent, setCurrentEvent] = useState([]);
   const intl = useIntl();
 
   useEffect(() => {
@@ -94,9 +113,9 @@ const ChartControl = (props) => {
   useEffect(() => {
     if (!isEmpty(allFields)) {
       allFields.forEach((i) => {
-        i.value = i.name;
+        i.value = i?.name;
       });
-      const fieldFilter = allFields.filter((item) => item.nameNoAccent == 'giaothong');
+      const fieldFilter = allFields.filter((item) => item.nameNoAccent == feildData.feild);
       if (!isEmpty(fieldFilter)) {
         form.setFieldsValue({ fieldId: fieldFilter[0].uuid });
         setEvents(fieldFilter[0]?.eventList);
@@ -105,18 +124,48 @@ const ChartControl = (props) => {
         setEvents(allFields[0]?.eventList);
       }
 
+      props.dispatch({
+        type: 'chartControl/emptyFieldId',
+        boolean: false,
+      });
+
       if (!isEmpty(fieldFilter)) {
         const eventsFilter = fieldFilter[0]?.eventList.filter(
-          (item) => item.nameNoAccent == 'daudosaiquydinh' || item.nameNoAccent == 'vuotdendo',
+          (item) =>
+            item.nameNoAccent == feildData.event.daudo ||
+            item.nameNoAccent == feildData.event.vuotdendo,
         );
         if (!isEmpty(eventsFilter) && eventsFilter.length >= 2) {
           form.setFieldsValue({ eventIds: [eventsFilter[0].uuid, eventsFilter[1].uuid] });
         } else if (!isEmpty(eventsFilter) && eventsFilter.length == 1) {
-          form.setFieldsValue({ eventIds: eventsFilter[0].uuid });
+          form.setFieldsValue({ eventIds: [eventsFilter[0].uuid] });
         } else {
-          form.setFieldsValue({ eventIds: events[0]?.uuid });
+          form.setFieldsValue({ eventIds: [] });
         }
+      } else {
+        form.setFieldsValue({ eventIds: events[0]?.uuid });
       }
+
+      if (isEmpty(form.getFieldValue('eventIds'))) {
+        props.dispatch({
+          type: 'chartControl/emptyEventIds',
+          boolean: true,
+        });
+      } else {
+        props.dispatch({
+          type: 'chartControl/emptyEventIds',
+          boolean: false,
+        });
+      }
+    } else {
+      props.dispatch({
+        type: 'chartControl/emptyFieldId',
+        boolean: true,
+      });
+      props.dispatch({
+        type: 'chartControl/emptyEventIds',
+        boolean: true,
+      });
     }
   }, [allFields]);
 
@@ -158,8 +207,14 @@ const ChartControl = (props) => {
   };
 
   const onChange = (list) => {
-    setIndeterminate(!!list.length && list.length < events.length);
+    setIndeterminate(list.length && list.length < events.length);
     setCheckAll(list.length === events.length);
+    if (list.length == 1) {
+      setCurrentEvent(list);
+    }
+    if (list.length < 1) {
+      form.setFieldsValue({ eventIds: currentEvent });
+    }
   };
 
   const onCheckAllChange = (e) => {
@@ -177,7 +232,41 @@ const ChartControl = (props) => {
     form.submit();
   };
 
-  const handleFilter = ({ typeDate, dateRange, provinceId, districtId, wardId }) => {
+  const handleFilter = ({
+    typeDate,
+    dateRange,
+    provinceId,
+    districtId,
+    wardId,
+    fieldId,
+    eventIds,
+  }) => {
+    if (isEmpty(fieldId)) {
+      props.dispatch({
+        type: 'chartControl/emptyFieldId',
+        boolean: true,
+      });
+      return;
+    } else {
+      props.dispatch({
+        type: 'chartControl/emptyFieldId',
+        boolean: false,
+      });
+    }
+
+    if (isEmpty(eventIds)) {
+      props.dispatch({
+        type: 'chartControl/emptyEventIds',
+        boolean: true,
+      });
+      return;
+    } else {
+      props.dispatch({
+        type: 'chartControl/emptyEventIds',
+        boolean: false,
+      });
+    }
+
     const start = moment(dateRange[0]);
     const end = moment(dateRange[1]);
     if (
@@ -268,6 +357,7 @@ const ChartControl = (props) => {
     if (provinceId && provinceId.length == 1) {
       getDistricts();
       setAllWards([]);
+      props.dispatch({ type: 'chartDisable/barChartDisable', boolean: true });
     }
 
     if (provinceId && provinceId.length > 1) {
@@ -275,6 +365,13 @@ const ChartControl = (props) => {
         districtId: [],
         wardId: [],
       });
+      props.dispatch({ type: 'chartDisable/barChartDisable', boolean: false });
+    }
+
+    if ((districtId && districtId.length > 1) || (wardId && wardId.length > 1)) {
+      props.dispatch({ type: 'chartDisable/barChartDisable', boolean: false });
+    } else if ((districtId && districtId.length == 1) || (wardId && wardId.length == 1)) {
+      props.dispatch({ type: 'chartDisable/barChartDisable', boolean: true });
     }
 
     if (districtId && districtId.length == 1) {
@@ -297,9 +394,23 @@ const ChartControl = (props) => {
     if (fieldId) {
       const currentField = allFields.find((item) => item.uuid == fieldId);
       setEvents(currentField?.eventList);
-      form.setFieldsValue({
-        eventIds: currentField.eventList[0].uuid || '',
-      });
+      if (!isEmpty(currentField.eventList)) {
+        form.setFieldsValue({
+          eventIds: [currentField?.eventList[0]?.uuid],
+        });
+      } else {
+        form.setFieldsValue({
+          eventIds: [],
+        });
+      }
+    }
+
+    if (eventIds && eventIds.length == 1) {
+      props.dispatch({ type: 'chartDisable/pieChartDisable', boolean: true });
+    }
+
+    if (eventIds && eventIds.length > 1) {
+      props.dispatch({ type: 'chartDisable/pieChartDisable', boolean: false });
     }
 
     form.submit();
@@ -315,7 +426,11 @@ const ChartControl = (props) => {
 
   return (
     <div className="chartControl">
-      <div className="chartControl-title">Bộ lọc</div>
+      <div className="chartControl-title">
+        {intl.formatMessage({
+          id: `pages.report.chart.filter`,
+        })}
+      </div>
       <div className="chartControl-filter">
         <Form
           form={form}
@@ -360,10 +475,20 @@ const ChartControl = (props) => {
                 </Option>
               </Select>
             </Form.Item>
-            <Form.Item name="dateRange" label="Khoảng thời gian">
+            <Form.Item
+              name="dateRange"
+              label={intl.formatMessage({
+                id: `pages.report.chart.dateRange`,
+              })}
+            >
               <PickerWithType picker={form.getFieldValue('typeDate')} format={format} />
             </Form.Item>
-            <Form.Item name="provinceId" label="Provinces">
+            <span>
+              {intl.formatMessage({
+                id: `pages.report.chart.area`,
+              })}
+            </span>
+            <Form.Item name="provinceId">
               <Select
                 mode="multiple"
                 allowClear={false}
@@ -393,7 +518,7 @@ const ChartControl = (props) => {
               </Select>
             </Form.Item>
             {form.getFieldValue('provinceId')?.length == 1 && (
-              <Form.Item name="districtId" label="Districts">
+              <Form.Item name="districtId">
                 <Select
                   mode="multiple"
                   allowClear={false}
@@ -415,7 +540,7 @@ const ChartControl = (props) => {
             )}
             {form.getFieldValue('provinceId')?.length == 1 &&
               form.getFieldValue('districtId')?.length <= 1 && (
-                <Form.Item name="wardId" label="Wards">
+                <Form.Item name="wardId">
                   <Select
                     mode="multiple"
                     allowClear={false}
@@ -436,7 +561,7 @@ const ChartControl = (props) => {
                   </Select>
                 </Form.Item>
               )}
-            <Form.Item name="aiCamera" label="AiCamera">
+            <Form.Item name="aiCamera" label="Camera AI">
               <Select
                 mode="multiple"
                 allowClear={false}
@@ -455,7 +580,12 @@ const ChartControl = (props) => {
                 ))}
               </Select>
             </Form.Item>
-            <Form.Item name="fieldId" label="Field">
+            <Form.Item
+              name="fieldId"
+              label={intl.formatMessage({
+                id: `pages.report.chart.field`,
+              })}
+            >
               <Select
                 allowClear={false}
                 showSearch
@@ -473,21 +603,35 @@ const ChartControl = (props) => {
                 ))}
               </Select>
             </Form.Item>
-            <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
-              Check all
-            </Checkbox>
-            <Divider />
-            <Form.Item name="eventIds" label="Field">
-              <CheckboxGroup onChange={onChange}>
-                {normalizeOptions('name', 'uuid', events).map(({ label, value }) => (
-                  <Row>
-                    <Col span={24}>
-                      <Checkbox value={value}>{label}</Checkbox>
-                    </Col>
-                  </Row>
-                ))}
-              </CheckboxGroup>
-            </Form.Item>
+            <span>
+              {intl.formatMessage({
+                id: `pages.report.chart.eventType`,
+              })}
+            </span>
+            <CheckAll>
+              <Checkbox
+                indeterminate={indeterminate}
+                onChange={onCheckAllChange}
+                checked={checkAll}
+              >
+                {intl.formatMessage({
+                  id: `pages.report.chart.checkAll`,
+                })}
+              </Checkbox>
+            </CheckAll>
+            <TypeWapper>
+              <Form.Item name="eventIds">
+                <CheckboxGroup onChange={onChange}>
+                  {normalizeOptions('name', 'uuid', events, false).map(({ label, value }) => (
+                    <Row>
+                      <Col span={24}>
+                        <Checkbox value={value}>{label}</Checkbox>
+                      </Col>
+                    </Row>
+                  ))}
+                </CheckboxGroup>
+              </Form.Item>
+            </TypeWapper>
           </div>
         </Form>
       </div>

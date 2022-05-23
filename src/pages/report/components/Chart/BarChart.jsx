@@ -10,7 +10,6 @@ const BarChart = (props) => {
   const intl = useIntl();
 
   useEffect(() => {
-    console.log('props?.data', props?.data);
     setData(props?.data);
   }, [props?.data]);
 

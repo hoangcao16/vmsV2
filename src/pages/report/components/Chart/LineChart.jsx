@@ -48,7 +48,19 @@ const LineChart = (props) => {
         typeChart={'line'}
       />
       <Divider />
-      {!props.timeout ? (
+      {props.timeoutFieldData ? (
+        <TimeoutChart>
+          {intl.formatMessage({
+            id: `pages.report.chart.emptyField`,
+          })}
+        </TimeoutChart>
+      ) : props.timeoutEventData ? (
+        <TimeoutChart>
+          {intl.formatMessage({
+            id: `pages.report.chart.emptyEvent`,
+          })}
+        </TimeoutChart>
+      ) : !props.timeout ? (
         <Line {...config} />
       ) : (
         <TimeoutChart>
@@ -63,7 +75,12 @@ const LineChart = (props) => {
 
 function mapStateToProps(state) {
   const { chart, home } = state;
-  return { data: chart?.list, timeout: home?.timeoutDataLineChart };
+  return {
+    data: chart?.list,
+    timeout: home?.timeoutDataLineChart,
+    timeoutFieldData: state?.chartControl?.timeoutFieldData,
+    timeoutEventData: state?.chartControl?.timeoutEventData,
+  };
 }
 
 export default connect(mapStateToProps)(LineChart);
