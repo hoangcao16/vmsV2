@@ -9,12 +9,14 @@ import DatePickerForm from './DatePickerForm';
 import { useHistory } from 'react-router-dom';
 
 const ChartHeader = (props) => {
-  const [currentPathIsReport, setCurrentPathIsReport] = useState(false);
+  const [currentPathIsReport, setCurrentPathIsReport] = useState(true);
   let url = useHistory();
 
   useEffect(() => {
     if (url.location.pathname == '/report') {
       setCurrentPathIsReport(true);
+    } else {
+      setCurrentPathIsReport(false);
     }
   }, []);
 

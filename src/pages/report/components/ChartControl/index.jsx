@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DatePicker, Select, ConfigProvider, Form, Tag } from 'antd';
+import { DatePicker, Select, ConfigProvider, Form, Tag, Checkbox, Divider, Row, Col } from 'antd';
 import moment from 'moment';
 import 'moment/locale/en-gb';
 import locale from 'antd/es/locale/en_GB';
@@ -14,6 +14,7 @@ import {
 } from '@/components/select/CustomSelect';
 import cameraApi from '@/services/controller-api/cameraService';
 import FieldEventApi from '@/services/fieldEvent/FieldEventApi';
+import { isEmpty } from 'lodash';
 const { RangePicker } = DatePicker;
 
 moment.locale('en-gb', {
@@ -23,6 +24,7 @@ moment.locale('en-gb', {
 });
 
 const { Option } = Select;
+const CheckboxGroup = Checkbox.Group;
 
 const typeTime = {
   DAY: 'day',
@@ -41,8 +43,11 @@ const ChartControl = (props) => {
   const [allWards, setAllWards] = useState([]);
   const [allAiCamera, setAllAiCamera] = useState([]);
   const [allFields, setAllFields] = useState([]);
+  const [indeterminate, setIndeterminate] = useState(false);
+  const [checkAll, setCheckAll] = useState(false);
 
   const [events, setEvents] = useState([]);
+  console.log('events', events);
   const intl = useIntl();
 
   useEffect(() => {
@@ -86,6 +91,35 @@ const ChartControl = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!isEmpty(allFields)) {
+      allFields.forEach((i) => {
+        i.value = i.name;
+      });
+      const fieldFilter = allFields.filter((item) => item.nameNoAccent == 'giaothong');
+      if (!isEmpty(fieldFilter)) {
+        form.setFieldsValue({ fieldId: fieldFilter[0].uuid });
+        setEvents(fieldFilter[0]?.eventList);
+      } else {
+        form.setFieldsValue({ fieldId: allFields[0].uuid });
+        setEvents(allFields[0]?.eventList);
+      }
+
+      if (!isEmpty(fieldFilter)) {
+        const eventsFilter = fieldFilter[0]?.eventList.filter(
+          (item) => item.nameNoAccent == 'daudosaiquydinh' || item.nameNoAccent == 'vuotdendo',
+        );
+        if (!isEmpty(eventsFilter) && eventsFilter.length >= 2) {
+          form.setFieldsValue({ eventIds: [eventsFilter[0].uuid, eventsFilter[1].uuid] });
+        } else if (!isEmpty(eventsFilter) && eventsFilter.length == 1) {
+          form.setFieldsValue({ eventIds: eventsFilter[0].uuid });
+        } else {
+          form.setFieldsValue({ eventIds: events[0]?.uuid });
+        }
+      }
+    }
+  }, [allFields]);
+
   const getDistricts = () => {
     try {
       AddressApi.getDistrictByProvinceId(form.getFieldValue('provinceId')).then((result) => {
@@ -123,6 +157,26 @@ const ChartControl = (props) => {
     }
   };
 
+  const onChange = (list) => {
+    setIndeterminate(!!list.length && list.length < events.length);
+    setCheckAll(list.length === events.length);
+  };
+
+  const onCheckAllChange = (e) => {
+    if (e.target.checked) {
+      const array = [];
+      events.forEach((item) => {
+        array.push(item.uuid);
+      });
+      form.setFieldsValue({ eventIds: array });
+    } else {
+      form.setFieldsValue({ eventIds: [] });
+    }
+    setIndeterminate(false);
+    setCheckAll(e.target.checked);
+    form.submit();
+  };
+
   const handleFilter = ({ typeDate, dateRange, provinceId, districtId, wardId }) => {
     const start = moment(dateRange[0]);
     const end = moment(dateRange[1]);
@@ -145,7 +199,7 @@ const ChartControl = (props) => {
         provinceIds: provinceId?.toString(),
         districtIds: districtId?.toString(),
         wardIds: wardId?.toString(),
-        eventUuids: '57353610-dc42-4096-8a51-9da12ee8b85e,bf943458-8cd3-4bc5-8f8b-e3b583c25f47',
+        eventUuids: form.getFieldValue('eventIds').toString(),
         cameraUuids: '',
       };
       props.dispatch({
@@ -170,9 +224,19 @@ const ChartControl = (props) => {
     districtId,
     wardId,
     fieldId,
+    eventIds,
     ...values
   }) => {
-    setFormValue({ typeDate, dateRange, provinceId, districtId, wardId, fieldId, ...values });
+    setFormValue({
+      typeDate,
+      dateRange,
+      provinceId,
+      districtId,
+      wardId,
+      fieldId,
+      eventIds,
+      ...values,
+    });
     if (typeDate) {
       if (typeDate == typeTime.WEEK) {
         setFormat('WW-YYYY');
@@ -228,6 +292,14 @@ const ChartControl = (props) => {
         aiCamera: [],
       });
       getAiCamera();
+    }
+
+    if (fieldId) {
+      const currentField = allFields.find((item) => item.uuid == fieldId);
+      setEvents(currentField?.eventList);
+      form.setFieldsValue({
+        eventIds: currentField.eventList[0].uuid || '',
+      });
     }
 
     form.submit();
@@ -400,6 +472,21 @@ const ChartControl = (props) => {
                   </Select.Option>
                 ))}
               </Select>
+            </Form.Item>
+            <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
+              Check all
+            </Checkbox>
+            <Divider />
+            <Form.Item name="eventIds" label="Field">
+              <CheckboxGroup onChange={onChange}>
+                {normalizeOptions('name', 'uuid', events).map(({ label, value }) => (
+                  <Row>
+                    <Col span={24}>
+                      <Checkbox value={value}>{label}</Checkbox>
+                    </Col>
+                  </Row>
+                ))}
+              </CheckboxGroup>
             </Form.Item>
           </div>
         </Form>

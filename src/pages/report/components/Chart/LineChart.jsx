@@ -13,7 +13,6 @@ import { TimeoutChart } from '../../style';
 const LineChart = (props) => {
   const [data, setData] = useState([]);
   const intl = useIntl();
-  console.log('props', props.timeout);
 
   useEffect(() => {
     if (!isEmpty(props.data)) {

@@ -5,6 +5,9 @@ import BarChart from './BarChart';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
 import { TimeoutChart } from '../../style';
+import { Tabs } from 'antd';
+
+const { TabPane } = Tabs;
 
 const Chart = ({ timeoutData }) => {
   const intl = useIntl();
@@ -18,15 +21,32 @@ const Chart = ({ timeoutData }) => {
         </TimeoutChart>
       ) : (
         <>
-          <div className="chart-background">
-            <LineChart />
-          </div>
-          <div className="chart-background">
-            <PieChart />
-          </div>
-          <div className="chart-background">
-            <BarChart />
-          </div>
+          <Tabs defaultActiveKey="1">
+            <TabPane
+              tab={intl.formatMessage({
+                id: `pages.report.chart.lineChart`,
+              })}
+              key="1"
+            >
+              <LineChart />
+            </TabPane>
+            <TabPane
+              tab={intl.formatMessage({
+                id: `pages.report.chart.pieChart`,
+              })}
+              key="2"
+            >
+              <PieChart />
+            </TabPane>
+            <TabPane
+              tab={intl.formatMessage({
+                id: `pages.report.chart.barChart`,
+              })}
+              key="3"
+            >
+              <BarChart />
+            </TabPane>
+          </Tabs>
         </>
       )}
     </div>

@@ -40,6 +40,9 @@ export default {
   'pages.report.chart.month': 'Tháng',
   'pages.report.chart.year': 'Năm',
   'pages.report.chart.dateRangeError': 'Hãy kiểm tra lại khoảng thời gian',
+  'pages.report.chart.lineChart': 'Biểu đồ đường',
+  'pages.report.chart.pieChart': 'Biểu đồ tròn',
+  'pages.report.chart.barChart': 'Biểu đồ cột',
 
   //User
 

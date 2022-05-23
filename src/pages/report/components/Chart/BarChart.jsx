@@ -1,31 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Column } from '@ant-design/plots';
+import { connect } from 'dva';
+import { useIntl } from 'umi';
 
-const BarChart = () => {
-  const data = [
-    { date: 2020, value: 100, type: 'A' },
-    { date: 2020, value: 200, type: 'B' },
-    { date: 2020, value: 300, type: 'C' },
-    { date: 2021, value: 200, type: 'A' },
-    { date: 2021, value: 400, type: 'B' },
-    { date: 2021, value: 600, type: 'C' },
-    { date: 2022, value: 200, type: 'A' },
-    { date: 2022, value: 400, type: 'B' },
-    { date: 2022, value: 600, type: 'C' },
-    { date: 2023, value: 200, type: 'A' },
-    { date: 2023, value: 400, type: 'B' },
-    { date: 2023, value: 600, type: 'C' },
-    { date: 2024, value: 200, type: 'A' },
-    { date: 2024, value: 400, type: 'B' },
-    { date: 2024, value: 600, type: 'C' },
-    { date: 2025, value: 200, type: 'A' },
-    { date: 2025, value: 400, type: 'B' },
-    { date: 2025, value: 600, type: 'C' },
-  ];
+import { TimeoutChart } from '../../style';
+
+const BarChart = (props) => {
+  const [data, setData] = useState([]);
+  const intl = useIntl();
+
+  useEffect(() => {
+    console.log('props?.data', props?.data);
+    setData(props?.data);
+  }, [props?.data]);
+
   const config = {
     data,
     isGroup: true,
-    xField: 'date',
+    xField: 'time',
     yField: 'value',
     seriesField: 'type',
     legend: {
@@ -46,7 +38,24 @@ const BarChart = () => {
       ],
     },
   };
-  return <Column {...config} />;
+  return (
+    <>
+      {!props.timeout ? (
+        <Column {...config} />
+      ) : (
+        <TimeoutChart>
+          {intl.formatMessage({
+            id: `pages.report.chart.dateRangeError`,
+          })}
+        </TimeoutChart>
+      )}
+    </>
+  );
 };
 
-export default BarChart;
+function mapStateToProps(state) {
+  const { chart, home } = state;
+  return { data: chart?.list, timeout: home?.timeoutDataPieChart };
+}
+
+export default connect(mapStateToProps)(BarChart);

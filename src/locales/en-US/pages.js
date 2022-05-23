@@ -40,6 +40,9 @@ export default {
   'pages.report.chart.month': 'Month',
   'pages.report.chart.year': 'Year',
   'pages.report.chart.dateRangeError': 'Please check date range again',
+  'pages.report.chart.lineChart': 'Line chart',
+  'pages.report.chart.pieChart': 'Pie chart',
+  'pages.report.chart.barChart': 'Bar chart',
 
   //User
 
