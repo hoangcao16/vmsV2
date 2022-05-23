@@ -1,5 +1,5 @@
-import FileService from './fileservice';
 import { notify } from '@/components/Notify';
+import FileService from './fileservice';
 
 const ExportEventFileApi = {
   uploadAvatar: async (avatarFileName, file) => {
@@ -17,6 +17,18 @@ const ExportEventFileApi = {
       result = await FileService.postRequestData('/api/v1/uploadAvatar', fmData);
     } catch (e) {
       notify('error', 'noti.archived_file', e.toString());
+      return {};
+    }
+    return result;
+  },
+
+  getAvatar: async (avatarFileName) => {
+    let result;
+    try {
+      result = await FileService.getRequestData('/api/v1/viewAvatar', {
+        fileId: avatarFileName,
+      });
+    } catch (e) {
       return {};
     }
     return result;
