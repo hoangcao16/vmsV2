@@ -7,6 +7,7 @@ import TableDailyArchive from './components/DaiyArchive/TableDailyArchive';
 import EventAI from './components/EventAI';
 
 const { TabPane } = Tabs;
+const DefaultActiveKey = 'dailyArchive';
 
 function Storage({ dispatch }) {
   const intl = useIntl();
@@ -40,7 +41,15 @@ function Storage({ dispatch }) {
 
         break;
       }
+
       case 'captured': {
+        dispatch({
+          type: 'captured/fetchAllCaptured',
+          payload: {
+            page: 1,
+            size: 10,
+          },
+        });
         break;
       }
       case 'event': {
@@ -60,13 +69,13 @@ function Storage({ dispatch }) {
   };
 
   useEffect(() => {
-    init('dailyArchive');
+    init(DefaultActiveKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <PageContainer>
-      <Tabs defaultActiveKey="dailyArchive" onChange={onChange}>
+      <Tabs defaultActiveKey={DefaultActiveKey} onChange={onChange}>
         <TabPane
           tab={`${intl.formatMessage({
             id: 'view.storage.daily_archive_files_list',

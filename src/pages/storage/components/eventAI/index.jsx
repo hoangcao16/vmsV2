@@ -135,34 +135,19 @@ function EventAI({ list, dispatch, metadata, loading }) {
   };
 
   const getAllCamera = (cameraGroupUuid) => {
-    if (cameraGroupUuid === '') {
-      cameraApi
-        .getAllAI({
-          page: 0,
-          size: 1000000,
-          sort_by: 'name',
-          order_by: 'asc',
-        })
-        .then((data) => {
-          if (data && data.payload) {
-            setCameraList(data.payload);
-          }
-        });
-    } else {
-      cameraApi
-        .getAllAI({
-          page: 0,
-          size: 1000000,
-          sort_by: 'name',
-          order_by: 'asc',
-          cameraGroupUuid: cameraGroupUuid,
-        })
-        .then((data) => {
-          if (data && data.payload) {
-            setCameraList(data.payload);
-          }
-        });
-    }
+    cameraApi
+      .getAllAI({
+        page: 0,
+        size: 1000000,
+        sort_by: 'name',
+        order_by: 'asc',
+        cameraGroupUuid: cameraGroupUuid === '' ? '' : cameraGroupUuid,
+      })
+      .then((data) => {
+        if (data && data.payload) {
+          setCameraList(data.payload);
+        }
+      });
   };
 
   const onChangeStartDate = (moment) => {
