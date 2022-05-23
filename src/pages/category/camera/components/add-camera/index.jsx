@@ -140,10 +140,10 @@ const AddCamera = ({
     if (currentLat === null) {
       notify('error', 'noti.ERROR', 'noti.please_select_lnglat_camera');
     } else {
-      const tags = data.tags.map((e) => {
-        return tagsOptions.find((tag) => tag.uuid === e);
+      const tags = data?.tags?.map((e) => {
+        return tagsOptions?.find((tag) => tag.uuid === e);
       });
-      const customTags = tags.map((item) => {
+      const customTags = tags?.map((item) => {
         const ct = {
           key: item?.key,
           value: [item?.uuid],
@@ -694,14 +694,14 @@ const AddCamera = ({
                     label={intl.formatMessage({
                       id: 'view.map.ward_id',
                     })}
-                    rules={[
-                      {
-                        required: true,
-                        message: `${intl.formatMessage({
-                          id: 'view.map.required_field',
-                        })}`,
-                      },
-                    ]}
+                    // rules={[
+                    //   {
+                    //     required: true,
+                    //     message: `${intl.formatMessage({
+                    //       id: 'view.map.required_field',
+                    //     })}`,
+                    //   },
+                    // ]}
                   >
                     <Select
                       showSearch

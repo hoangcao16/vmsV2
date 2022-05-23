@@ -98,12 +98,20 @@ export default {
   'pages.setting-user.list-user.administrativeUnitName': 'AdministrativeUnit name',
   'pages.setting-user.list-user.active': 'Active',
   'pages.setting-user.list-user.inactive': 'Inactive',
+  'pages.setting-user.list-user.edit-user': 'Edit user',
+  'pages.setting-user.list-user.imageUrl': 'Picture',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Success',
+
   'pages.setting-user.list-user.updateUserGroupSuccess': 'Update user group success',
   'pages.setting-user.list-user.removeUserGroupSuccess': 'Remove user group success',
   'pages.setting-user.list-user.createUserGroupSuccess': 'Create user group success',
+
+  'pages.setting-user.list-user.updateUserSuccess': 'Update user success',
+  'pages.setting-user.list-user.removeUserSuccess': 'Remove user success',
+  'pages.setting-user.list-user.createUserSuccess': 'Create user success',
+
   'pages.setting-user.list-user.addMemberIntoGroupSuccess': 'Add member into group success',
   'pages.setting-user.list-user.removeMemberIntoGroupSuccess': 'Remove member into group success',
 

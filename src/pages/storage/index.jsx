@@ -1,18 +1,72 @@
 import { PageContainer } from '@ant-design/pro-layout';
 import { Tabs } from 'antd';
-import React from 'react';
-import { useIntl } from 'umi';
-import Captured from './components/captured';
-import TableDailyArchive from './components/dailyArchive/TableDailyArchive';
+import React, { useEffect } from 'react';
+import { connect, useIntl } from 'umi';
+import Captured from './components/Captured';
+import TableDailyArchive from './components/DaiyArchive/TableDailyArchive';
+import EventAI from './components/EventAI';
 
 const { TabPane } = Tabs;
 
-function Storage() {
+function Storage({ dispatch }) {
   const intl = useIntl();
+
+  const init = (activeKey) => {
+    if (!activeKey) {
+      return null;
+    }
+
+    switch (activeKey) {
+      case 'dailyArchive': {
+        dispatch({
+          type: 'dailyArchive/fetchAllDailyArchive',
+          payload: {
+            page: 1,
+            size: 10,
+          },
+        });
+
+        break;
+      }
+
+      case 'ai': {
+        dispatch({
+          type: 'eventAI/fetchAllEventsAI',
+          payload: {
+            page: 1,
+            size: 10,
+          },
+        });
+
+        break;
+      }
+      case 'captured': {
+        break;
+      }
+      case 'event': {
+        break;
+      }
+      case 'important': {
+        break;
+      }
+
+      default:
+        console.log('Not found Key');
+    }
+  };
+
+  const onChange = (activeKey) => {
+    init(activeKey);
+  };
+
+  useEffect(() => {
+    init('dailyArchive');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <PageContainer>
-      <Tabs defaultActiveKey="1">
+      <Tabs defaultActiveKey="dailyArchive" onChange={onChange}>
         <TabPane
           tab={`${intl.formatMessage({
             id: 'view.storage.daily_archive_files_list',
@@ -51,11 +105,15 @@ function Storage() {
           })}`}
           key="ai"
         >
-          tab5
+          <EventAI />
         </TabPane>
       </Tabs>
     </PageContainer>
   );
 }
 
-export default Storage;
+function mapStateToProps(state) {
+  return state;
+}
+
+export default connect(mapStateToProps)(Storage);

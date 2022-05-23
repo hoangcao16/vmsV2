@@ -56,7 +56,12 @@ export const TreeStyle = styled(Tree)`
       align-items: center;
     }
     .ant-tree-node-content-wrapper {
+      display: flex;
+      align-items: center;
       width: 100%;
+      .ant-tree-title {
+        flex: 1;
+      }
     }
   }
 `;
