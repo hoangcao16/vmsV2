@@ -2,6 +2,7 @@ import { filterOption, normalizeOptions } from '@/components/select/CustomSelect
 import AddressApi from '@/services/address/AddressApi';
 import AdDivisionApi from '@/services/advision/AdDivision';
 import cameraApi from '@/services/controller-api/cameraService';
+import eventApi from '@/services/controller-api/eventApi';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import locale from 'antd/lib/date-picker/locale/vi_VN';
@@ -9,7 +10,7 @@ import debounce from 'lodash/debounce';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { connect, useIntl } from 'umi';
-import { CellCreateTime, ContainerFilterCaptured, ProTableStyled } from './capturedStyled';
+import { CellCreateTime, ContainerFilterEventFiles, ProTableStyled } from './eventFilesStyled';
 
 const layoutLong = {
   labelCol: { span: 6 },
@@ -21,47 +22,30 @@ const layoutShort = {
   wrapperCol: { span: 12 },
 };
 
-function Captured({ dispatch, loading, list, metadata }) {
+function EventFiles({ dispatch, loading, list, metadata }) {
   const intl = useIntl();
-  const [form] = Form.useForm();
 
-  const [collapse, setCollapse] = useState(true);
+  const [form] = Form.useForm();
+  const [collapse, setCollapse] = useState(false);
 
   const [cameraGroupList, setCameraGroupList] = useState([]);
   const [cameraList, setCameraList] = useState([]);
+
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const [provinceList, setProvinceList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
   const [adminUnitList, setAdminUnitList] = useState([]);
 
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [eventList, setEventList] = useState([]);
 
   const onPaginationChange = (page, size) => {
     const dataParam = Object.assign({ ...metadata, page, size });
 
     dispatch({
-      type: 'captured/fetchAllCaptured',
-      payload: dataParam,
-    });
-  };
-
-  const onFinish = (values) => {
-    const dataParam = Object.assign({
-      ...metadata,
-
-      page: 1,
-      size: 10,
-    });
-
-    dispatch({
-      type: 'captured/saveSearchParam',
-      payload: dataParam,
-    });
-
-    dispatch({
-      type: 'captured/fetchAllCaptured',
+      type: 'eventFiles/fetchAllEventFiles',
       payload: dataParam,
     });
   };
@@ -85,18 +69,18 @@ function Captured({ dispatch, loading, list, metadata }) {
 
     const dataParam = Object.assign({
       ...metadata,
-      searchValue: value,
+      searchValue: value ? value : '',
       page: 1,
       size: 10,
     });
 
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'eventFiles/saveSearchParam',
       payload: dataParam,
     });
 
     dispatch({
-      type: 'captured/fetchAllCaptured',
+      type: 'eventFiles/fetchAllEventFiles',
       payload: dataParam,
     });
   };
@@ -118,9 +102,9 @@ function Captured({ dispatch, loading, list, metadata }) {
   };
 
   const onChangeCamera = (cameraUuid) => {
-    const dataParam = Object.assign({ ...metadata, cameraUuid: cameraUuid });
+    const dataParam = Object.assign({ ...metadata, cameraUuid: cameraUuid ? cameraUuid : '' });
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'eventFiles/saveSearchParam',
       payload: dataParam,
     });
   };
@@ -132,13 +116,13 @@ function Captured({ dispatch, loading, list, metadata }) {
 
     const dataParam = Object.assign({
       ...metadata,
-      cameraGroupUuid: cameraGroupUuid,
+      cameraGroupUuid: cameraGroupUuid ? cameraGroupUuid : '',
       cameraUuid: null,
     });
 
     getAllCamera(cameraGroupUuid);
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'eventFiles/saveSearchParam',
       payload: dataParam,
     });
   };
@@ -154,7 +138,7 @@ function Captured({ dispatch, loading, list, metadata }) {
           startRecordTime: -1,
         });
         dispatch({
-          type: 'captured/saveSearchParam',
+          type: 'eventFiles/saveSearchParam',
           payload: dataParam,
         });
         setStartDate(null);
@@ -164,7 +148,7 @@ function Captured({ dispatch, loading, list, metadata }) {
           startRecordTime: +moment.unix(),
         });
         dispatch({
-          type: 'captured/saveSearchParam',
+          type: 'eventFiles/saveSearchParam',
           payload: dataParam,
         });
         setStartDate(moment);
@@ -172,7 +156,7 @@ function Captured({ dispatch, loading, list, metadata }) {
     } else {
       const dataParam = Object.assign({ ...metadata, startRecordTime: -1 });
       dispatch({
-        type: 'captured/saveSearchParam',
+        type: 'eventFiles/saveSearchParam',
         payload: dataParam,
       });
     }
@@ -189,7 +173,7 @@ function Captured({ dispatch, loading, list, metadata }) {
           endRecordTime: -1,
         });
         dispatch({
-          type: 'captured/saveSearchParam',
+          type: 'eventFiles/saveSearchParam',
           payload: dataParam,
         });
         setEndDate(null);
@@ -199,7 +183,7 @@ function Captured({ dispatch, loading, list, metadata }) {
           endRecordTime: +moment.unix(),
         });
         dispatch({
-          type: 'captured/saveSearchParam',
+          type: 'eventFiles/saveSearchParam',
           payload: dataParam,
         });
         setEndDate(moment);
@@ -207,7 +191,7 @@ function Captured({ dispatch, loading, list, metadata }) {
     } else {
       const dataParam = Object.assign({ ...metadata, endRecordTime: -1 });
       dispatch({
-        type: 'captured/saveSearchParam',
+        type: 'eventFiles/saveSearchParam',
         payload: dataParam,
       });
     }
@@ -226,9 +210,9 @@ function Captured({ dispatch, loading, list, metadata }) {
           console.log(err);
         });
     }
-    const dataParam = Object.assign({ ...metadata, provinceId: cityId });
+    const dataParam = Object.assign({ ...metadata, provinceId: cityId ? cityId : '' });
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'eventFiles/saveSearchParam',
       payload: dataParam,
     });
   };
@@ -245,26 +229,26 @@ function Captured({ dispatch, loading, list, metadata }) {
           console.log(err);
         });
     }
-    const dataParam = Object.assign({ ...metadata, districtId: districtId });
+    const dataParam = Object.assign({ ...metadata, districtId: districtId ? districtId : '' });
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'eventFiles/saveSearchParam',
       payload: dataParam,
     });
   };
 
   const onChangeWard = (wardId) => {
-    const dataParam = Object.assign({ ...metadata, wardId: wardId });
+    const dataParam = Object.assign({ ...metadata, wardId: wardId ? wardId : '' });
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'eventFiles/saveSearchParam',
       payload: dataParam,
     });
   };
 
   const onChangeAddress = (event) => {
-    let value = event.target.value;
+    const value = event.target.value ? event.target.value : '';
     const dataParam = Object.assign({ ...metadata, address: value });
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'eventFiles/saveSearchParam',
       payload: dataParam,
     });
   };
@@ -276,13 +260,14 @@ function Captured({ dispatch, loading, list, metadata }) {
     });
   };
 
-  const onChangeUnit = (unitId) => {
+  const onChangeEventType = (eventUuid) => {
     const dataParam = Object.assign({
       ...metadata,
-      administrativeUnitUuid: unitId,
+      eventUuid: eventUuid ? eventUuid : 'notnull',
     });
+
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'eventFiles/saveSearchParam',
       payload: dataParam,
     });
   };
@@ -290,10 +275,40 @@ function Captured({ dispatch, loading, list, metadata }) {
   const onChangeFileType = (value) => {
     const dataParam = Object.assign({
       ...metadata,
-      type: value,
+      type: value ? value : -1,
     });
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'eventFiles/saveSearchParam',
+      payload: dataParam,
+    });
+  };
+
+  const onChangeUnit = (unitId) => {
+    const dataParam = Object.assign({
+      ...metadata,
+      administrativeUnitUuid: unitId ? unitId : '',
+    });
+    dispatch({
+      type: 'eventFiles/saveSearchParam',
+      payload: dataParam,
+    });
+  };
+
+  const onFinish = (values) => {
+    const dataParam = Object.assign({
+      ...metadata,
+
+      page: 1,
+      size: 10,
+    });
+
+    dispatch({
+      type: 'eventFiles/saveSearchParam',
+      payload: dataParam,
+    });
+
+    dispatch({
+      type: 'eventFiles/fetchAllEventFiles',
       payload: dataParam,
     });
   };
@@ -334,6 +349,17 @@ function Captured({ dispatch, loading, list, metadata }) {
         setAdminUnitList(data.payload);
       }
     });
+
+    //
+
+    eventApi
+      .getAll({ page: 0, size: 1000000, sort_by: 'name', order_by: 'asc' })
+      .then((res) => {
+        setEventList(res.payload);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   const columns = [
@@ -343,7 +369,7 @@ function Captured({ dispatch, loading, list, metadata }) {
       }),
       dataIndex: 'createdTime',
       render: (text) => {
-        return <CellCreateTime>{moment(text * 1000).format('DD/MM/YYYY HH:mm')}</CellCreateTime>;
+        return <CellCreateTime>{moment(text).format('DD/MM/YYYY HH:mm')}</CellCreateTime>;
       },
     },
     {
@@ -361,6 +387,12 @@ function Captured({ dispatch, loading, list, metadata }) {
             id: 'view.storage.type_image',
           });
       },
+    },
+    {
+      title: intl.formatMessage({
+        id: 'view.storage.event',
+      }),
+      dataIndex: 'eventName',
     },
     {
       title: intl.formatMessage({
@@ -400,7 +432,7 @@ function Captured({ dispatch, loading, list, metadata }) {
 
   return (
     <div>
-      <ContainerFilterCaptured>
+      <ContainerFilterEventFiles>
         <Form name="basic" onFinish={onFinish} autoComplete="off" form={form}>
           <div className="collapse-filter">
             <div className="collapse-filter__left">
@@ -606,18 +638,16 @@ function Captured({ dispatch, loading, list, metadata }) {
                     <Col span={12}>
                       <Form.Item
                         {...layoutShort}
-                        label={intl.formatMessage({ id: 'view.map.administrative_unit' })}
-                        name="administrativeUnitUuid"
+                        label={intl.formatMessage({ id: 'view.storage.event_type' })}
+                        name="eventType"
                       >
                         <Select
-                          showSearch
                           allowClear
-                          onChange={(id) => onChangeUnit(id)}
+                          showSearch
+                          onChange={(id) => onChangeEventType(id)}
                           filterOption={filterOption}
-                          options={normalizeOptions('name', 'uuid', adminUnitList)}
-                          placeholder={intl.formatMessage({
-                            id: 'view.map.administrative_unit',
-                          })}
+                          options={normalizeOptions('name', 'uuid', eventList)}
+                          placeholder={intl.formatMessage({ id: 'view.storage.event_type' })}
                         />
                       </Form.Item>
                     </Col>
@@ -641,12 +671,27 @@ function Captured({ dispatch, loading, list, metadata }) {
                       </Form.Item>
                     </Col>
                   </Row>
+
+                  <Form.Item
+                    {...layoutLong}
+                    label={intl.formatMessage({ id: 'view.map.administrative_unit' })}
+                    name="administrativeUnitUuid"
+                  >
+                    <Select
+                      showSearch
+                      allowClear
+                      onChange={(id) => onChangeUnit(id)}
+                      filterOption={filterOption}
+                      options={normalizeOptions('name', 'uuid', adminUnitList)}
+                      placeholder={intl.formatMessage({ id: 'view.map.administrative_unit' })}
+                    />
+                  </Form.Item>
                 </Col>
               </Row>
             </div>
           )}
         </Form>
-      </ContainerFilterCaptured>
+      </ContainerFilterEventFiles>
 
       <ProTableStyled
         loading={loading}
@@ -676,12 +721,12 @@ function Captured({ dispatch, loading, list, metadata }) {
 }
 
 function mapStateToProps(state) {
-  const { list, metadata } = state.captured;
+  const { list, metadata } = state.eventFiles;
   return {
-    loading: state.loading.models.captured,
+    loading: state.loading.models.eventFiles,
     list,
     metadata,
   };
 }
 
-export default connect(mapStateToProps)(Captured);
+export default connect(mapStateToProps)(EventFiles);
