@@ -1,4 +1,4 @@
-import DailyArchiveApi from '@/services/storage-api/DailyArchiveApi';
+import DailyArchiveApi from '@/services/storage-api/dailyArchiveApi';
 
 export const initSearchCaptureFileParam = {
   startRecordTime: -1,
