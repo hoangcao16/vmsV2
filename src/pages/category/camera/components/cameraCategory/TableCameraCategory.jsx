@@ -1,6 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { AutoComplete, Button, Input } from 'antd';
 import { connect } from 'dva';
+import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
@@ -69,6 +70,26 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
     categoryColumns.splice(1, 1, ...addTagColumns);
   }
 
+  const handleSearch = (value) => {
+    if (type === 'camera_vendor') {
+      dispatch({
+        type: 'cameraCategory/fetchAllVendor',
+        payload: {
+          name: value,
+          size: metadata?.size,
+        },
+      });
+    } else if (type === 'camera_type') {
+      dispatch({
+        type: 'cameraCategory/fetchAllType',
+        payload: {
+          name: value,
+          size: metadata?.size,
+        },
+      });
+    }
+  };
+
   return (
     <>
       <ProTableStyle
@@ -101,20 +122,28 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
         }}
         toolbar={{
           multipleLine: true,
-          //   filter: (
-          //     <AutoComplete key="search" onSearch={debounce(handleSearch, 1000)}>
-          //       <Input.Search
-          //         placeholder={intl.formatMessage(
-          //           { id: 'view.common_device.please_enter_zone_name' },
-          //           {
-          //             plsEnter: intl.formatMessage({
-          //               id: 'please_enter',
-          //             }),
-          //           },
-          //         )}
-          //       />
-          //     </AutoComplete>
-          //   ),
+          filter: (
+            <AutoComplete
+              key="search"
+              className="search-camera-category"
+              onSearch={debounce(handleSearch, 1000)}
+            >
+              <Input.Search
+                placeholder={intl.formatMessage(
+                  {
+                    id: `view.category.plsEnter_camera_${
+                      type === 'camera_vendor' ? 'vendor' : type === 'camera_type' ? 'type' : 'tags'
+                    }`,
+                  },
+                  {
+                    plsEnter: intl.formatMessage({
+                      id: 'please_enter',
+                    }),
+                  },
+                )}
+              />
+            </AutoComplete>
+          ),
           actions: [
             <Button
               key="add"
