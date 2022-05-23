@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { connect, useIntl } from 'umi';
 import Captured from './components/Captured';
 import TableDailyArchive from './components/DaiyArchive/TableDailyArchive';
+import EventFiles from './components/EventFiles';
 import EventAI from './components/EventAI';
 
 const { TabPane } = Tabs;
@@ -53,6 +54,14 @@ function Storage({ dispatch }) {
         break;
       }
       case 'event': {
+        dispatch({
+          type: 'eventFiles/fetchAllEventFiles',
+          payload: {
+            page: 1,
+            size: 10,
+            eventUuid: 'notnull',
+          },
+        });
         break;
       }
       case 'important': {
@@ -98,7 +107,7 @@ function Storage({ dispatch }) {
           })}`}
           key="event"
         >
-          tab3
+          <EventFiles />
         </TabPane>
         <TabPane
           tab={`${intl.formatMessage({

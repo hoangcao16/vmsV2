@@ -152,11 +152,7 @@ function EventAI({ list, dispatch, metadata, loading }) {
 
   const onChangeStartDate = (moment) => {
     if (moment) {
-      moment.set('hour', 0);
-      moment.set('minute', 0);
-      moment.set('second', 0);
-      moment.set('millisecond', 1);
-      if (endDate && moment.isAfter(endDate)) {
+      if (endDate && moment.startOf('day').isAfter(endDate)) {
         form.setFieldsValue({
           startDate: null,
         });
@@ -191,11 +187,7 @@ function EventAI({ list, dispatch, metadata, loading }) {
 
   const onChangeEndDate = (moment) => {
     if (moment) {
-      moment.set('hour', 23);
-      moment.set('minute', 59);
-      moment.set('second', 59);
-      moment.set('millisecond', 999);
-      if (startDate && startDate.isAfter(moment)) {
+      if (startDate && moment.endOf('day').isBefore(startDate)) {
         form.setFieldsValue({
           endDate: null,
         });
