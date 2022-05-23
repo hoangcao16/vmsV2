@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import { connect } from 'dva';
 import { ProTableStyle } from './style';
-import { Button } from 'antd';
+import { AutoComplete, Button, Input } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import AddEditAdministrativeUnit from './components/AddEditAdministrativeUnit';
+import { debounce } from 'lodash';
 
 const AdministrativeUnit = ({ dispatch, list, metadata }) => {
   const intl = useIntl();
@@ -49,6 +50,16 @@ const AdministrativeUnit = ({ dispatch, list, metadata }) => {
     },
   ];
 
+  const handleSearch = (value) => {
+    dispatch({
+      type: 'advision/fetchAll',
+      payload: {
+        size: metadata?.size,
+        name: value,
+      },
+    });
+  };
+
   return (
     <>
       <PageContainer>
@@ -71,7 +82,20 @@ const AdministrativeUnit = ({ dispatch, list, metadata }) => {
           }}
           toolbar={{
             multipleLine: true,
-
+            filter: (
+              <AutoComplete key="search" onSearch={debounce(handleSearch, 1000)}>
+                <Input.Search
+                  placeholder={intl.formatMessage(
+                    { id: 'view.category.plsEnter_administrative_unit_name' },
+                    {
+                      plsEnter: intl.formatMessage({
+                        id: 'please_enter',
+                      }),
+                    },
+                  )}
+                />
+              </AutoComplete>
+            ),
             actions: [
               <Button
                 key="add"

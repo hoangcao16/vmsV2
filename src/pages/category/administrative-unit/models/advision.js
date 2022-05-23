@@ -18,8 +18,6 @@ export default {
   effects: {
     *fetchAll({ payload }, { call, put }) {
       try {
-        console.log('payload', payload);
-
         const response = yield call(AdDivisionApi.getAll, payload);
         yield put({
           type: 'save',
