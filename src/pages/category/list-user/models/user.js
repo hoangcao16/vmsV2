@@ -1,3 +1,4 @@
+import { notify } from '@/components/Notify';
 import UserApi from '@/services/user/UserApi';
 
 export default {
@@ -33,7 +34,13 @@ export default {
 
     *patch({ payload: { id, values } }, { call, put, select }) {
       try {
-        const res = yield call(UserApi.updateUser, id, values);
+        yield call(UserApi.updateUser, id, values);
+
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'pages.setting-user.list-user.updateUserSuccess',
+        );
         //check res==>push notif
         const oldList = yield select((state) => state.user.list);
         const metadata = yield select((state) => state.user.metadata);
@@ -56,26 +63,52 @@ export default {
         // yield put({ type: 'reload' });
       } catch (error) {
         console.log(error);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 
     *remove({ payload: id }, { call, put }) {
       try {
-        const res = yield call(UserApi.deleteUser, id);
+        yield call(UserApi.deleteUser, id);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'pages.setting-user.list-user.updateUserSuccess',
+        );
         //check res==>push notif
         yield put({ type: 'reload' });
       } catch (error) {
         console.log(error);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 
     *create({ payload: values }, { call, put }) {
       try {
-        const res = yield call(UserApi.createUser, values);
+        yield call(UserApi.createUser, values);
+
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'pages.setting-user.list-user.updateUserSuccess',
+        );
         //check res==>push notif
         yield put({ type: 'reload' });
       } catch (error) {
         console.log(error);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 

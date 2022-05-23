@@ -1,24 +1,21 @@
-import MSCustomizeDrawer from '@/components/Drawer';
 import { SpanCode } from '@/pages/category/camera/style';
 import permissionCheck from '@/utils/PermissionCheck';
 import {
   CheckOutlined,
   CloseOutlined,
-  DeleteOutlined,
   DownOutlined,
-  EditOutlined,
   RightOutlined,
   UserAddOutlined,
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
-import { Button, Col, Form, Input, Popconfirm, Row, Select, Space, Switch, Tooltip } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Space, Switch, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import UserRole from './conponnents/roles';
 import UserGroup from './conponnents/user-group';
-import AddUser from './conponnents/user/AddUser';
+import AddEditUser from './conponnents/user/AddEditUser';
 import { ContainerFilter } from './style';
 
 const layoutLong = {
@@ -31,7 +28,7 @@ const UserList = ({ dispatch, list, metadata }) => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [form] = Form.useForm();
   const [collapse, setCollapse] = useState(false);
-
+  const [selectedRecord, setSelectedRecord] = useState(null);
   useEffect(() => {
     dispatch({
       type: 'user/fetchAllUser',
@@ -42,11 +39,13 @@ const UserList = ({ dispatch, list, metadata }) => {
     });
   }, []);
 
-  const showDrawer = () => {
+  const showDrawer = (record) => {
     setOpenDrawer(true);
+    setSelectedRecord(record);
   };
   const onClose = () => {
     setOpenDrawer(false);
+    setSelectedRecord(null);
   };
 
   const handleUpdateStatus = async (e, uuid) => {
@@ -68,6 +67,7 @@ const UserList = ({ dispatch, list, metadata }) => {
       type: 'user/remove',
       payload: id,
     });
+    setOpenDrawer(false);
   };
 
   const columns = [
@@ -116,55 +116,6 @@ const UserList = ({ dispatch, list, metadata }) => {
         );
       },
     },
-
-    {
-      title: intl.formatMessage({
-        id: 'pages.setting-user.list-user.option',
-      }),
-      dataIndex: 'option',
-      valueType: 'option',
-      render: (text, record) => {
-        return (
-          <>
-            <Space>
-              {permissionCheck('edit_user') && (
-                <Tooltip
-                  placement="top"
-                  title={intl.formatMessage({
-                    id: 'pages.setting-user.list-user.edit',
-                  })}
-                  arrowPointAtCenter={true}
-                >
-                  <EditOutlined />
-                </Tooltip>
-              )}
-            </Space>
-            <Space>
-              {permissionCheck('delete_user') && (
-                <Popconfirm
-                  title={intl.formatMessage({
-                    id: 'pages.setting-user.list-user.delete-confirm',
-                  })}
-                  onConfirm={() => handleDeleteUser(record.uuid)}
-                  cancelText="Cancel"
-                  okText="Ok"
-                >
-                  <Tooltip
-                    placement="top"
-                    title={intl.formatMessage({
-                      id: 'pages.setting-user.list-user.delete',
-                    })}
-                    arrowPointAtCenter={true}
-                  >
-                    <DeleteOutlined />
-                  </Tooltip>
-                </Popconfirm>
-              )}
-            </Space>
-          </>
-        );
-      },
-    },
   ];
   const onPaginationChange = (page, size) => {
     dispatch({
@@ -194,6 +145,15 @@ const UserList = ({ dispatch, list, metadata }) => {
         dataSource={list}
         columns={columns}
         options={false}
+        onRow={(record, recordIndex) => {
+          return {
+            onClick: (event) => {
+              if (event.target.nodeName !== 'DIV') {
+                permissionCheck('edit_user') && showDrawer(record);
+              }
+            },
+          };
+        }}
         toolbar={{
           multipleLine: true,
           filter: (
@@ -274,7 +234,7 @@ const UserList = ({ dispatch, list, metadata }) => {
           actions: [
             <UserRole key="user-role" />,
             <UserGroup key="user-group" />,
-            <Button key="add" type="primary" onClick={showDrawer}>
+            <Button key="add" type="primary" onClick={() => showDrawer(null)}>
               <UserAddOutlined />
               {intl.formatMessage({
                 id: 'pages.setting-user.list-user.new-user',
@@ -299,18 +259,12 @@ const UserList = ({ dispatch, list, metadata }) => {
         }}
       />
       {openDrawer && (
-        <MSCustomizeDrawer
+        <AddEditUser
           openDrawer={openDrawer}
           onClose={onClose}
-          width={'20%'}
-          zIndex={1001}
-          title={intl.formatMessage({
-            id: 'pages.setting-user.list-user.new-user',
-          })}
-          placement="right"
-        >
-          <AddUser onClose={onClose} />
-        </MSCustomizeDrawer>
+          selectedRecord={selectedRecord}
+          handleDeleteUser={handleDeleteUser}
+        />
       )}
     </PageContainer>
   );
