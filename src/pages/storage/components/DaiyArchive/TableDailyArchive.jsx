@@ -63,34 +63,19 @@ function TableDailyArchive({ list, dispatch, metadata, loading }) {
   };
 
   const getAllCamera = (cameraGroupUuid) => {
-    if (cameraGroupUuid === '') {
-      cameraApi
-        .getAll({
-          page: 0,
-          size: 1000000,
-          sort_by: 'name',
-          order_by: 'asc',
-        })
-        .then((data) => {
-          if (data && data.payload) {
-            setCameraList(data.payload);
-          }
-        });
-    } else {
-      cameraApi
-        .getAll({
-          page: 0,
-          size: 1000000,
-          sort_by: 'name',
-          order_by: 'asc',
-          cameraGroupUuid: cameraGroupUuid,
-        })
-        .then((data) => {
-          if (data && data.payload) {
-            setCameraList(data.payload);
-          }
-        });
-    }
+    cameraApi
+      .getAll({
+        page: 0,
+        size: 1000000,
+        sort_by: 'name',
+        order_by: 'asc',
+        cameraGroupUuid: cameraGroupUuid === '' ? '' : cameraGroupUuid,
+      })
+      .then((data) => {
+        if (data && data.payload) {
+          setCameraList(data.payload);
+        }
+      });
   };
 
   const onChangeCamera = (cameraUuid) => {
@@ -392,7 +377,10 @@ function TableDailyArchive({ list, dispatch, metadata, loading }) {
           return intl.formatMessage({
             id: 'view.storage.type_video',
           });
-        if (text === 1) return 'view.storage.type_image';
+        if (text === 1)
+          return intl.formatMessage({
+            id: 'view.storage.type_image',
+          });
       },
     },
     {
@@ -425,13 +413,7 @@ function TableDailyArchive({ list, dispatch, metadata, loading }) {
   return (
     <div>
       <ContainerFilterDailyArchive>
-        <Form
-          className="formFilterDailyArchive"
-          name="basic"
-          onFinish={onFinish}
-          autoComplete="off"
-          form={form}
-        >
+        <Form name="basic" onFinish={onFinish} autoComplete="off" form={form}>
           <div className="collapse-filter">
             <Form.Item name="quickSearch">
               <Input.Search

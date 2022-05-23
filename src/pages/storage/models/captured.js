@@ -1,6 +1,6 @@
-import EventAiAPI from '@/services/storage-api/eventAI-api';
+import capturedApi from '../../../services/storage-api/capturedApi';
 
-export const initSearchEventsAI = {
+export const initSearchCaptured = {
   startRecordTime: -1,
   endRecordTime: -1,
   address: '',
@@ -13,21 +13,19 @@ export const initSearchEventsAI = {
   cameraUuid: '',
   type: -1,
   eventUuid: '',
-  searchType: '',
+  searchType: 'all',
   searchValue: '',
-  eventType: '',
-  status: '',
 };
 
 export default {
-  namespace: 'eventAI',
+  namespace: 'captured',
   state: {
     list: [],
     metadata: {
       page: 1,
       size: 10,
       total: 0,
-      ...initSearchEventsAI,
+      ...initSearchCaptured,
     },
   },
 
@@ -42,9 +40,9 @@ export default {
   },
 
   effects: {
-    *fetchAllEventsAI({ payload }, { call, put }) {
+    *fetchAllCaptured({ payload }, { call, put }) {
       try {
-        const response = yield call(EventAiAPI.getAllEvents, payload);
+        const response = yield call(capturedApi.getAllCaptured, payload);
         yield put({
           type: 'save',
           payload: {
