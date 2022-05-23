@@ -92,16 +92,10 @@ function TableCameraPermission({
   };
 
   const renderCheckbox = (record, namePer) => {
-    let defaultChecked = true;
-
-    if (record[namePer] === undefined) {
-      defaultChecked = false;
-    }
-
     return (
       <Checkbox
         onChange={(e) => onChange(e, namePer, record.cam_uuid)}
-        defaultChecked={defaultChecked}
+        checked={!!record[namePer]}
         disabled={record.isDisableRow}
       />
     );

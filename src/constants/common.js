@@ -9,6 +9,7 @@ export const STORAGE = {
   GROUP_UUID_SELECTED: 'group_uuid_selected',
   ROLE_CODE_SELECTED: 'role_code_selected',
   ROLE_UUID_SELECTED: 'role_uuid_selected',
+  USER_UUID_SELECTED: 'user_uuid_selected',
 };
 export const PAGE_SIZE = 20;
 export const STATUS_CODE = {

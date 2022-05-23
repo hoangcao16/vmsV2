@@ -1,22 +1,22 @@
 import { STORAGE } from '@/constants/common';
-import UserApi from '@/services/user/UserApi';
 import { CloseOutlined } from '@ant-design/icons';
 import { EditableProTable } from '@ant-design/pro-table';
 import { Checkbox, Popconfirm, Space, Tooltip } from 'antd';
 import { connect } from 'dva';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
-import AddCameraGroupPermission from './AddCameraGroupPermission';
+import AddCameraPermission from './AddCameraPermission';
 
-function TableGroupCameraPermission({
+function TableCameraPermission({
   id,
   dispatch,
-  listCameraGroupPermission,
+  listCameraPermission,
   metadata,
-  listCameraGroupNotPermission,
+  listCameraNotPermission,
   loading,
 }) {
   const intl = useIntl();
+
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const showDrawer = () => {
@@ -27,28 +27,24 @@ function TableGroupCameraPermission({
   };
 
   useEffect(() => {
-    UserApi.getUserGroupById(id).then(async (result) => {
-      localStorage.setItem(STORAGE.GROUP_CODE_SELECTED, result?.payload?.code);
-      localStorage.setItem(STORAGE.GROUP_UUID_SELECTED, result?.payload?.uuid);
-      dispatch({
-        type: 'groupCameraPermissionInGroupUser/fetchAllPermissionCameraGroups',
-        payload: {
-          code: result?.payload?.code,
-        },
-      });
+    dispatch({
+      type: 'cameraPermissionInUser/fetchAllPermissionCamera',
+      payload: {
+        uuid: id ?? localStorage.getItem(STORAGE.USER_UUID_SELECTED),
+      },
     });
-  }, []);
+  }, [id]);
 
   async function onChange(e, name, cameraGroupId) {
     const data = {
-      subject: `user_g@${localStorage.getItem(STORAGE.GROUP_CODE_SELECTED)}`,
-      object: `cam_g@${cameraGroupId}`,
+      subject: `user@${localStorage.getItem(STORAGE.USER_UUID_SELECTED) ?? id}`,
+      object: `cam@${cameraGroupId}`,
       action: name,
     };
     if (e.target.checked) {
       //dispatch
       dispatch({
-        type: 'groupCameraPermissionInGroupUser/setPermisionCameraGroups',
+        type: 'cameraPermissionInUser/setPermisionCamera',
         payload: data,
       });
 
@@ -59,19 +55,21 @@ function TableGroupCameraPermission({
     };
     //dispatch
     dispatch({
-      type: 'groupCameraPermissionInGroupUser/removePermisionCameraGroups',
+      type: 'cameraPermissionInUser/removePermisionCamera',
       payload: dataRemove,
     });
   }
 
-  const removeAllPermmisionInCameraGroups = async (record) => {
+  const removeAllPermmisionInCamera = async (record) => {
     const per = ['view_online', 'view_offline', 'setup_preset', 'ptz_control'];
+
     let data = [];
+
     for (let name of per) {
       if (record[name]) {
         data.push({
-          subject: `user_g@${localStorage.getItem(STORAGE.GROUP_CODE_SELECTED)}`,
-          object: `cam_g@${record.cam_group_uuid}`,
+          subject: `user@${localStorage.getItem(STORAGE.USER_UUID_SELECTED)}`,
+          object: `cam@${record.cam_uuid}`,
           action: name,
         });
       }
@@ -82,7 +80,7 @@ function TableGroupCameraPermission({
 
     //dispatch
     dispatch({
-      type: 'groupCameraPermissionInGroupUser/removePermisionCameraGroups',
+      type: 'cameraPermissionInUser/removePermisionCamera',
       payload: dataRemove,
     });
   };
@@ -90,19 +88,18 @@ function TableGroupCameraPermission({
   const renderCheckbox = (record, namePer) => {
     return (
       <Checkbox
-        onChange={(e) => onChange(e, namePer, record.cam_group_uuid)}
+        onChange={(e) => onChange(e, namePer, record.cam_uuid)}
         checked={!!record[namePer]}
         disabled={record.isDisableRow}
       />
     );
   };
-
   const columns = [
     {
       title: intl.formatMessage({
-        id: 'pages.setting-user.list-user.cameraGroup',
+        id: 'pages.setting-user.list-user.camera',
       }),
-      dataIndex: 'cam_group_name',
+      dataIndex: 'cam_name',
       width: '15%',
     },
 
@@ -158,7 +155,7 @@ function TableGroupCameraPermission({
                 title={intl.formatMessage({
                   id: 'pages.setting-user.list-user.delete-confirm',
                 })}
-                onConfirm={() => removeAllPermmisionInCameraGroups(record)}
+                onConfirm={() => removeAllPermmisionInCamera(record)}
                 cancelText="Cancel"
                 okText="Ok"
               >
@@ -186,20 +183,20 @@ function TableGroupCameraPermission({
       <EditableProTable
         loading={loading}
         headerTitle={intl.formatMessage({
-          id: 'pages.setting-user.list-user.permissionCameraGroups',
+          id: 'pages.setting-user.list-user.permissionCamera',
         })}
-        recordCreatorProps={{
-          creatorButtonText: intl.formatMessage({
-            id: 'pages.setting-user.list-user.permissionCameraGroups',
-          }),
-          onClick: () => showDrawer(),
-        }}
         rowKey="uuid"
         search={false}
-        value={listCameraGroupPermission}
+        value={listCameraPermission}
         columns={columns}
         // rowSelection={{}}
         options={false}
+        recordCreatorProps={{
+          creatorButtonText: intl.formatMessage({
+            id: 'pages.setting-user.list-user.permissionCamera',
+          }),
+          onClick: () => showDrawer(),
+        }}
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
@@ -207,15 +204,15 @@ function TableGroupCameraPermission({
             `${intl.formatMessage({
               id: 'pages.setting-user.list-user.total',
             })} ${total}`,
-          total: listCameraGroupPermission?.length,
+          total: listCameraPermission?.length,
           onChange: onPaginationChange,
           pageSize: 5,
           current: 1,
         }}
       />
       {openDrawer && (
-        <AddCameraGroupPermission
-          listCameraGroupNotPermission={listCameraGroupNotPermission}
+        <AddCameraPermission
+          listCameraNotPermission={listCameraNotPermission}
           onClose={onClose}
           openDrawer={openDrawer}
         />
@@ -225,14 +222,13 @@ function TableGroupCameraPermission({
 }
 
 function mapStateToProps(state) {
-  const { listCameraGroupPermission, metadata, listCameraGroupNotPermission } =
-    state.groupCameraPermissionInGroupUser;
+  const { listCameraPermission, metadata, listCameraNotPermission } = state.cameraPermissionInUser;
   return {
-    loading: state.loading.models.groupCameraPermissionInGroupUser,
-    listCameraGroupPermission,
+    loading: state.loading.models.cameraPermissionInUser,
+    listCameraPermission,
     metadata,
-    listCameraGroupNotPermission,
+    listCameraNotPermission,
   };
 }
 
-export default connect(mapStateToProps)(TableGroupCameraPermission);
+export default connect(mapStateToProps)(TableCameraPermission);

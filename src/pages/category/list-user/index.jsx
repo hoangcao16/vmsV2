@@ -1,3 +1,4 @@
+import { STORAGE } from '@/constants/common';
 import { SpanCode } from '@/pages/category/camera/style';
 import permissionCheck from '@/utils/PermissionCheck';
 import {
@@ -46,6 +47,10 @@ const UserList = ({ dispatch, list, metadata }) => {
   const onClose = () => {
     setOpenDrawer(false);
     setSelectedRecord(null);
+    dispatch({
+      type: 'user/removeUserUuid',
+    });
+    localStorage.removeItem(STORAGE.USER_UUID_SELECTED);
   };
 
   const handleUpdateStatus = async (e, uuid) => {
@@ -129,8 +134,6 @@ const UserList = ({ dispatch, list, metadata }) => {
 
   const handleSubmit = () => {
     const a = form.getFieldsValue(true);
-
-    console.log(a);
   };
 
   return (
@@ -150,6 +153,7 @@ const UserList = ({ dispatch, list, metadata }) => {
             onClick: (event) => {
               if (event.target.nodeName !== 'DIV') {
                 permissionCheck('edit_user') && showDrawer(record);
+                localStorage.setItem(STORAGE.USER_UUID_SELECTED, record.uuid);
               }
             },
           };

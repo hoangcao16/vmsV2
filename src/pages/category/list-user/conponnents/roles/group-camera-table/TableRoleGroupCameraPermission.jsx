@@ -45,8 +45,6 @@ function TableRoleGroupCameraPermission({
       action: name,
     };
 
-    console.log('data:', data);
-
     if (e.target.checked) {
       //dispatch
       dispatch({
@@ -93,16 +91,10 @@ function TableRoleGroupCameraPermission({
   };
 
   const renderCheckbox = (record, namePer) => {
-    let defaultChecked = true;
-
-    if (record[namePer] === undefined) {
-      defaultChecked = false;
-    }
-
     return (
       <Checkbox
-        onChange={(e) => onChange(e, namePer, record.cam_uuid)}
-        defaultChecked={defaultChecked}
+        onChange={(e) => onChange(e, namePer, record.cam_group_uuid)}
+        checked={!!record[namePer]}
         disabled={record.isDisableRow}
       />
     );
