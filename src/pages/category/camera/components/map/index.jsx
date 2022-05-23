@@ -90,12 +90,19 @@ const MapAddCamera = ({ resultSearchMap, handleSelectMap, defaultLongLat, isEdit
   }, []);
   useEffect(() => {
     if (resultSearchMap) {
-      const bbox = resultSearchMap.data.bbox;
-      const currentLatLngSelector = [bbox[2], bbox[3]];
-      setCurrentLan(currentLatLngSelector);
-      mapboxRef.current.flyTo({
-        center: currentLatLngSelector,
-      });
+      const bbox = resultSearchMap?.data?.bbox;
+      if (bbox?.length > 2) {
+        const currentLatLngSelector = [bbox[0], bbox[1]];
+        setCurrentLan(currentLatLngSelector);
+        mapboxRef.current.flyTo({
+          center: currentLatLngSelector,
+        });
+      } else {
+        setCurrentLan(LAT_LNG);
+        mapboxRef.current.flyTo({
+          center: LAT_LNG,
+        });
+      }
     }
   }, [resultSearchMap]);
   useEffect(() => {

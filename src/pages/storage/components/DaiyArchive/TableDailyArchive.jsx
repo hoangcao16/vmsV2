@@ -2,14 +2,16 @@ import { filterOption, normalizeOptions } from '@/components/select/CustomSelect
 import AddressApi from '@/services/address/AddressApi';
 import AdDivisionApi from '@/services/advision/AdDivision';
 import cameraApi from '@/services/controller-api/cameraService';
+import DailyArchiveApi from '@/services/storage-api/DailyArchiveApi';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import locale from 'antd/lib/date-picker/locale/vi_VN';
 import debounce from 'lodash/debounce';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { connect, useIntl } from 'umi';
-import { CellCreateTime, ContainerFilterCaptured, ProTableStyled } from './capturedStyled';
+import { useIntl, connect } from 'umi';
+import DrawerViewCapture from './components/DrawViewCapture/DrawerViewCapture';
+import { CellCreateTime, ContainerFilterDailyArchive, ProTableStyled } from './style';
 
 const layoutLong = {
   labelCol: { span: 6 },
@@ -21,82 +23,41 @@ const layoutShort = {
   wrapperCol: { span: 12 },
 };
 
-function Captured({ dispatch, loading, list, metadata }) {
-  const intl = useIntl();
+function TableDailyArchive({ list, dispatch, metadata, loading }) {
   const [form] = Form.useForm();
+  const intl = useIntl();
 
   const [collapse, setCollapse] = useState(true);
 
   const [cameraGroupList, setCameraGroupList] = useState([]);
   const [cameraList, setCameraList] = useState([]);
 
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
   const [provinceList, setProvinceList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
   const [adminUnitList, setAdminUnitList] = useState([]);
 
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [isOpenView, setIsOpenView] = useState(false);
+  const [captureSelected, setCaptureSelected] = useState(null);
+
+  const handleOpenDrawerView = (value) => {
+    setIsOpenView(true);
+    setCaptureSelected(value);
+  };
+
+  const handleCloseDrawerView = () => {
+    setIsOpenView(false);
+    setCaptureSelected(null);
+  };
 
   const onPaginationChange = (page, size) => {
     const dataParam = Object.assign({ ...metadata, page, size });
 
     dispatch({
-      type: 'captured/fetchAllCaptured',
-      payload: dataParam,
-    });
-  };
-
-  const onFinish = (values) => {
-    const dataParam = Object.assign({
-      ...metadata,
-
-      page: 1,
-      size: 10,
-    });
-
-    dispatch({
-      type: 'captured/saveSearchParam',
-      payload: dataParam,
-    });
-
-    dispatch({
-      type: 'captured/fetchAllCaptured',
-      payload: dataParam,
-    });
-  };
-
-  const handleQuickSearchPaste = (event) => {
-    const value = event.target.value.trimStart();
-    form.setFieldsValue({
-      quickSearch: value,
-    });
-  };
-
-  const handleQuickSearchBlur = (event) => {
-    const value = event.target.value.trim();
-    form.setFieldsValue({
-      quickSearch: value,
-    });
-  };
-
-  const onQuickSearchHandler = (e) => {
-    const value = e.target.value.trim();
-
-    const dataParam = Object.assign({
-      ...metadata,
-      searchValue: value,
-      page: 1,
-      size: 10,
-    });
-
-    dispatch({
-      type: 'captured/saveSearchParam',
-      payload: dataParam,
-    });
-
-    dispatch({
-      type: 'captured/fetchAllCaptured',
+      type: 'dailyArchive/fetchAllDailyArchive',
       payload: dataParam,
     });
   };
@@ -120,7 +81,7 @@ function Captured({ dispatch, loading, list, metadata }) {
   const onChangeCamera = (cameraUuid) => {
     const dataParam = Object.assign({ ...metadata, cameraUuid: cameraUuid });
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'dailyArchive/saveSearchParam',
       payload: dataParam,
     });
   };
@@ -138,7 +99,7 @@ function Captured({ dispatch, loading, list, metadata }) {
 
     getAllCamera(cameraGroupUuid);
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'dailyArchive/saveSearchParam',
       payload: dataParam,
     });
   };
@@ -154,7 +115,7 @@ function Captured({ dispatch, loading, list, metadata }) {
           startRecordTime: -1,
         });
         dispatch({
-          type: 'captured/saveSearchParam',
+          type: 'dailyArchive/saveSearchParam',
           payload: dataParam,
         });
         setStartDate(null);
@@ -164,7 +125,7 @@ function Captured({ dispatch, loading, list, metadata }) {
           startRecordTime: +moment.unix(),
         });
         dispatch({
-          type: 'captured/saveSearchParam',
+          type: 'dailyArchive/saveSearchParam',
           payload: dataParam,
         });
         setStartDate(moment);
@@ -172,7 +133,7 @@ function Captured({ dispatch, loading, list, metadata }) {
     } else {
       const dataParam = Object.assign({ ...metadata, startRecordTime: -1 });
       dispatch({
-        type: 'captured/saveSearchParam',
+        type: 'dailyArchive/saveSearchParam',
         payload: dataParam,
       });
     }
@@ -189,7 +150,7 @@ function Captured({ dispatch, loading, list, metadata }) {
           endRecordTime: -1,
         });
         dispatch({
-          type: 'captured/saveSearchParam',
+          type: 'dailyArchive/saveSearchParam',
           payload: dataParam,
         });
         setEndDate(null);
@@ -199,7 +160,7 @@ function Captured({ dispatch, loading, list, metadata }) {
           endRecordTime: +moment.unix(),
         });
         dispatch({
-          type: 'captured/saveSearchParam',
+          type: 'dailyArchive/saveSearchParam',
           payload: dataParam,
         });
         setEndDate(moment);
@@ -207,7 +168,7 @@ function Captured({ dispatch, loading, list, metadata }) {
     } else {
       const dataParam = Object.assign({ ...metadata, endRecordTime: -1 });
       dispatch({
-        type: 'captured/saveSearchParam',
+        type: 'dailyArchive/saveSearchParam',
         payload: dataParam,
       });
     }
@@ -228,7 +189,7 @@ function Captured({ dispatch, loading, list, metadata }) {
     }
     const dataParam = Object.assign({ ...metadata, provinceId: cityId });
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'dailyArchive/saveSearchParam',
       payload: dataParam,
     });
   };
@@ -247,7 +208,7 @@ function Captured({ dispatch, loading, list, metadata }) {
     }
     const dataParam = Object.assign({ ...metadata, districtId: districtId });
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'dailyArchive/saveSearchParam',
       payload: dataParam,
     });
   };
@@ -255,7 +216,7 @@ function Captured({ dispatch, loading, list, metadata }) {
   const onChangeWard = (wardId) => {
     const dataParam = Object.assign({ ...metadata, wardId: wardId });
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'dailyArchive/saveSearchParam',
       payload: dataParam,
     });
   };
@@ -264,7 +225,7 @@ function Captured({ dispatch, loading, list, metadata }) {
     let value = event.target.value;
     const dataParam = Object.assign({ ...metadata, address: value });
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'dailyArchive/saveSearchParam',
       payload: dataParam,
     });
   };
@@ -282,18 +243,61 @@ function Captured({ dispatch, loading, list, metadata }) {
       administrativeUnitUuid: unitId,
     });
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'dailyArchive/saveSearchParam',
       payload: dataParam,
     });
   };
 
-  const onChangeFileType = (value) => {
+  const handleQuickSearchPaste = (event) => {
+    const value = event.target.value.trimStart();
+    form.setFieldsValue({
+      quickSearch: value,
+    });
+  };
+
+  const handleQuickSearchBlur = (event) => {
+    const value = event.target.value.trim();
+    form.setFieldsValue({
+      quickSearch: value,
+    });
+  };
+
+  const onQuickSearchHandler = (e) => {
+    const value = e.target.value.trim();
+
     const dataParam = Object.assign({
       ...metadata,
-      type: value,
+      searchType: 'all',
+      searchValue: value,
+      page: 1,
+      size: 10,
     });
+
     dispatch({
-      type: 'captured/saveSearchParam',
+      type: 'dailyArchive/saveSearchParam',
+      payload: dataParam,
+    });
+
+    dispatch({
+      type: 'dailyArchive/fetchAllDailyArchive',
+      payload: dataParam,
+    });
+  };
+
+  const onFinish = (values) => {
+    const dataParam = Object.assign({
+      ...metadata,
+      page: 1,
+      size: 10,
+    });
+
+    dispatch({
+      type: 'dailyArchive/saveSearchParam',
+      payload: dataParam,
+    });
+
+    dispatch({
+      type: 'dailyArchive/fetchAllDailyArchive',
       payload: dataParam,
     });
   };
@@ -302,23 +306,6 @@ function Captured({ dispatch, loading, list, metadata }) {
     AddressApi.getAllProvinces()
       .then((res) => {
         setProvinceList(res.payload);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    getAllCamera('');
-
-    cameraApi
-      .getAllGroupCamera({
-        parent: 'all',
-        page: 0,
-        size: 1000000,
-        sort_by: 'name',
-        order_by: 'asc',
-      })
-      .then((res) => {
-        setCameraGroupList(res.payload);
       })
       .catch((err) => {
         console.log(err);
@@ -334,7 +321,33 @@ function Captured({ dispatch, loading, list, metadata }) {
         setAdminUnitList(data.payload);
       }
     });
+    //
+    getAllCamera('');
+    DailyArchiveApi.getAllGroupCamera({
+      parent: 'all',
+      page: 0,
+      size: 1000000,
+      sort_by: 'name',
+      order_by: 'asc',
+    })
+      .then((res) => {
+        setCameraGroupList(res.payload);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
+
+  // useEffect(() => {
+  //   dispatch({
+  //     type: 'dailyArchive/fetchAllDailyArchive',
+  //     payload: {
+  //       page: 1,
+  //       size: 10,
+  //     },
+  //   });
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const columns = [
     {
@@ -350,7 +363,7 @@ function Captured({ dispatch, loading, list, metadata }) {
       title: intl.formatMessage({
         id: 'view.storage.type',
       }),
-      dataIndex: 'type',
+      dataIndex: 'fileType',
       render: (text) => {
         if (text === 0)
           return intl.formatMessage({
@@ -381,72 +394,61 @@ function Captured({ dispatch, loading, list, metadata }) {
       ),
       dataIndex: 'cameraName',
     },
-  ];
-
-  const typeList = [
     {
-      id: 0,
-      name: `${intl.formatMessage({
-        id: 'view.storage.type_video',
-      })}`,
-    },
-    {
-      id: 1,
-      name: `${intl.formatMessage({
-        id: 'view.storage.type_image',
-      })}`,
+      title: intl.formatMessage({
+        id: 'view.storage.address',
+      }),
+      dataIndex: 'address',
     },
   ];
 
   return (
     <div>
-      <ContainerFilterCaptured>
+      <ContainerFilterDailyArchive>
         <Form name="basic" onFinish={onFinish} autoComplete="off" form={form}>
           <div className="collapse-filter">
-            <div className="collapse-filter__left">
-              <Form.Item name="quickSearch">
-                <Input.Search
-                  placeholder={intl.formatMessage({
-                    id: 'view.storage.search_daily_archive',
-                  })}
-                  maxLength={255}
-                  onPaste={handleQuickSearchPaste}
-                  onBlur={handleQuickSearchBlur}
-                  onChange={debounce(onQuickSearchHandler, 1500)}
-                  onSearch={() => {
-                    form.submit();
-                  }}
-                />
-              </Form.Item>
+            <Form.Item name="quickSearch">
+              <Input.Search
+                placeholder={intl.formatMessage({
+                  id: 'view.storage.search_daily_archive',
+                })}
+                maxLength={255}
+                onPaste={handleQuickSearchPaste}
+                onBlur={handleQuickSearchBlur}
+                onChange={debounce(onQuickSearchHandler, 1500)}
+                onSearch={() => {
+                  form.submit();
+                }}
+              />
+            </Form.Item>
 
-              {collapse === true && (
-                <Button
-                  type="link"
-                  onClick={() => {
-                    setCollapse(false);
-                  }}
-                >
-                  {intl.formatMessage({
-                    id: 'view.storage.filter',
-                  })}{' '}
-                  <RightOutlined />
-                </Button>
-              )}
+            {collapse === true && (
+              <Button
+                type="link"
+                onClick={() => {
+                  setCollapse(false);
+                }}
+              >
+                {intl.formatMessage({
+                  id: 'view.storage.filter',
+                })}{' '}
+                <RightOutlined />
+              </Button>
+            )}
 
-              {collapse === false && (
-                <Button
-                  type="link"
-                  onClick={() => {
-                    setCollapse(true);
-                  }}
-                >
-                  {intl.formatMessage({
-                    id: 'view.storage.hide_filter',
-                  })}{' '}
-                  <DownOutlined />
-                </Button>
-              )}
-            </div>
+            {collapse === false && (
+              <Button
+                type="link"
+                onClick={() => {
+                  setCollapse(true);
+                }}
+              >
+                {intl.formatMessage({
+                  id: 'view.storage.hide_filter',
+                })}{' '}
+                <DownOutlined />
+              </Button>
+            )}
           </div>
 
           {collapse === false && (
@@ -602,51 +604,26 @@ function Captured({ dispatch, loading, list, metadata }) {
                     </Col>
                   </Row>
 
-                  <Row>
-                    <Col span={12}>
-                      <Form.Item
-                        {...layoutShort}
-                        label={intl.formatMessage({ id: 'view.map.administrative_unit' })}
-                        name="administrativeUnitUuid"
-                      >
-                        <Select
-                          showSearch
-                          allowClear
-                          onChange={(id) => onChangeUnit(id)}
-                          filterOption={filterOption}
-                          options={normalizeOptions('name', 'uuid', adminUnitList)}
-                          placeholder={intl.formatMessage({
-                            id: 'view.map.administrative_unit',
-                          })}
-                        />
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={12}>
-                      <Form.Item
-                        {...layoutShort}
-                        label={intl.formatMessage({ id: 'view.storage.file_type' })}
-                        name="file_type"
-                      >
-                        <Select
-                          allowClear
-                          showSearch
-                          onChange={(status) => onChangeFileType(status)}
-                          filterOption={filterOption}
-                          options={normalizeOptions('name', 'id', typeList)}
-                          placeholder={intl.formatMessage({
-                            id: 'view.storage.file_type',
-                          })}
-                        />
-                      </Form.Item>
-                    </Col>
-                  </Row>
+                  <Form.Item
+                    {...layoutLong}
+                    label={intl.formatMessage({ id: 'view.map.administrative_unit' })}
+                    name="administrativeUnitUuid"
+                  >
+                    <Select
+                      showSearch
+                      allowClear
+                      onChange={(id) => onChangeUnit(id)}
+                      filterOption={filterOption}
+                      options={normalizeOptions('name', 'uuid', adminUnitList)}
+                      placeholder={intl.formatMessage({ id: 'view.map.administrative_unit' })}
+                    />
+                  </Form.Item>
                 </Col>
               </Row>
             </div>
           )}
         </Form>
-      </ContainerFilterCaptured>
+      </ContainerFilterDailyArchive>
 
       <ProTableStyled
         loading={loading}
@@ -655,6 +632,13 @@ function Captured({ dispatch, loading, list, metadata }) {
         options={false}
         dataSource={list}
         columns={columns}
+        onRow={(record) => {
+          return {
+            onClick: (event) => {
+              handleOpenDrawerView(record);
+            },
+          };
+        }}
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
@@ -671,17 +655,25 @@ function Captured({ dispatch, loading, list, metadata }) {
           current: metadata?.page,
         }}
       />
+
+      {captureSelected !== null && (
+        <DrawerViewCapture
+          isOpenView={isOpenView}
+          data={captureSelected}
+          onClose={handleCloseDrawerView}
+        />
+      )}
     </div>
   );
 }
 
 function mapStateToProps(state) {
-  const { list, metadata } = state.captured;
+  const { list, metadata } = state.dailyArchive;
   return {
-    loading: state.loading.models.captured,
+    loading: state.loading.models.dailyArchive,
     list,
     metadata,
   };
 }
 
-export default connect(mapStateToProps)(Captured);
+export default connect(mapStateToProps)(TableDailyArchive);

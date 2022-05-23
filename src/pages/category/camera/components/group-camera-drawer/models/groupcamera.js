@@ -6,6 +6,12 @@ export default {
     groupCameraParentOptions: [],
     selectedGroupCamera: {},
     closeDrawerState: false,
+    cameraGroupExistsed: [],
+    metadataCameraGroupExistsed: {
+      total: 0,
+      page: 1,
+      size: 10,
+    },
   },
   reducers: {
     saveGroupCameraParent(state, { payload }) {
@@ -18,6 +24,16 @@ export default {
       return {
         ...state,
         selectedGroupCamera: payload,
+      };
+    },
+    saveCameraGroupExistsed(
+      state,
+      { payload: { cameraGroupExistsed, metadataCameraGroupExistsed } },
+    ) {
+      return {
+        ...state,
+        cameraGroupExistsed,
+        metadataCameraGroupExistsed,
       };
     },
     closeDrawer(state) {
@@ -43,6 +59,20 @@ export default {
         yield put({
           type: 'saveSelectedGroupCamera',
           payload: response?.payload,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    *fetchCameraGroupExistsed({ payload }, { call, put }) {
+      try {
+        const response = yield call(cameraApi.getAll, payload);
+        yield put({
+          type: 'saveCameraGroupExistsed',
+          payload: {
+            cameraGroupExistsed: response?.payload,
+            metadataCameraGroupExistsed: response?.metadata,
+          },
         });
       } catch (error) {
         console.log(error);

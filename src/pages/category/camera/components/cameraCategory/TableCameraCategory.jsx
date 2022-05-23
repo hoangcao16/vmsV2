@@ -1,21 +1,40 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
-import React, { useEffect } from 'react';
-import { useIntl } from 'umi';
+import { AutoComplete, Button, Input } from 'antd';
 import { connect } from 'dva';
+import { debounce } from 'lodash';
+import { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
+import AddEditCameraCategory from './AddEditCameraCategory';
 
-const TableVendorType = ({
-  dispatch,
-  cameraTypesOptions,
-  tagsOptions,
-  vendorsOptions,
-  metadata,
-  type,
-}) => {
+const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, type }) => {
   const intl = useIntl();
+  const [openDrawerAddEdit, setOpenDrawerAddEdit] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
 
-  console.log('type', type);
+  useEffect(() => {
+    dispatch({
+      type: 'cameraCategory/fetchAllVendor',
+      payload: {
+        name: metadata?.name,
+        size: metadata?.size,
+      },
+    });
+    dispatch({
+      type: 'cameraCategory/fetchAllType',
+      payload: {
+        name: metadata?.name,
+        size: metadata?.size,
+      },
+    });
+    dispatch({
+      type: 'cameraCategory/fetchAllTags',
+      payload: {
+        name: metadata?.name,
+        size: metadata?.size,
+      },
+    });
+  }, []);
 
   const categoryColumns = [
     {
@@ -51,40 +70,34 @@ const TableVendorType = ({
     categoryColumns.splice(1, 1, ...addTagColumns);
   }
 
-  //   useEffect(() => {
-  //     if (type === 'camera_vendor') {
-  //       dispatch({
-  //         type: 'category/fetchAllVendor',
-  //         payload: {
-  //           size: metadata?.size,
-  //           name: metadata?.name,
-  //         },
-  //       });
-  //     } else if (type === 'camera_type') {
-  //       dispatch({
-  //         type: 'category/fetchAllType',
-  //         payload: {
-  //           size: metadata?.size,
-  //           name: metadata?.name,
-  //         },
-  //       });
-  //     } else if (type === 'camera_tags') {
-  //       dispatch({
-  //         type: 'category/fetchAllTags',
-  //         payload: {
-  //           size: metadata?.size,
-  //           name: metadata?.name,
-  //         },
-  //       });
-  //     }
-  //   }, [type]);
+  const handleSearch = (value) => {
+    if (type === 'camera_vendor') {
+      dispatch({
+        type: 'cameraCategory/fetchAllVendor',
+        payload: {
+          name: value,
+          size: metadata?.size,
+        },
+      });
+    } else if (type === 'camera_type') {
+      dispatch({
+        type: 'cameraCategory/fetchAllType',
+        payload: {
+          name: value,
+          size: metadata?.size,
+        },
+      });
+    }
+  };
 
   return (
     <>
       <ProTableStyle
         headerTitle={`${intl.formatMessage(
           {
-            id: 'view.category.camera_vendor',
+            id: `view.${
+              type === 'camera_vendor' ? 'category.camera_vendor' : 'camera.camera_type'
+            }`,
           },
           {
             cam: intl.formatMessage({
@@ -95,59 +108,55 @@ const TableVendorType = ({
         rowKey="id"
         search={false}
         dataSource={
-          type === 'camera_vendor'
-            ? vendorsOptions
-            : type === 'camera_type'
-            ? cameraTypesOptions
-            : tagsOptions
+          type === 'camera_vendor' ? listVendor : type === 'camera_type' ? listType : listTags
         }
         columns={categoryColumns}
         options={false}
         onRow={(record) => {
           return {
             onClick: () => {
-              //   setOpenDrawerAddEdit(true);
-              //   setSelectedRecord(record);
-              console.log('record', record);
+              setOpenDrawerAddEdit(true);
+              setSelectedRecord(record);
             },
           };
         }}
         toolbar={{
           multipleLine: true,
-          //   filter: (
-          //     <AutoComplete key="search" onSearch={debounce(handleSearch, 1000)}>
-          //       <Input.Search
-          //         placeholder={intl.formatMessage(
-          //           { id: 'view.common_device.please_enter_zone_name' },
-          //           {
-          //             plsEnter: intl.formatMessage({
-          //               id: 'please_enter',
-          //             }),
-          //           },
-          //         )}
-          //       />
-          //     </AutoComplete>
-          //   ),
-          //   actions: [
-          //     <Button
-          //       key="add"
-          //       type="primary"
-          //       onClick={() => {
-          //         setOpenDrawerAddEdit(true);
-          //         setSelectedRecord(null);
-          //       }}
-          //     >
-          //       <PlusOutlined />
-          //       {intl.formatMessage(
-          //         { id: 'view.common_device.add_zone' },
-          //         {
-          //           add: intl.formatMessage({
-          //             id: 'add',
-          //           }),
-          //         },
-          //       )}
-          //     </Button>,
-          //   ],
+          filter: (
+            <AutoComplete
+              key="search"
+              className="search-camera-category"
+              onSearch={debounce(handleSearch, 1000)}
+            >
+              <Input.Search
+                placeholder={intl.formatMessage(
+                  {
+                    id: `view.category.plsEnter_camera_${
+                      type === 'camera_vendor' ? 'vendor' : type === 'camera_type' ? 'type' : 'tags'
+                    }`,
+                  },
+                  {
+                    plsEnter: intl.formatMessage({
+                      id: 'please_enter',
+                    }),
+                  },
+                )}
+              />
+            </AutoComplete>
+          ),
+          actions: [
+            <Button
+              key="add"
+              type="primary"
+              onClick={() => {
+                setOpenDrawerAddEdit(true);
+                setSelectedRecord(null);
+              }}
+            >
+              <PlusOutlined />
+              {intl.formatMessage({ id: 'add' })}
+            </Button>,
+          ],
         }}
         pagination={{
           showQuickJumper: true,
@@ -157,7 +166,9 @@ const TableVendorType = ({
               id: 'view.camera.total',
             })} ${total} ${intl.formatMessage(
               {
-                id: 'view.category.camera_vendor',
+                id: `view.${
+                  type === 'camera_vendor' ? 'category.camera_vendor' : 'camera.camera_type'
+                }`,
               },
               {
                 cam: intl.formatMessage({
@@ -166,23 +177,32 @@ const TableVendorType = ({
               },
             )}`,
           // total: metadata?.total,
-          // pageSize: metadata?.size,
+          pageSize: 10,
           // current: metadata?.page,
         }}
       />
+
+      {openDrawerAddEdit && (
+        <AddEditCameraCategory
+          onClose={() => setOpenDrawerAddEdit(false)}
+          dispatch={dispatch}
+          selectedRecord={selectedRecord}
+          openDrawer={openDrawerAddEdit}
+          type={type}
+        />
+      )}
     </>
   );
 };
 
 function mapStateToProps(state) {
-  const { metadata } = state.category;
-  const { cameraTypesOptions, tagsOptions, vendorsOptions } = state.globalstore;
+  const { metadata, listVendor, listType, listTags } = state.cameraCategory;
   return {
-    loading: state.loading.models.category,
+    loading: state.loading.models.cameraCategory,
     metadata,
-    cameraTypesOptions,
-    tagsOptions,
-    vendorsOptions,
+    listVendor,
+    listType,
+    listTags,
   };
 }
 

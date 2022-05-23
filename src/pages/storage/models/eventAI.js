@@ -1,6 +1,6 @@
-import DailyArchiveApi from '@/services/storage-api/dailyArchiveApi';
+import EventAiAPI from '@/services/storage-api/eventAI-api';
 
-export const initSearchCaptureFileParam = {
+export const initSearchEventsAI = {
   startRecordTime: -1,
   endRecordTime: -1,
   address: '',
@@ -15,17 +15,19 @@ export const initSearchCaptureFileParam = {
   eventUuid: '',
   searchType: '',
   searchValue: '',
+  eventType: '',
+  status: '',
 };
 
 export default {
-  namespace: 'dailyArchive',
+  namespace: 'eventAI',
   state: {
     list: [],
     metadata: {
       page: 1,
       size: 10,
       total: 0,
-      ...initSearchCaptureFileParam,
+      ...initSearchEventsAI,
     },
   },
 
@@ -40,9 +42,9 @@ export default {
   },
 
   effects: {
-    *fetchAllDailyArchive({ payload }, { call, put }) {
+    *fetchAllEventsAI({ payload }, { call, put }) {
       try {
-        const response = yield call(DailyArchiveApi.getAllDailyArchive, payload);
+        const response = yield call(EventAiAPI.getAllEvents, payload);
         yield put({
           type: 'save',
           payload: {

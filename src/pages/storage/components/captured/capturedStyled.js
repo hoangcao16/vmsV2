@@ -5,11 +5,20 @@ export const CellCreateTime = styled.div`
   color: #177ddc !important;
 `;
 
-export const ContainerFilterDailyArchive = styled.div`
+export const ContainerFilterCaptured = styled.div`
   width: 100%;
-  padding-top: 16px;
+  margin-bottom: 2px;
 
   .collapse-filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 16px 24px;
+    background: #1f2020;
+  }
+
+  .collapse-filter__left {
     display: flex;
     align-items: center;
 
@@ -20,7 +29,13 @@ export const ContainerFilterDailyArchive = styled.div`
   }
 
   .extra-filter {
-    padding-top: 16px;
+    margin-top: 2px;
+    padding: 16px 24px;
+    background: #1f2020;
+  }
+
+  .btn-viewType {
+    border: none;
   }
 `;
 

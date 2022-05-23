@@ -1,4 +1,4 @@
-import DailyArchiveApi from '@/services/dailyArchive/DailyArchiveApi';
+import DailyArchiveApi from '@/services/storage-api/DailyArchiveApi';
 import { DeleteOutlined, DownloadOutlined, SaveOutlined, StarOutlined } from '@ant-design/icons';
 import { Button, Col, Collapse, Input, Row, Space, Spin, Tooltip } from 'antd';
 import { connect } from 'dva';

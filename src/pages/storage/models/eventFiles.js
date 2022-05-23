@@ -1,6 +1,7 @@
-import DailyArchiveApi from '@/services/storage-api/dailyArchiveApi';
+import DailyArchiveApi from '@/services/storage-api/DailyArchiveApi';
+import eventFilesApi from '@/services/storage-api/eventFilesApi';
 
-export const initSearchCaptureFileParam = {
+export const initSearchEventFiles = {
   startRecordTime: -1,
   endRecordTime: -1,
   address: '',
@@ -12,20 +13,20 @@ export const initSearchCaptureFileParam = {
   cameraGroupUuid: '',
   cameraUuid: '',
   type: -1,
-  eventUuid: '',
+  eventUuid: 'notnull',
   searchType: '',
   searchValue: '',
 };
 
 export default {
-  namespace: 'dailyArchive',
+  namespace: 'eventFiles',
   state: {
     list: [],
     metadata: {
       page: 1,
       size: 10,
       total: 0,
-      ...initSearchCaptureFileParam,
+      ...initSearchEventFiles,
     },
   },
 
@@ -40,9 +41,9 @@ export default {
   },
 
   effects: {
-    *fetchAllDailyArchive({ payload }, { call, put }) {
+    *fetchAllEventFiles({ payload }, { call, put }) {
       try {
-        const response = yield call(DailyArchiveApi.getAllDailyArchive, payload);
+        const response = yield call(eventFilesApi.getAllEventFiles, payload);
         yield put({
           type: 'save',
           payload: {
