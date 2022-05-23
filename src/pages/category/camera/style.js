@@ -21,6 +21,9 @@ export const ProTableStyle = styled(ProTable)`
   .ant-table-row {
     cursor: pointer;
   }
+  .search-camera-category {
+    width: 360px;
+  }
 `;
 export const SpanCode = styled.span`
   color: #1890ff;
