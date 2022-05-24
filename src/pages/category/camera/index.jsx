@@ -8,7 +8,7 @@ import GroupCamera from './groupCamera';
 import { StyledTabs } from './style';
 import TableCameraCategory from './components/cameraCategory/TableCameraCategory';
 import { useState } from 'react';
-const CameraDevice = ({}) => {
+const CameraDevice = () => {
   const intl = useIntl();
   const [type, setType] = useState('camera');
   return (
