@@ -380,6 +380,7 @@ export default {
   'view.storage.capture_snapshot': 'Chụp ảnh',
   'view.storage.delete': 'Xóa tệp',
   'view.storage.set_event': 'Gán sự kiện',
+
   //view user
   'view.user.record': 'Ghi hình',
   'view.user.configuration': 'Cấu hình',
@@ -618,6 +619,30 @@ export default {
   'view.ai_events.processingStatus.process': 'Chưa xử lý',
   'view.ai_events.processingStatus.processed': 'Đã xử lý',
   'view.ai_events.processingStatus.not_processed': 'Hủy',
+
+  'view.ai_events.event_files_list': 'Danh sách sự kiện AI',
+  'view.ai_events.attendance': 'Điểm danh',
+  'view.ai_events.intruding': 'Xâm nhập',
+  'view.ai_events.first_seen': 'Điểm danh',
+  'view.ai_events.just_crossed': 'Vượt rào',
+  'view.ai_events.daudo': 'Đậu đỗ sai quy định',
+  'view.ai_events.nhandienbienso': 'Nhận diện biển số',
+  'view.ai_events.vuotdendo': 'Vượt đèn đỏ',
+  'view.ai_events.damdong': 'Phát hiện đám đông',
+  'view.ai_events.line_crossing': 'Vượt rào ảo',
+  'view.ai_events.edit_info': 'Chỉnh sửa thông tin đối tượng',
+  'view.ai_events.info': 'Thông tin đối tượng',
+  'view.ai_events.edit_note': 'Chỉnh sửa ghi chú',
+  'view.ai_events.err_image': 'Hình ảnh vi phạm',
+  'view.ai_events.name1': 'Tên: ',
+  'view.ai_events.code1': 'Mã nhân viên: ',
+  'view.ai_events.department1': 'Phòng ban: ',
+  'view.ai_events.administrative1': 'Đơn vị: ',
+  'view.ai_events.type_object.vehicle': 'Xe',
+  'view.ai_events.type_object.xemay': 'Xe máy',
+  'view.ai_events.type_object.human': 'Người',
+  'view.ai_events.type_object.unknow': 'Không xác định',
+
   //view department
   'view.department.administrative': 'Đơn vị hành chính',
   'view.department.edit_department': 'Chỉnh sửa thông tin phòng ban',
