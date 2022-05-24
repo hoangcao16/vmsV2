@@ -94,6 +94,11 @@ export default {
           groupsOfUser: res?.payload?.groups,
         },
       });
+
+      yield put({
+        type: 'groupCameraPermissionInUser/reloadFetchAllPermissionCameraGroups',
+        payload: {},
+      });
     },
 
     *setRoleForUser({ payload: data }, { call, put, all }) {
@@ -128,6 +133,11 @@ export default {
         payload: {
           rolesOfUser: res?.payload?.roles,
         },
+      });
+
+      yield put({
+        type: 'groupCameraPermissionInUser/reloadFetchAllPermissionCameraGroups',
+        payload: {},
       });
     },
   },

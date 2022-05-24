@@ -159,6 +159,7 @@ export default {
           localStorage.getItem(STORAGE.ROLE_CODE_SELECTED),
       );
       yield put({ type: 'fetchAllPermissionCameraGroups', payload: { code } });
+      yield put({ type: 'cameraPermissionInRole/reloadFetchAllPermissionCamera', payload: {} });
     },
   },
 };
