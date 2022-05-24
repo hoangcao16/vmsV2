@@ -95,7 +95,9 @@
         "umi": "^3.5.0",
         "umi-serve": "^1.9.10",
         "uuid": "^8.3.2",
-        "vietmaps-gl": "^1.0.0-alpha"
+        "vietmaps-gl": "^1.0.0-alpha",
+        "react-beautiful-dnd": "^13.1.0",
+        "react-custom-scrollbars": "^4.2.1"
     },
     "devDependencies": {
         "@ant-design/pro-cli": "^2.1.0",

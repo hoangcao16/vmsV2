@@ -70,5 +70,5 @@ export default {
   'menu.storage': 'Lưu trữ',
 
   //Live
-  'menu.live': 'Giám sát',
+  'menu.live_mode': 'Giám sát',
 };
