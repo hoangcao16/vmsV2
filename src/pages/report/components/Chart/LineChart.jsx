@@ -6,13 +6,19 @@ import moment from 'moment';
 import reportApi from '@/services/report/ReportApi';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
+import { isEmpty } from 'lodash';
+import styled from 'styled-components';
+import { TimeoutChart } from '../../style';
 
 const LineChart = (props) => {
   const [data, setData] = useState([]);
   const intl = useIntl();
 
   useEffect(() => {
-    if (props.data) {
+    if (!isEmpty(props.data)) {
+      props.data.forEach((item) => {
+        item.value = parseInt(item.value);
+      });
       setData(props.data);
     }
   }, [props.data]);
@@ -42,14 +48,39 @@ const LineChart = (props) => {
         typeChart={'line'}
       />
       <Divider />
-      <Line {...config} />
+      {props.timeoutFieldData ? (
+        <TimeoutChart>
+          {intl.formatMessage({
+            id: `pages.report.chart.emptyField`,
+          })}
+        </TimeoutChart>
+      ) : props.timeoutEventData ? (
+        <TimeoutChart>
+          {intl.formatMessage({
+            id: `pages.report.chart.emptyEvent`,
+          })}
+        </TimeoutChart>
+      ) : !props.timeout ? (
+        <Line {...config} />
+      ) : (
+        <TimeoutChart>
+          {intl.formatMessage({
+            id: `pages.report.chart.dateRangeError`,
+          })}
+        </TimeoutChart>
+      )}
     </>
   );
 };
 
 function mapStateToProps(state) {
-  const { chart } = state;
-  return { data: chart?.list };
+  const { chart, home } = state;
+  return {
+    data: chart?.list,
+    timeout: home?.timeoutDataLineChart,
+    timeoutFieldData: state?.chartControl?.timeoutFieldData,
+    timeoutEventData: state?.chartControl?.timeoutEventData,
+  };
 }
 
 export default connect(mapStateToProps)(LineChart);

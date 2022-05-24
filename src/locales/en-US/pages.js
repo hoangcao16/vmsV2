@@ -39,6 +39,18 @@ export default {
   'pages.report.chart.week': 'Week',
   'pages.report.chart.month': 'Month',
   'pages.report.chart.year': 'Year',
+  'pages.report.chart.dateRangeError': 'Please check date range again',
+  'pages.report.chart.lineChart': 'Line chart',
+  'pages.report.chart.pieChart': 'Pie chart',
+  'pages.report.chart.barChart': 'Bar chart',
+  'pages.report.chart.emptyField': 'There are no field in the system',
+  'pages.report.chart.emptyEvent': 'There are no event in the field',
+  'pages.report.chart.filter': 'Filter',
+  'pages.report.chart.dateRange': 'Date Range',
+  'pages.report.chart.area': 'Area',
+  'pages.report.chart.field': 'Field',
+  'pages.report.chart.eventType': 'Event type',
+  'pages.report.chart.checkAll': 'Check all',
 
   //User
 

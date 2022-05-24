@@ -2,9 +2,9 @@ import React from 'react';
 import { Row, Col } from 'antd';
 import Notification from './Notification';
 import './Home.less';
-import LineChart from '../report/components/chart/LineChart';
-import PieChart from '../report/components/chart/PieChart';
-import CameraStatistics from '../report/components/cameraStatistics';
+import LineChart from '../report/components/Chart/LineChart';
+import PieChart from '../report/components/Chart/PieChart';
+import CameraStatistics from '../report/components/CameraStatistics';
 
 const reportCol = {
   xs: 24,

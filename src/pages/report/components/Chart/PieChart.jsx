@@ -5,6 +5,8 @@ import { Divider } from 'antd';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
 import { isEmpty } from 'lodash';
+import styled from 'styled-components';
+import { TimeoutChart } from '../../style';
 
 const PieChart = (props) => {
   const intl = useIntl();
@@ -84,14 +86,39 @@ const PieChart = (props) => {
         typeChart={'pie'}
       />
       <Divider />
-      <Pie {...config} />
+      {props.timeoutFieldData ? (
+        <TimeoutChart>
+          {intl.formatMessage({
+            id: `pages.report.chart.emptyField`,
+          })}
+        </TimeoutChart>
+      ) : props.timeoutEventData ? (
+        <TimeoutChart>
+          {intl.formatMessage({
+            id: `pages.report.chart.emptyEvent`,
+          })}
+        </TimeoutChart>
+      ) : !props.timeout ? (
+        <Pie {...config} />
+      ) : (
+        <TimeoutChart>
+          {intl.formatMessage({
+            id: `pages.report.chart.dateRangeError`,
+          })}
+        </TimeoutChart>
+      )}
     </>
   );
 };
 
 function mapStateToProps(state) {
-  const { chart } = state;
-  return { data: chart?.listPieChart };
+  const { chart, home } = state;
+  return {
+    data: chart?.listPieChart,
+    timeout: home?.timeoutDataPieChart,
+    timeoutFieldData: state?.chartControl?.timeoutFieldData,
+    timeoutEventData: state?.chartControl?.timeoutEventData,
+  };
 }
 
 export default connect(mapStateToProps)(PieChart);

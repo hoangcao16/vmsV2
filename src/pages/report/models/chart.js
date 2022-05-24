@@ -7,16 +7,17 @@ export default {
   state: {
     list: [],
     listPieChart: [],
+    timeoutData: false,
   },
   reducers: {
-    save(state, { payload: { data: list, dataPieChart: listPieChart } }) {
+    save(state, { payload: { data: list, dataPieChart: listPieChart, ...rest } }) {
       if (!isEmpty(list)) {
         state.list = list;
       }
       if (!isEmpty(listPieChart)) {
         state.listPieChart = listPieChart;
       }
-      return { ...state };
+      return { ...state, ...rest };
     },
   },
   effects: {
@@ -45,6 +46,14 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    *timeoutData({ boolean }, { put }) {
+      yield put({
+        type: 'save',
+        payload: {
+          timeoutData: boolean,
+        },
+      });
     },
   },
 };

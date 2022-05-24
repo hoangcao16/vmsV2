@@ -39,6 +39,18 @@ export default {
   'pages.report.chart.week': 'Tuần',
   'pages.report.chart.month': 'Tháng',
   'pages.report.chart.year': 'Năm',
+  'pages.report.chart.dateRangeError': 'Hãy kiểm tra lại khoảng thời gian',
+  'pages.report.chart.lineChart': 'Biểu đồ đường',
+  'pages.report.chart.pieChart': 'Biểu đồ tròn',
+  'pages.report.chart.barChart': 'Biểu đồ cột',
+  'pages.report.chart.emptyField': 'Không có lĩnh vực nào trong hệ thống',
+  'pages.report.chart.emptyEvent': 'Không có sự kiện nào trong lĩnh vực',
+  'pages.report.chart.filter': 'Bộ lọc',
+  'pages.report.chart.dateRange': 'Khoảng thời gian',
+  'pages.report.chart.area': 'Khu vực',
+  'pages.report.chart.field': 'Lĩnh vực',
+  'pages.report.chart.eventType': 'Loại sự kiện',
+  'pages.report.chart.checkAll': 'Chọn tất cả',
 
   //User
 
