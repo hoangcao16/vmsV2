@@ -13,9 +13,9 @@ import {
 import { ProTableStyle, SpanCode, ContainerFilterDailyArchive } from './style';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
-import AddCamera from './components/add-camera';
-import EditCamera from './components/edit-camera';
-import ScanCamera from './components/scan-camera';
+import AddCamera from './components/AddCamera';
+import EditCamera from './components/EditCamera';
+import ScanCamera from './components/ScanCamera';
 import debounce from 'lodash/debounce';
 import { CAMERASTATUS } from '@/constants/common';
 

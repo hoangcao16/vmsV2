@@ -11,7 +11,7 @@ import {
   InboxOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import MapAddCamera from '../map';
+import MapAddCamera from '../Map';
 import { v4 as uuidV4 } from 'uuid';
 import clearData from '@/utils/CleanData';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
@@ -119,6 +119,9 @@ const AddCamera = ({
   };
   const onClose = () => {
     setIsAddNewDrawer(false);
+    setAvatarUrl('');
+    setAvatarFileName('');
+    setResultSearchMap(null);
     form.resetFields();
     dispatch({
       type: 'scanCamera/saveSelectedIp',
@@ -879,9 +882,14 @@ const AddCamera = ({
                     <Form.Item
                       labelCol={{ span: 5 }}
                       wrapperCol={{ span: 24 }}
-                      label={intl.formatMessage({
-                        id: 'view.category.tags',
-                      })}
+                      label={intl.formatMessage(
+                        {
+                          id: 'view.category.tags',
+                        },
+                        {
+                          cam: intl.formatMessage({ id: 'camera' }),
+                        },
+                      )}
                       name={['tags']}
                       rules={[]}
                     >
