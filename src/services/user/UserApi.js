@@ -157,6 +157,39 @@ const UserApi = {
   removePermissionInRole: async (dataRemove) => {
     return request.post('/authz/api/v0/authorization/remove_permission', dataRemove);
   },
+
+  // Setting User Data
+
+  getAllGroups: async (params) => {
+    return request.get(`/authz/api/v0/groups`, {
+      params,
+    });
+  },
+
+  getAllRoles: async (params) => {
+    return request.get(`/authz/api/v0/roles`, {
+      params,
+    });
+  },
+  getRolesByUser: async (uuid) => {
+    return request.get(`/authz/api/v0/authorization/get_permission?subject=user@${uuid}`);
+  },
+
+  getGroupsByUser: async (uuid) => {
+    return request.get(`/authz/api/v0/authorization/get_permission?subject=user@${uuid}`);
+  },
+
+  setRoleForUser: async (data) => {
+    return request.post('/authz/api/v0/users/set_roles', data);
+  },
+
+  setGroupForUser: async (data) => {
+    return request.post('/authz/api/v0/users/set_groups', data);
+  },
+
+  getGroupByUser: async (uuid) => {
+    return request.get(`/authz/api/v0/authorization/get_permission?subject=user@${uuid}`);
+  },
 };
 
 export default UserApi;

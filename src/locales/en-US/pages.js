@@ -130,6 +130,9 @@ export default {
     'Remove Permision Camera Group Success',
 
   'pages.setting-user.list-user.titleErrors': 'Errors',
+  'pages.setting-user.list-user.permission-by': 'Permission By:',
+  'pages.setting-user.list-user.permission': 'Permission',
+  'pages.setting-user.list-user.information': 'Information',
 
   // Code AUTH
   'pages.setting-user.list-user.601': 'BadRequest',
