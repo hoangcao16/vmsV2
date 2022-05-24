@@ -1,0 +1,174 @@
+import React, { useState, useEffect } from 'react';
+import {
+  AimOutlined,
+  EnvironmentOutlined,
+  CloseOutlined,
+  EditOutlined,
+  CameraOutlined,
+} from '@ant-design/icons';
+import { Tooltip, Spin, Button } from 'antd';
+import { TYPE_FORM_ACTION_ON_MAP } from '@/constants/map';
+import camImgSrcDefault from '@/assets/img/cam-default.png';
+import adUnitImgSrcDefault from '@/assets/img/adminis-unit-default.png';
+// import ExportEventFileApi from '../../actions/api/exporteventfile/ExportEventFileApi';
+import { isEmpty } from 'lodash';
+// import { useSelector, useDispatch } from "react-redux";
+
+const CamInfoPopup = (props) => {
+  const {
+    type,
+    dataDetailInfo,
+    startSnapshotCamera,
+    onClosePopup,
+    handleEditInfo,
+    trans: intl,
+  } = props;
+  const [imageUrl, setImageUrl] = useState(null);
+
+  useEffect(() => {
+    const loadImageFileHanleler = (avatarFileName) => {
+      if (avatarFileName) {
+        // ExportEventFileApi.getAvatar(avatarFileName).then((result) => {
+        //   if (result.data) {
+        //     let blob = new Blob([result.data], { type: 'octet/stream' });
+        //     let url = window.URL.createObjectURL(blob);
+        //     setImageUrl(url);
+        //   } else {
+        //     setImageUrl('');
+        //   }
+        // });
+      }
+    };
+    loadImageFileHanleler(dataDetailInfo?.avatarFileName);
+  }, [dataDetailInfo?.avatarFileName]);
+
+  const renderCamInfo = () => (
+    <>
+      <li>
+        <EnvironmentOutlined className="camera-info__icon camera-info__icon--black" />
+        <span className="camera-info__detail-desc camera-info__detail-address">
+          {dataDetailInfo ? dataDetailInfo.address : ''}
+        </span>
+      </li>
+
+      <li>
+        <span className="camera-info__detail-desc camera-info__detail-address camera-info__detail--adminis">
+          {dataDetailInfo?.administrativeUnitName ? dataDetailInfo.administrativeUnitName : ''}
+        </span>
+      </li>
+
+      <li>
+        <span className="camera-info__detail-desc camera-info__detail-address camera-info__detail--venderName">
+          {dataDetailInfo?.vendorName ? dataDetailInfo.vendorName : ''}
+        </span>
+      </li>
+
+      <li>
+        <AimOutlined className="camera-info__icon camera-info__icon--black" />
+        <span className="camera-info__detail-desc camera-info__phone">
+          {dataDetailInfo && dataDetailInfo.zoneName
+            ? dataDetailInfo.zoneName
+            : `${intl.formatMessage({ id: 'view.maps.not_provide' })}`}
+        </span>
+      </li>
+    </>
+  );
+
+  const renderAdminisUnitInfo = () => (
+    <>
+      <li>
+        <EnvironmentOutlined className="camera-info__icon camera-info__icon--black" />
+        <span className="camera-info__detail-desc">
+          {dataDetailInfo
+            ? `${dataDetailInfo.address}, ${
+                !isEmpty(dataDetailInfo.wardName) ? `${dataDetailInfo.wardName},` : ''
+              } ${dataDetailInfo.districtName},${dataDetailInfo.provinceName}`
+            : ''}
+        </span>
+      </li>
+
+      <li>
+        <span className="camera-info__detail-desc camera-info__detail--phone">
+          {dataDetailInfo?.tel ? `+${dataDetailInfo.tel}` : '+XXXXXXXXXX'}
+        </span>
+      </li>
+
+      <li>
+        <AimOutlined className="camera-info__icon camera-info__icon--black" />
+        <span className="camera-info__detail-desc ">
+          {dataDetailInfo && dataDetailInfo.lat_ && dataDetailInfo.long_
+            ? `${dataDetailInfo.lat_}/${dataDetailInfo.long_}`
+            : `${intl.formatMessage({ id: 'view.maps.not_provide' })}`}
+        </span>
+      </li>
+    </>
+  );
+
+  return (
+    <div className="camera-info">
+      <div className="camera-info__header">
+        {type === TYPE_FORM_ACTION_ON_MAP.cam && (
+          <Spin
+            tip={intl.formatMessage({ id: 'view.maps.loading' })}
+            className="camera-info__header--loading"
+            id={`cam-loading-${dataDetailInfo.uuid}`}
+          ></Spin>
+        )}
+        {type === TYPE_FORM_ACTION_ON_MAP.cam ? (
+          <video
+            id={`video-slot-${dataDetailInfo.uuid}`}
+            className="video-js"
+            preload="auto"
+            width="100%"
+            height="100%"
+            poster={imageUrl ? imageUrl : camImgSrcDefault}
+            data-setup="{}"
+          />
+        ) : (
+          <img
+            src={imageUrl ? imageUrl : adUnitImgSrcDefault}
+            className="camera-info__header__img"
+          />
+        )}
+        <div className="camera-info__header-action">
+          <span
+            className="camera-info__icon icon-item icon-item__pin"
+            id={`icon-pin-cam-${dataDetailInfo.uuid}`}
+          >
+            <Button
+              icon={<CameraOutlined />}
+              onClick={() => {
+                startSnapshotCamera(type, dataDetailInfo);
+              }}
+            />
+          </span>
+
+          <span className="edit-info__icon icon-item">
+            <Button icon={<EditOutlined />} onClick={() => handleEditInfo(dataDetailInfo)} />
+          </span>
+
+          <span className="close-info__icon icon-item">
+            <Button
+              icon={<CloseOutlined />}
+              onClick={() => {
+                onClosePopup(type, dataDetailInfo.uuid);
+              }}
+            />
+          </span>
+        </div>
+      </div>
+      <Tooltip placement="top" title={dataDetailInfo.name}>
+        <h3 className="camera-info__title">
+          <span>{dataDetailInfo ? dataDetailInfo.name : ''}</span>
+        </h3>
+      </Tooltip>
+      <div className="camera-detail">
+        <ul className="camera-info__detail">
+          {type === TYPE_FORM_ACTION_ON_MAP.cam ? renderCamInfo() : renderAdminisUnitInfo()}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default CamInfoPopup;

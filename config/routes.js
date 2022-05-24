@@ -34,6 +34,7 @@ export default [
     path: '/map',
     icon: 'environment',
     name: 'map',
+    component: './maps',
   },
   {
     path: '/live',

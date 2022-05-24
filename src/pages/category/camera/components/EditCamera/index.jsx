@@ -25,7 +25,7 @@ import {
   QuestionCircleOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import MapAddCamera from '../map';
+import MapAddCamera from '../Map';
 import { v4 as uuidV4 } from 'uuid';
 import clearData from '@/utils/CleanData';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
@@ -159,6 +159,10 @@ const EditCamera = ({
   };
   const onClose = () => {
     setIsEditDrawer(false);
+    setAvatarUrl('');
+    setAvatarFileName('');
+    setResultSearchMap(null);
+    form.resetFields();
   };
   const DraggerProps = {
     name: 'avatar',
@@ -176,7 +180,11 @@ const EditCamera = ({
       notify('error', 'noti.ERROR', 'noti.please_select_lnglat_camera');
     } else {
       const tags = data?.tags?.map((e) => {
-        return tagsOptions?.find((tag) => tag.uuid === e);
+        if (e?.value) {
+          return tagsOptions?.find((tag) => tag.uuid === e?.value);
+        } else {
+          return tagsOptions?.find((tag) => tag.uuid === e);
+        }
       });
       const customTags = tags?.map((item) => {
         const ct = {
@@ -943,9 +951,14 @@ const EditCamera = ({
                     <Form.Item
                       labelCol={{ span: 5 }}
                       wrapperCol={{ span: 24 }}
-                      label={intl.formatMessage({
-                        id: 'view.category.tags',
-                      })}
+                      label={intl.formatMessage(
+                        {
+                          id: 'view.category.tags',
+                        },
+                        {
+                          cam: intl.formatMessage({ id: 'camera' }),
+                        },
+                      )}
                       name={['tags']}
                       rules={[]}
                     >

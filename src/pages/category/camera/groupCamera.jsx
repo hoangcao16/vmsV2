@@ -14,7 +14,7 @@ import { useIntl } from 'umi';
 import { TreeNodeStyle, CameraGroupSearch, TreeStyle, GroupCameraContainer } from './style';
 import isEmpty from 'lodash/isEmpty';
 import CircleIcon from '@/assets/img/iconO';
-import GroupCameraDrawer from './components/group-camera-drawer';
+import GroupCameraDrawer from './components/GroupCameraDrawer';
 const { Search } = Input;
 
 const unflatten = (array, parent, tree) => {
