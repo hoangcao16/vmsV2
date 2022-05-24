@@ -1,4 +1,4 @@
-import DailyArchiveApi from '@/services/storage-api/DailyArchiveApi';
+import DailyArchiveApi from '@/services/storage-api/dailyArchiveApi';
 import eventFilesApi from '@/services/storage-api/eventFilesApi';
 
 export const initSearchEventFiles = {

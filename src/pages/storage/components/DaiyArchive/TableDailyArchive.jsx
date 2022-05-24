@@ -2,7 +2,7 @@ import { filterOption, normalizeOptions } from '@/components/select/CustomSelect
 import AddressApi from '@/services/address/AddressApi';
 import AdDivisionApi from '@/services/advision/AdDivision';
 import cameraApi from '@/services/controller-api/cameraService';
-import DailyArchiveApi from '@/services/storage-api/DailyArchiveApi';
+import DailyArchiveApi from '@/services/storage-api/dailyArchiveApi';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import locale from 'antd/lib/date-picker/locale/vi_VN';

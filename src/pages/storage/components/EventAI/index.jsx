@@ -2,7 +2,7 @@ import { filterOption, normalizeOptions } from '@/components/select/CustomSelect
 import AddressApi from '@/services/address/AddressApi';
 import AdDivisionApi from '@/services/advision/AdDivision';
 import cameraApi from '@/services/controller-api/cameraService';
-import EventAiAPI from '@/services/storage-api/EventAI-api';
+import EventAiAPI from '@/services/storage-api/eventAI-api';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { Badge, Button, Col, DatePicker, Form, Input, Row, Select, Space, Tooltip } from 'antd';
 import locale from 'antd/lib/date-picker/locale/vi_VN';
