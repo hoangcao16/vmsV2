@@ -1,6 +1,8 @@
 export default {
   'pages.layouts.userLayout.title': 'Dự án quản lí video an ninh cấp thành phố',
+  'pages.layouts.userLayout.header': 'Dự án VMS',
   'pages.login.accountLogin.tab': 'Đăng nhập',
+  'pages.login.accountLogin.forgotPassword': 'Quên mật khẩu',
   'pages.login.accountLogin.errorMessage': 'Đăng nhập thất bại.Vui lòng kiểm tra lại',
   'pages.login.email.placeholder': 'Email',
   'pages.login.email.required': 'Email là bắt buộc',
@@ -123,9 +125,6 @@ export default {
   'pages.setting-user.list-user.updateUserGroupSuccess': 'Sửa nhóm thành công',
   'pages.setting-user.list-user.removeUserGroupSuccess': 'Xóa nhóm thành công',
   'pages.setting-user.list-user.createUserGroupSuccess': 'Thêm nhóm thành công',
-  'pages.setting-user.list-user.updateUserSuccess': 'Sửa người dùng thành công',
-  'pages.setting-user.list-user.removeUserSuccess': 'Xóa người dùng thành công',
-  'pages.setting-user.list-user.createUserSuccess': 'Thêm người dùng thành công',
   'pages.setting-user.list-user.addMemberIntoGroupSuccess': 'Thêm thành viên vào nhóm thành công',
   'pages.setting-user.list-user.removeMemberIntoGroupSuccess': 'Xóa thành viên nhóm thành công',
   'pages.setting-user.list-user.updatePermisisionUserGroupSuccess': 'Sửa quyền thành công',
@@ -142,6 +141,14 @@ export default {
   'pages.setting-user.list-user.createRoleSuccess': 'Tạo vai trò thành công',
   'pages.setting-user.list-user.updateRoleSuccess': 'Cập nhập vai trò thành công',
   'pages.setting-user.list-user.removeRoleSuccess': 'Xóa vai trò thành công',
+
+  'pages.setting-user.list-user.createUserSuccess': 'Tạo người dùng thành công',
+  'pages.setting-user.list-user.updateUserSuccess': 'Cập nhập người dùng thành công',
+  'pages.setting-user.list-user.deleteUserSuccess': 'Xóa người dùng thành công',
+
+  'pages.setting-user.list-user.unit': 'Đơn vị',
+  'pages.setting-user.list-user.position': 'Chức vụ',
+  'pages.setting-user.list-user.user-search': 'Tìm kiếm theo tên, địa chỉ...',
 
   // Code AUTH
   'pages.setting-user.list-user.601': 'Yêu cầu không hợp lệ',

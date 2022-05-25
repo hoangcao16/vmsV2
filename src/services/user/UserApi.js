@@ -165,6 +165,9 @@ const UserApi = {
       params,
     });
   },
+  getListPositionUnit: async () => {
+    return request.get(`/cctv-controller-svc/api/v1/user/list_postion_unit`);
+  },
 
   getAllRoles: async (params) => {
     return request.get(`/authz/api/v0/roles`, {
