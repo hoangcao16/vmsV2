@@ -16,7 +16,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import CameraSlotControl from './CameraSlotControl';
 
-const CameraSlot = ({ camera, dispatch, isDraggingOver }) => {
+const CameraSlot = ({ screen, camera, dispatch, isDraggingOver }) => {
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [countdown, setCountdown] = useState(0);
@@ -383,6 +383,7 @@ const CameraSlot = ({ camera, dispatch, isDraggingOver }) => {
             onCapture={captureCamera}
             onRecord={recordVideo}
             onClose={closeCamera}
+            mode={screen.mode}
           />
           <StyledCameraBottom>
             <StyledCameraName>{camera.name}</StyledCameraName>
@@ -485,4 +486,8 @@ const StyledCountdown = styled.div`
   border-radius: 2px;
 `;
 
-export default connect()(React.memo(CameraSlot));
+const mapStateToProps = (state) => ({
+  screen: state.live.screen,
+});
+
+export default connect(mapStateToProps)(React.memo(CameraSlot));

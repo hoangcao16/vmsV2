@@ -198,4 +198,5 @@ export default {
   'pages.live-mode.action.save': 'Lưu',
   'pages.live-mode.action.edit': 'Sửa',
   'pages.live-mode.action.delete': 'Xóa',
+  'pages.live-mode.speed': 'Tốc độ xem',
 };

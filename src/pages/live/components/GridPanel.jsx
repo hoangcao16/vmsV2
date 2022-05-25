@@ -30,7 +30,6 @@ const GridPanel = ({ screen }) => {
                       style={provided.draggableProps.style}
                       isDragging={snapshot.draggingOver}
                     >
-                      {snapshot.draggingOver}
                       {camera?.uuid && (
                         <CameraSlot isDraggingOver={dropSnapshot.isDraggingOver} camera={camera} />
                       )}
