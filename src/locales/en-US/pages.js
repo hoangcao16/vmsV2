@@ -1,6 +1,8 @@
 export default {
   'pages.layouts.userLayout.title': 'Provincial security video management project',
-  'pages.login.accountLogin.tab': 'Account Login',
+  'pages.layouts.userLayout.header': 'VMS Project',
+  'pages.login.accountLogin.tab': 'Login',
+  'pages.login.accountLogin.forgotPassword': 'Forgot password',
   'pages.login.accountLogin.errorMessage': 'Incorrect username/password(admin/ant.design)',
   'pages.login.email.placeholder': 'Email',
   'pages.login.email.required': 'Please input your Email!',
@@ -10,6 +12,7 @@ export default {
   'pages.login.password.required': 'Please input your password!',
   'pages.login.rememberMe': 'Remember password',
   'pages.login.forgotPassword': 'Forgot password?',
+  'pages.login.submit': 'LoginHelelelelele',
 
   //Home
   'pages.home.notification': 'Notification',
@@ -113,6 +116,10 @@ export default {
   'pages.setting-user.list-user.edit-user': 'Edit user',
   'pages.setting-user.list-user.imageUrl': 'Picture',
 
+  'pages.setting-user.list-user.unit': 'Unit',
+  'pages.setting-user.list-user.position': 'Position',
+  'pages.setting-user.list-user.user-search': 'Search by name,address...',
+
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Success',
 
@@ -122,6 +129,7 @@ export default {
 
   'pages.setting-user.list-user.updateUserSuccess': 'Update user success',
   'pages.setting-user.list-user.removeUserSuccess': 'Remove user success',
+  'pages.setting-user.list-user.deleteUserSuccess': 'Remove user success',
   'pages.setting-user.list-user.createUserSuccess': 'Create user success',
 
   'pages.setting-user.list-user.addMemberIntoGroupSuccess': 'Add member into group success',

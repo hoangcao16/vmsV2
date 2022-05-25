@@ -1,3 +1,4 @@
+import MSFormItem from '@/components/Form/Item';
 import { STORAGE } from '@/constants/common';
 import { SpanCode } from '@/pages/category/camera/style';
 import permissionCheck from '@/utils/PermissionCheck';
@@ -10,8 +11,9 @@ import {
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
-import { Button, Col, Form, Input, Row, Select, Space, Switch, Tooltip } from 'antd';
+import { AutoComplete, Button, Col, Form, Row, Select, Space, Switch, Tooltip } from 'antd';
 import { connect } from 'dva';
+import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import UserRole from './conponnents/roles';
@@ -24,15 +26,32 @@ const layoutLong = {
   wrapperCol: { span: 18 },
 };
 
-const UserList = ({ dispatch, list, metadata }) => {
+const UserList = ({
+  dispatch,
+  list,
+  metadata,
+  dataListAllRole,
+  dataListAllUserGroup,
+  dataListAllUnit,
+  dataListAllPosition,
+}) => {
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [form] = Form.useForm();
-  const [collapse, setCollapse] = useState(false);
+  const [collapse, setCollapse] = useState(true);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [search, setSearch] = useState('');
   useEffect(() => {
     dispatch({
       type: 'user/fetchAllUser',
+      payload: {
+        page: metadata?.page,
+        size: metadata?.size,
+      },
+    });
+
+    dispatch({
+      type: 'user/getDataForFilter',
       payload: {
         page: metadata?.page,
         size: metadata?.size,
@@ -132,8 +151,36 @@ const UserList = ({ dispatch, list, metadata }) => {
     });
   };
 
+  const onChangeData = async (e) => {
+    const filters = form.getFieldValue();
+    dispatch({
+      type: 'user/fetchAllUser',
+      payload: {
+        ...filters,
+        page: 1,
+        size: 10,
+      },
+    });
+  };
+
   const handleSubmit = () => {
     const a = form.getFieldsValue(true);
+  };
+
+  const handleSearch = async (value) => {
+    const filters = form.getFieldValue(true);
+    setSearch(value);
+    if (search !== null) {
+      dispatch({
+        type: 'user/fetchAllUser',
+        payload: {
+          ...filters,
+          searchValue: value,
+          page: metadata?.page,
+          size: metadata?.size,
+        },
+      });
+    }
   };
 
   return (
@@ -170,15 +217,14 @@ const UserList = ({ dispatch, list, metadata }) => {
                 form={form}
               >
                 <div className="collapse-filter">
-                  <Form.Item name="quickSearch">
-                    <Input.Search
-                      placeholder="Tìm kiếm theo tên, địa chỉ"
-                      maxLength={255}
-                      onSearch={() => {
-                        form.submit();
-                      }}
+                  <MSFormItem type="input" maxLength={255} name="searchValue">
+                    <AutoComplete
+                      placeholder={intl.formatMessage({
+                        id: 'pages.setting-user.list-user.user-search',
+                      })}
+                      onSearch={debounce(handleSearch, 1000)}
                     />
-                  </Form.Item>
+                  </MSFormItem>
 
                   {collapse === true && (
                     <Button
@@ -213,20 +259,112 @@ const UserList = ({ dispatch, list, metadata }) => {
                   <div className="extra-filter">
                     <Row justify="space-between">
                       <Col span={12}>
-                        <Form.Item {...layoutLong} label="Chức vụ" name="cameraUuid">
-                          <Select />
+                        <Form.Item
+                          {...layoutLong}
+                          label={intl.formatMessage({
+                            id: 'pages.setting-user.list-user.unit',
+                          })}
+                          name="unit"
+                        >
+                          <Select
+                            allowClear
+                            showSearch
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                              option.key.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                            onChange={(e) => onChangeData(e)}
+                            filterSort={(optionA, optionB) =>
+                              optionA.key.toLowerCase().localeCompare(optionB.key.toLowerCase())
+                            }
+                          >
+                            {dataListAllUnit?.map((item) => (
+                              <Select.Option key={item} value={item}>
+                                {item}
+                              </Select.Option>
+                            ))}
+                          </Select>
                         </Form.Item>
 
-                        <Form.Item {...layoutLong} label="Đơn vị" name="cameraGroupUuid">
-                          <Select />
+                        <Form.Item
+                          {...layoutLong}
+                          label={intl.formatMessage({
+                            id: 'pages.setting-user.list-user.position',
+                          })}
+                          name="position"
+                        >
+                          <Select
+                            allowClear
+                            showSearch
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                              option.key.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                            onChange={(e) => onChangeData(e)}
+                            filterSort={(optionA, optionB) =>
+                              optionA.key.toLowerCase().localeCompare(optionB.key.toLowerCase())
+                            }
+                          >
+                            {dataListAllPosition?.map((item) => (
+                              <Select.Option key={item} value={item}>
+                                {item}
+                              </Select.Option>
+                            ))}
+                          </Select>
                         </Form.Item>
                       </Col>
                       <Col span={12}>
-                        <Form.Item {...layoutLong} label="Vai trò" name="provinceId">
-                          <Select />
+                        <Form.Item
+                          {...layoutLong}
+                          label={intl.formatMessage({
+                            id: 'pages.setting-user.list-user.role',
+                          })}
+                          name="role"
+                        >
+                          <Select
+                            showSearch
+                            allowClear
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                              option.key.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                            onChange={(e) => onChangeData(e)}
+                            filterSort={(optionA, optionB) =>
+                              optionA.key.toLowerCase().localeCompare(optionB.key.toLowerCase())
+                            }
+                          >
+                            {dataListAllRole?.map((item) => (
+                              <Select.Option key={item.name} value={item.uuid}>
+                                {item.name}
+                              </Select.Option>
+                            ))}
+                          </Select>
                         </Form.Item>
-                        <Form.Item {...layoutLong} label="Nhóm người dùng" name="districtId">
-                          <Select />
+                        <Form.Item
+                          {...layoutLong}
+                          label={intl.formatMessage({
+                            id: 'pages.setting-user.list-user.group-user',
+                          })}
+                          name="group"
+                        >
+                          <Select
+                            showSearch
+                            allowClear
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                              option.key.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                            onChange={(e) => onChangeData(e)}
+                            filterSort={(optionA, optionB) =>
+                              optionA.key.toLowerCase().localeCompare(optionB.key.toLowerCase())
+                            }
+                          >
+                            {dataListAllUserGroup?.map((item) => (
+                              <Select.Option key={item.name} value={item.uuid}>
+                                {item.name}
+                              </Select.Option>
+                            ))}
+                          </Select>
                         </Form.Item>
                       </Col>
                     </Row>
@@ -274,11 +412,16 @@ const UserList = ({ dispatch, list, metadata }) => {
   );
 };
 function mapStateToProps(state) {
-  const { list, metadata } = state.user;
+  const { list, metadata, dataForFilter } = state.user;
+
   return {
     loading: state.loading.models.user,
     list,
     metadata,
+    dataListAllRole: dataForFilter?.dataListAllRole,
+    dataListAllUserGroup: dataForFilter?.dataListAllUserGroup,
+    dataListAllUnit: dataForFilter?.dataListAllUnit,
+    dataListAllPosition: dataForFilter?.dataListAllPosition,
   };
 }
 

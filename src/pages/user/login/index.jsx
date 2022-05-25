@@ -1,28 +1,19 @@
 import Footer from '@/components/Footer';
-
 import AuthZApi from '@/services/authz/AuthZApi';
-import { LockOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
-import { LoginForm, ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
-import { Alert, message, Tabs } from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
+import { message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { FormattedMessage, history, SelectLang, useIntl, useModel } from 'umi';
 import styles from './index.less';
-
-const LoginMessage = ({ content }) => (
-  <Alert
-    style={{
-      marginBottom: 24,
-    }}
-    message={content}
-    type="error"
-    showIcon
-  />
-);
+import { BottomForm } from './style';
 
 const Login = () => {
   const [userLoginState, setUserLoginState] = useState({});
   const [type, setType] = useState('account');
   const { initialState, setInitialState } = useModel('@@initialState');
+
+  console.log('type:', type);
   const intl = useIntl();
 
   const fetchUserInfo = async () => {
@@ -34,8 +25,6 @@ const Login = () => {
 
   const handleSubmit = async (values) => {
     try {
-      // 登录
-      // const msg = await login({ ...values, type });
       const msg = await AuthZApi.login({ ...values, type });
 
       if (msg.code === 600) {
@@ -44,12 +33,11 @@ const Login = () => {
         });
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
-        /** 此方法会跳转到 redirect 参数所在的位置 */
 
         if (!history) return;
         const { query } = history.location;
         const { redirect } = query;
-        history.push(redirect || '/account');
+        history.push(redirect || '/');
         return;
       } else {
         const defaultLoginFailureMessage = intl.formatMessage({
@@ -57,8 +45,6 @@ const Login = () => {
         });
         message.error(defaultLoginFailureMessage);
       }
-
-      console.log(msg); // 如果失败去设置用户错误信息
 
       setUserLoginState(msg);
     } catch (error) {
@@ -78,7 +64,9 @@ const Login = () => {
       <div className={styles.content}>
         <LoginForm
           logo={<img alt="logo" src="/logo.svg" />}
-          title="Dự án VMS"
+          title={intl.formatMessage({
+            id: 'pages.layouts.userLayout.header',
+          })}
           subTitle={intl.formatMessage({
             id: 'pages.layouts.userLayout.title',
           })}
@@ -96,15 +84,14 @@ const Login = () => {
                 id: 'pages.login.accountLogin.tab',
               })}
             />
-          </Tabs>
-
-          {status === 'error' && loginType === 'account' && (
-            <LoginMessage
-              content={intl.formatMessage({
-                id: 'pages.login.accountLogin.errorMessage',
+            <Tabs.TabPane
+              key="forgotPassword"
+              tab={intl.formatMessage({
+                id: 'pages.login.accountLogin.forgotPassword',
               })}
             />
-          )}
+          </Tabs>
+
           {type === 'account' && (
             <>
               <ProFormText
@@ -142,87 +129,41 @@ const Login = () => {
             </>
           )}
 
-          {type === 'mobile' && (
-            <>
-              <ProFormText
-                fieldProps={{
-                  size: 'large',
-                  prefix: <MobileOutlined className={styles.prefixIcon} />,
-                }}
-                name="mobile"
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.phoneNumber.placeholder',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: <FormattedMessage id="pages.login.phoneNumber.required" />,
-                  },
-                  {
-                    pattern: /^1\d{10}$/,
-                    message: <FormattedMessage id="pages.login.phoneNumber.invalid" />,
-                  },
-                ]}
-              />
-              <ProFormCaptcha
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined className={styles.prefixIcon} />,
-                }}
-                captchaProps={{
-                  size: 'large',
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.captcha.placeholder',
-                })}
-                captchaTextRender={(timing, count) => {
-                  if (timing) {
-                    return `${count} ${intl.formatMessage({
-                      id: 'pages.getCaptchaSecondText',
-                    })}`;
-                  }
-
-                  return intl.formatMessage({
-                    id: 'pages.login.phoneLogin.getVerificationCode',
-                  });
-                }}
-                name="captcha"
-                rules={[
-                  {
-                    required: true,
-                    message: <FormattedMessage id="pages.login.captcha.required" />,
-                  },
-                ]}
-                onGetCaptcha={async (phone) => {
-                  const result = await getFakeCaptcha({
-                    phone,
-                  });
-
-                  if (result === false) {
-                    return;
-                  }
-
-                  message.success('获取验证码成功！验证码为：1234');
-                }}
-              />
-            </>
-          )}
-          <div
-            style={{
-              marginBottom: 24,
-            }}
-          >
-            <ProFormCheckbox noStyle name="autoLogin">
-              <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
-            </ProFormCheckbox>
-            <a
-              style={{
-                float: 'right',
+          {type === 'forgotPassword' && (
+            <ProFormText
+              name="email"
+              fieldProps={{
+                size: 'large',
+                prefix: <UserOutlined className={styles.prefixIcon} />,
               }}
-            >
-              <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
-            </a>
-          </div>
+              placeholder={intl.formatMessage({
+                id: 'pages.login.email.placeholder',
+              })}
+              rules={[
+                {
+                  required: true,
+                  message: <FormattedMessage id="pages.login.email.required" />,
+                },
+              ]}
+            />
+          )}
+
+          {type === 'account' ? (
+            <BottomForm>
+              <ProFormCheckbox noStyle name="autoLogin">
+                <FormattedMessage id="pages.login.rememberMe" />
+              </ProFormCheckbox>
+              <a className="forgot-password">
+                <FormattedMessage id="pages.login.forgotPassword" />
+              </a>
+            </BottomForm>
+          ) : (
+            <BottomForm>
+              <a className="forgot-password">
+                <FormattedMessage id="pages.login.accountLogin.tab" />
+              </a>
+            </BottomForm>
+          )}
         </LoginForm>
       </div>
       <Footer />

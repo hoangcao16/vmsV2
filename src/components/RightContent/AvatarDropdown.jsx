@@ -3,11 +3,12 @@ import AuthZApi from '@/services/authz/AuthZApi';
 import { LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import React, { useCallback } from 'react';
-import { history, useModel } from 'umi';
+import { history, useIntl, useModel } from 'umi';
 import HeaderDropdown from '../Header/HeaderDropdown';
 import styles from './index.less';
 
 const AvatarDropdown = ({ menu }) => {
+  const intl = useIntl();
   const { initialState, setInitialState } = useModel('@@initialState');
   const onMenuClick = useCallback(
     async (event) => {
@@ -53,7 +54,9 @@ const AvatarDropdown = ({ menu }) => {
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
       <Menu.Item key="logout">
         <LogoutOutlined />
-        Đăng xuất
+        {intl.formatMessage({
+          id: 'view.user.log_out',
+        })}
       </Menu.Item>
     </Menu>
   );
@@ -63,10 +66,10 @@ const AvatarDropdown = ({ menu }) => {
         <Avatar
           size="small"
           className={styles.avatar}
-          src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png'"
+          src={currentUser?.payload?.user_avatar}
           alt="avatar"
         />
-        <span className={`${styles.name} anticon`}>Thường</span>
+        <span className={`${styles.name} anticon`}>{currentUser?.payload?.user_name}</span>
       </span>
     </HeaderDropdown>
   );
