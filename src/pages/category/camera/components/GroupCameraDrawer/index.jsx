@@ -350,17 +350,16 @@ const GroupCameraDrawer = ({
             },
             selectedRowKeys: selectedCameraToAdd?.map((item) => item.uuid),
           }}
+          tableAlertRender={false}
+          tableAlertOptionRender={false}
           pagination={{
             showQuickJumper: true,
-            showSizeChanger: true,
             showTotal: (total) =>
               `${intl.formatMessage({
                 id: 'pages.setting-user.list-user.total',
               })} ${total}`,
             total: metadataCameraGroupExistsed?.total,
-            onChange: onPaginationChange,
-            pageSize: metadataCameraGroupExistsed?.size,
-            current: metadataCameraGroupExistsed?.page,
+            pageSize: 20,
           }}
         />
       </StyledDrawer>
