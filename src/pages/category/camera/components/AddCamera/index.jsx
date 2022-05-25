@@ -13,7 +13,7 @@ import {
 } from '@ant-design/icons';
 import MapAddCamera from '../Map';
 import { v4 as uuidV4 } from 'uuid';
-import clearData from '@/utils/CleanData';
+import { clearData } from '@/utils';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
 import { notify } from '@/components/Notify';
 import AddressApi from '@/services/addressApi';

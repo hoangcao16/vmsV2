@@ -27,9 +27,13 @@ const GridPanel = ({ screen }) => {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
+                      style={provided.draggableProps.style}
                       isDragging={snapshot.draggingOver}
                     >
-                      {camera?.uuid && <CameraSlot cameraUuid={camera?.uuid} type={camera?.type} />}
+                      {snapshot.draggingOver}
+                      {camera?.uuid && (
+                        <CameraSlot isDraggingOver={dropSnapshot.isDraggingOver} camera={camera} />
+                      )}
                     </GridItemContent>
                   )}
                 </Draggable>

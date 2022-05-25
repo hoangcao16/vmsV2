@@ -1,13 +1,15 @@
 import { LIVE_MODE } from '@/constants/common';
-import useClickOutside from '@/hooks/useClickOutside';
 import cameraApi from '@/services/controllerApi/cameraService';
-import { FilterFilled } from '@ant-design/icons';
-import { Button, Form, Input, Pagination, Space, Tooltip } from 'antd';
-import React, { useEffect, useRef } from 'react';
+import { CloseOutlined, FilterFilled, LoadingOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Pagination, Spin, Tooltip } from 'antd';
+import { connect } from 'dva';
+import React, { useEffect, useRef, useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { Scrollbars } from 'react-custom-scrollbars';
 import styled from 'styled-components';
-import { connect } from 'umi';
+import { FormattedMessage } from 'umi';
+
+import FilterDrawer from './FilterDrawer';
 
 const CameraItem = ({ item, index }) => {
   return (
@@ -28,28 +30,29 @@ const CameraItem = ({ item, index }) => {
   );
 };
 
-const CameraList = ({ dispatch, ...props }) => {
+const CameraList = ({ dispatch, filters, cameras: listCameras = [], ...props }) => {
   const [pagination, setPagination] = React.useState({
     page: 1,
     size: 20,
     name: '',
     total: 0,
   });
-  const divRef = useRef(null);
+  const [visibleFilter, setVisibleFilter] = useState(false);
   const [form] = Form.useForm();
-
-  useClickOutside(divRef, props?.onCancel);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchCameras();
-  }, [pagination.page, pagination.name]);
+  }, [pagination.page, pagination.name, filters]);
 
   const fetchCameras = async () => {
+    setLoading(true);
     try {
       const { metadata, payload } = await cameraApi.getAll({
         page: pagination.page,
         size: pagination.size,
         name: pagination.name,
+        ...filters,
       });
 
       dispatch({
@@ -60,7 +63,9 @@ const CameraList = ({ dispatch, ...props }) => {
         ...pagination,
         ...metadata,
       });
-    } catch (error) {}
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSearch = ({ name }) => {
@@ -73,41 +78,53 @@ const CameraList = ({ dispatch, ...props }) => {
   };
 
   return (
-    <StyledDrawer ref={divRef} {...props}>
-      <Form form={form} onFinish={handleSearch}>
-        <Space size={8}>
-          <Form.Item name="name" noStyle>
-            <Input.Search placeholder="Nhãn camera" onSearch={form.submit} />
-          </Form.Item>
-          <Button type="primary" icon={<FilterFilled />} />
-        </Space>
-      </Form>
-      <StyledWrapper autoHide>
-        <Droppable droppableId={LIVE_MODE.CAMERA_LIST_DROPPABLE_ID}>
-          {(provided) => (
-            <StyledCameraList ref={provided.innerRef} {...provided.droppableProps}>
-              {props?.cameras.map((item, index) => (
-                <CameraItem item={item} index={index} />
-              ))}
-              {provided.placeholder}
-            </StyledCameraList>
-          )}
-        </Droppable>
-      </StyledWrapper>
-      <StyledPagination>
-        <Pagination
-          size="small"
-          pageSize={pagination.size}
-          current={pagination.page}
-          total={pagination.total}
-          onChange={(page) =>
-            setPagination({
-              ...pagination,
-              page,
-            })
-          }
-        />
-      </StyledPagination>
+    <StyledDrawer {...props}>
+      <div className="ant-drawer-header">
+        <div className="ant-drawer-header-title">
+          <Button icon={<CloseOutlined />} className="ant-drawer-close" onClick={props?.onClose} />
+          <div className="ant-drawer-title">
+            <FormattedMessage id="pages.live-mode.list.camera" />
+          </div>
+        </div>
+      </div>
+      <StyledDrawerContent>
+        {loading && <StyledSpin indicator={<LoadingOutlined style={{ fontSize: 32 }} />} />}
+        <Form form={form} onFinish={handleSearch}>
+          <StyledSearch size={8}>
+            <Form.Item name="name" noStyle>
+              <Input.Search placeholder="Nhãn camera" onSearch={form.submit} />
+            </Form.Item>
+            <Button type="primary" icon={<FilterFilled />} onClick={() => setVisibleFilter(true)} />
+          </StyledSearch>
+        </Form>
+        <FilterDrawer visible={visibleFilter} onClose={() => setVisibleFilter(false)} />
+        <StyledWrapper autoHide>
+          <Droppable droppableId={LIVE_MODE.CAMERA_LIST_DROPPABLE_ID}>
+            {(provided) => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {listCameras.map((item, index) => (
+                  <CameraItem key={index} item={item} index={index} />
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </StyledWrapper>
+        <StyledPagination>
+          <Pagination
+            size="small"
+            pageSize={pagination.size}
+            current={pagination.page}
+            total={pagination.total}
+            onChange={(page) =>
+              setPagination({
+                ...pagination,
+                page,
+              })
+            }
+          />
+        </StyledPagination>
+      </StyledDrawerContent>
     </StyledDrawer>
   );
 };
@@ -115,14 +132,36 @@ const CameraList = ({ dispatch, ...props }) => {
 const StyledDrawer = styled.div`
   position: fixed;
   display: flex;
-  flex-flow: column;
+  flex-direction: column;
   top: 0;
   bottom: 0;
   right: ${(prop) => (prop.visible ? 0 : '-100%')};
   z-index: 1000;
-  padding: 1rem;
   background-color: #1f1f1f;
-  transition: all 0.2s linear;
+  transition: all 0.5s linear;
+`;
+
+const StyledDrawerContent = styled.div`
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 24px;
+  flex-flow: column;
+  width: 350px;
+`;
+
+const StyledSpin = styled(Spin)`
+  display: flex !important;
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  background-color: #eeeeee10;
+  justify-content: center;
+  align-items: center;
 `;
 
 const StyledWrapper = styled(Scrollbars)`
@@ -132,7 +171,13 @@ const StyledWrapper = styled(Scrollbars)`
   margin: 10px 0;
 `;
 
-const StyledCameraList = styled.div``;
+const StyledSearch = styled.div`
+  display: flex;
+
+  .ant-input-search {
+    margin-right: 10px;
+  }
+`;
 
 const StyledPagination = styled.div`
   display: flex;
@@ -143,7 +188,6 @@ const StyledPagination = styled.div`
 const StyledCameraItem = styled.div`
   margin-bottom: 5px;
   padding: 5px;
-  z-index: 99999 !important;
   user-select: none;
 `;
 
@@ -167,4 +211,13 @@ const CameraItemName = styled.p`
   }
 `;
 
-export default connect(() => {})(CameraList);
+function mapStateToProps(state) {
+  const { filters } = state.filterCamera;
+
+  return {
+    loading: state.loading.models.filterCamera,
+    filters,
+  };
+}
+
+export default connect(mapStateToProps)(CameraList);
