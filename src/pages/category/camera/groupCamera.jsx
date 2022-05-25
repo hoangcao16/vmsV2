@@ -13,6 +13,7 @@ import {
 import { useIntl } from 'umi';
 import { TreeNodeStyle, CameraGroupSearch, TreeStyle, GroupCameraContainer } from './style';
 import isEmpty from 'lodash/isEmpty';
+import debounce from 'lodash/debounce';
 import CircleIcon from '@/assets/img/iconO';
 import GroupCameraDrawer from './components/GroupCameraDrawer';
 const { Search } = Input;
@@ -46,11 +47,23 @@ const unflatten = (array, parent, tree) => {
   });
   return tree;
 };
+const findParent = (data, children) => {
+  let parent = {};
+  data.map((item) => {
+    if (item.key == children.parentId) {
+      if (item?.parentId !== '0') {
+        findParent(data, item);
+      } else {
+        parent = item;
+      }
+    }
+  });
+  return parent;
+};
 const GroupCamera = ({ dispatch, groupCameraParentOptions }) => {
   const intl = useIntl();
   const [option, setOption] = useState({
     expandedKeys: [],
-    searchValue: '',
     autoExpandParent: true,
   });
   const [camGroupUuid, setCamGroupUuid] = useState(null);
@@ -176,6 +189,67 @@ const GroupCamera = ({ dispatch, groupCameraParentOptions }) => {
       payload: id,
     });
   };
+  // search camera group
+  const handleSearch = (value) => {
+    const treeDataConverted = groupCameraParentOptions.map((p) => {
+      return {
+        title: p?.name,
+        key: p?.uuid,
+        parentId: isEmpty(p?.parent) ? '0' : p?.parent,
+      };
+    });
+    const parentUuidList = treeDataConverted.map((item) => {
+      if (item?.parentId && item?.parentId !== '0') {
+        return item?.parentId;
+      }
+    });
+    const formatTreeData = treeDataConverted.map((child) => {
+      if (!parentUuidList.includes(child?.key)) {
+        return {
+          ...child,
+          icon: <CircleIcon />,
+        };
+      } else {
+        return child;
+      }
+    });
+    const data = unflatten(formatTreeData);
+    if (isEmpty(value)) {
+      setTreeNodeCamList(data);
+      setOption({
+        ...option,
+        expandedKeys: [],
+      });
+    } else {
+      const searchData = formatTreeData.filter((item) => {
+        return item?.title.toLowerCase().includes(value.toLowerCase());
+      });
+      if (!isEmpty(searchData)) {
+        setOption({
+          ...option,
+          expandedKeys: [searchData[0]?.key],
+        });
+        const groupCamera = searchData.map((item) => {
+          if (item?.parentId && item?.parentId !== '0') {
+            return findParent(formatTreeData, item);
+          } else {
+            return item;
+          }
+        });
+        const setGroupCamera = Array.from(new Set(groupCamera));
+        const finalData = setGroupCamera.filter((element) => {
+          if (Object.keys(element).length !== 0) {
+            return true;
+          }
+
+          return false;
+        });
+        setTreeNodeCamList(finalData);
+      } else {
+        setTreeNodeCamList([]);
+      }
+    }
+  };
   const { expandedKeys, autoExpandParent } = option;
   return (
     <>
@@ -186,6 +260,11 @@ const GroupCamera = ({ dispatch, groupCameraParentOptions }) => {
               placeholder={intl.formatMessage({
                 id: 'view.map.search',
               })}
+              onSearch={debounce(handleSearch, 1000)}
+              value={valueSearch}
+              onChange={(e) => setValueSearch(e.target.value)}
+              onBlur={(e) => setValueSearch(e.target.value.trim())}
+              onPaste={(e) => setValueSearch(e.target.value.trimStart())}
             />
             <Tooltip
               placement="rightTop"
