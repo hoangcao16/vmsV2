@@ -1,7 +1,8 @@
-import EventAiAPI from '@/services/storage-api/eventAI-api';
-import { EVENT_AI_NAMESPACE } from '../constants';
+import DailyArchiveApi from '@/services/storage-api/dailyArchiveApi';
+import eventFilesApi from '@/services/storage-api/eventFilesApi';
+import { IMPORTANT_NAMESPACE } from '../constants';
 
-export const initSearchEventsAI = {
+export const initSearchImportants = {
   startRecordTime: -1,
   endRecordTime: -1,
   address: '',
@@ -13,22 +14,20 @@ export const initSearchEventsAI = {
   cameraGroupUuid: '',
   cameraUuid: '',
   type: -1,
-  eventUuid: '',
-  searchType: '',
+  eventUuid: 'notnull',
   searchType: 'all',
-  eventType: '',
-  status: '',
+  searchValue: '',
 };
 
 export default {
-  namespace: EVENT_AI_NAMESPACE,
+  namespace: IMPORTANT_NAMESPACE,
   state: {
     list: [],
     metadata: {
       page: 1,
       size: 10,
       total: 0,
-      ...initSearchEventsAI,
+      ...initSearchImportants,
     },
   },
 
@@ -45,7 +44,7 @@ export default {
   effects: {
     *fetchAll({ payload }, { call, put }) {
       try {
-        const response = yield call(EventAiAPI.getAllEvents, payload);
+        const response = yield call(eventFilesApi.getAllEventFiles, payload);
         yield put({
           type: 'save',
           payload: {

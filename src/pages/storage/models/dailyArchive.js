@@ -1,4 +1,5 @@
 import DailyArchiveApi from '@/services/storage-api/dailyArchiveApi';
+import { DAILY_ARCHIVE_NAMESPACE } from '../constants';
 
 export const initSearchCaptureFileParam = {
   startRecordTime: -1,
@@ -13,12 +14,12 @@ export const initSearchCaptureFileParam = {
   cameraUuid: '',
   type: -1,
   eventUuid: '',
-  searchType: '',
+  searchType: 'all',
   searchValue: '',
 };
 
 export default {
-  namespace: 'dailyArchive',
+  namespace: DAILY_ARCHIVE_NAMESPACE,
   state: {
     list: [],
     metadata: {
@@ -40,7 +41,7 @@ export default {
   },
 
   effects: {
-    *fetchAllDailyArchive({ payload }, { call, put }) {
+    *fetchAll({ payload }, { call, put }) {
       try {
         const response = yield call(DailyArchiveApi.getAllDailyArchive, payload);
         yield put({

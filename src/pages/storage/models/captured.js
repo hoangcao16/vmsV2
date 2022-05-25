@@ -1,4 +1,5 @@
 import capturedApi from '../../../services/storage-api/capturedApi';
+import { CAPTURED_NAMESPACE } from '../constants';
 
 export const initSearchCaptured = {
   startRecordTime: -1,
@@ -18,7 +19,7 @@ export const initSearchCaptured = {
 };
 
 export default {
-  namespace: 'captured',
+  namespace: CAPTURED_NAMESPACE,
   state: {
     list: [],
     metadata: {
@@ -40,7 +41,7 @@ export default {
   },
 
   effects: {
-    *fetchAllCaptured({ payload }, { call, put }) {
+    *fetchAll({ payload }, { call, put }) {
       try {
         const response = yield call(capturedApi.getAllCaptured, payload);
         yield put({
