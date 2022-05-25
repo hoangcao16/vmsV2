@@ -19,7 +19,6 @@ export default defineConfig({
     ...defaultSettings,
   },
   locale: {
-    // default vi-VN
     default: 'vi-VN',
     antd: true,
     baseNavigator: true,

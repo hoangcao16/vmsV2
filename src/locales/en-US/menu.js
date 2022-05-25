@@ -70,5 +70,5 @@ export default {
   'menu.storage': 'Storage',
 
   //Live
-  'menu.live': 'Live mode',
+  'menu.live_mode': 'Live mode',
 };

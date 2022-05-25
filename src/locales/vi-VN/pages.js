@@ -155,4 +155,15 @@ export default {
   //Storage
   'pages.storage.dailyArchive.total': 'Tổng',
   'pages.storage.dailyArchive.camera': 'camera',
+
+  //Live mode
+  'pages.live-mode.list.favorite': 'Danh sách màn hình yêu thích',
+  'pages.live-mode.list.camera': 'Danh sách camera giám sát',
+  'pages.live-mode.mode.live': 'Xem trực tiếp',
+  'pages.live-mode.mode.review': 'Xem lại',
+  'pages.live-mode.action.favorite': 'Màn hình yêu thích:',
+  'pages.live-mode.action.choose': 'Chọn màn hình',
+  'pages.live-mode.action.save': 'Lưu',
+  'pages.live-mode.action.edit': 'Sửa',
+  'pages.live-mode.action.delete': 'Xóa',
 };

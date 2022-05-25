@@ -15,8 +15,8 @@ const useHandleUploadFile = (fileName) => {
     const loadImageFileHanler = (fileName) => {
       if (!isEmpty(fileName)) {
         ExportEventFileApi.getAvatar(fileName).then((result) => {
-          if (result.data) {
-            let blob = new Blob([result.data], { type: 'octet/stream' });
+          if (result) {
+            let blob = new Blob([result], { type: 'octet/stream' });
             let url = window.URL.createObjectURL(blob);
             setImageUrl(url);
           } else {
@@ -38,11 +38,11 @@ const useHandleUploadFile = (fileName) => {
   const uploadImage = async (options) => {
     const { file } = options;
     await ExportEventFileApi.uploadAvatar(uuidV4(), file).then((result) => {
-      if (result.data && result.data.payload && result.data.payload.fileUploadInfoList.length > 0) {
+      if (result && result.payload && result.payload.fileUploadInfoList.length > 0) {
         getBase64(file, (imageUrl) => {
           setLoading(false);
           setImageUrl(imageUrl);
-          const fileName = result.data.payload.fileUploadInfoList[0].name;
+          const fileName = result.payload.fileUploadInfoList[0].name;
           setImgFileName(fileName);
         });
       }

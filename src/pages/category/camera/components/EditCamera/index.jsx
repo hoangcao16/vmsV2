@@ -99,24 +99,35 @@ const EditCamera = ({
   }, [dispatch, selectedUuidEdit]);
   // Fill data to form
   useEffect(() => {
-    if (!isEmpty(selectedCamera)) {
-      setProvinceId(selectedCamera?.provinceId);
-      setDistrictId(selectedCamera?.districtId);
-      setCurrentLat(selectedCamera?.lat_);
-      setCurrentLng(selectedCamera?.long_);
-      setAvatarFileName(selectedCamera?.setAvatarFileName);
-      setDefaultLongLat([selectedCamera?.long_, selectedCamera?.lat_]);
-      for (const key in selectedCamera) {
-        form.setFieldsValue({ [key]: selectedCamera[key] });
+    (async () => {
+      if (!isEmpty(selectedCamera)) {
+        setProvinceId(selectedCamera?.provinceId);
+        setDistrictId(selectedCamera?.districtId);
+        setCurrentLat(selectedCamera?.lat_);
+        setCurrentLng(selectedCamera?.long_);
+        setAvatarFileName(selectedCamera?.avatarFileName);
+        setDefaultLongLat([selectedCamera?.long_, selectedCamera?.lat_]);
+        for (const key in selectedCamera) {
+          form.setFieldsValue({ [key]: selectedCamera[key] });
+        }
+        const customTags = selectedCamera?.tags?.map((item) => {
+          return {
+            label: item.key,
+            value: item.value[0],
+          };
+        });
+        form.setFieldsValue({ tags: customTags });
+        await ExportEventFileApi.getAvatar(selectedCamera?.avatarFileName).then((result) => {
+          if (result) {
+            let blob = new Blob([result], { type: 'octet/stream' });
+            let url = window.URL.createObjectURL(blob);
+            setAvatarUrl(url);
+          } else {
+            setAvatarUrl('');
+          }
+        });
       }
-      const customTags = selectedCamera?.tags?.map((item) => {
-        return {
-          label: item.key,
-          value: item.value[0],
-        };
-      });
-      form.setFieldsValue({ tags: customTags });
-    }
+    })();
   }, [selectedCamera]);
   const onChangeCity = (cityId) => {
     setProvinceId(cityId);
@@ -146,10 +157,10 @@ const EditCamera = ({
   const uploadImage = async (options) => {
     const { file } = options;
     await ExportEventFileApi.uploadAvatar(uuidV4(), file).then((result) => {
-      if (result.data && result.data.payload && result.data.payload.fileUploadInfoList.length > 0) {
+      if (result && result.payload && result.payload.fileUploadInfoList.length > 0) {
         getBase64(file, (imageUrl) => {
           setAvatarUrl(imageUrl);
-          let fileName = result.data.payload.fileUploadInfoList[0].name;
+          let fileName = result.payload.fileUploadInfoList[0].name;
           setAvatarFileName(fileName);
 
           //phần này set vào state để push lên
@@ -163,6 +174,16 @@ const EditCamera = ({
     setAvatarFileName('');
     setResultSearchMap(null);
     form.resetFields();
+    dispatch({
+      type: 'camera/getOneCamera',
+      payload: {
+        selectedCamera: {},
+      },
+    });
+    dispatch({
+      type: 'camera/selectUuidEdit',
+      payload: '',
+    });
   };
   const DraggerProps = {
     name: 'avatar',
@@ -343,7 +364,7 @@ const EditCamera = ({
                   <Form.Item
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 24 }}
-                    name={['name']}
+                    name="name"
                     label={intl.formatMessage(
                       {
                         id: 'view.camera.camera_name',
@@ -897,7 +918,7 @@ const EditCamera = ({
                           id: 'view.map.please_choose_administrative_unit',
                         })}
                         getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                      />{' '}
+                      />
                     </Form.Item>
                     <Button
                       shape="circle"

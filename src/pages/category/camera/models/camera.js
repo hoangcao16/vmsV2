@@ -1,5 +1,6 @@
 import cameraApi from '@/services/controller-api/cameraService';
 import { notify } from '@/components/Notify';
+import { ExportFileDownload } from '@/components/ExportFileDownload';
 export default {
   namespace: 'camera',
   state: {
@@ -18,13 +19,13 @@ export default {
       return { ...state, list, metadata };
     },
     getOneCamera(state, { payload: { selectedCamera } }) {
+      console.log('getOneCamera', selectedCamera);
       return { ...state, selectedCamera };
     },
     selectUuidEdit(state, { payload: selectedUuidEdit }) {
       return { ...state, selectedUuidEdit };
     },
     closeDrawer(state) {
-      console.log(state);
       return { ...state, closeDrawerState: !state.closeDrawerState };
     },
   },
@@ -114,6 +115,18 @@ export default {
             type: 'closeDrawer',
           });
           notify('success', 'noti.success', 'noti.successfully_delete_camera');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    *exportDataCamera({ payload }, { call, put }) {
+      try {
+        const request = yield call(cameraApi.exportData, payload);
+        if (request?.type === 'application/octet-stream') {
+          const data = new Blob([request], { type: 'application/vnd.ms-excel' });
+          ExportFileDownload(data, 'view.user.detail_list.report_camera_info');
+          notify('success', 'noti.success', 'noti.successfully_export_camera');
         }
       } catch (error) {
         console.log(error);
