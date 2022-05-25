@@ -111,10 +111,10 @@ const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDraw
   const uploadImage = async (options) => {
     const { file } = options;
     await ExportEventFileApi.uploadAvatar(uuidV4(), file).then((result) => {
-      if (result.data && result.data.payload && result.data.payload.fileUploadInfoList.length > 0) {
+      if (result && result.payload && result.payload.fileUploadInfoList.length > 0) {
         getBase64(file, (imageUrl) => {
           setAvatarFileName(imageUrl);
-          //   let fileName = result.data.payload.fileUploadInfoList[0].name;
+          //   let fileName = result.payload.fileUploadInfoList[0].name;
           //   setAvatarFileName(fileName);
         });
       }

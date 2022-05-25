@@ -1,5 +1,6 @@
 import { notify } from '@/components/Notify';
-import FileService from './fileservice';
+import { fileRequestClient } from '@/utils/request';
+import _uniqueId from 'lodash/uniqueId';
 
 const ExportEventFileApi = {
   uploadAvatar: async (avatarFileName, file) => {
@@ -14,9 +15,19 @@ const ExportEventFileApi = {
     );
     fmData.append('files', file);
     try {
-      result = await FileService.postRequestData('/api/v1/uploadAvatar', fmData);
+      result = await fileRequestClient.request({
+        method: 'POST',
+        url: '/api/v1/uploadAvatar',
+        data: fmData,
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+          requestId: _uniqueId('cctv'),
+        },
+      });
     } catch (e) {
-      notify('error', 'noti.archived_file', e.toString());
+      console.log(e);
+      // notify('error', 'noti.archived_file', e.toString());
       return {};
     }
     return result;
@@ -25,8 +36,16 @@ const ExportEventFileApi = {
   getAvatar: async (avatarFileName) => {
     let result;
     try {
-      result = await FileService.getRequestData('/api/v1/viewAvatar', {
-        fileId: avatarFileName,
+      result = await fileRequestClient.request({
+        method: 'GET',
+        url: '/api/v1/viewAvatar',
+        params: { fileId: avatarFileName },
+        headers: {
+          Accept: 'application/octet-stream',
+          'Content-Type': 'application/octet-stream',
+          requestId: _uniqueId('cctv'),
+        },
+        responseType: 'blob',
       });
     } catch (e) {
       return {};

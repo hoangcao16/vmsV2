@@ -1,4 +1,5 @@
 export const API_URL = REACT_APP_BASE_URL || 'http://10.0.0.62:10001';
+export const API_FILE_URL = REACT_APP_BASE_FILE_URL || 'http://10.0.0.62:8841';
 
 export const STORAGE = {
   TOKEN: 'token',
@@ -13,7 +14,7 @@ export const STORAGE = {
 };
 export const PAGE_SIZE = 20;
 export const STATUS_CODE = {
-  LIST_SUCCESS_CODE: [201, 202, 600, 700, 800, 1100, 1300, 1400, 1700, 601, 12000, 15000],
+  LIST_SUCCESS_CODE: [201, 202, 600, 700, 800, 1100, 1300, 1400, 1600, 1700, 601, 12000, 15000],
   SUCCESS: 700,
   CREATED: 201,
   UPDATED: 202,
