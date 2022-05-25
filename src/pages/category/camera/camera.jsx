@@ -13,9 +13,9 @@ import {
 import { ProTableStyle, SpanCode, ContainerFilterDailyArchive } from './style';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
-import AddCamera from './components/add-camera';
-import EditCamera from './components/edit-camera';
-import ScanCamera from './components/scan-camera';
+import AddCamera from './components/AddCamera';
+import EditCamera from './components/EditCamera';
+import ScanCamera from './components/ScanCamera';
 import debounce from 'lodash/debounce';
 import { CAMERASTATUS } from '@/constants/common';
 
@@ -66,7 +66,8 @@ const CameraList = ({
     });
   };
   const onFinish = (values) => {
-    handleGetListCamera(searchParam);
+    const data = { ...searchParam, page: searchCaptureFileParamDefault.page };
+    handleGetListCamera(data);
   };
   const handleAddCameraScan = async (ip) => {
     await dispatch({
@@ -293,6 +294,13 @@ const CameraList = ({
     setIsAddNewDrawer(false);
     setIsEditDrawer(false);
   }, [closeDrawerState]);
+  //export excel camera
+  const handleExport = async () => {
+    dispatch({
+      type: 'camera/exportDataCamera',
+      payload: searchParam,
+    });
+  };
   return (
     <>
       <ProTableStyle
@@ -509,12 +517,7 @@ const CameraList = ({
               />
             </Tooltip>,
             <Tooltip key="export" title={intl.formatMessage({ id: 'view.report.export_data' })}>
-              <Button
-                icon={<DownloadOutlined />}
-                onClick={() => {
-                  alert('export');
-                }}
-              />
+              <Button icon={<DownloadOutlined />} onClick={() => handleExport()} />
             </Tooltip>,
             <Button
               key="add"

@@ -39,6 +39,18 @@ export default {
   'pages.report.chart.week': 'Tuần',
   'pages.report.chart.month': 'Tháng',
   'pages.report.chart.year': 'Năm',
+  'pages.report.chart.dateRangeError': 'Hãy kiểm tra lại khoảng thời gian',
+  'pages.report.chart.lineChart': 'Biểu đồ đường',
+  'pages.report.chart.pieChart': 'Biểu đồ tròn',
+  'pages.report.chart.barChart': 'Biểu đồ cột',
+  'pages.report.chart.emptyField': 'Không có lĩnh vực nào trong hệ thống',
+  'pages.report.chart.emptyEvent': 'Không có sự kiện nào trong lĩnh vực',
+  'pages.report.chart.filter': 'Bộ lọc',
+  'pages.report.chart.dateRange': 'Khoảng thời gian',
+  'pages.report.chart.area': 'Khu vực',
+  'pages.report.chart.field': 'Lĩnh vực',
+  'pages.report.chart.eventType': 'Loại sự kiện',
+  'pages.report.chart.checkAll': 'Chọn tất cả',
 
   //User
 
@@ -100,6 +112,9 @@ export default {
   'pages.setting-user.list-user.search-by-name': 'Tìm kiếm theo tên',
   'pages.setting-user.list-user.edit-user': 'Sửa người dùng',
   'pages.setting-user.list-user.imageUrl': 'Ảnh',
+  'pages.setting-user.list-user.permission-by': 'Phân quyền theo:',
+  'pages.setting-user.list-user.permission': 'Phân quyền',
+  'pages.setting-user.list-user.information': 'Thông tin',
 
   //Notif
   'pages.setting-user.list-user.titleSuccess': 'Thành công',
@@ -140,4 +155,15 @@ export default {
   //Storage
   'pages.storage.dailyArchive.total': 'Tổng',
   'pages.storage.dailyArchive.camera': 'camera',
+
+  //Live mode
+  'pages.live-mode.list.favorite': 'Danh sách màn hình yêu thích',
+  'pages.live-mode.list.camera': 'Danh sách camera giám sát',
+  'pages.live-mode.mode.live': 'Xem trực tiếp',
+  'pages.live-mode.mode.review': 'Xem lại',
+  'pages.live-mode.action.favorite': 'Màn hình yêu thích:',
+  'pages.live-mode.action.choose': 'Chọn màn hình',
+  'pages.live-mode.action.save': 'Lưu',
+  'pages.live-mode.action.edit': 'Sửa',
+  'pages.live-mode.action.delete': 'Xóa',
 };

@@ -34,11 +34,13 @@ export default [
     path: '/map',
     icon: 'environment',
     name: 'map',
+    component: './maps',
   },
   {
     path: '/live',
     icon: 'videoCamera',
     name: 'live_mode',
+    component: './live/index',
   },
   {
     path: '/storage',

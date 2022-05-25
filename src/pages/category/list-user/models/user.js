@@ -1,4 +1,5 @@
 import { notify } from '@/components/Notify';
+import { STORAGE } from '@/constants/common';
 import UserApi from '@/services/user/UserApi';
 
 export default {
@@ -10,10 +11,14 @@ export default {
       page: 1,
       size: 10,
     },
+    userAddingUuid: null,
   },
   reducers: {
     save(state, { payload: { data: list, metadata } }) {
       return { ...state, list, metadata };
+    },
+    saveUserUuid(state, { payload: { data: userAddingUuid } }) {
+      return { ...state, userAddingUuid };
     },
   },
   effects: {
@@ -77,7 +82,7 @@ export default {
         notify(
           'success',
           'pages.setting-user.list-user.titleSuccess',
-          'pages.setting-user.list-user.updateUserSuccess',
+          'pages.setting-user.list-user.deleteUserSuccess',
         );
         //check res==>push notif
         yield put({ type: 'reload' });
@@ -91,14 +96,32 @@ export default {
       }
     },
 
+    *removeUserUuid(action, { put }) {
+      yield put({
+        type: 'saveUserUuid',
+        payload: {
+          data: null,
+        },
+      });
+    },
+
     *create({ payload: values }, { call, put }) {
       try {
-        yield call(UserApi.createUser, values);
+        const res = yield call(UserApi.createUser, values);
+
+        yield put({
+          type: 'saveUserUuid',
+          payload: {
+            data: res?.payload?.uuid,
+          },
+        });
+
+        localStorage.setItem(STORAGE.USER_UUID_SELECTED, res?.payload?.uuid);
 
         notify(
           'success',
           'pages.setting-user.list-user.titleSuccess',
-          'pages.setting-user.list-user.updateUserSuccess',
+          'pages.setting-user.list-user.createUserSuccess',
         );
         //check res==>push notif
         yield put({ type: 'reload' });

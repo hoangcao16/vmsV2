@@ -39,6 +39,18 @@ export default {
   'pages.report.chart.week': 'Week',
   'pages.report.chart.month': 'Month',
   'pages.report.chart.year': 'Year',
+  'pages.report.chart.dateRangeError': 'Please check date range again',
+  'pages.report.chart.lineChart': 'Line chart',
+  'pages.report.chart.pieChart': 'Pie chart',
+  'pages.report.chart.barChart': 'Bar chart',
+  'pages.report.chart.emptyField': 'There are no field in the system',
+  'pages.report.chart.emptyEvent': 'There are no event in the field',
+  'pages.report.chart.filter': 'Filter',
+  'pages.report.chart.dateRange': 'Date Range',
+  'pages.report.chart.area': 'Area',
+  'pages.report.chart.field': 'Field',
+  'pages.report.chart.eventType': 'Event type',
+  'pages.report.chart.checkAll': 'Check all',
 
   //User
 
@@ -130,6 +142,9 @@ export default {
     'Remove Permision Camera Group Success',
 
   'pages.setting-user.list-user.titleErrors': 'Errors',
+  'pages.setting-user.list-user.permission-by': 'Permission By:',
+  'pages.setting-user.list-user.permission': 'Permission',
+  'pages.setting-user.list-user.information': 'Information',
 
   // Code AUTH
   'pages.setting-user.list-user.601': 'BadRequest',
@@ -145,4 +160,14 @@ export default {
   //Storage
   'pages.storage.dailyArchive.total': 'Total',
   'pages.storage.dailyArchive.camera': 'camera',
+
+  'pages.live-mode.list.favorite': 'Favorite screens',
+  'pages.live-mode.list.camera': 'List camera',
+  'pages.live-mode.mode.live': 'Live view',
+  'pages.live-mode.mode.review': 'Playback view',
+  'pages.live-mode.action.favorite': 'Favorite screen:',
+  'pages.live-mode.action.choose': 'Choose screen',
+  'pages.live-mode.action.save': 'Save',
+  'pages.live-mode.action.edit': 'Edit',
+  'pages.live-mode.action.delete': 'Delete',
 };

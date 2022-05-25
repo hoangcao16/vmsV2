@@ -1,4 +1,5 @@
 import EventAiAPI from '@/services/storage-api/eventAI-api';
+import { EVENT_AI_NAMESPACE } from '../constants';
 
 export const initSearchEventsAI = {
   startRecordTime: -1,
@@ -14,13 +15,13 @@ export const initSearchEventsAI = {
   type: -1,
   eventUuid: '',
   searchType: '',
-  searchValue: '',
+  searchType: 'all',
   eventType: '',
   status: '',
 };
 
 export default {
-  namespace: 'eventAI',
+  namespace: EVENT_AI_NAMESPACE,
   state: {
     list: [],
     metadata: {
@@ -42,7 +43,7 @@ export default {
   },
 
   effects: {
-    *fetchAllEventsAI({ payload }, { call, put }) {
+    *fetchAll({ payload }, { call, put }) {
       try {
         const response = yield call(EventAiAPI.getAllEvents, payload);
         yield put({

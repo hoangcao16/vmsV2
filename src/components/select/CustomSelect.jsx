@@ -18,16 +18,40 @@ export function filterOption(input, option) {
   );
 }
 
-export function normalizeOptions(labelField, valueField, dataSource) {
+export function filterOptionForChart(input, option) {
+  let array = {
+    label: option?.children,
+    value: option?.value,
+  };
+  return (
+    array.label.match(new RegExp(input, 'i')) ||
+    removeAccents(array.label).match(new RegExp(input, 'i'))
+  );
+}
+
+export function normalizeOptions(labelField, valueField, dataSource, sortable = true) {
   if (dataSource != null) {
-    return dataSource
-      .sort((a, b) => defaultTo(get(a, labelField), '').localeCompare(get(b, labelField)))
-      .map((r) => ({
-        value: get(r, valueField),
-        label: get(r, labelField),
-      }));
+    if (sortable) {
+      return dataSource
+        .sort((a, b) => defaultTo(get(a, labelField), '').localeCompare(get(b, labelField)))
+        .map((r) => ({
+          value: get(r, valueField),
+          label: get(r, labelField),
+        }));
+    }
+    return dataSource.map((r) => ({
+      value: get(r, valueField),
+      label: get(r, labelField),
+    }));
   }
   return [];
+}
+
+export function disableOptions(label, value, validateNumber) {
+  if (label && label.length >= validateNumber && !label.includes(value)) {
+    return true;
+  }
+  return false;
 }
 
 export function CustomSelect(props) {
