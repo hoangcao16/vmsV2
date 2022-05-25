@@ -1,6 +1,7 @@
 import MSCustomizeDrawer from '@/components/Drawer';
 import MSFormItem from '@/components/Form/Item';
-import UserApi from '@/services/user/UserApi';
+import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
+import getBase64 from '@/utils/getBase64';
 import permissionCheck from '@/utils/PermissionCheck';
 import {
   CloseOutlined,
@@ -25,9 +26,9 @@ import {
 import { connect } from 'dva';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useIntl } from 'umi';
-import useHandleUploadFile from '../../../../../hooks/useHandleUploadFile';
+import { v4 as uuidV4 } from 'uuid';
 import './AddEditUser.less';
 import TableCameraPermission from './camera-table/TableCameraPermission';
 import TableGroupCameraPermission from './group-camera-table/TableGroupCameraPermission';
@@ -51,19 +52,11 @@ function AddEditUser({
   const dateFormat = 'DD/MM/YYYY';
   const intl = useIntl();
   const [form] = Form.useForm();
-  const [imgFile, setImgFile] = useState('');
-  const [imageUrl, imgFileName, loading, handleChange, uploadImage, beforeUpload] =
-    useHandleUploadFile(imgFile);
+  const [avatarFileName, setAvatarFileName] = useState(
+    selectedRecord?.avatar_base64 || selectedRecord?.avatar_file_name || '',
+  );
   const [keyActive, setKeyActive] = useState(TABS_SELECTED.INFO);
   const [isLoading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!isEmpty(selectedRecord)) {
-      UserApi.getDetailUser(selectedRecord?.uuid).then(async (res) => {
-        setImgFile(res?.payload?.avatar_file_name);
-      });
-    }
-  }, []);
 
   const uploadButton = (
     <div>
@@ -71,13 +64,43 @@ function AddEditUser({
       <div style={{ marginTop: 8 }}>{intl.formatMessage({ id: 'view.map.add_image' })}</div>
     </div>
   );
+  function beforeUpload(file) {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      notify('error', 'noti.ERROR', 'noti.upload_file_desc');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      notify('error', 'noti.ERROR', 'noti.size_file_desc');
+    }
+    return isJpgOrPng && isLt2M;
+  }
+
+  const uploadImage = async (options) => {
+    const { file } = options;
+    await ExportEventFileApi.uploadAvatar(uuidV4(), file).then((result) => {
+      if (result.data && result.data.payload && result.data.payload.fileUploadInfoList.length > 0) {
+        getBase64(file, (imageUrl) => {
+          setAvatarFileName(imageUrl);
+          //   let fileName = result.data.payload.fileUploadInfoList[0].name;
+          //   setAvatarFileName(fileName);
+        });
+      }
+    });
+  };
+
+  const handleChange = (info) => {
+    if (info.file.status === 'uploading') {
+      setLoading(true);
+    }
+  };
 
   const handleSubmit = (values) => {
     const payload = {
       ...values,
       phone: values?.phone,
       date_of_birth: moment(values?.date_of_birth).format('DD-MM-YYYY'),
-      avatar_file_name: imgFileName,
+      avatar_file_name: avatarFileName,
     };
 
     if (isEmpty(selectedRecord)) {
@@ -178,6 +201,7 @@ function AddEditUser({
                   ? {
                       ...selectedRecord,
                       date_of_birth: moment(selectedRecord?.date_of_birth, dateFormat),
+                      avatar_file_name: selectedRecord?.avatar_base64 ?? '',
                     }
                   : {}
               }
@@ -194,15 +218,19 @@ function AddEditUser({
                         accept=".png,.jpeg,.jpg"
                         name="avatar"
                         listType="picture"
-                        className="camera-image"
+                        className="avatar-uploader"
                         showUploadList={false}
-                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                         beforeUpload={beforeUpload}
-                        onChange={handleChange}
                         customRequest={uploadImage}
+                        onChange={handleChange}
                       >
-                        {imageUrl ? (
-                          <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
+                        {avatarFileName && avatarFileName !== '' ? (
+                          <img
+                            className="avatar__image"
+                            src={avatarFileName}
+                            alt="avatar"
+                            style={{ width: '100%' }}
+                          />
                         ) : (
                           uploadButton
                         )}

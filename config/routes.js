@@ -14,12 +14,6 @@ export default [
         redirect: '/user/login',
       },
       {
-        name: 'register',
-        icon: 'smile',
-        path: '/user/register',
-        component: './user/register',
-      },
-      {
         component: './exception/404',
       },
     ],

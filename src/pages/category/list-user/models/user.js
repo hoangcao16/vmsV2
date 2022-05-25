@@ -12,6 +12,7 @@ export default {
       size: 10,
     },
     userAddingUuid: null,
+    dataForFilter: null,
   },
   reducers: {
     save(state, { payload: { data: list, metadata } }) {
@@ -19,6 +20,9 @@ export default {
     },
     saveUserUuid(state, { payload: { data: userAddingUuid } }) {
       return { ...state, userAddingUuid };
+    },
+    saveDataForFilter(state, { payload: { data: dataForFilter } }) {
+      return { ...state, dataForFilter };
     },
   },
   effects: {
@@ -30,6 +34,29 @@ export default {
           payload: {
             data: response?.payload,
             metadata: response?.metadata,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    *getDataForFilter({ payload }, { call, put, all }) {
+      try {
+        const [dataListAllRole, dataListAllUserGroup, otherData] = yield all([
+          call(UserApi.getAllRoles, { page: 0, size: 10000 }),
+          call(UserApi.getAllGroups, { page: 0, size: 10000 }),
+          call(UserApi.getListPositionUnit),
+        ]);
+        yield put({
+          type: 'saveDataForFilter',
+          payload: {
+            data: {
+              dataListAllRole: dataListAllRole?.payload,
+              dataListAllUserGroup: dataListAllUserGroup?.payload,
+              dataListAllUnit: otherData?.payload?.units,
+              dataListAllPosition: otherData?.payload?.positions,
+            },
           },
         });
       } catch (error) {
@@ -65,7 +92,7 @@ export default {
             metadata: metadata,
           },
         });
-        // yield put({ type: 'reload' });
+        yield put({ type: 'reload' });
       } catch (error) {
         console.log(error);
         notify(

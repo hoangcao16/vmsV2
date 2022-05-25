@@ -1,36 +1,23 @@
+import MSFormItem from '@/components/Form/Item';
+import { notify } from '@/components/Notify';
+import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
+import AddressApi from '@/services/address/AddressApi';
+import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
+import getBase64 from '@/utils/getBase64';
 import {
   CloseOutlined,
   DeleteOutlined,
   LoadingOutlined,
   PlusOutlined,
   SaveOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
-import {
-  Avatar,
-  Button,
-  Card,
-  Col,
-  Form,
-  Input,
-  Popconfirm,
-  Row,
-  Select,
-  Space,
-  Upload,
-} from 'antd';
-import React, { useEffect, useState } from 'react';
-import { StyledDrawer } from '../style';
-import { useIntl } from 'umi';
+import { Button, Card, Col, Form, Input, Popconfirm, Row, Select, Space, Upload } from 'antd';
 import { isEmpty } from 'lodash';
-import MSFormItem from '@/components/Form/Item';
-import AddressApi from '@/services/address/AddressApi';
-import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
-import { notify } from '@/components/Notify';
-import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
-import { v4 as uuidV4 } from 'uuid';
-import getBase64 from '@/utils/getBase64';
+import React, { useEffect, useState } from 'react';
 import PhoneInput from 'react-phone-number-input';
+import { useIntl } from 'umi';
+import { v4 as uuidV4 } from 'uuid';
+import { StyledDrawer } from '../style';
 
 const DATA_FAKE_UNIT = {
   provinces: [{ name: '', provinceId: '' }],
