@@ -13,7 +13,6 @@ const Login = () => {
   const [type, setType] = useState('account');
   const { initialState, setInitialState } = useModel('@@initialState');
 
-  console.log('type:', type);
   const intl = useIntl();
 
   const fetchUserInfo = async () => {
@@ -84,12 +83,6 @@ const Login = () => {
                 id: 'pages.login.accountLogin.tab',
               })}
             />
-            <Tabs.TabPane
-              key="forgotPassword"
-              tab={intl.formatMessage({
-                id: 'pages.login.accountLogin.forgotPassword',
-              })}
-            />
           </Tabs>
 
           {type === 'account' && (
@@ -129,41 +122,14 @@ const Login = () => {
             </>
           )}
 
-          {type === 'forgotPassword' && (
-            <ProFormText
-              name="email"
-              fieldProps={{
-                size: 'large',
-                prefix: <UserOutlined className={styles.prefixIcon} />,
-              }}
-              placeholder={intl.formatMessage({
-                id: 'pages.login.email.placeholder',
-              })}
-              rules={[
-                {
-                  required: true,
-                  message: <FormattedMessage id="pages.login.email.required" />,
-                },
-              ]}
-            />
-          )}
-
-          {type === 'account' ? (
-            <BottomForm>
-              <ProFormCheckbox noStyle name="autoLogin">
-                <FormattedMessage id="pages.login.rememberMe" />
-              </ProFormCheckbox>
-              <a className="forgot-password">
-                <FormattedMessage id="pages.login.forgotPassword" />
-              </a>
-            </BottomForm>
-          ) : (
-            <BottomForm>
-              <a className="forgot-password">
-                <FormattedMessage id="pages.login.accountLogin.tab" />
-              </a>
-            </BottomForm>
-          )}
+          <BottomForm>
+            <ProFormCheckbox noStyle name="autoLogin">
+              <FormattedMessage id="pages.login.rememberMe" />
+            </ProFormCheckbox>
+            <a className="forgot-password">
+              <FormattedMessage id="pages.login.forgotPassword" />
+            </a>
+          </BottomForm>
         </LoginForm>
       </div>
       <Footer />
