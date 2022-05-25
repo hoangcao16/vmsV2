@@ -267,7 +267,7 @@ export default {
   'view.report.district': 'quận/huyện',
   'view.report.ward': 'phường/xã',
   //view pages
-  'view.pages.login': 'Đăng nhập1111',
+  'view.pages.login': 'Đăng nhập',
   'view.pages.wc_pls_login': 'Chào mừng, vui lòng đăng nhập.',
   'view.pages.account': 'Tài khoản',
   'view.pages.password': 'Mật khẩu',

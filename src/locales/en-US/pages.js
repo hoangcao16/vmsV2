@@ -12,7 +12,6 @@ export default {
   'pages.login.password.required': 'Please input your password!',
   'pages.login.rememberMe': 'Remember password',
   'pages.login.forgotPassword': 'Forgot password?',
-  'pages.login.submit': 'LoginHelelelelele',
 
   //Home
   'pages.home.notification': 'Notification',

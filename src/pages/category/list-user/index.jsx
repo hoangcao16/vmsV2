@@ -41,6 +41,7 @@ const UserList = ({
   const [collapse, setCollapse] = useState(true);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [search, setSearch] = useState('');
+
   useEffect(() => {
     dispatch({
       type: 'user/fetchAllUser',
@@ -168,7 +169,7 @@ const UserList = ({
   };
 
   const handleSearch = async (value) => {
-    const filters = form.getFieldValue(true);
+    const filters = form.getFieldValue();
     setSearch(value);
     if (search !== null) {
       dispatch({
