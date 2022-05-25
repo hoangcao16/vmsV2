@@ -1,62 +1,81 @@
+import { Tabs } from 'antd';
+import { connect } from 'dva';
 import React from 'react';
+import { useIntl } from 'umi';
+import { ChartBackground, TimeoutChart } from '../../style';
+import BarChart from './BarChart';
 import LineChart from './LineChart';
 import PieChart from './PieChart';
-import BarChart from './BarChart';
-import { connect } from 'dva';
-import { useIntl } from 'umi';
-import { TimeoutChart } from '../../style';
-import { Tabs } from 'antd';
 
 const { TabPane } = Tabs;
 
-const Chart = ({ timeoutData, chartDisable }) => {
+const Chart = (props) => {
   const intl = useIntl();
   return (
     <div className="chart">
-      {timeoutData ? (
+      {props?.timeoutData ? (
         <TimeoutChart paddingY={256}>
           {intl.formatMessage({
             id: `pages.report.chart.dateRangeError`,
           })}
         </TimeoutChart>
       ) : (
-        <>
-          <Tabs defaultActiveKey="1">
+        <ChartBackground>
+          <Tabs
+            defaultActiveKey="1"
+            onChange={(activeKey) => {
+              props.dispatch({
+                type: 'chartDisable/chooseCurrentTabWhenChangeChartControl',
+                payload: activeKey,
+              });
+            }}
+            activeKey={props.currentTabKey}
+          >
             <TabPane
               tab={intl.formatMessage({
                 id: `pages.report.chart.lineChart`,
               })}
               key="1"
             >
-              <LineChart />
+              <ChartBackground>
+                <LineChart />
+              </ChartBackground>
             </TabPane>
             <TabPane
               tab={intl.formatMessage({
                 id: `pages.report.chart.pieChart`,
               })}
               key="2"
-              disabled={chartDisable?.pieChartDisable}
+              disabled={props?.chartDisable?.pieChartDisable}
             >
-              <PieChart />
+              <ChartBackground>
+                <PieChart />
+              </ChartBackground>
             </TabPane>
             <TabPane
               tab={intl.formatMessage({
                 id: `pages.report.chart.barChart`,
               })}
               key="3"
-              disabled={chartDisable?.barChartDisable}
+              disabled={props?.chartDisable?.barChartDisable}
             >
-              <BarChart />
+              <ChartBackground>
+                <BarChart />
+              </ChartBackground>
             </TabPane>
           </Tabs>
-        </>
+        </ChartBackground>
       )}
     </div>
   );
 };
 
 function mapStateToProps(state) {
-  return { timeoutData: state?.chart?.timeoutData, chartDisable: state?.chartDisable };
+  return {
+    timeoutData: state?.chart?.timeoutData,
+    chartDisable: state?.chartDisable,
+    currentTabKey: state?.chartDisable?.currentTabKey,
+  };
 }
 
 export default connect(mapStateToProps)(Chart);

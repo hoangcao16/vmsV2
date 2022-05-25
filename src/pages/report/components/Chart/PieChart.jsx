@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Pie, G2 } from '@ant-design/plots';
-import ChartHeader from './ChartHeader';
-import { Divider } from 'antd';
+import { G2, Pie } from '@ant-design/plots';
 import { connect } from 'dva';
-import { useIntl } from 'umi';
 import { isEmpty } from 'lodash';
-import styled from 'styled-components';
+import React, { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
 import { TimeoutChart } from '../../style';
+import ChartHeader from './ChartHeader';
 
 const PieChart = (props) => {
   const intl = useIntl();
@@ -85,7 +83,6 @@ const PieChart = (props) => {
         })}
         typeChart={'pie'}
       />
-      <Divider />
       {props.timeoutFieldData ? (
         <TimeoutChart>
           {intl.formatMessage({

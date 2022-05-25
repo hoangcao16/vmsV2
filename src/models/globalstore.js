@@ -1,9 +1,10 @@
 import AddressApi from '@/services/address/AddressApi';
-import cameraApi from '@/services/controller-api/cameraService';
-import ZoneApi from '@/services/zone/ZoneApi';
 import AdDivisionApi from '@/services/advision/AdDivision';
-import VendorApi from '@/services/vendor/VendorApi';
+import cameraApi from '@/services/controller-api/cameraService';
+import FieldEventApi from '@/services/fieldEvent/FieldEventApi';
 import TagApi from '@/services/tag/tagApi';
+import VendorApi from '@/services/vendor/VendorApi';
+import ZoneApi from '@/services/zone/ZoneApi';
 
 export default {
   namespace: 'globalstore',
@@ -15,6 +16,7 @@ export default {
     vendorsOptions: [],
     tagsOptions: [],
     provincesOptions: [],
+    fieldsOptions: [],
   },
 
   reducers: {
@@ -56,6 +58,9 @@ export default {
     },
     saveProvinces(state, { payload }) {
       return { ...state, provincesOptions: payload };
+    },
+    saveFields(state, { payload }) {
+      return { ...state, fieldsOptions: payload };
     },
   },
 
@@ -137,6 +142,17 @@ export default {
         console.log(error);
       }
     },
+    *fetchAllFields({ payload }, { call, put }) {
+      try {
+        const response = yield call(FieldEventApi.getAllFieldEvent);
+        yield put({
+          type: 'saveFields',
+          payload: response?.payload,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -155,6 +171,7 @@ export default {
           dispatch({ type: 'fetchAllVendors', payload: data });
           dispatch({ type: 'fetchAllTags', payload: data });
           dispatch({ type: 'fetchAllProvinces', payload: data });
+          dispatch({ type: 'fetchAllFields', payload: data });
         }
       });
     },
