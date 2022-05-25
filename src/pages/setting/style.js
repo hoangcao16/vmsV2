@@ -34,7 +34,7 @@ export const StyledCard = styled(Card)`
     .ant-select-selector {
       border-radius: 0 2px 2px 0;
     }
-    .ant-input {
+    .ant-input-number {
       border-right: 0;
       border-radius: 2px 0 0 2px;
     }
@@ -63,6 +63,10 @@ export const StyledCard = styled(Card)`
 
   .ant-card-body {
     .ant-select {
+      width: 100%;
+    }
+
+    .ant-input-number {
       width: 100%;
     }
 

@@ -6,7 +6,7 @@ import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
 import EditCamproxy from './EditCamproxy';
 
-const TableCamproxy = ({ dispatch, list, metadata }) => {
+const TableCamproxy = ({ dispatch, list, metadata, loading }) => {
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedCamproxyEdit, setSelectedCamproxyEdit] = useState(null);
@@ -101,6 +101,7 @@ const TableCamproxy = ({ dispatch, list, metadata }) => {
         dataSource={list}
         columns={columns}
         options={false}
+        loading={loading}
         onRow={(record) => {
           return {
             onClick: () => {

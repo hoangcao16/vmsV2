@@ -8,7 +8,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import AddEditAdministrativeUnit from './components/AddEditAdministrativeUnit';
 import { debounce } from 'lodash';
 
-const AdministrativeUnit = ({ dispatch, list, metadata }) => {
+const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
   const intl = useIntl();
   const [openDrawerAddEdit, setOpenDrawerAddEdit] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
@@ -72,6 +72,7 @@ const AdministrativeUnit = ({ dispatch, list, metadata }) => {
           dataSource={list}
           columns={columns}
           options={false}
+          loading={loading}
           onRow={(record) => {
             return {
               onClick: () => {

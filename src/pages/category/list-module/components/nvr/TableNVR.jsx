@@ -8,7 +8,7 @@ import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
 import EditNVR from './EditNVR';
 
-const TableNVR = ({ dispatch, list, metadata }) => {
+const TableNVR = ({ dispatch, list, metadata, loading }) => {
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedNVREdit, setSelectedNVREdit] = useState(null);
@@ -23,6 +23,10 @@ const TableNVR = ({ dispatch, list, metadata }) => {
       },
     });
   }, []);
+
+  const [listNVR, setListNVR] = useState(list);
+
+  console.log('list', listNVR);
 
   const showDrawer = () => {
     setOpenDrawer(true);
@@ -103,6 +107,7 @@ const TableNVR = ({ dispatch, list, metadata }) => {
         dataSource={list}
         columns={columns}
         options={false}
+        loading={loading}
         onRow={(record) => {
           return {
             onClick: () => {

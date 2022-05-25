@@ -1,5 +1,6 @@
 import MSCustomizeDrawer from '@/components/Drawer';
 import ProTable from '@ant-design/pro-table';
+import { Tabs } from 'antd';
 import styled from 'styled-components';
 
 export const StyledDrawer = styled(MSCustomizeDrawer)`
@@ -36,5 +37,17 @@ export const ProTableStyle = styled(ProTable)`
   }
   .ant-select-auto-complete {
     width: 100%;
+  }
+`;
+
+export const TabsStyle = styled(Tabs)`
+  .ant-tabs-nav {
+    margin-bottom: 0;
+    background-color: #1f1f1f;
+  }
+  .ant-tabs-nav-wrap {
+    margin-left: 16px;
+    padding-top: 12px;
+    padding-bottom: 6px;
   }
 `;

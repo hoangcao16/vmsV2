@@ -7,7 +7,7 @@ import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
 import EditPlayback from './EditPlayback';
 
-const TablePlayback = ({ dispatch, list, metadata }) => {
+const TablePlayback = ({ dispatch, list, metadata, loading }) => {
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedPlaybackEdit, setSelectedPlaybackEdit] = useState(null);
@@ -102,6 +102,7 @@ const TablePlayback = ({ dispatch, list, metadata }) => {
         dataSource={list}
         columns={columns}
         options={false}
+        loading={loading}
         onRow={(record) => {
           return {
             onClick: () => {

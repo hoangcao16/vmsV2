@@ -1,13 +1,14 @@
 import { ClearOutlined } from '@ant-design/icons';
-import { Checkbox, Col, Input, Row, Select } from 'antd';
-import React from 'react';
+import { Checkbox, Col, Input, InputNumber, Row, Select } from 'antd';
+import React, { useState } from 'react';
 import { useIntl } from 'umi';
 import { StyledCard } from '../style';
 
 const { Option } = Select;
 
-const CleanSetting = () => {
+const CleanSetting = ({ list }) => {
   const intl = useIntl();
+  const [cleanSettingData, setCleanSettingData] = useState(list || {});
 
   const titleCard = (
     <Row>
@@ -15,10 +16,8 @@ const CleanSetting = () => {
         <ClearOutlined />
       </Col>
       <Col span={23} className="title">
-        <h4>Thiết lập cấu hình dọn dẹp</h4>
-        <p>
-          Thiết lập chế độ tự động dọn dẹp giúp đơn vị tối ưu lại bộ nhớ và tiết kiệm chi phí hơn
-        </p>
+        <h4>{intl.formatMessage({ id: 'view.storage.what_is_cs' })}</h4>
+        <p>{intl.formatMessage({ id: 'view.storage.cs_desc' })}</p>
       </Col>
     </Row>
   );
@@ -38,52 +37,111 @@ const CleanSetting = () => {
     </Option>,
   ];
 
+  const onChangeTimeTypeOne = (value) => {
+    let configCleanFileNew = cleanSettingData.configCleanFile;
+    configCleanFileNew[0].timeType = value;
+
+    //set clean setting data
+    setCleanSettingData({
+      ...cleanSettingData,
+      configCleanFile: configCleanFileNew,
+    });
+  };
+
   return (
     <>
       <StyledCard title={titleCard}>
         <div className="setting-clean">
           <Row justify="space-between">
-            <Col span={8}>
+            <Col span={8} className="capture">
               <Row>
                 <Col className="label">
                   <p>{intl.formatMessage({ id: 'view.storage.file_capture' })} :</p>
                 </Col>
                 <Col span={8}>
-                  <Input />
+                  <InputNumber
+                    controls={false}
+                    value={
+                      cleanSettingData?.configCleanFile
+                        ? cleanSettingData?.configCleanFile[0]?.time
+                        : 0
+                    }
+                  />
                 </Col>
                 <Col span={4}>
-                  <Select defaultValue="YEAR">{optionSelect}</Select>
+                  <Select
+                    onChange={onChangeTimeTypeOne}
+                    value={
+                      cleanSettingData?.configCleanFile
+                        ? cleanSettingData?.configCleanFile[0]?.timeType
+                        : 'YEAR'
+                    }
+                  >
+                    {optionSelect}
+                  </Select>
                 </Col>
               </Row>
             </Col>
-            <Col span={8}>
+            <Col span={8} className="event">
               <Row>
                 <Col className="label">
-                  <p>Tệp lưu hàng ngày :</p>
+                  <p>{intl.formatMessage({ id: 'view.storage.autosave_file' })} :</p>
                 </Col>
                 <Col span={8}>
-                  <Input />
+                  <InputNumber
+                    controls={false}
+                    value={
+                      cleanSettingData?.configCleanFile
+                        ? cleanSettingData?.configCleanFile[1]?.time
+                        : 0
+                    }
+                  />
                 </Col>
                 <Col span={4}>
-                  <Select defaultValue="YEAR">{optionSelect}</Select>
+                  <Select
+                    value={
+                      cleanSettingData?.configCleanFile
+                        ? cleanSettingData?.configCleanFile[1]?.timeType
+                        : 'YEAR'
+                    }
+                  >
+                    {optionSelect}
+                  </Select>
                 </Col>
               </Row>
             </Col>
-            <Col span={8}>
+            <Col span={8} className="daily-record">
               <Row>
                 <Col className="label">
-                  <p>Tệp sự kiện :</p>
+                  <p>{intl.formatMessage({ id: 'view.storage.event_file' })} :</p>
                 </Col>
                 <Col span={8}>
-                  <Input />
+                  <InputNumber
+                    controls={false}
+                    value={
+                      cleanSettingData?.configCleanFile
+                        ? cleanSettingData?.configCleanFile[1]?.time
+                        : 0
+                    }
+                  />
                 </Col>
                 <Col span={4}>
-                  <Select defaultValue="YEAR">{optionSelect}</Select>
+                  <Select
+                    value={
+                      cleanSettingData?.configCleanFile
+                        ? cleanSettingData?.configCleanFile[2]?.timeType
+                        : 'YEAR'
+                    }
+                  >
+                    {optionSelect}
+                  </Select>
                 </Col>
               </Row>
             </Col>
           </Row>
-          <Checkbox>Dọn dẹp tệp quan trọng</Checkbox>
+          <Checkbox checked={cleanSettingData?.autoRemoveFileImportant || false}>
+            {intl.formatMessage({ id: 'view.storage.clean_important_file' })}
+          </Checkbox>
         </div>
       </StyledCard>
     </>

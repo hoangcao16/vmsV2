@@ -7,7 +7,7 @@ import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
 import AddEditZone from './AddEditZone';
 
-const TableZone = ({ dispatch, list, metadata }) => {
+const TableZone = ({ dispatch, list, metadata, loading }) => {
   const intl = useIntl();
   const [openDrawerAddEdit, setOpenDrawerAddEdit] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
@@ -77,6 +77,7 @@ const TableZone = ({ dispatch, list, metadata }) => {
         dataSource={list}
         columns={columns}
         options={false}
+        loading={loading}
         onRow={(record) => {
           return {
             onClick: () => {

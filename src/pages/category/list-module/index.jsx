@@ -5,6 +5,7 @@ import TableNVR from './components/nvr/TableNVR';
 import TablePlayback from './components/playback/TablePlayback';
 import TableZone from './components/zone/TableZone';
 import { useIntl } from 'umi';
+import { TabsStyle } from './style';
 
 const { TabPane } = Tabs;
 
@@ -13,7 +14,7 @@ const ModuleList = () => {
 
   return (
     <PageContainer>
-      <Tabs defaultActiveKey="1">
+      <TabsStyle defaultActiveKey="nvr">
         <TabPane
           tab={`${intl.formatMessage({
             id: 'view.common_device.nvr_list',
@@ -46,7 +47,7 @@ const ModuleList = () => {
         >
           <TableCamproxy />
         </TabPane>
-      </Tabs>
+      </TabsStyle>
     </PageContainer>
   );
 };

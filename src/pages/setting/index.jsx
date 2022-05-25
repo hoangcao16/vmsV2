@@ -1,14 +1,14 @@
 import { CloseOutlined, SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Button } from 'antd';
-import React from 'react';
+import { connect } from 'dva';
 import { useIntl } from 'umi';
 import CleanSetting from './components/CleanSetting';
 import EmailConfig from './components/EmailConfig';
 import RecordSetting from './components/RecordSetting';
 import WarningStoreSetting from './components/WarningStoreSetting';
 
-const Setting = () => {
+const Setting = ({ listRecord, listClean, listDisk, loading, dispatch, allEmails, listEmail }) => {
   const intl = useIntl();
 
   return (
@@ -26,12 +26,30 @@ const Setting = () => {
         ],
       }}
     >
-      <RecordSetting />
-      <CleanSetting />
-      <WarningStoreSetting />
-      <EmailConfig />
+      {!loading && (
+        <>
+          <RecordSetting list={listRecord} />
+          <CleanSetting list={listClean} />
+          <WarningStoreSetting list={listDisk} />
+          <EmailConfig listAllEmail={allEmails} listEmail={listEmail} />
+        </>
+      )}
     </PageContainer>
   );
 };
 
-export default Setting;
+function mapStateToProps(state) {
+  const { listRecord, listClean, listDisk, listEmail } = state.setting;
+  const { list } = state.user;
+  const allEmails = list.map((i) => i.email);
+  return {
+    loading: state.loading.models.setting && state.loading.models.user,
+    listRecord,
+    listClean,
+    listDisk,
+    allEmails,
+    listEmail,
+  };
+}
+
+export default connect(mapStateToProps)(Setting);
