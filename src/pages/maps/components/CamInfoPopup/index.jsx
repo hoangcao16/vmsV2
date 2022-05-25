@@ -10,7 +10,7 @@ import { Tooltip, Spin, Button } from 'antd';
 import { TYPE_FORM_ACTION_ON_MAP } from '@/constants/map';
 import camImgSrcDefault from '@/assets/img/cam-default.png';
 import adUnitImgSrcDefault from '@/assets/img/adminis-unit-default.png';
-// import ExportEventFileApi from '../../actions/api/exporteventfile/ExportEventFileApi';
+import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
 import { isEmpty } from 'lodash';
 // import { useSelector, useDispatch } from "react-redux";
 
@@ -28,15 +28,15 @@ const CamInfoPopup = (props) => {
   useEffect(() => {
     const loadImageFileHanleler = (avatarFileName) => {
       if (avatarFileName) {
-        // ExportEventFileApi.getAvatar(avatarFileName).then((result) => {
-        //   if (result.data) {
-        //     let blob = new Blob([result.data], { type: 'octet/stream' });
-        //     let url = window.URL.createObjectURL(blob);
-        //     setImageUrl(url);
-        //   } else {
-        //     setImageUrl('');
-        //   }
-        // });
+        ExportEventFileApi.getAvatar(avatarFileName).then((result) => {
+          if (result) {
+            let blob = new Blob([result], { type: 'octet/stream' });
+            let url = window.URL.createObjectURL(blob);
+            setImageUrl(url);
+          } else {
+            setImageUrl('');
+          }
+        });
       }
     };
     loadImageFileHanleler(dataDetailInfo?.avatarFileName);

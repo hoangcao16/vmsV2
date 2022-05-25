@@ -1,4 +1,6 @@
 import request from '@/utils/request';
+import _uniqueId from 'lodash/uniqueId';
+import { STORAGE } from '@/constants/common';
 const CAMERA_ENDPOINT = '/cctv-controller-svc/api/v1/cameras';
 const CAMERA_ENDPOINT_AI = '/cctv-controller-svc/api/v1/cameras/ai';
 const CAMERA_SEARCH_ENDPOINT = '/cctv-controller-svc/api/v1/cameras/search';
@@ -6,6 +8,18 @@ const CAMERA_BY_TRACKING_POINT = '/cctv-controller-svc/api/v1/cameras/find_by_po
 const CAMERA_SCAN_ENDPOINT = '/ptz-ctrl/api/v1/scan-camera';
 const CAMERA_TYPES_ENDPOINT = '/cctv-controller-svc/api/v1/camera_types';
 const CAMERA_GROUP_ENDPOINT = '/cctv-controller-svc/api/v1/camera_groups';
+const CAMERA_EXPORT_DATA_ENDPOINT = '/owl/api/v1/report-camera';
+const exportHeader = () => {
+  const token = localStorage.getItem(STORAGE.TOKEN);
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json; charset=utf-8',
+  };
+  if (token) {
+    headers.Authorization = token;
+  }
+  return headers;
+};
 const cameraApi = {
   getAll(queryParams) {
     return request.request({
@@ -126,6 +140,18 @@ const cameraApi = {
     return request.request({
       method: 'DELETE',
       url: `${CAMERA_GROUP_ENDPOINT}/${uuid}`,
+    });
+  },
+  exportData(data) {
+    return request.request({
+      method: 'POST',
+      url: CAMERA_EXPORT_DATA_ENDPOINT,
+      data,
+      headers: {
+        ...exportHeader(),
+        requestId: _uniqueId('cctv'),
+      },
+      responseType: 'blob',
     });
   },
 };

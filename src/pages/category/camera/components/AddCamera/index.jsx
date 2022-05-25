@@ -106,10 +106,10 @@ const AddCamera = ({
   const uploadImage = async (options) => {
     const { file } = options;
     await ExportEventFileApi.uploadAvatar(uuidV4(), file).then((result) => {
-      if (result.data && result.data.payload && result.data.payload.fileUploadInfoList.length > 0) {
+      if (result && result.payload && result.payload.fileUploadInfoList.length > 0) {
         getBase64(file, (imageUrl) => {
           setAvatarUrl(imageUrl);
-          let fileName = result.data.payload.fileUploadInfoList[0].name;
+          let fileName = result.payload.fileUploadInfoList[0].name;
           setAvatarFileName(fileName);
 
           //phần này set vào state để push lên
@@ -275,7 +275,7 @@ const AddCamera = ({
                   <Form.Item
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 24 }}
-                    name={['name']}
+                    name="name"
                     label={intl.formatMessage(
                       {
                         id: 'view.camera.camera_name',
@@ -828,7 +828,7 @@ const AddCamera = ({
                           id: 'view.map.please_choose_administrative_unit',
                         })}
                         getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                      />{' '}
+                      />
                     </Form.Item>
                     <Button
                       shape="circle"
