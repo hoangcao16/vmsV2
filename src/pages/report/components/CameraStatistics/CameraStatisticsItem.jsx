@@ -4,9 +4,11 @@ import styled from 'styled-components';
 import { useIntl } from 'umi';
 
 const CustomCard = styled(Card)`
-  color: white !important;
-  border-radius: 10px !important;
-  background-color: ${(prop) => prop?.backgroundColor} !important;
+  &.ant-card {
+    color: white;
+    background-color: ${(prop) => prop?.backgroundColor};
+    border-radius: 10px;
+  }
 `;
 
 const CardTitle = styled.div`

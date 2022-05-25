@@ -51,6 +51,8 @@ export default {
   'pages.report.chart.field': 'Lĩnh vực',
   'pages.report.chart.eventType': 'Loại sự kiện',
   'pages.report.chart.checkAll': 'Chọn tất cả',
+  'pages.report.chart.timeRecord': 'Ngày ghi nhận',
+  'pages.report.chart.type': 'Loại',
 
   //User
 

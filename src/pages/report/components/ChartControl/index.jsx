@@ -206,13 +206,13 @@ const ChartControl = (props) => {
       });
       form.setFieldsValue({ eventIds: array });
       if (events.length >= 2) {
-        props.dispatch({ type: 'chartDisable/pieChartDisable', boolean: false });
+        props.dispatch({ type: 'chartDisable/isDisablePieChart', boolean: false });
       } else {
-        props.dispatch({ type: 'chartDisable/pieChartDisable', boolean: true });
+        props.dispatch({ type: 'chartDisable/isDisablePieChart', boolean: true });
       }
     } else {
       form.setFieldsValue({ eventIds: [] });
-      props.dispatch({ type: 'chartDisable/pieChartDisable', boolean: true });
+      props.dispatch({ type: 'chartDisable/isDisablePieChart', boolean: true });
     }
     setIndeterminate(false);
     setCheckAll(e.target.checked);
@@ -279,11 +279,7 @@ const ChartControl = (props) => {
         cameraUuids: form.getFieldValue('aiCamera').toString(),
       };
       props.dispatch({
-        type: 'chart/changeReportHeaderDataPieChart',
-        payload: params,
-      });
-      props.dispatch({
-        type: 'chart/changeReportHeaderData',
+        type: 'chart/saveFilterPayLoad',
         payload: params,
       });
       props.dispatch({
@@ -347,8 +343,8 @@ const ChartControl = (props) => {
     if (provinceId && provinceId.length == 1) {
       getDistricts();
       setAllWards([]);
-      props.dispatch({ type: 'chartDisable/barChartDisable', boolean: true });
-      props.dispatch({ type: 'chartDisable/chooseCurrentTabWhenChangeChartControl', payload: '1' });
+      props.dispatch({ type: 'chartDisable/isDisableBarChart', boolean: true });
+      props.dispatch({ type: 'chartDisable/changeCurrentTab', payload: '1' });
     }
 
     if (provinceId && provinceId.length > 1) {
@@ -356,14 +352,14 @@ const ChartControl = (props) => {
         districtId: [],
         wardId: [],
       });
-      props.dispatch({ type: 'chartDisable/barChartDisable', boolean: false });
+      props.dispatch({ type: 'chartDisable/isDisableBarChart', boolean: false });
     }
 
     if ((districtId && districtId.length > 1) || (wardId && wardId.length > 1)) {
-      props.dispatch({ type: 'chartDisable/barChartDisable', boolean: false });
+      props.dispatch({ type: 'chartDisable/isDisableBarChart', boolean: false });
     } else if ((districtId && districtId.length == 1) || (wardId && wardId.length == 1)) {
-      props.dispatch({ type: 'chartDisable/barChartDisable', boolean: true });
-      props.dispatch({ type: 'chartDisable/chooseCurrentTabWhenChangeChartControl', payload: '1' });
+      props.dispatch({ type: 'chartDisable/isDisableBarChart', boolean: true });
+      props.dispatch({ type: 'chartDisable/changeCurrentTab', payload: '1' });
     }
 
     if (districtId && districtId.length == 1) {
@@ -398,17 +394,16 @@ const ChartControl = (props) => {
         form.setFieldsValue({
           eventIds: [],
         });
-        jhhjkgghhgfsdszz;
       }
     }
 
     if (array && !isEmpty(array) && array.length <= 1) {
-      props.dispatch({ type: 'chartDisable/pieChartDisable', boolean: true });
-      props.dispatch({ type: 'chartDisable/chooseCurrentTabWhenChangeChartControl', payload: '1' });
+      props.dispatch({ type: 'chartDisable/isDisablePieChart', boolean: true });
+      props.dispatch({ type: 'chartDisable/changeCurrentTab', payload: '1' });
     }
 
     if (array && array.length > 1) {
-      props.dispatch({ type: 'chartDisable/pieChartDisable', boolean: false });
+      props.dispatch({ type: 'chartDisable/isDisablePieChart', boolean: false });
     }
 
     form.submit();

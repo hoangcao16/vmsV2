@@ -3,17 +3,17 @@ import { isEmpty } from 'lodash';
 export default {
   namespace: 'chartDisable',
   state: {
-    barChartDisable: true,
-    pieChartDisable: false,
+    isDisableBarChart: true,
+    isDisablePieChart: false,
     currentTabKey: '1',
   },
   reducers: {
-    save(state, { payload: { barChartDisable, pieChartDisable, currentTabKey } }) {
-      if (typeof barChartDisable == 'boolean') {
-        state.barChartDisable = barChartDisable;
+    save(state, { payload: { isDisableBarChart, isDisablePieChart, currentTabKey } }) {
+      if (typeof isDisableBarChart == 'boolean') {
+        state.isDisableBarChart = isDisableBarChart;
       }
-      if (typeof pieChartDisable == 'boolean') {
-        state.pieChartDisable = pieChartDisable;
+      if (typeof isDisablePieChart == 'boolean') {
+        state.isDisablePieChart = isDisablePieChart;
       }
 
       if (!isEmpty(currentTabKey)) {
@@ -23,23 +23,23 @@ export default {
     },
   },
   effects: {
-    *barChartDisable({ boolean }, { put }) {
+    *isDisableBarChart({ boolean }, { put }) {
       yield put({
         type: 'save',
         payload: {
-          barChartDisable: boolean,
+          isDisableBarChart: boolean,
         },
       });
     },
-    *pieChartDisable({ boolean }, { put }) {
+    *isDisablePieChart({ boolean }, { put }) {
       yield put({
         type: 'save',
         payload: {
-          pieChartDisable: boolean,
+          isDisablePieChart: boolean,
         },
       });
     },
-    *chooseCurrentTabWhenChangeChartControl({ payload }, { put }) {
+    *changeCurrentTab({ payload }, { put }) {
       yield put({
         type: 'save',
         payload: {

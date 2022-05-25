@@ -42,9 +42,7 @@ const ChartHeader = (props) => {
 
   return (
     <>
-      {currentPathIsReport ? (
-        ''
-      ) : (
+      {!currentPathIsReport && (
         <ChartHeaderInfo>
           <ChartHeaderInfoWrapper>
             <ChartHeaderInfoWrapperTitle>{props.title}</ChartHeaderInfoWrapperTitle>
