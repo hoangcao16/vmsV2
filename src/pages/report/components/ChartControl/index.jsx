@@ -276,7 +276,7 @@ const ChartControl = (props) => {
         districtIds: districtId?.toString(),
         wardIds: wardId?.toString(),
         eventUuids: form.getFieldValue('eventIds').toString(),
-        cameraUuids: '',
+        cameraUuids: form.getFieldValue('aiCamera').toString(),
       };
       props.dispatch({
         type: 'chart/changeReportHeaderDataPieChart',
@@ -299,6 +299,7 @@ const ChartControl = (props) => {
     provinceId,
     districtId,
     wardId,
+    aiCamera,
     fieldId,
     eventIds,
     ...values
@@ -310,9 +311,11 @@ const ChartControl = (props) => {
       districtId,
       wardId,
       fieldId,
+      aiCamera,
       eventIds,
       ...values,
     });
+
     if (typeDate) {
       if (typeDate == typeTime.WEEK) {
         setFormat('WW-YYYY');
