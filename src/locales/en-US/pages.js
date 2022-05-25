@@ -127,7 +127,6 @@ export default {
   'pages.setting-user.list-user.createUserGroupSuccess': 'Create user group success',
 
   'pages.setting-user.list-user.updateUserSuccess': 'Update user success',
-  'pages.setting-user.list-user.removeUserSuccess': 'Remove user success',
   'pages.setting-user.list-user.deleteUserSuccess': 'Remove user success',
   'pages.setting-user.list-user.createUserSuccess': 'Create user success',
 
