@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Col, Row, Tooltip } from 'antd';
 import cameraApi from '@/services/camera/CameraApi';
-import CameraStatisticsItem from './CameraStatisticsItem';
+import { Col, Row } from 'antd';
 import { isEmpty } from 'lodash';
+import React, { useEffect, useState } from 'react';
+import CameraStatisticsItem from './CameraStatisticsItem';
 
 const topColResponsiveProps = {
   xs: 24,
@@ -43,15 +43,15 @@ const CameraStatistics = () => {
 
   const getColor = (r) => {
     if (r.cameraName === 'totalCamera') {
-      return 'totalCamera';
+      return '#ff008c';
     }
     if (r.cameraName === 'cameraAI') {
-      return 'cameraAI';
+      return '#7721ef';
     }
     if (r.cameraName === 'cameraIsWorking') {
-      return 'cameraIsWorking';
+      return '#9bcb21';
     }
-    return 'cameraIsNotWorking';
+    return '#eb000c';
   };
 
   return (

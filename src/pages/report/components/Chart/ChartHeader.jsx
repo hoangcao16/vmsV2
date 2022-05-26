@@ -1,12 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { DatePicker, Select, Space, ConfigProvider, Form } from 'antd';
-import moment from 'moment';
-import 'moment/locale/en-gb';
-import locale from 'antd/es/locale/en_GB';
-import './ChartHeader.less';
+import { Divider } from 'antd';
 import { connect } from 'dva';
-import DatePickerForm from './DatePickerForm';
+import 'moment/locale/en-gb';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
+import DatePickerForm from './DatePickerForm';
+
+const ChartHeaderInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ChartHeaderInfoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @media screen and (max-width: 900px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`;
+
+const ChartHeaderInfoWrapperTitle = styled.div`
+  margin-bottom: 24px;
+  @media screen and (max-width: 900px) {
+    margin-bottom: 12px;
+  }
+`;
 
 const ChartHeader = (props) => {
   const [currentPathIsReport, setCurrentPathIsReport] = useState(true);
@@ -21,16 +41,17 @@ const ChartHeader = (props) => {
   }, []);
 
   return (
-    <div className="chart-header">
-      <div className="chart-header-title">{props.title}</div>
-      {currentPathIsReport ? (
-        ''
-      ) : (
-        <div className="chart-header-date">
-          <DatePickerForm title={props.title} typeChart={props.typeChart} />
-        </div>
+    <>
+      {!currentPathIsReport && (
+        <ChartHeaderInfo>
+          <ChartHeaderInfoWrapper>
+            <ChartHeaderInfoWrapperTitle>{props.title}</ChartHeaderInfoWrapperTitle>
+            <DatePickerForm title={props.title} typeChart={props.typeChart} />
+          </ChartHeaderInfoWrapper>
+          <Divider />
+        </ChartHeaderInfo>
       )}
-    </div>
+    </>
   );
 };
 

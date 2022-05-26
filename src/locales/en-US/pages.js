@@ -53,6 +53,20 @@ export default {
   'pages.report.chart.field': 'Field',
   'pages.report.chart.eventType': 'Event type',
   'pages.report.chart.checkAll': 'Check all',
+  'pages.report.chart.detailReport': 'Detailed traffic situation report',
+  'pages.report.chart.generalReport': 'General traffic situation report',
+  'pages.report.chart.timeRecord': 'Time record',
+  'pages.report.chart.type': 'Type',
+  'pages.report.chart.image': 'Image',
+  'pages.report.chart.eventType': 'Event type',
+  'pages.report.chart.recordCamera': 'Record Camera',
+  'pages.report.chart.penaltyTicketId': 'Penalty ticket Id',
+  'pages.report.chart.status': 'Status',
+  'pages.report.chart.notProcess': 'Not process',
+  'pages.report.chart.processing': 'Processing',
+  'pages.report.chart.processed': 'Processed',
+  'pages.report.chart.note': 'Note',
+  'pages.report.chart.event': 'event',
 
   //User
 

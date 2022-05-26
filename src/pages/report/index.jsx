@@ -1,10 +1,10 @@
+import { Col, Row } from 'antd';
+import { connect } from 'dva';
 import React from 'react';
+import { useIntl } from 'umi';
 import CameraStatistics from './components/CameraStatistics';
 import Chart from './components/Chart';
-import { Row, Col } from 'antd';
 import ChartControl from './components/ChartControl';
-import { connect } from 'dva';
-import { useIntl } from 'umi';
 import { TimeoutChart } from './style';
 
 const chartCol = {
