@@ -55,6 +55,16 @@ export default {
   'pages.report.chart.checkAll': 'Chọn tất cả',
   'pages.report.chart.timeRecord': 'Ngày ghi nhận',
   'pages.report.chart.type': 'Loại',
+  'pages.report.chart.image': 'Ảnh',
+  'pages.report.chart.eventType': 'Loại sự kiện',
+  'pages.report.chart.recordCamera': 'Camera ghi nhận',
+  'pages.report.chart.penaltyTicketId': 'Số phiếu phạt',
+  'pages.report.chart.status': 'Trạng thái',
+  'pages.report.chart.notProcess': 'Chưa xử lý',
+  'pages.report.chart.processing': 'Đang xử lý',
+  'pages.report.chart.processed': 'Đã xử lý',
+  'pages.report.chart.note': 'Ghi chú',
+  'pages.report.chart.event': 'sự kiện',
 
   //User
 

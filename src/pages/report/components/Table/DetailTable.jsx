@@ -1,25 +1,24 @@
 import { ProTableStyle } from '@/pages/category/administrative-unit/style';
 import { SpanCode } from '@/pages/category/camera/components/GroupCameraDrawer/style';
 import ReportApi from '@/services/report/ReportApi';
+import { Col, Row } from 'antd';
 import { connect } from 'dva';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 
 const DetailTable = (props) => {
   const [data, setData] = useState([]);
-  console.log('data', data);
   const [size, setSize] = useState(10);
-  const [page, setpage] = useState(1);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(1);
   const intl = useIntl();
 
   const getData = async () => {
-    console.log('props.filterParams', props.filterParams);
-    const params = { page: 1, size: 10 };
+    const params = { page: page, size: size };
     const payload = { ...params, ...props.filterParams };
-    console.log('payload', payload);
     try {
       const result = await ReportApi.getDataDetailChart(payload);
-      console.log('result', result);
+      setTotal(result?.payload?.metadata?.total);
       setData(result?.payload?.events);
     } catch (error) {
       console.log(error);
@@ -28,11 +27,32 @@ const DetailTable = (props) => {
 
   useEffect(() => {
     getData();
-  }, [props?.filterParams]);
+  }, [props?.filterParams, page, size]);
 
-  const formatDate = (date) => {
-    let formatted_date = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
+  const formatDate = (time) => {
+    if (time < 10) {
+      return `0${time}`;
+    }
+    return time;
+  };
+
+  const dateForm = (date) => {
+    let formatted_date =
+      formatDate(date.getHours()) +
+      ':' +
+      formatDate(date.getMinutes()) +
+      ' ' +
+      formatDate(date.getDate()) +
+      '/' +
+      formatDate(date.getMonth() + 1) +
+      '/' +
+      date.getFullYear();
     return formatted_date;
+  };
+
+  const onPaginationChange = (page, size) => {
+    setPage(page);
+    setSize(size);
   };
 
   const columns = [
@@ -41,46 +61,105 @@ const DetailTable = (props) => {
       dataIndex: 'createdTime',
       key: 'createdTime',
       render: (text) => {
-        return (
-          <SpanCode>
-            {formatDate(new Date(text))} | {new Date(text).toLocaleTimeString()}
-          </SpanCode>
-        );
+        return <SpanCode>{dateForm(new Date(text))}</SpanCode>;
       },
     },
     {
       title: intl.formatMessage({ id: 'pages.report.chart.type' }),
       dataIndex: 'type',
       key: 'type',
+      valueEnum: {
+        0: 'Video',
+        1: {
+          text: intl.formatMessage({
+            id: 'pages.report.chart.image',
+          }),
+        },
+      },
+    },
+    {
+      title: intl.formatMessage({ id: 'pages.report.chart.eventType' }),
+      key: 'eventName',
+      dataIndex: 'eventName',
+    },
+    {
+      title: intl.formatMessage({ id: 'pages.report.chart.recordCamera' }),
+      key: 'cameraName',
+      dataIndex: 'cameraName',
+    },
+    {
+      title: intl.formatMessage({ id: 'pages.report.chart.penaltyTicketId' }),
+      key: 'penaltyTicketId',
+      dataIndex: 'penaltyTicketId',
+    },
+    {
+      title: intl.formatMessage({ id: 'pages.report.chart.status' }),
+      key: 'status',
+      dataIndex: 'status',
+      valueEnum: {
+        process: {
+          text: intl.formatMessage({
+            id: 'pages.report.chart.notProcess',
+          }),
+          status: 'Default',
+        },
+        processing: {
+          text: intl.formatMessage({
+            id: 'pages.report.chart.processing',
+          }),
+          status: 'Processing',
+        },
+        processed: {
+          text: intl.formatMessage({
+            id: 'pages.report.chart.processed',
+          }),
+          status: 'Success',
+        },
+      },
+    },
+    {
+      title: intl.formatMessage({ id: 'pages.report.chart.note' }),
+      key: 'note',
+      dataIndex: 'note',
     },
   ];
 
   return (
-    <ProTableStyle
-      headerTitle={intl.formatMessage(
-        {
-          id: 'view.camera.camera_list',
-        },
-        {
-          cam: intl.formatMessage({
-            id: 'camera',
-          }),
-        },
-      )}
-      rowKey="uuid"
-      search={false}
-      dataSource={data}
-      columns={columns}
-      options={false}
-      pagination={{
-        showQuickJumper: true,
-        showSizeChanger: true,
-        showTotal: (total) =>
-          `${intl.formatMessage({
-            id: 'view.camera.total',
-          })} ${total} camera`,
-      }}
-    />
+    <Row gutter={24}>
+      <Col span={24}>
+        <ProTableStyle
+          headerTitle={intl.formatMessage(
+            {
+              id: 'view.camera.camera_list',
+            },
+            {
+              cam: intl.formatMessage({
+                id: 'camera',
+              }),
+            },
+          )}
+          rowKey="uuid"
+          search={false}
+          dataSource={data}
+          columns={columns}
+          options={false}
+          pagination={{
+            showQuickJumper: true,
+            showSizeChanger: true,
+            showTotal: (total) =>
+              `${intl.formatMessage({
+                id: 'view.camera.total',
+              })} ${total} ${intl.formatMessage({
+                id: 'pages.report.chart.event',
+              })}`,
+            total: total,
+            onChange: onPaginationChange,
+            pageSize: size,
+            current: page,
+          }}
+        />
+      </Col>
+    </Row>
   );
 };
 
