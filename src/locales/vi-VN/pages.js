@@ -58,7 +58,6 @@ export default {
   'pages.report.chart.timeRecord': 'Ngày ghi nhận',
   'pages.report.chart.type': 'Loại',
   'pages.report.chart.image': 'Ảnh',
-  'pages.report.chart.eventType': 'Loại sự kiện',
   'pages.report.chart.recordCamera': 'Camera ghi nhận',
   'pages.report.chart.penaltyTicketId': 'Số phiếu phạt',
   'pages.report.chart.status': 'Trạng thái',
