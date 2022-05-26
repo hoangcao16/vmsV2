@@ -13,6 +13,9 @@ const settingApi = {
   getEmailConfig: async () => {
     return request.get('/cctv-monitor-ctrl-svc/api/v1/email/get-email');
   },
+  postRecordingVideo: async (data) => {
+    return request.post('/cctv-monitor-ctrl-svc/api/v1/config/recording-video', data);
+  },
 };
 
 export default settingApi;

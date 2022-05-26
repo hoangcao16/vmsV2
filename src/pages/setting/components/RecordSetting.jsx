@@ -1,12 +1,12 @@
 import { FieldTimeOutlined } from '@ant-design/icons';
-import { Button, Col, Row, Select } from 'antd';
+import { Button, Col, Popconfirm, Row, Select } from 'antd';
 import { useState } from 'react';
 import { useIntl } from 'umi';
 import { StyledCard } from '../style';
 
 const { Option } = Select;
 
-const RecordSetting = ({ list }) => {
+const RecordSetting = ({ list, dispatch }) => {
   const intl = useIntl();
 
   const [recordSize, setRecordSize] = useState(list?.recordingVideoSizeSave || 0);
@@ -41,14 +41,30 @@ const RecordSetting = ({ list }) => {
     );
   }
 
+  const confirm = async () => {
+    dispatch({
+      type: 'setting/postRecordSetting',
+      payload: {
+        ...list,
+        recordingVideoSizeSave: recordSize,
+      },
+    });
+  };
+
   return (
     <>
       <StyledCard
         title={titleCard}
         extra={
-          <Button type="primary" onClick={() => console.log(recordSize)}>
-            Save
-          </Button>
+          <Popconfirm
+            placement="leftTop"
+            title={intl.formatMessage({ id: 'noti.save_change' })}
+            onConfirm={confirm}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary">Save</Button>
+          </Popconfirm>
         }
       >
         <Row>

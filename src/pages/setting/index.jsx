@@ -28,7 +28,7 @@ const Setting = ({ listRecord, listClean, listDisk, loading, dispatch, allEmails
     >
       {!loading && (
         <>
-          <RecordSetting list={listRecord} />
+          <RecordSetting list={listRecord} dispatch={dispatch} />
           <CleanSetting list={listClean} />
           <WarningStoreSetting list={listDisk} />
           <EmailConfig listAllEmail={allEmails} listEmail={listEmail} />

@@ -80,6 +80,15 @@ export default {
         console.log(error);
       }
     },
+    *postRecordSetting({ payload }, { call, put }) {
+      try {
+        yield call(settingApi.postRecordingVideo, payload);
+        notify('success', 'noti.success', 'noti.successful_setting');
+        yield put({ type: 'fetchRecordSetting' });
+      } catch (error) {
+        notify('error', 'noti.faid', `pages.setting-user.list-user.${error?.code}`);
+      }
+    },
   },
   subscriptions: {
     setup({ dispatch, history }) {
