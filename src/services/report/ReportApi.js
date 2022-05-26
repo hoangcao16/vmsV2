@@ -1,15 +1,31 @@
+import { STORAGE } from '@/constants/common';
 import request from '@/utils/request';
+import _uniqueId from 'lodash/uniqueId';
 
+const exportHeader = () => {
+  const token = localStorage.getItem(STORAGE.TOKEN);
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json; charset=utf-8',
+  };
+  if (token) {
+    headers.Authorization = token;
+  }
+  return headers;
+};
 const ReportApi = {
-  // getExportData: async (body) => {
-  //   let result;
-  //   try {
-  //     result = await MyService.getRequestDataBlob('/owl/api/v1/export-excel-data', body);
-  //   } catch (error) {
-  //     console.log(JSON.stringify(error));
-  //   }
-  //   return result;
-  // },
+  getExportData(data) {
+    return request.request({
+      method: 'GET',
+      url: '/owl/api/v1/export-excel-data',
+      params: data,
+      headers: {
+        ...exportHeader(),
+        requestId: _uniqueId('cctv'),
+      },
+      responseType: 'blob',
+    });
+  },
 
   // getExportDataToMail: async (body) => {
   //   let result;

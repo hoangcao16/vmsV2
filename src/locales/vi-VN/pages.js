@@ -67,6 +67,7 @@ export default {
   'pages.report.chart.processed': 'Đã xử lý',
   'pages.report.chart.note': 'Ghi chú',
   'pages.report.chart.event': 'sự kiện',
+  'pages.report.chart.trafficViolationsStatistics': 'Thống kê vi phạm giao thông',
 
   //User
 
@@ -161,6 +162,9 @@ export default {
   'pages.setting-user.list-user.unit': 'Đơn vị',
   'pages.setting-user.list-user.position': 'Chức vụ',
   'pages.setting-user.list-user.user-search': 'Tìm kiếm theo tên, địa chỉ...',
+
+  'report.export.success': 'Xuất tệp báo cáo thành công',
+  'report.export.failed': 'Xuất tệp báo cáo thất bại',
 
   // Code AUTH
   'pages.setting-user.list-user.601': 'Yêu cầu không hợp lệ',
