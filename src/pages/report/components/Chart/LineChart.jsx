@@ -1,14 +1,10 @@
-import React, { useEffect, useState } from 'react';
 import { Line } from '@ant-design/plots';
-import ChartHeader from './ChartHeader';
-import { Divider } from 'antd';
-import moment from 'moment';
-import reportApi from '@/services/report/ReportApi';
 import { connect } from 'dva';
-import { useIntl } from 'umi';
 import { isEmpty } from 'lodash';
-import styled from 'styled-components';
+import React, { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
 import { TimeoutChart } from '../../style';
+import ChartHeader from './ChartHeader';
 
 const LineChart = (props) => {
   const [data, setData] = useState([]);
@@ -47,7 +43,6 @@ const LineChart = (props) => {
         })}
         typeChart={'line'}
       />
-      <Divider />
       {props.timeoutFieldData ? (
         <TimeoutChart>
           {intl.formatMessage({

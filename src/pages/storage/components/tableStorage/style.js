@@ -6,6 +6,9 @@ export const CellCreateTime = styled.div`
 `;
 
 export const ProTableStyled = styled(ProTable)`
+  .ant-table-container {
+    padding-top: 16px;
+  }
   .ant-table-row {
     cursor: pointer;
   }

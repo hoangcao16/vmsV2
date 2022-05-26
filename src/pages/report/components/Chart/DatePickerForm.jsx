@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { DatePicker, Select, Space, ConfigProvider, Form } from 'antd';
+import FieldEventApi from '@/services/fieldEvent/FieldEventApi';
+import { ConfigProvider, DatePicker, Form, Select, Space } from 'antd';
+import locale from 'antd/es/locale/en_GB';
+import { connect } from 'dva';
+import { isEmpty } from 'lodash';
 import moment from 'moment';
 import 'moment/locale/en-gb';
-import locale from 'antd/es/locale/en_GB';
-import './ChartHeader.less';
-import { connect } from 'dva';
+import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
-import { isEmpty } from 'lodash';
-import FieldEventApi from '@/services/fieldEvent/FieldEventApi';
 
 moment.locale('en-gb', {
   week: {
@@ -51,7 +50,6 @@ const DatePickerForm = (props) => {
   const [form] = Form.useForm();
   const [allFields, setAllFields] = useState([]);
   const [eventsUuid, setEventsUuid] = useState([]);
-  console.log('eventsUuid', eventsUuid);
   const intl = useIntl();
 
   useEffect(() => {

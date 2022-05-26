@@ -1,5 +1,4 @@
-import DailyArchiveApi from '@/services/storage-api/dailyArchiveApi';
-import eventFilesApi from '@/services/storage-api/eventFilesApi';
+import importantFilesApi from '@/services/storage-api/importantFilesApi';
 import { IMPORTANT_NAMESPACE } from '../constants';
 
 export const initSearchImportants = {
@@ -14,7 +13,7 @@ export const initSearchImportants = {
   cameraGroupUuid: '',
   cameraUuid: '',
   type: -1,
-  eventUuid: 'notnull',
+  eventUuid: '',
   searchType: 'all',
   searchValue: '',
 };
@@ -32,6 +31,10 @@ export default {
   },
 
   reducers: {
+    resetSearchParam(state) {
+      return { ...state, metadata: { ...state.metadata, ...initSearchImportants } };
+    },
+
     save(state, { payload: { data: list, metadata } }) {
       return { ...state, list, metadata: { ...state.metadata, ...metadata } };
     },
@@ -44,7 +47,7 @@ export default {
   effects: {
     *fetchAll({ payload }, { call, put }) {
       try {
-        const response = yield call(eventFilesApi.getAllEventFiles, payload);
+        const response = yield call(importantFilesApi.getAllFiles, payload);
         yield put({
           type: 'save',
           payload: {

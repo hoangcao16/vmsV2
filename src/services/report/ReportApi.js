@@ -45,6 +45,12 @@ const ReportApi = {
       params,
     });
   },
+
+  getDataDetailChart: async (params) => {
+    return request.get(`/owl/api/v2/get-list-event`, {
+      params,
+    });
+  },
 };
 
 export default ReportApi;

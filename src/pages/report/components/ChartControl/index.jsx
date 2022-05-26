@@ -1,21 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { DatePicker, Select, ConfigProvider, Form, Tag, Checkbox, Divider, Row, Col } from 'antd';
-import moment from 'moment';
-import 'moment/locale/en-gb';
-import locale from 'antd/es/locale/en_GB';
-import { connect } from 'dva';
-import { useIntl } from 'umi';
-import './ChartControl.less';
-import AddressApi from '@/services/address/AddressApi';
 import {
   disableOptions,
   filterOptionForChart,
   normalizeOptions,
 } from '@/components/select/CustomSelect';
+import AddressApi from '@/services/address/AddressApi';
 import cameraApi from '@/services/controller-api/cameraService';
-import FieldEventApi from '@/services/fieldEvent/FieldEventApi';
+import { Checkbox, Col, ConfigProvider, DatePicker, Form, Row, Select, Tag } from 'antd';
+import locale from 'antd/es/locale/en_GB';
+import { connect } from 'dva';
 import { isEmpty } from 'lodash';
+import moment from 'moment';
+import 'moment/locale/en-gb';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useIntl } from 'umi';
+import './ChartControl.less';
 
 const { RangePicker } = DatePicker;
 
@@ -62,11 +61,9 @@ const ChartControl = (props) => {
   const [allDistricts, setAllDistricts] = useState([]);
   const [allWards, setAllWards] = useState([]);
   const [allAiCamera, setAllAiCamera] = useState([]);
-  const [allFields, setAllFields] = useState([]);
-  const [indeterminate, setIndeterminate] = useState(false);
+  const [indeterminate, setIndeterminate] = useState(true);
   const [checkAll, setCheckAll] = useState(false);
   const [events, setEvents] = useState([]);
-  const [currentEvent, setCurrentEvent] = useState([]);
   const intl = useIntl();
 
   useEffect(() => {
@@ -101,27 +98,17 @@ const ChartControl = (props) => {
   }, []);
 
   useEffect(() => {
-    try {
-      FieldEventApi.getAllFieldEvent().then((result) => {
-        setAllFields(result?.payload);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!isEmpty(allFields)) {
-      allFields.forEach((i) => {
+    if (!isEmpty(props?.allFiedls)) {
+      props?.allFiedls.forEach((i) => {
         i.value = i?.name;
       });
-      const fieldFilter = allFields.filter((item) => item.nameNoAccent == feildData.feild);
+      const fieldFilter = props?.allFiedls.filter((item) => item.nameNoAccent == feildData.feild);
       if (!isEmpty(fieldFilter)) {
         form.setFieldsValue({ fieldId: fieldFilter[0].uuid });
         setEvents(fieldFilter[0]?.eventList);
       } else {
-        form.setFieldsValue({ fieldId: allFields[0].uuid });
-        setEvents(allFields[0]?.eventList);
+        form.setFieldsValue({ fieldId: props?.allFiedls[0].uuid });
+        setEvents(props?.allFiedls[0]?.eventList);
       }
 
       props.dispatch({
@@ -167,7 +154,7 @@ const ChartControl = (props) => {
         boolean: true,
       });
     }
-  }, [allFields]);
+  }, [props?.allFiedls]);
 
   const getDistricts = () => {
     try {
@@ -209,12 +196,6 @@ const ChartControl = (props) => {
   const onChange = (list) => {
     setIndeterminate(list.length && list.length < events.length);
     setCheckAll(list.length === events.length);
-    if (list.length == 1) {
-      setCurrentEvent(list);
-    }
-    if (list.length < 1) {
-      form.setFieldsValue({ eventIds: currentEvent });
-    }
   };
 
   const onCheckAllChange = (e) => {
@@ -224,8 +205,14 @@ const ChartControl = (props) => {
         array.push(item.uuid);
       });
       form.setFieldsValue({ eventIds: array });
+      if (events.length >= 2) {
+        props.dispatch({ type: 'chartDisable/isDisablePieChart', boolean: false });
+      } else {
+        props.dispatch({ type: 'chartDisable/isDisablePieChart', boolean: true });
+      }
     } else {
       form.setFieldsValue({ eventIds: [] });
+      props.dispatch({ type: 'chartDisable/isDisablePieChart', boolean: true });
     }
     setIndeterminate(false);
     setCheckAll(e.target.checked);
@@ -289,14 +276,10 @@ const ChartControl = (props) => {
         districtIds: districtId?.toString(),
         wardIds: wardId?.toString(),
         eventUuids: form.getFieldValue('eventIds').toString(),
-        cameraUuids: '',
+        cameraUuids: form.getFieldValue('aiCamera').toString(),
       };
       props.dispatch({
-        type: 'chart/changeReportHeaderDataPieChart',
-        payload: params,
-      });
-      props.dispatch({
-        type: 'chart/changeReportHeaderData',
+        type: 'chart/saveFilterPayLoad',
         payload: params,
       });
       props.dispatch({
@@ -312,6 +295,7 @@ const ChartControl = (props) => {
     provinceId,
     districtId,
     wardId,
+    aiCamera,
     fieldId,
     eventIds,
     ...values
@@ -323,9 +307,11 @@ const ChartControl = (props) => {
       districtId,
       wardId,
       fieldId,
+      aiCamera,
       eventIds,
       ...values,
     });
+
     if (typeDate) {
       if (typeDate == typeTime.WEEK) {
         setFormat('WW-YYYY');
@@ -357,7 +343,8 @@ const ChartControl = (props) => {
     if (provinceId && provinceId.length == 1) {
       getDistricts();
       setAllWards([]);
-      props.dispatch({ type: 'chartDisable/barChartDisable', boolean: true });
+      props.dispatch({ type: 'chartDisable/isDisableBarChart', boolean: true });
+      props.dispatch({ type: 'chartDisable/changeCurrentTab', payload: '1' });
     }
 
     if (provinceId && provinceId.length > 1) {
@@ -365,13 +352,14 @@ const ChartControl = (props) => {
         districtId: [],
         wardId: [],
       });
-      props.dispatch({ type: 'chartDisable/barChartDisable', boolean: false });
+      props.dispatch({ type: 'chartDisable/isDisableBarChart', boolean: false });
     }
 
     if ((districtId && districtId.length > 1) || (wardId && wardId.length > 1)) {
-      props.dispatch({ type: 'chartDisable/barChartDisable', boolean: false });
+      props.dispatch({ type: 'chartDisable/isDisableBarChart', boolean: false });
     } else if ((districtId && districtId.length == 1) || (wardId && wardId.length == 1)) {
-      props.dispatch({ type: 'chartDisable/barChartDisable', boolean: true });
+      props.dispatch({ type: 'chartDisable/isDisableBarChart', boolean: true });
+      props.dispatch({ type: 'chartDisable/changeCurrentTab', payload: '1' });
     }
 
     if (districtId && districtId.length == 1) {
@@ -391,10 +379,14 @@ const ChartControl = (props) => {
       getAiCamera();
     }
 
+    let array = eventIds || [];
+
     if (fieldId) {
-      const currentField = allFields.find((item) => item.uuid == fieldId);
+      const currentField = props?.allFiedls.find((item) => item.uuid == fieldId);
       setEvents(currentField?.eventList);
       if (!isEmpty(currentField.eventList)) {
+        //eslint-disable-next-line react-hooks/exhaustive-deps
+        array = [currentField?.eventList[0]?.uuid];
         form.setFieldsValue({
           eventIds: [currentField?.eventList[0]?.uuid],
         });
@@ -405,12 +397,13 @@ const ChartControl = (props) => {
       }
     }
 
-    if (eventIds && eventIds.length == 1) {
-      props.dispatch({ type: 'chartDisable/pieChartDisable', boolean: true });
+    if (array && !isEmpty(array) && array.length <= 1) {
+      props.dispatch({ type: 'chartDisable/isDisablePieChart', boolean: true });
+      props.dispatch({ type: 'chartDisable/changeCurrentTab', payload: '1' });
     }
 
-    if (eventIds && eventIds.length > 1) {
-      props.dispatch({ type: 'chartDisable/pieChartDisable', boolean: false });
+    if (array && array.length > 1) {
+      props.dispatch({ type: 'chartDisable/isDisablePieChart', boolean: false });
     }
 
     form.submit();
@@ -442,7 +435,8 @@ const ChartControl = (props) => {
             provinceId: defaultProvinceId,
             districtId: [],
             wardId: [],
-            fieldId: allFields[0]?.uuid || '',
+            fieldId: [],
+            aiCamera: [],
           }}
         >
           <div className="chartControl-filter-items">
@@ -589,11 +583,11 @@ const ChartControl = (props) => {
               <Select
                 allowClear={false}
                 showSearch
-                datasource={allFields}
+                datasource={props?.allFiedls}
                 filterOption={filterOptionForChart}
                 placeholder="Field"
               >
-                {normalizeOptions('name', 'uuid', allFields).map(({ label, value }) => (
+                {normalizeOptions('name', 'uuid', props?.allFiedls).map(({ label, value }) => (
                   <Select.Option
                     disabled={disableOptions(form.getFieldValue('fieldId'), value, 100000)}
                     value={value}
@@ -609,15 +603,17 @@ const ChartControl = (props) => {
               })}
             </span>
             <CheckAll>
-              <Checkbox
-                indeterminate={indeterminate}
-                onChange={onCheckAllChange}
-                checked={checkAll}
-              >
-                {intl.formatMessage({
-                  id: `pages.report.chart.checkAll`,
-                })}
-              </Checkbox>
+              <Form.Item name="checkAll">
+                <Checkbox
+                  indeterminate={indeterminate}
+                  onChange={onCheckAllChange}
+                  checked={checkAll}
+                >
+                  {intl.formatMessage({
+                    id: `pages.report.chart.checkAll`,
+                  })}
+                </Checkbox>
+              </Form.Item>
             </CheckAll>
             <TypeWapper>
               <Form.Item name="eventIds">
@@ -640,7 +636,10 @@ const ChartControl = (props) => {
 };
 
 function mapStateToProps(state) {
-  return { allProvinces: state?.globalstore?.provincesOptions };
+  return {
+    allProvinces: state?.globalstore?.provincesOptions,
+    allFiedls: state?.globalstore?.fieldsOptions,
+  };
 }
 
 export default connect(mapStateToProps)(ChartControl);

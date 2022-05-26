@@ -301,6 +301,7 @@ export default {
   'view.storage.violation_time': 'Ngày ghi nhận',
   'view.storage.created_time': 'Ngày tạo',
   'view.storage.detail_file': 'Chi tiết tệp',
+  'view.storage.detail_file_AI': 'Sự kiện',
   'view.storage.file_name': 'Tên tệp',
   'view.storage.note': 'Ghi chú',
   'view.storage.camera_name': 'Tên {cam}',

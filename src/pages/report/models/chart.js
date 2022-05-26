@@ -1,10 +1,10 @@
-import moment from 'moment';
 import reportApi from '@/services/report/ReportApi';
 import { isEmpty } from 'lodash';
 
 export default {
   namespace: 'chart',
   state: {
+    payload: {},
     list: [],
     listPieChart: [],
     timeoutData: false,
@@ -21,6 +21,22 @@ export default {
     },
   },
   effects: {
+    *saveFilterPayLoad({ payload }, { put }) {
+      yield put({
+        type: 'changeReportHeaderData',
+        payload: payload,
+      });
+      yield put({
+        type: 'changeReportHeaderDataPieChart',
+        payload: payload,
+      });
+      yield put({
+        type: 'save',
+        payload: {
+          payload: payload,
+        },
+      });
+    },
     *changeReportHeaderData({ payload }, { call, put }) {
       try {
         const response = yield call(reportApi.getData, payload);

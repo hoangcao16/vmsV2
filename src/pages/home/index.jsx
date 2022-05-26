@@ -1,10 +1,11 @@
+import { Col, Row } from 'antd';
 import React from 'react';
-import { Row, Col } from 'antd';
-import Notification from './Notification';
-import './Home.less';
+import styled from 'styled-components';
+import CameraStatistics from '../report/components/CameraStatistics';
 import LineChart from '../report/components/Chart/LineChart';
 import PieChart from '../report/components/Chart/PieChart';
-import CameraStatistics from '../report/components/CameraStatistics';
+import { ChartBackground } from '../report/style';
+import Notification from './Notification';
 
 const reportCol = {
   xs: 24,
@@ -28,6 +29,13 @@ const notiCol = {
   },
 };
 
+const NotiWrapper = styled.div`
+  position: -webkit-sticky;
+  position: sticky;
+  top: 70px;
+  margin-bottom: 24px;
+`;
+
 export default function index() {
   return (
     <div className="home">
@@ -35,18 +43,18 @@ export default function index() {
         <Col {...reportCol}>
           <CameraStatistics />
           <div>
-            <div className="chart-background">
+            <ChartBackground>
               <LineChart />
-            </div>
-            <div className="chart-background">
+            </ChartBackground>
+            <ChartBackground>
               <PieChart />
-            </div>
+            </ChartBackground>
           </div>
         </Col>
         <Col {...notiCol}>
-          <div className="noti">
+          <NotiWrapper>
             <Notification />
-          </div>
+          </NotiWrapper>
         </Col>
       </Row>
     </div>

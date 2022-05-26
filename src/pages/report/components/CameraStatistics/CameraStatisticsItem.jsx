@@ -1,20 +1,36 @@
-import React from 'react';
 import { Card } from 'antd';
-import './CameraStatisticsItem.less';
+import React from 'react';
+import styled from 'styled-components';
 import { useIntl } from 'umi';
+
+const CustomCard = styled(Card)`
+  &.ant-card {
+    color: white;
+    background-color: ${(prop) => prop?.backgroundColor};
+    border-radius: 10px;
+  }
+`;
+
+const CardTitle = styled.div`
+  font-size: 12px;
+`;
+
+const CardInfo = styled.div`
+  font-weight: 600;
+  font-size: 30px;
+  font-family: 'Roboto';
+`;
 
 export default function CameraStatisticsItem(props) {
   const intl = useIntl();
   return (
-    <div className="cameraStatisticsItem">
-      <Card className={`card ${props?.color}`}>
-        <div className="card--title">
-          {intl.formatMessage({
-            id: `pages.report.cameraStatistics.${props.cameraName}`,
-          })}
-        </div>
-        <div className="card--info">{props.totalCamera}</div>
-      </Card>
-    </div>
+    <CustomCard backgroundColor={props?.color}>
+      <CardTitle>
+        {intl.formatMessage({
+          id: `pages.report.cameraStatistics.${props.cameraName}`,
+        })}
+      </CardTitle>
+      <CardInfo>{props.totalCamera}</CardInfo>
+    </CustomCard>
   );
 }

@@ -300,6 +300,7 @@ export default {
   'view.storage.violation_time': 'Violation time',
   'view.storage.created_time': 'Created time',
   'view.storage.detail_file': 'Detail file',
+  'view.storage.detail_file_AI': 'Event',
   'view.storage.file_name': 'File name',
   'view.storage.note': 'Note',
   'view.storage.camera_name': '{cam} name',
