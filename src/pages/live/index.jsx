@@ -1,4 +1,5 @@
-import { notify } from '@/components/Notify';
+import { LIVE_MODE } from '@/constants/common';
+import { GRID1X1, GRID2X2, GRID3X3, GRID4X4 } from '@/constants/grid';
 import bookmarkService from '@/services/bookmark';
 import { HeartOutlined, OrderedListOutlined, SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -6,18 +7,13 @@ import { Button, Select, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { connect, FormattedMessage } from 'umi';
-import { useDispatch } from 'react-redux';
-
 import ActionGrid from './components/ActionGrid';
 import CameraList from './components/CameraList';
 import GridPanel from './components/GridPanel';
 import { StyledTabs, StyledText } from './style';
-import { GRID1X1, GRID2X2, GRID3X3, GRID4X4 } from '@/constants/grid';
-import { LIVE_MODE } from '@/constants/common';
 
-const Live = ({ availableList, screen }) => {
+const Live = ({ availableList, screen, dispatch }) => {
   const [visibleCameraList, setVisibleCameraList] = useState(false);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     fetchDefaultScreen();
