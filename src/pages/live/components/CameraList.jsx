@@ -6,8 +6,8 @@ import { Button, Form, Input, Pagination, Space, Tooltip } from 'antd';
 import React, { useEffect, useRef } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { connect } from 'umi';
 
 const CameraItem = ({ item, index }) => {
   return (
@@ -28,7 +28,7 @@ const CameraItem = ({ item, index }) => {
   );
 };
 
-const CameraList = (props) => {
+const CameraList = ({ dispatch, ...props }) => {
   const [pagination, setPagination] = React.useState({
     page: 1,
     size: 20,
@@ -37,9 +37,8 @@ const CameraList = (props) => {
   });
   const divRef = useRef(null);
   const [form] = Form.useForm();
-  const dispatch = useDispatch();
 
-  useClickOutside(divRef, props.onCancel);
+  useClickOutside(divRef, props?.onCancel);
 
   useEffect(() => {
     fetchCameras();
@@ -168,4 +167,4 @@ const CameraItemName = styled.p`
   }
 `;
 
-export default CameraList;
+export default connect(() => {})(CameraList);
