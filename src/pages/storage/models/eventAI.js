@@ -14,7 +14,6 @@ export const initSearchEventsAI = {
   cameraUuid: '',
   type: -1,
   eventUuid: '',
-  searchType: '',
   searchType: 'all',
   eventType: '',
   status: '',
