@@ -58,7 +58,6 @@ export default {
   'pages.report.chart.timeRecord': 'Time record',
   'pages.report.chart.type': 'Type',
   'pages.report.chart.image': 'Image',
-  'pages.report.chart.eventType': 'Event type',
   'pages.report.chart.recordCamera': 'Record Camera',
   'pages.report.chart.penaltyTicketId': 'Penalty ticket Id',
   'pages.report.chart.status': 'Status',

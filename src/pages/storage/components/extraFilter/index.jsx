@@ -14,7 +14,9 @@ import {
   DAILY_ARCHIVE_NAMESPACE,
   EVENT_AI_NAMESPACE,
   EVENT_FILES_NAMESPACE,
+  GRID_VIEW,
   IMPORTANT_NAMESPACE,
+  LIST_VIEW,
 } from '../../constants';
 import AddressApi from '@/services/address/AddressApi';
 import cameraApi from '@/services/controller-api/cameraService';
@@ -32,13 +34,12 @@ const layoutShort = {
 };
 
 function ExtraFilter({ state, nameSpace, dispatch }) {
-  const list = state[nameSpace].list ? state[nameSpace].list : [];
   const metadata = state[nameSpace].metadata ? state[nameSpace].metadata : {};
 
   const intl = useIntl();
   const [form] = Form.useForm();
 
-  const [collapse, setCollapse] = useState(false);
+  const [collapse, setCollapse] = useState(true);
 
   const [cameraGroupList, setCameraGroupList] = useState([]);
   const [cameraList, setCameraList] = useState([]);
@@ -52,7 +53,15 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
   const [endDate, setEndDate] = useState(null);
 
   const [eventList, setEventList] = useState([]);
-  const [viewType, setViewType] = useState('list');
+
+  const viewType = state[nameSpace].viewType ? state[nameSpace].viewType : 'list';
+
+  const handleChangeViewType = (value) => {
+    dispatch({
+      type: `${nameSpace}/setViewType`,
+      payload: value,
+    });
+  };
 
   const onFinish = (values) => {
     console.log(nameSpace);
@@ -381,6 +390,9 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
 
   useEffect(() => {
     // dispatch reset metadata to init state
+    dispatch({
+      type: `${nameSpace}/resetSearchParam`,
+    });
 
     form.resetFields();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -471,24 +483,26 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
             )}
           </div>
 
-          <Space className="collapse-filter__right">
-            <Button
-              className="btn-viewType"
-              type={viewType === 'list' ? 'link' : 'default'}
-              icon={<FaThList />}
-              onClick={() => {
-                setViewType('list');
-              }}
-            />
-            <Button
-              className="btn-viewType"
-              type={viewType === 'grid' ? 'link' : 'default'}
-              icon={<FaThLarge />}
-              onClick={() => {
-                setViewType('grid');
-              }}
-            />
-          </Space>
+          {nameSpace === EVENT_AI_NAMESPACE && (
+            <Space className="collapse-filter__right">
+              <Button
+                className="btn-viewType"
+                type={viewType === LIST_VIEW ? 'link' : 'default'}
+                icon={<FaThList />}
+                onClick={() => {
+                  handleChangeViewType(LIST_VIEW);
+                }}
+              />
+              <Button
+                className="btn-viewType"
+                type={viewType === GRID_VIEW ? 'link' : 'default'}
+                icon={<FaThLarge />}
+                onClick={() => {
+                  handleChangeViewType(GRID_VIEW);
+                }}
+              />
+            </Space>
+          )}
         </div>
 
         {collapse === false && (

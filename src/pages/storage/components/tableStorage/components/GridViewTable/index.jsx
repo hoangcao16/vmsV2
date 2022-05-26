@@ -3,10 +3,12 @@ import { Pagination, Spin } from 'antd';
 import moment from 'moment';
 import React from 'react';
 import { connect, useIntl } from 'umi';
-import { WrapperGridViewEventAI } from './style';
+import { GridViewTableStyled } from './style';
 
-function GridViewEventAI({ list, loading, metadata, dispatch }) {
+function GridViewTable({ state, dispatch, nameSpace }) {
   const intl = useIntl();
+  const { list, metadata } = state[nameSpace];
+  const loading = state.loading.models[nameSpace] ? state.loading.models[nameSpace] : false;
 
   if (loading) {
     return <Spin />;
@@ -16,13 +18,13 @@ function GridViewEventAI({ list, loading, metadata, dispatch }) {
     const dataParam = Object.assign({ ...metadata, page, size });
 
     dispatch({
-      type: 'eventAI/fetchAllEventsAI',
+      type: `${nameSpace}/fetchAll`,
       payload: dataParam,
     });
   };
 
   return (
-    <WrapperGridViewEventAI>
+    <GridViewTableStyled>
       {list.map((item, index) => {
         return (
           <div className="card-event" key={item.id}>
@@ -86,17 +88,12 @@ function GridViewEventAI({ list, loading, metadata, dispatch }) {
           current={metadata?.page}
         />
       </div>
-    </WrapperGridViewEventAI>
+    </GridViewTableStyled>
   );
 }
 
 function mapStateToProps(state) {
-  const { list, metadata } = state.eventAI;
-  return {
-    loading: state.loading.models.eventAI,
-    list,
-    metadata,
-  };
+  return { state };
 }
 
-export default connect(mapStateToProps)(GridViewEventAI);
+export default connect(mapStateToProps)(GridViewTable);
