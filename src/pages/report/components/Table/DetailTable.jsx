@@ -128,16 +128,9 @@ const DetailTable = (props) => {
     <Row gutter={24}>
       <Col span={24}>
         <ProTableStyle
-          headerTitle={intl.formatMessage(
-            {
-              id: 'view.camera.camera_list',
-            },
-            {
-              cam: intl.formatMessage({
-                id: 'camera',
-              }),
-            },
-          )}
+          headerTitle={intl.formatMessage({
+            id: 'pages.report.chart.detailReport',
+          })}
           rowKey="uuid"
           search={false}
           dataSource={data}

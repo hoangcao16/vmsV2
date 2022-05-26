@@ -53,6 +53,8 @@ export default {
   'pages.report.chart.field': 'Field',
   'pages.report.chart.eventType': 'Event type',
   'pages.report.chart.checkAll': 'Check all',
+  'pages.report.chart.detailReport': 'Detailed traffic situation report',
+  'pages.report.chart.generalReport': 'General traffic situation report',
   'pages.report.chart.timeRecord': 'Time record',
   'pages.report.chart.type': 'Type',
   'pages.report.chart.image': 'Image',
