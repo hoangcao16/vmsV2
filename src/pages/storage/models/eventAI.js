@@ -1,5 +1,5 @@
 import EventAiAPI from '@/services/storage-api/eventAI-api';
-import { EVENT_AI_NAMESPACE } from '../constants';
+import { EVENT_AI_NAMESPACE, LIST_VIEW } from '../constants';
 
 export const initSearchEventsAI = {
   startRecordTime: -1,
@@ -29,9 +29,21 @@ export default {
       total: 0,
       ...initSearchEventsAI,
     },
+    viewType: LIST_VIEW,
   },
 
   reducers: {
+    setViewType(state, payload) {
+      return {
+        ...state,
+        viewType: payload.payload,
+      };
+    },
+
+    resetSearchParam(state) {
+      return { ...state, metadata: { ...state.metadata, ...initSearchEventsAI } };
+    },
+
     save(state, { payload: { data: list, metadata } }) {
       return { ...state, list, metadata: { ...state.metadata, ...metadata } };
     },

@@ -31,6 +31,10 @@ export default {
   },
 
   reducers: {
+    resetSearchParam(state) {
+      return { ...state, metadata: { ...state.metadata, ...initSearchCaptured } };
+    },
+
     save(state, { payload: { data: list, metadata } }) {
       return { ...state, list, metadata: { ...state.metadata, ...metadata } };
     },
