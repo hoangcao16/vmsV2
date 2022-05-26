@@ -739,6 +739,7 @@ export default {
   'noti.at_least_10_characters': 'At least 10 characters',
   'noti.at_least_9_characters': 'At least 9 characters',
   'noti.max_characters': 'Up to {max} characters',
+  'noti.min_characters': 'At least {min} characters',
   'noti.at_least_8_characters': 'At least 8 characters',
   'noti.no_valid_results_found': 'No valid results found',
 

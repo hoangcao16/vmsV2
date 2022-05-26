@@ -7,7 +7,7 @@ export default {
     list: [],
     metadata: {
       name: '',
-      size: 100,
+      size: 10,
     },
   },
   reducers: {
@@ -41,7 +41,11 @@ export default {
         );
         yield put({ type: 'reload' });
       } catch (error) {
-        notify('error', 'pages.setting-user.list-user.titleErrors');
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 
@@ -52,7 +56,11 @@ export default {
 
         yield put({ type: 'reload' });
       } catch (error) {
-        notify('error', 'pages.setting-user.list-user.titleErrors');
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 
@@ -63,7 +71,11 @@ export default {
 
         yield put({ type: 'reload' });
       } catch (error) {
-        notify('error', 'pages.setting-user.list-user.titleErrors');
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 

@@ -3,7 +3,7 @@ import { validateEmail } from '@/utils/Validate';
 import { NotificationOutlined } from '@ant-design/icons';
 import { Col, Row, Select } from 'antd';
 import { isEmpty } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useIntl } from 'umi';
 import { StyledCard } from '../style';
 
@@ -15,9 +15,8 @@ const EmailConfig = ({ listAllEmail, listEmail }) => {
   };
 
   const onChange = (value) => {
-    let data = [];
     if (isEmpty(value)) {
-      data = value;
+      setEmails([]);
     } else {
       const checkEmail = value.filter((v) => {
         let isCheck = validateEmail(v);
@@ -28,6 +27,8 @@ const EmailConfig = ({ listAllEmail, listEmail }) => {
         notify('error', 'noti.faid', 'noti.delete_illegal_email');
         setEmails(checkEmail);
         return;
+      } else {
+        setEmails(value);
       }
     }
   };
@@ -53,7 +54,7 @@ const EmailConfig = ({ listAllEmail, listEmail }) => {
           <Col span={12}>
             <Select
               mode="tags"
-              allowClear
+              showArrow
               value={emails}
               onChange={onChange}
               options={listAllEmail.map((g) => ({

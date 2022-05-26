@@ -1,6 +1,6 @@
 import { ClearOutlined } from '@ant-design/icons';
-import { Checkbox, Col, Input, InputNumber, Row, Select } from 'antd';
-import React, { useState } from 'react';
+import { Checkbox, Col, InputNumber, Row, Select } from 'antd';
+import { useState } from 'react';
 import { useIntl } from 'umi';
 import { StyledCard } from '../style';
 
@@ -58,7 +58,7 @@ const CleanSetting = ({ list }) => {
                 <Col className="label">
                   <p>{intl.formatMessage({ id: 'view.storage.file_capture' })} :</p>
                 </Col>
-                <Col span={8}>
+                <Col span={10}>
                   <InputNumber
                     controls={false}
                     value={
@@ -68,7 +68,7 @@ const CleanSetting = ({ list }) => {
                     }
                   />
                 </Col>
-                <Col span={4}>
+                <Col span={5}>
                   <Select
                     onChange={onChangeTimeTypeOne}
                     value={
@@ -87,7 +87,7 @@ const CleanSetting = ({ list }) => {
                 <Col className="label">
                   <p>{intl.formatMessage({ id: 'view.storage.autosave_file' })} :</p>
                 </Col>
-                <Col span={8}>
+                <Col span={10}>
                   <InputNumber
                     controls={false}
                     value={
@@ -97,7 +97,7 @@ const CleanSetting = ({ list }) => {
                     }
                   />
                 </Col>
-                <Col span={4}>
+                <Col span={5}>
                   <Select
                     value={
                       cleanSettingData?.configCleanFile
@@ -115,7 +115,7 @@ const CleanSetting = ({ list }) => {
                 <Col className="label">
                   <p>{intl.formatMessage({ id: 'view.storage.event_file' })} :</p>
                 </Col>
-                <Col span={8}>
+                <Col span={10}>
                   <InputNumber
                     controls={false}
                     value={
@@ -125,7 +125,7 @@ const CleanSetting = ({ list }) => {
                     }
                   />
                 </Col>
-                <Col span={4}>
+                <Col span={5}>
                   <Select
                     value={
                       cleanSettingData?.configCleanFile

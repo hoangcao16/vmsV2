@@ -43,7 +43,7 @@ function mapStateToProps(state) {
   const { list } = state.user;
   const allEmails = list.map((i) => i.email);
   return {
-    loading: state.loading.models.setting && state.loading.models.user,
+    loading: state.loading.models.setting,
     listRecord,
     listClean,
     listDisk,

@@ -1,8 +1,6 @@
-import settingApi from '@/services/setting/SettingApi';
 import { FieldTimeOutlined } from '@ant-design/icons';
 import { Button, Col, Row, Select } from 'antd';
-import { isEmpty } from 'lodash';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useIntl } from 'umi';
 import { StyledCard } from '../style';
 
@@ -45,7 +43,14 @@ const RecordSetting = ({ list }) => {
 
   return (
     <>
-      <StyledCard title={titleCard}>
+      <StyledCard
+        title={titleCard}
+        extra={
+          <Button type="primary" onClick={() => console.log(recordSize)}>
+            Save
+          </Button>
+        }
+      >
         <Row>
           <Col className="label">
             <p>{intl.formatMessage({ id: 'view.storage.maximum_length_video_archive' })} :</p>
@@ -55,7 +60,6 @@ const RecordSetting = ({ list }) => {
               {secondOptions}
             </Select>
           </Col>
-          <Button onClick={() => console.log(recordSize)}>save</Button>
         </Row>
       </StyledCard>
     </>

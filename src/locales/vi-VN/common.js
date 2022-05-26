@@ -739,6 +739,7 @@ export default {
   'noti.at_least_10_characters': 'Tối thiểu 10 ký tự',
   'noti.at_least_9_characters': 'Tối thiểu 9 ký tự',
   'noti.max_characters': 'Tối đa {max} ký tự',
+  'noti.min_characters': 'Tối thiểu {min} ký tự',
   'noti.at_least_8_characters': 'Tối thiểu 8 ký tự',
   'noti.successfully_delete_human': '{delete} thành công người',
   'noti.no_valid_results_found': 'Không tìm thấy kết quả hợp lệ',

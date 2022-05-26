@@ -19,6 +19,7 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
       payload: {
         size: metadata?.size,
         name: metadata?.name,
+        page: 1,
       },
     });
   }, []);
@@ -112,13 +113,14 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
             ],
           }}
           pagination={{
+            showQuickJumper: true,
             showSizeChanger: true,
             showTotal: (total) =>
               `${intl.formatMessage({
                 id: 'view.camera.total',
               })} ${total}`,
             total: metadata?.total,
-            pageSize: 10,
+            pageSize: metadata.size,
             current: metadata?.page,
           }}
         />

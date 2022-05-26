@@ -1,7 +1,7 @@
 import { CheckOutlined, CloseOutlined, GatewayOutlined } from '@ant-design/icons';
 import { Col, Radio, Row, Select, Switch } from 'antd';
 import { isEmpty } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import { StyledCard } from '../style';
 const { Option } = Select;
