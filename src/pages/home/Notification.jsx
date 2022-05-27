@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'dva';
-import { useIntl } from 'umi';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { getLocale } from 'umi';
 import NotiApi from '@/services/notification/NotiApi';
-import './Notificaltion.less';
 import { Badge, Typography } from 'antd';
+import { connect } from 'dva';
 import { isEmpty } from 'lodash';
+import React, { useEffect, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { getLocale, useIntl } from 'umi';
+import './Notificaltion.less';
 
 const { Text } = Typography;
 
@@ -57,8 +56,16 @@ const Notification = (props) => {
     });
   };
 
-  const formatDate = (date) => {
-    let formatted_date = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
+  const formatDate = (time) => {
+    if (time < 10) {
+      return `0${time}`;
+    }
+    return time;
+  };
+
+  const dateForm = (date) => {
+    let formatted_date =
+      formatDate(date.getDate()) + '-' + formatDate(date.getMonth() + 1) + '-' + date.getFullYear();
     return formatted_date;
   };
 
@@ -150,7 +157,7 @@ const Notification = (props) => {
     if (isEmpty(createdTime)) {
       return (
         <Text>
-          {formatDate(new Date(createdTime))} | {new Date(createdTime).toLocaleTimeString()}
+          {dateForm(new Date(createdTime))} | {new Date(createdTime).toLocaleTimeString()}
         </Text>
       );
     }

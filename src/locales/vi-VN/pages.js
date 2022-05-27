@@ -67,6 +67,10 @@ export default {
   'pages.report.chart.note': 'Ghi chú',
   'pages.report.chart.event': 'sự kiện',
   'pages.report.chart.trafficViolationsStatistics': 'Thống kê vi phạm giao thông',
+  'pages.report.chart.trafficViolationsList': 'Danh sách vi phạm giao thông',
+  'pages.report.chart.recordCamera': 'Camera ghi nhận',
+  'pages.report.chart.violationType': 'Loại vi phạm',
+  'pages.report.chart.address': 'Địa điểm',
 
   //User
 

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import CameraStatistics from '../report/components/CameraStatistics';
 import LineChart from '../report/components/Chart/LineChart';
 import PieChart from '../report/components/Chart/PieChart';
+import ListTable from '../report/components/Table/ListTable';
 import { ChartBackground } from '../report/style';
 import Notification from './Notification';
 
@@ -48,6 +49,9 @@ export default function index() {
             </ChartBackground>
             <ChartBackground>
               <PieChart />
+            </ChartBackground>
+            <ChartBackground>
+              <ListTable />
             </ChartBackground>
           </div>
         </Col>
