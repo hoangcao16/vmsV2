@@ -66,6 +66,7 @@ export default {
   'pages.report.chart.processed': 'Processed',
   'pages.report.chart.note': 'Note',
   'pages.report.chart.event': 'event',
+  'pages.report.chart.trafficViolationsStatistics': 'Traffic violations statistics',
 
   //User
 
@@ -164,6 +165,9 @@ export default {
   'pages.setting-user.list-user.permission-by': 'Permission By:',
   'pages.setting-user.list-user.permission': 'Permission',
   'pages.setting-user.list-user.information': 'Information',
+
+  'report.export.success': 'Report file export success',
+  'report.export.failed': 'Report file export failed',
 
   // Code AUTH
   'pages.setting-user.list-user.601': 'BadRequest',

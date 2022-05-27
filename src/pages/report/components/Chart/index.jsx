@@ -1,14 +1,40 @@
-import { Tabs } from 'antd';
+import { Divider, Tabs } from 'antd';
 import { connect } from 'dva';
 import React from 'react';
+import styled from 'styled-components';
 import { useIntl } from 'umi';
 import { ChartBackground, TimeoutChart } from '../../style';
+import ExportReport from '../Export/ExportReport';
+import ExportReportToMail from '../Export/ExportReportToMail';
 import DetailTable from '../Table/DetailTable';
 import BarChart from './BarChart';
 import LineChart from './LineChart';
 import PieChart from './PieChart';
 
 const { TabPane } = Tabs;
+
+const Header = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const HeaderWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const HeaderTitle = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const HeaderExport = styled.div`
+  font-size: 16px;
+  width: 50px;
+  display: flex;
+  justify-content: space-between;
+`;
 
 const Chart = (props) => {
   const intl = useIntl();
@@ -23,6 +49,20 @@ const Chart = (props) => {
       ) : (
         <>
           <ChartBackground>
+            <Header>
+              <HeaderWrapper>
+                <HeaderTitle>
+                  {intl.formatMessage({
+                    id: `pages.report.chart.trafficViolationsStatistics`,
+                  })}
+                </HeaderTitle>
+                <HeaderExport>
+                  <ExportReportToMail />
+                  <ExportReport />
+                </HeaderExport>
+              </HeaderWrapper>
+              <Divider />
+            </Header>
             <Tabs
               defaultActiveKey="1"
               onChange={(activeKey) => {
