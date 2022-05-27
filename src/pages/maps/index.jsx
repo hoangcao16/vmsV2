@@ -11,10 +11,11 @@ import { useIntl } from 'umi';
 import { Button } from 'antd';
 import { UnorderedListOutlined } from '@ant-design/icons';
 import { connect } from 'dva';
-import LiveCameras from './components/LiveCameras';
+import CameraListDrawer from './components/CameraListDrawer';
 import { TYPE_FORM_ACTION_ON_MAP } from '@/constants/map';
 import CamInfoPopup from './components/CamInfoPopup';
 import CameraIcon from '@/assets/img/cameraIcon';
+import ViewLiveCameras from './components/ViewLiveCameras';
 const Maps = ({ dispatch, metadata, cameraList, cameraAIList, AdminisUnitList }) => {
   const intl = useIntl();
   const mapboxRef = useRef(null);
@@ -25,8 +26,9 @@ const Maps = ({ dispatch, metadata, cameraList, cameraAIList, AdminisUnitList })
   const mapMarkersRef = useRef([]);
   const markerTargetRef = useRef(null);
   const [currentLan, setCurrentLan] = useState(null);
-  const [isOpenLiveCameras, setIsOpenLiveCameras] = useState(false);
+  const [isOpenCameraListDrawer, setIsOpenCameraListDrawer] = useState(false);
   const [cameraOnMap, setCameraOnMap] = useState([]);
+  const [isCollapse, setIsCollapse] = useState(false);
   const zoom = 13;
   //reset maker
   const resetMarker = (marker) => {
@@ -46,10 +48,10 @@ const Maps = ({ dispatch, metadata, cameraList, cameraAIList, AdminisUnitList })
   const hanldeOpenCameraAIDrawer = () => {};
   const hanldeOpenAdminisUnitDrawer = () => {};
   const hanldeOpenCameraDrawer = () => {
-    setIsOpenLiveCameras(true);
+    setIsOpenCameraListDrawer(true);
   };
   const renderCameraIcon = (cam) => {
-    if (cam.source === 1) {
+    if (cam.recordingStatus === 1) {
       return `data:image/svg+xml;charset=utf-8;base64,` + btoa(CameraIcon('cameraGreen'));
     }
     if (cam.recordingStatus === 0) {
@@ -150,6 +152,7 @@ const Maps = ({ dispatch, metadata, cameraList, cameraAIList, AdminisUnitList })
     });
   };
   const createMarkerCam = (listCam, markerRef) => {
+    console.log('createMarkerCam', listCam);
     if (listCam.length > 0) {
       listCam.forEach((camera, index) => {
         if (_.inRange(camera.lat_, -90, 90)) {
@@ -241,10 +244,11 @@ const Maps = ({ dispatch, metadata, cameraList, cameraAIList, AdminisUnitList })
       </MapHeader>
       <MapContainer>
         <div key="map" id="map" />
-        <LiveCameras
-          isOpenLiveCameras={isOpenLiveCameras}
-          setIsOpenLiveCameras={setIsOpenLiveCameras}
+        <CameraListDrawer
+          isOpenCameraListDrawer={isOpenCameraListDrawer}
+          setIsOpenCameraListDrawer={setIsOpenCameraListDrawer}
         />
+        <ViewLiveCameras />
       </MapContainer>
     </>
   );

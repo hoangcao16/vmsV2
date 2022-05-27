@@ -8,7 +8,7 @@ export default {
     metadata: {
       total: 0,
       page: 1,
-      size: 16,
+      size: 200,
     },
   },
   reducers: {

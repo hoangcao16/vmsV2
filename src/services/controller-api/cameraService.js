@@ -9,17 +9,7 @@ const CAMERA_SCAN_ENDPOINT = '/ptz-ctrl/api/v1/scan-camera';
 const CAMERA_TYPES_ENDPOINT = '/cctv-controller-svc/api/v1/camera_types';
 const CAMERA_GROUP_ENDPOINT = '/cctv-controller-svc/api/v1/camera_groups';
 const CAMERA_EXPORT_DATA_ENDPOINT = '/owl/api/v1/report-camera';
-const exportHeader = () => {
-  const token = localStorage.getItem(STORAGE.TOKEN);
-  let headers = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json; charset=utf-8',
-  };
-  if (token) {
-    headers.Authorization = token;
-  }
-  return headers;
-};
+
 const cameraApi = {
   getAll(queryParams) {
     return request.request({
@@ -148,7 +138,8 @@ const cameraApi = {
       url: CAMERA_EXPORT_DATA_ENDPOINT,
       data,
       headers: {
-        ...exportHeader(),
+        Accept: 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
         requestId: _uniqueId('cctv'),
       },
       responseType: 'blob',

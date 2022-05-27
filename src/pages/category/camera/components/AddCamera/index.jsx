@@ -42,9 +42,7 @@ const AddCamera = ({
   const intl = useIntl();
   const [avatarUrl, setAvatarUrl] = useState('');
   const [avatarFileName, setAvatarFileName] = useState('');
-  const [provinceId, setProvinceId] = useState(null);
   const [districts, setDistrict] = useState([]);
-  const [districtId, setDistrictId] = useState(null);
   const [wards, setWard] = useState([]);
   const [resultSearchMap, setResultSearchMap] = useState(null);
   const [currentLat, setCurrentLat] = useState(null);
@@ -60,31 +58,25 @@ const AddCamera = ({
       });
     }
   }, [selectedIp]);
-  // get districts when select province
-  useEffect(() => {
-    if (provinceId) {
-      AddressApi.getDistrictByProvinceId(provinceId).then((res) => {
+
+  const onChangeCity = (cityId) => {
+    form.setFieldsValue({ districtId: null, wardId: null });
+    setWard([]);
+    setDistrict([]);
+    if (cityId) {
+      AddressApi.getDistrictByProvinceId(cityId).then((res) => {
         setDistrict(res?.payload);
       });
-      setDistrictId(null);
     }
-  }, [provinceId]);
-  useEffect(() => {
+  };
+  const onChangeDistrict = (districtId) => {
+    form.setFieldsValue({ wardId: null });
+    setWard([]);
     if (districtId) {
       AddressApi.getWardByDistrictId(districtId).then((res) => {
         setWard(res?.payload);
       });
-    } else {
-      setWard([]);
     }
-  }, [districtId]);
-  const onChangeCity = (cityId) => {
-    setProvinceId(cityId);
-    form.setFieldsValue({ districtId: null, wardId: null });
-  };
-  const onChangeDistrict = (districtId) => {
-    setDistrictId(districtId);
-    form.setFieldsValue({ wardId: null });
   };
   //upload avatar
   const handleChange = (info) => {
@@ -342,14 +334,16 @@ const AddCamera = ({
                         },
                       )}
                       name={['groupCameraUuid']}
-                      rules={[
-                        {
-                          required: true,
-                          message: intl.formatMessage({
-                            id: 'view.map.required_field',
-                          }),
-                        },
-                      ]}
+                      rules={
+                        [
+                          // {
+                          //   required: true,
+                          //   message: intl.formatMessage({
+                          //     id: 'view.map.required_field',
+                          //   }),
+                          // },
+                        ]
+                      }
                     >
                       <Select
                         showSearch
