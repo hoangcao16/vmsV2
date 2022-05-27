@@ -1,12 +1,10 @@
 import { StyledDrawer, ProTableStyle } from './style';
-import { Space, Button } from 'antd';
-import { SaveOutlined, CloseOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useIntl } from 'umi';
 import { connect } from 'dva';
-const LiveCameras = ({
-  isOpenLiveCameras,
-  setIsOpenLiveCameras,
+const CameraListDrawer = ({
+  isOpenCameraListDrawer,
+  setIsOpenCameraListDrawer,
   dispatch,
   cameraList,
   metadata,
@@ -41,7 +39,7 @@ const LiveCameras = ({
     },
   ];
   const onClose = () => {
-    setIsOpenLiveCameras(false);
+    setIsOpenCameraListDrawer(false);
   };
   const handleGetListCamera = (searchParam) => {
     dispatch({
@@ -49,17 +47,12 @@ const LiveCameras = ({
       payload: searchParam,
     });
   };
-  const onPaginationChange = (page, size) => {
-    const dataParam = Object.assign({ ...searchParam, page, size });
-    setSearchParam(dataParam);
-    handleGetListCamera(dataParam);
-  };
   return (
     <StyledDrawer
-      openDrawer={isOpenLiveCameras}
+      openDrawer={isOpenCameraListDrawer}
       onClose={onClose}
       width={'26%'}
-      zIndex={1001}
+      zIndex={5}
       placement="right"
       getContainer={false}
       closable={false}
@@ -74,9 +67,7 @@ const LiveCameras = ({
         pagination={{
           showTotal: false,
           total: metadata?.total,
-          onChange: onPaginationChange,
-          pageSize: metadata?.size,
-          current: metadata?.page,
+          pageSize: 16,
         }}
       />
     </StyledDrawer>
@@ -89,4 +80,4 @@ function mapStateToProps(state) {
     metadata,
   };
 }
-export default connect(mapStateToProps)(LiveCameras);
+export default connect(mapStateToProps)(CameraListDrawer);
