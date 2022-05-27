@@ -11,6 +11,6 @@ export const TimeoutChart = styled.div`
 
 export const ChartBackground = styled.div`
   margin-bottom: 24px;
-  padding: 32px;
+  padding: 20px 12px;
   background-color: #1f1f1f;
 `;
