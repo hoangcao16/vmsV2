@@ -13,8 +13,8 @@ import {
 import { useIntl } from 'umi';
 import { TreeNodeStyle, CameraGroupSearch, TreeStyle, GroupCameraContainer } from './style';
 import isEmpty from 'lodash/isEmpty';
+import CircleIcon from '@/assets/img/iconCircle';
 import debounce from 'lodash/debounce';
-import CircleIcon from '@/assets/img/iconO';
 import GroupCameraDrawer from './components/GroupCameraDrawer';
 const { Search } = Input;
 

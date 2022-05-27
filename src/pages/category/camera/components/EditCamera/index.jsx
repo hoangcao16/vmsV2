@@ -59,9 +59,7 @@ const EditCamera = ({
   const intl = useIntl();
   const [avatarUrl, setAvatarUrl] = useState('');
   const [avatarFileName, setAvatarFileName] = useState('');
-  const [provinceId, setProvinceId] = useState(null);
   const [districts, setDistrict] = useState([]);
-  const [districtId, setDistrictId] = useState(null);
   const [wards, setWard] = useState([]);
   const [resultSearchMap, setResultSearchMap] = useState(null);
   const [currentLat, setCurrentLat] = useState(null);
@@ -70,24 +68,6 @@ const EditCamera = ({
   const [isLoading, setLoading] = useState(false);
   const vietmapApiKey = REACT_APP_VIETMAP_APIKEY;
 
-  // get districts when select province
-  useEffect(() => {
-    if (provinceId) {
-      AddressApi.getDistrictByProvinceId(provinceId).then((res) => {
-        setDistrict(res?.payload);
-      });
-      setDistrictId(null);
-    }
-  }, [provinceId]);
-  useEffect(() => {
-    if (districtId) {
-      AddressApi.getWardByDistrictId(districtId).then((res) => {
-        setWard(res?.payload);
-      });
-    } else {
-      setWard([]);
-    }
-  }, [districtId]);
   //Get data camera
   useEffect(() => {
     if (selectedUuidEdit !== '') {
@@ -101,8 +81,6 @@ const EditCamera = ({
   useEffect(() => {
     (async () => {
       if (!isEmpty(selectedCamera)) {
-        setProvinceId(selectedCamera?.provinceId);
-        setDistrictId(selectedCamera?.districtId);
         setCurrentLat(selectedCamera?.lat_);
         setCurrentLng(selectedCamera?.long_);
         setAvatarFileName(selectedCamera?.avatarFileName);
@@ -130,12 +108,23 @@ const EditCamera = ({
     })();
   }, [selectedCamera]);
   const onChangeCity = (cityId) => {
-    setProvinceId(cityId);
     form.setFieldsValue({ districtId: null, wardId: null });
+    setWard([]);
+    setDistrict([]);
+    if (cityId) {
+      AddressApi.getDistrictByProvinceId(cityId).then((res) => {
+        setDistrict(res?.payload);
+      });
+    }
   };
   const onChangeDistrict = (districtId) => {
-    setDistrictId(districtId);
     form.setFieldsValue({ wardId: null });
+    setWard([]);
+    if (districtId) {
+      AddressApi.getWardByDistrictId(districtId).then((res) => {
+        setWard(res?.payload);
+      });
+    }
   };
   //upload avatar
   const handleChange = (info) => {
@@ -431,14 +420,16 @@ const EditCamera = ({
                         },
                       )}
                       name={['cameraGroupUuid']}
-                      rules={[
-                        {
-                          required: true,
-                          message: intl.formatMessage({
-                            id: 'view.map.required_field',
-                          }),
-                        },
-                      ]}
+                      rules={
+                        [
+                          // {
+                          //   required: true,
+                          //   message: intl.formatMessage({
+                          //     id: 'view.map.required_field',
+                          //   }),
+                          // },
+                        ]
+                      }
                     >
                       <Select
                         showSearch
