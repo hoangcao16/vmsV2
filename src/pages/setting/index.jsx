@@ -11,12 +11,9 @@ const Setting = ({ listRecord, listClean, listDisk, loading, dispatch, allEmails
 
   return (
     <PageContainer>
-      {/* {!loading && (
-        
-      )} */}
       <>
         <RecordSetting list={listRecord} dispatch={dispatch} loading={loading} />
-        <CleanSetting list={listClean} />
+        <CleanSetting list={listClean} dispatch={dispatch} loading={loading} />
         <WarningStoreSetting list={listDisk} />
         <EmailConfig listAllEmail={allEmails} listEmail={listEmail} />
       </>

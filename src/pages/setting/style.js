@@ -38,9 +38,14 @@ export const StyledCard = styled(Card)`
     .ant-select-selector {
       border-radius: 0 2px 2px 0;
     }
-    .ant-input-number {
+    .ant-input {
       border-right: 0;
       border-radius: 2px 0 0 2px;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      margin: 0;
+      -webkit-appearance: none;
     }
     .ant-checkbox-wrapper {
       margin-top: 34px;
