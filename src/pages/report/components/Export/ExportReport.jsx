@@ -1,28 +1,18 @@
 import { notify } from '@/components/Notify';
 import ReportApi from '@/services/report/ReportApi';
+import getCurrentLocale from '@/utils/Locale';
 import { ExportOutlined } from '@ant-design/icons';
 import { connect } from 'dva';
 import fileDownload from 'js-file-download';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
-import { getLocale } from 'umi';
+import React from 'react';
 
 const ExportReport = (props) => {
-  const [currentLanguage, setCurrentLanguage] = useState('vn');
-
-  useEffect(() => {
-    if (getLocale() == 'en-US') {
-      setCurrentLanguage('en');
-    } else {
-      setCurrentLanguage('vn');
-    }
-  }, []);
-
   const handleExport = async () => {
     const params = {
       ...props?.filterParams,
       typeChart: 'tableReport',
-      lang: currentLanguage,
+      lang: getCurrentLocale(),
     };
     try {
       await ReportApi.getExportData(params).then((result) => {
@@ -32,7 +22,7 @@ const ExportReport = (props) => {
           fileDownload(data, `Report_${moment().format('DD.MM.YYYY_HH.mm.ss')}.xlsx`);
           notify('success', 'noti.success', 'report.export.success');
         } else {
-          notify('success', 'noti.success', 'report.export.failed');
+          notify('error', 'noti.faid', 'report.export.failed');
         }
       });
     } catch (error) {

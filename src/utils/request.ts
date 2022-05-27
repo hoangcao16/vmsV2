@@ -1,7 +1,7 @@
-import axios, { AxiosInstance } from 'axios';
 import AuthZApi from '@/services/authz/AuthZApi';
+import axios, { AxiosInstance } from 'axios';
 // import { store } from "store";
-import { API_URL, API_FILE_URL, STATUS_CODE, STORAGE } from '../constants/common';
+import { API_FILE_URL, API_URL, STATUS_CODE, STORAGE } from '../constants/common';
 export class BaseService {
   private baseUrl;
   private withToken;
@@ -39,9 +39,9 @@ export class BaseService {
     this.instance.interceptors.response.use(
       (response) => {
         const responseCode = Number(response.data?.code);
-        if (!isProd) {
-          console.log('SUC Resp: ', response.data);
-        }
+        // if (!isProd) {
+        //   console.log('SUC Resp: ', response.data);
+        // }
         if (!responseCode) {
           return response.data;
         }
