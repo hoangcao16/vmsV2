@@ -28,6 +28,8 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch, openDrawer }) => {
   const [districtId, setDistrictId] = useState(selectedRecord?.districtId || null);
   const [wards, setWard] = useState([]);
 
+  console.log(selectedRecord);
+
   const handleSubmit = (value) => {
     const payload = {
       ...value,

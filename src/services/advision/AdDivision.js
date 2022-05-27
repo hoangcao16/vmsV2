@@ -5,13 +5,13 @@ const AdDivisionApi = {
   getAllAdDivision(data) {
     return request.request({
       method: 'GET',
-      url: `/cctv-controller-svc/api/v1/administrative_units`,
+      url: `cctv-controller-svc/api/v1/administrative_units/v2`,
       params: data,
     });
   },
 
   getAll(params) {
-    return request.get(`/cctv-controller-svc/api/v1/administrative_units`, { params: params });
+    return request.get(`cctv-controller-svc/api/v1/administrative_units/v2`, { params: params });
   },
 
   getAdDivisionByUuid(uuid) {

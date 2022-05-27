@@ -6,8 +6,9 @@ export default {
   state: {
     list: [],
     metadata: {
-      name: '',
-      size: 100,
+      total: 0,
+      size: 10,
+      page: 1,
     },
   },
   reducers: {
@@ -41,7 +42,11 @@ export default {
         );
         yield put({ type: 'reload' });
       } catch (error) {
-        notify('error', 'pages.setting-user.list-user.titleErrors');
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 
@@ -52,7 +57,11 @@ export default {
 
         yield put({ type: 'reload' });
       } catch (error) {
-        notify('error', 'pages.setting-user.list-user.titleErrors');
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 
@@ -63,12 +72,17 @@ export default {
 
         yield put({ type: 'reload' });
       } catch (error) {
-        notify('error', 'pages.setting-user.list-user.titleErrors');
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 
     *reload(action, { put, select }) {
-      yield put({ type: 'fetchAll', payload: { size: 100 } });
+      const metadata = yield select((state) => state.advision.metadata);
+      yield put({ type: 'fetchAll', payload: { page: metadata?.page, size: metadata?.size } });
     },
   },
 };

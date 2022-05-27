@@ -1,6 +1,6 @@
 import { SearchOutlined } from '@ant-design/icons';
 import ProTable from '@ant-design/pro-table';
-import { AutoComplete, Input, Tag } from 'antd';
+import { AutoComplete, Form, Input, Tag } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -8,18 +8,23 @@ import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
 import EditNVR from './EditNVR';
 
-const TableNVR = ({ dispatch, list, metadata }) => {
+const TableNVR = ({ dispatch, list, metadata, loading }) => {
+  const [form] = Form.useForm();
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedNVREdit, setSelectedNVREdit] = useState(null);
+  const [searchParam, setSearchParam] = useState({
+    page: metadata?.page,
+    size: metadata?.size,
+  });
 
   useEffect(() => {
+    console.log('searchParam', searchParam);
     dispatch({
       type: 'nvr/fetchAllNVR',
       payload: {
         page: metadata?.page,
         size: metadata?.size,
-        name: metadata?.name,
       },
     });
   }, []);
@@ -31,15 +36,24 @@ const TableNVR = ({ dispatch, list, metadata }) => {
     setOpenDrawer(false);
   };
 
-  const handleSearch = (value) => {
+  const handleGetListNVR = (searchParam) => {
     dispatch({
       type: 'nvr/fetchAllNVR',
-      payload: {
-        page: metadata?.page,
-        size: metadata?.size,
-        name: value,
-      },
+      payload: searchParam,
     });
+  };
+
+  const handleSearch = (e) => {
+    const value = e.target.value.trim();
+    const dataParam = Object.assign({ ...searchParam, name: value, page: 1, size: 10 });
+    setSearchParam(dataParam);
+    handleGetListNVR(dataParam);
+  };
+
+  const onPaginationChange = (page, size) => {
+    const dataParam = Object.assign({ ...searchParam, page, size });
+    setSearchParam(dataParam);
+    handleGetListNVR(dataParam);
   };
 
   const renderTag = (cellValue) => {
@@ -103,6 +117,7 @@ const TableNVR = ({ dispatch, list, metadata }) => {
         dataSource={list}
         columns={columns}
         options={false}
+        loading={loading}
         onRow={(record) => {
           return {
             onClick: () => {
@@ -114,18 +129,22 @@ const TableNVR = ({ dispatch, list, metadata }) => {
         toolbar={{
           multipleLine: true,
           filter: (
-            <AutoComplete key="search" onSearch={debounce(handleSearch, 1000)}>
-              <Input.Search
-                placeholder={intl.formatMessage(
-                  { id: 'view.common_device.please_enter_nvr_name' },
-                  {
-                    plsEnter: intl.formatMessage({
-                      id: 'please_enter',
-                    }),
-                  },
-                )}
-              />
-            </AutoComplete>
+            <Form className="bg-grey" form={form} layout="horizontal">
+              <Form.Item>
+                <Input.Search
+                  maxLength={255}
+                  placeholder={intl.formatMessage(
+                    { id: 'view.common_device.please_enter_nvr_name' },
+                    {
+                      plsEnter: intl.formatMessage({
+                        id: 'please_enter',
+                      }),
+                    },
+                  )}
+                  onChange={debounce(handleSearch, 1000)}
+                />
+              </Form.Item>
+            </Form>
           ),
         }}
         pagination={{
@@ -135,6 +154,7 @@ const TableNVR = ({ dispatch, list, metadata }) => {
             `${intl.formatMessage({
               id: 'view.camera.total',
             })} ${total} NVR`,
+          onChange: onPaginationChange,
           total: metadata?.total,
           pageSize: metadata?.size,
           current: metadata?.page,

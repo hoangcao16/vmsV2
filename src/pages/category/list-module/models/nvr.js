@@ -6,7 +6,6 @@ export default {
   state: {
     list: [],
     metadata: {
-      name: '',
       page: 1,
       size: 10,
     },
@@ -41,13 +40,17 @@ export default {
         );
         yield put({ type: 'reload' });
       } catch (error) {
-        notify('error', 'pages.setting-user.list-user.titleErrors');
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 
     *reload(action, { put, select }) {
-      const page = yield select((state) => state.nvr.page);
-      yield put({ type: 'fetchAllNVR', payload: { page } });
+      const metadata = yield select((state) => state.nvr.metadata);
+      yield put({ type: 'fetchAllNVR', payload: { page: metadata?.page, size: metadata?.size } });
     },
   },
 };

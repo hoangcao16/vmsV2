@@ -18,21 +18,58 @@ const MSFormItem = ({
       switch (type) {
         case 'input':
           return [
-            { max: props.maxLength, message: `Tối đa ${props.maxLength} kí tự.` },
-            { min: props.minLength, message: `Tối thiểu ${props.minLength} kí tự.` },
-            { required: props.required, message: `Trường ${props.name} là bắt buộc.` },
+            {
+              max: props.maxLength,
+              message: `${intl.formatMessage(
+                { id: 'noti.max_characters' },
+                { max: props.maxLength },
+              )}`,
+            },
+            {
+              min: props.minLength,
+              message: `${intl.formatMessage(
+                { id: 'noti.min_characters' },
+                { min: props.minLength },
+              )}`,
+            },
+            {
+              required: props.required,
+              message: `${intl.formatMessage({ id: 'view.map.required_field' })}`,
+            },
           ];
         case 'select':
-          return [{ required: props.required, message: `Trường ${props.name} là bắt buộc.` }];
+          return [
+            {
+              required: props.required,
+              message: `${intl.formatMessage({ id: 'view.map.required_field' })}`,
+            },
+          ];
         case 'email':
           return [
-            { max: props.maxLength, message: `Tối đa ${props.maxLength} kí tự.` },
-            { min: props.minLength, message: `Tối thiểu ${props.minLength} kí tự.` },
-            { required: props.required, message: `Trường ${props.name} là bắt buộc.` },
+            {
+              max: props.maxLength,
+              message: `${intl.formatMessage(
+                { id: 'noti.max_characters' },
+                { max: props.maxLength },
+              )}`,
+            },
+            {
+              min: props.minLength,
+              message: `${intl.formatMessage(
+                { id: 'noti.min_characters' },
+                { min: props.minLength },
+              )}`,
+            },
+            {
+              required: props.required,
+              message: `${intl.formatMessage({ id: 'view.map.required_field' })}`,
+            },
             {
               pattern:
                 /^[a-zA-Z0-9]+([\._-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([\_-]?[a-zA-Z0-9]+)*(\.[a-zA-Z]{2,4}){1,2}$/,
-              message: `Trường ${props.name} không đúng định dạng.`,
+              message: `${intl.formatMessage({
+                id: 'view.user.detail_list.email_address_required',
+              })}`,
             },
           ];
         case 'tel':
@@ -41,7 +78,8 @@ const MSFormItem = ({
               validator(_, value) {
                 const valiValue = (
                   document.getElementById('tel') as HTMLInputElement
-                ).value.replace(/\s/, '');
+                ).value.replace(/\s/g, '');
+                console.log('valiValue', valiValue);
 
                 if (!valiValue.length) {
                   return Promise.reject(intl.formatMessage({ id: 'view.map.required_field' }));
