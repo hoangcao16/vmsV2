@@ -1,6 +1,4 @@
-import { CloseOutlined, SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Button } from 'antd';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
 import CleanSetting from './components/CleanSetting';
@@ -12,28 +10,16 @@ const Setting = ({ listRecord, listClean, listDisk, loading, dispatch, allEmails
   const intl = useIntl();
 
   return (
-    <PageContainer
-      header={{
-        extra: [
-          <Button key="close">
-            <CloseOutlined />
-            {intl.formatMessage({ id: 'view.map.cancel' })}
-          </Button>,
-          <Button type="primary" key="save">
-            <SaveOutlined />
-            {intl.formatMessage({ id: 'view.map.button_save' })}
-          </Button>,
-        ],
-      }}
-    >
-      {!loading && (
-        <>
-          <RecordSetting list={listRecord} dispatch={dispatch} />
-          <CleanSetting list={listClean} />
-          <WarningStoreSetting list={listDisk} />
-          <EmailConfig listAllEmail={allEmails} listEmail={listEmail} />
-        </>
-      )}
+    <PageContainer>
+      {/* {!loading && (
+        
+      )} */}
+      <>
+        <RecordSetting list={listRecord} dispatch={dispatch} loading={loading} />
+        <CleanSetting list={listClean} />
+        <WarningStoreSetting list={listDisk} />
+        <EmailConfig listAllEmail={allEmails} listEmail={listEmail} />
+      </>
     </PageContainer>
   );
 };

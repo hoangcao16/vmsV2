@@ -78,7 +78,8 @@ const MSFormItem = ({
               validator(_, value) {
                 const valiValue = (
                   document.getElementById('tel') as HTMLInputElement
-                ).value.replace(/\s/, '');
+                ).value.replace(/\s/g, '');
+                console.log('valiValue', valiValue);
 
                 if (!valiValue.length) {
                   return Promise.reject(intl.formatMessage({ id: 'view.map.required_field' }));

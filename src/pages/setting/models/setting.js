@@ -1,3 +1,4 @@
+import { notify } from '@/components/Notify';
 import settingApi from '@/services/setting/SettingApi';
 
 export default {
@@ -84,7 +85,6 @@ export default {
       try {
         yield call(settingApi.postRecordingVideo, payload);
         notify('success', 'noti.success', 'noti.successful_setting');
-        yield put({ type: 'fetchRecordSetting' });
       } catch (error) {
         notify('error', 'noti.faid', `pages.setting-user.list-user.${error?.code}`);
       }

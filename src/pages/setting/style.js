@@ -20,6 +20,10 @@ export const StyledCard = styled(Card)`
     }
   }
 
+  .cancel {
+    margin-right: 8px;
+  }
+
   .title {
     h4 {
       margin-bottom: 2px;

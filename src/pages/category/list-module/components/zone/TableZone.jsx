@@ -11,6 +11,10 @@ const TableZone = ({ dispatch, list, metadata, loading }) => {
   const intl = useIntl();
   const [openDrawerAddEdit, setOpenDrawerAddEdit] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [searchParam, setSearchParam] = useState({
+    page: metadata?.page,
+    size: metadata?.size,
+  });
 
   useEffect(() => {
     dispatch({
@@ -18,20 +22,27 @@ const TableZone = ({ dispatch, list, metadata, loading }) => {
       payload: {
         page: metadata?.page,
         size: metadata?.size,
-        name: metadata?.name,
       },
     });
   }, []);
 
-  const handleSearch = (value) => {
+  const handleGetListZone = (searchParam) => {
     dispatch({
       type: 'zone/fetchAllZone',
-      payload: {
-        page: metadata?.page,
-        size: metadata?.size,
-        name: value,
-      },
+      payload: searchParam,
     });
+  };
+
+  const handleSearch = (value) => {
+    const dataParam = Object.assign({ ...searchParam, name: value, page: 1, size: 10 });
+    setSearchParam(dataParam);
+    handleGetListZone(dataParam);
+  };
+
+  const onPaginationChange = (page, size) => {
+    const dataParam = Object.assign({ ...searchParam, page, size });
+    setSearchParam(dataParam);
+    handleGetListZone(dataParam);
   };
 
   const columns = [
@@ -130,6 +141,7 @@ const TableZone = ({ dispatch, list, metadata, loading }) => {
             `${intl.formatMessage({
               id: 'view.camera.total',
             })} ${total} Zone`,
+          onChange: onPaginationChange,
           total: metadata?.total,
           pageSize: metadata?.size,
           current: metadata?.page,

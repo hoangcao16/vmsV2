@@ -10,6 +10,10 @@ const TableCamproxy = ({ dispatch, list, metadata, loading }) => {
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedCamproxyEdit, setSelectedCamproxyEdit] = useState(null);
+  const [searchParam, setSearchParam] = useState({
+    page: metadata?.page,
+    size: metadata?.size,
+  });
 
   useEffect(() => {
     dispatch({
@@ -17,7 +21,6 @@ const TableCamproxy = ({ dispatch, list, metadata, loading }) => {
       payload: {
         page: metadata?.page,
         size: metadata?.size,
-        name: metadata?.name,
       },
     });
   }, []);
@@ -29,15 +32,23 @@ const TableCamproxy = ({ dispatch, list, metadata, loading }) => {
     setOpenDrawer(false);
   };
 
-  const handleSearch = (value) => {
+  const handleGetListCamproxy = (searchParam) => {
     dispatch({
       type: 'camproxy/fetchAllCamproxy',
-      payload: {
-        page: metadata?.page,
-        size: metadata?.size,
-        name: value,
-      },
+      payload: searchParam,
     });
+  };
+
+  const handleSearch = (value) => {
+    const dataParam = Object.assign({ ...searchParam, name: value, page: 1, size: 10 });
+    setSearchParam(dataParam);
+    handleGetListCamproxy(dataParam);
+  };
+
+  const onPaginationChange = (page, size) => {
+    const dataParam = Object.assign({ ...searchParam, page, size });
+    setSearchParam(dataParam);
+    handleGetListCamproxy(dataParam);
   };
 
   const renderTag = (cellValue) => {
@@ -134,6 +145,7 @@ const TableCamproxy = ({ dispatch, list, metadata, loading }) => {
             `${intl.formatMessage({
               id: 'view.camera.total',
             })} ${total} Camproxy`,
+          onChange: onPaginationChange,
           total: metadata?.total,
           pageSize: metadata?.size,
           current: metadata?.page,

@@ -277,6 +277,7 @@ const CameraList = ({
     },
   ];
   const onPaginationChange = (page, size) => {
+    console.log(page, size);
     const dataParam = Object.assign({ ...searchParam, page, size });
     setSearchParam(dataParam);
     handleGetListCamera(dataParam);

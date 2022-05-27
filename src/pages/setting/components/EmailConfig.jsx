@@ -57,7 +57,7 @@ const EmailConfig = ({ listAllEmail, listEmail }) => {
               showArrow
               value={emails}
               onChange={onChange}
-              options={listAllEmail.map((g) => ({
+              options={listAllEmail?.map((g) => ({
                 value: g,
                 label: render(g, g),
               }))}

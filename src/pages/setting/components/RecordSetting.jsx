@@ -1,24 +1,21 @@
-import { FieldTimeOutlined } from '@ant-design/icons';
-import { Button, Col, Popconfirm, Row, Select } from 'antd';
-import { useState } from 'react';
+import { CloseOutlined, FieldTimeOutlined, SaveOutlined } from '@ant-design/icons';
+import { Button, Col, Row, Select } from 'antd';
+import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import { StyledCard } from '../style';
 
 const { Option } = Select;
 
-const RecordSetting = ({ list, dispatch }) => {
+const RecordSetting = ({ list, dispatch, loading }) => {
   const intl = useIntl();
 
-  const [recordSize, setRecordSize] = useState(list?.recordingVideoSizeSave || 0);
+  const [recordSize, setRecordSize] = useState(0);
 
-  // useEffect(() => {
-  //   settingApi.getRecordingVideo().then(async (data) => {
-  //     let convertData = await convertRecordSetitngData(data?.payload);
-  //     setRecordSize(convertData);
-  //     setLoading(false);
-  //     return;
-  //   });
-  // }, []);
+  useEffect(() => {
+    if (!loading) {
+      setRecordSize(list?.recordingVideoSizeSave);
+    }
+  }, [loading]);
 
   const titleCard = (
     <Row>
@@ -42,13 +39,21 @@ const RecordSetting = ({ list, dispatch }) => {
   }
 
   const confirm = async () => {
-    dispatch({
+    await dispatch({
       type: 'setting/postRecordSetting',
       payload: {
         ...list,
         recordingVideoSizeSave: recordSize,
       },
     });
+    setRecordSize(recordSize);
+    dispatch({
+      type: 'setting/fetchRecordSetting',
+    });
+  };
+
+  const cancel = () => {
+    setRecordSize(list?.recordingVideoSizeSave);
   };
 
   return (
@@ -56,15 +61,16 @@ const RecordSetting = ({ list, dispatch }) => {
       <StyledCard
         title={titleCard}
         extra={
-          <Popconfirm
-            placement="leftTop"
-            title={intl.formatMessage({ id: 'noti.save_change' })}
-            onConfirm={confirm}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary">Save</Button>
-          </Popconfirm>
+          <>
+            <Button key="close" className="cancel" onClick={cancel}>
+              <CloseOutlined />
+              {intl.formatMessage({ id: 'view.map.cancel' })}
+            </Button>
+            <Button type="primary" className="save" key="save" onClick={confirm}>
+              <SaveOutlined />
+              {intl.formatMessage({ id: 'view.map.button_save' })}
+            </Button>
+          </>
         }
       >
         <Row>

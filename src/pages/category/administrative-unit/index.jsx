@@ -1,28 +1,21 @@
-import { PageContainer } from '@ant-design/pro-layout';
-import React, { useEffect, useState } from 'react';
-import { useIntl } from 'umi';
-import { connect } from 'dva';
-import { ProTableStyle } from './style';
-import { AutoComplete, Button, Input } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import AddEditAdministrativeUnit from './components/AddEditAdministrativeUnit';
+import { PageContainer } from '@ant-design/pro-layout';
+import { AutoComplete, Button, Input } from 'antd';
+import { connect } from 'dva';
 import { debounce } from 'lodash';
+import { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
+import AddEditAdministrativeUnit from './components/AddEditAdministrativeUnit';
+import { ProTableStyle } from './style';
 
 const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
   const intl = useIntl();
   const [openDrawerAddEdit, setOpenDrawerAddEdit] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
-
-  useEffect(() => {
-    dispatch({
-      type: 'advision/fetchAll',
-      payload: {
-        size: metadata?.size,
-        name: metadata?.name,
-        page: 1,
-      },
-    });
-  }, []);
+  const [searchParam, setSearchParam] = useState({
+    page: metadata?.page,
+    size: metadata?.size,
+  });
 
   const columns = [
     {
@@ -51,15 +44,39 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
     },
   ];
 
+  const handleGetListAdvision = (searchParam) => {
+    dispatch({
+      type: 'advision/fetchAll',
+      payload: searchParam,
+    });
+  };
+
   const handleSearch = (value) => {
+    const dataParam = Object.assign({
+      ...searchParam,
+      name: value,
+      page: 1,
+      size: 10,
+    });
+    setSearchParam(dataParam);
+    handleGetListAdvision(dataParam);
+  };
+
+  const onPaginationChange = (page, size) => {
+    const dataParam = Object.assign({ ...searchParam, page, size });
+    setSearchParam(dataParam);
+    handleGetListAdvision(dataParam);
+  };
+
+  useEffect(() => {
     dispatch({
       type: 'advision/fetchAll',
       payload: {
+        page: metadata?.page,
         size: metadata?.size,
-        name: value,
       },
     });
-  };
+  }, []);
 
   return (
     <>
@@ -68,12 +85,12 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
           headerTitle={`${intl.formatMessage({
             id: 'view.category.administrative_unit',
           })}`}
-          rowKey="id"
+          rowKey="uuid"
           search={false}
           dataSource={list}
+          loading={loading}
           columns={columns}
           options={false}
-          loading={loading}
           onRow={(record) => {
             return {
               onClick: () => {
@@ -120,7 +137,8 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
                 id: 'view.camera.total',
               })} ${total}`,
             total: metadata?.total,
-            pageSize: metadata.size,
+            onChange: onPaginationChange,
+            pageSize: metadata?.size,
             current: metadata?.page,
           }}
         />

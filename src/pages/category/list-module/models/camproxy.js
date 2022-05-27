@@ -8,7 +8,6 @@ export default {
     metadata: {
       page: 1,
       size: 10,
-      name: '',
     },
   },
   reducers: {
@@ -49,8 +48,11 @@ export default {
       }
     },
     *reload(action, { put, select }) {
-      const page = yield select((state) => state.camproxy.page);
-      yield put({ type: 'fetchAllCamproxy', payload: { page } });
+      const metadata = yield select((state) => state.camproxy.metadata);
+      yield put({
+        type: 'fetchAllCamproxy',
+        payload: { page: metadata?.page, size: metadata?.size },
+      });
     },
   },
 };

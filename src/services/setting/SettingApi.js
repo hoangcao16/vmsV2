@@ -1,20 +1,28 @@
 import request from '@/utils/request';
+import _uniqueId from 'lodash/uniqueId';
 
 const settingApi = {
-  getRecordingVideo: async () => {
-    return request.get('/cctv-monitor-ctrl-svc/api/v1/config/recording-video');
+  getRecordingVideo() {
+    return request.request({
+      method: 'GET',
+      url: '/cctv-monitor-ctrl-svc/api/v1/config/recording-video',
+    });
   },
-  getDataCleanFile: async () => {
+  getDataCleanFile() {
     return request.get('/cctv-monitor-ctrl-svc/api/v1/config/clean-file');
   },
-  getDataWarningDisk: async () => {
+  getDataWarningDisk() {
     return request.get('/cctv-monitor-ctrl-svc/api/v1/config/warning-disk');
   },
-  getEmailConfig: async () => {
+  getEmailConfig() {
     return request.get('/cctv-monitor-ctrl-svc/api/v1/email/get-email');
   },
-  postRecordingVideo: async (data) => {
-    return request.post('/cctv-monitor-ctrl-svc/api/v1/config/recording-video', data);
+  postRecordingVideo(data) {
+    return request.post('/cctv-monitor-ctrl-svc/api/v1/config/recording-video', data, {
+      headers: {
+        requestId: _uniqueId('cctv'),
+      },
+    });
   },
 };
 

@@ -6,8 +6,9 @@ export default {
   state: {
     list: [],
     metadata: {
-      name: '',
+      total: 0,
       size: 10,
+      page: 1,
     },
   },
   reducers: {
@@ -80,7 +81,8 @@ export default {
     },
 
     *reload(action, { put, select }) {
-      yield put({ type: 'fetchAll', payload: { size: 100 } });
+      const metadata = yield select((state) => state.advision.metadata);
+      yield put({ type: 'fetchAll', payload: { page: metadata?.page, size: metadata?.size } });
     },
   },
 };

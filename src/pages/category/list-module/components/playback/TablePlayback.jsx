@@ -11,6 +11,10 @@ const TablePlayback = ({ dispatch, list, metadata, loading }) => {
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedPlaybackEdit, setSelectedPlaybackEdit] = useState(null);
+  const [searchParam, setSearchParam] = useState({
+    page: metadata?.page,
+    size: metadata?.size,
+  });
 
   useEffect(() => {
     dispatch({
@@ -18,7 +22,6 @@ const TablePlayback = ({ dispatch, list, metadata, loading }) => {
       payload: {
         page: metadata?.page,
         size: metadata?.size,
-        name: metadata?.name,
       },
     });
   }, []);
@@ -30,15 +33,23 @@ const TablePlayback = ({ dispatch, list, metadata, loading }) => {
     setOpenDrawer(false);
   };
 
-  const handleSearch = (value) => {
+  const handleGetListPlayback = (searchParam) => {
     dispatch({
       type: 'playback/fetchAllPlayback',
-      payload: {
-        page: metadata?.page,
-        size: metadata?.size,
-        name: value,
-      },
+      payload: searchParam,
     });
+  };
+
+  const handleSearch = (value) => {
+    const dataParam = Object.assign({ ...searchParam, name: value, page: 1, size: 10 });
+    setSearchParam(dataParam);
+    handleGetListPlayback(dataParam);
+  };
+
+  const onPaginationChange = (page, size) => {
+    const dataParam = Object.assign({ ...searchParam, page, size });
+    setSearchParam(dataParam);
+    handleGetListPlayback(dataParam);
   };
 
   const renderTag = (cellValue) => {
@@ -135,6 +146,7 @@ const TablePlayback = ({ dispatch, list, metadata, loading }) => {
             `${intl.formatMessage({
               id: 'view.camera.total',
             })} ${total} Playback`,
+          onChange: onPaginationChange,
           total: metadata?.total,
           pageSize: metadata?.size,
           current: metadata?.page,
