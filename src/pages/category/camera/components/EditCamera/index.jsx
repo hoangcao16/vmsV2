@@ -162,6 +162,10 @@ const EditCamera = ({
     setAvatarUrl('');
     setAvatarFileName('');
     setResultSearchMap(null);
+    setDistrict([]);
+    setWard([]);
+    setCurrentLat(null);
+    setCurrentLng(null);
     form.resetFields();
     dispatch({
       type: 'camera/getOneCamera',

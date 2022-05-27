@@ -9,6 +9,13 @@ export const MapContainer = styled.div`
   .ant-drawer {
     position: absolute;
   }
+  .mapboxql-control-popup {
+    max-width: 340px !important;
+  }
+  .mapboxgl-popup-content {
+    padding: 0;
+    border-radius: 8px;
+  }
 `;
 export const MapHeader = styled.div`
   display: flex;

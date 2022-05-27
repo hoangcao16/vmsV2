@@ -16,7 +16,23 @@ import { TYPE_FORM_ACTION_ON_MAP } from '@/constants/map';
 import CamInfoPopup from './components/CamInfoPopup';
 import CameraIcon from '@/assets/img/cameraIcon';
 import ViewLiveCameras from './components/ViewLiveCameras';
-const Maps = ({ dispatch, metadata, cameraList, cameraAIList, AdminisUnitList }) => {
+import CameraApi from '@/services/camera/CameraApi';
+import camProxyService from '@/services/camProxy';
+import { notify } from '@/components/Notify';
+import { v4 as uuidV4 } from 'uuid';
+import getBase64 from '@/utils/getBase64';
+import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
+import moment from 'moment';
+import { captureVideoFrame } from '@/utils/captureVideoFrame';
+import EditCamera from '@/pages/category/camera/components/EditCamera';
+const Maps = ({
+  dispatch,
+  metadata,
+  cameraList,
+  cameraAIList,
+  AdminisUnitList,
+  closeDrawerState,
+}) => {
   const intl = useIntl();
   const mapboxRef = useRef(null);
   const mapBoxDrawRef = useRef(null);
@@ -26,10 +42,130 @@ const Maps = ({ dispatch, metadata, cameraList, cameraAIList, AdminisUnitList })
   const mapMarkersRef = useRef([]);
   const markerTargetRef = useRef(null);
   const [currentLan, setCurrentLan] = useState(null);
+  const [isEditDrawer, setIsEditDrawer] = useState(false);
   const [isOpenCameraListDrawer, setIsOpenCameraListDrawer] = useState(false);
   const [cameraOnMap, setCameraOnMap] = useState([]);
-  const [isCollapse, setIsCollapse] = useState(false);
+  const streamingPopupRef = useRef(null);
   const zoom = 13;
+  const closeRTCPeerConnection = (slotIdx) => {
+    // CLOSE STREAM
+    let pcLstTmp = streamingPopupRef.current;
+    if (pcLstTmp.pc) {
+      pcLstTmp.pc.close();
+    }
+  };
+  const startCamera = async (camera, mode) => {
+    const data = await CameraApi.checkPermissionForViewOnline({
+      cameraUuid: camera?.uuid,
+      mode,
+    });
+    if (data == null) {
+      notify('warning', 'noti.default_screen', 'noti.error_camera_address');
+      return;
+    }
+    if (mode === 'webrtc') {
+      const restartConfig = {
+        iceServers: [
+          {
+            urls: 'stun:turn.edsolabs.com:3478',
+          },
+        ],
+      };
+      const pc = new RTCPeerConnection();
+      const newCameraStreaming = { ...camera, pc: pc };
+      streamingPopupRef.current = newCameraStreaming;
+      let peerCode = (Math.random() + 1).toString(36).substring(10);
+
+      pc.setConfiguration(restartConfig);
+      pc.addTransceiver('video');
+
+      pc.ontrack = (event) => {
+        const cell = document.getElementById('video-slot-' + camera?.uuid);
+        if (cell) {
+          cell.srcObject = event.streams[0];
+          cell.style = 'display:block;';
+          cell.play();
+        }
+      };
+
+      const thisTime = new Date().getTime();
+      const token = (Math.random() + 1).toString(36).substring(10) + thisTime;
+      let dc = pc.createDataChannel(token);
+
+      pc.ondatachannel = (event) => {
+        dc = event.channel;
+        let dcTimeout = null;
+        dc.onmessage = (evt) => {
+          dcTimeout = setTimeout(function () {
+            if (dc == null && dcTimeout != null) {
+              dcTimeout = null;
+              return;
+            }
+            const message = 'Ping from: ' + peerCode;
+            if (dc.readyState === 'open') {
+              dc.send(message);
+            }
+          }, 1000);
+        };
+        dc.onclose = () => {
+          clearTimeout(dcTimeout);
+          dcTimeout = null;
+        };
+      };
+
+      pc.onconnectionstatechange = function (event) {
+        switch (pc.connectionState) {
+          case 'connected':
+            break;
+          case 'disconnected':
+            break;
+          case 'failed':
+            break;
+          case 'closed':
+            break;
+        }
+      };
+
+      const API = data.camproxyApi;
+      pc.createOffer({
+        iceRestart: true,
+      })
+        .then((offer) => {
+          pc.setLocalDescription(offer);
+
+          camProxyService
+            .playCamera(API, {
+              token: token,
+              camUuid: camera?.uuid,
+              offer: offer,
+              viewType: 'live',
+            })
+            .then((res) => {
+              if (res) {
+                pc.setRemoteDescription(res.payload);
+              } else {
+                console.log('Failed');
+              }
+            });
+        })
+        .catch((error) => {
+          console.log('error:', error);
+        })
+        .catch((e) => console.log(e))
+        .finally(() => {});
+    }
+  };
+  const closeCamera = (cameraUuid) => {
+    const cell = document.getElementById('video-slot-' + cameraUuid);
+
+    if (cell) {
+      cell.srcObject = null;
+    }
+    if (streamingPopupRef?.current?.hls) {
+      streamingPopupRef?.current?.hls?.destroy();
+    }
+    closeRTCPeerConnection(cameraUuid);
+  };
   //reset maker
   const resetMarker = (marker) => {
     marker &&
@@ -126,24 +262,84 @@ const Maps = ({ dispatch, metadata, cameraList, cameraAIList, AdminisUnitList })
         calRatioZoom(marker, currentZoom);
       });
   };
-  const handleEditCam = (camInfo) => {};
-  const startSnapshotCamera = (type, camera) => {};
-  const handleClosePopup = (type, slotId) => {
-    // type === TYPE_FORM_ACTION_ON_MAP.cam && CameraService.closeCamera(slotId);
+  // Snapshot Camera
+  const setFileName = (type) => {
+    if (type === 0) {
+      return 'Cut.' + moment().format('DDMMYYYY.hhmmss') + '.mp4';
+    }
+    return 'Cap.' + moment().format('DDMMYYYY.hhmmss') + '.jpg';
+  };
+  const handleEditCam = (camInfo) => {
+    setIsEditDrawer(true);
+    dispatch({
+      type: 'camera/selectUuidEdit',
+      payload: camInfo?.uuid,
+    });
+  };
+  const startSnapshotCamera = (type, camera) => {
+    const cell = document.getElementById('video-slot-' + camera.uuid);
+    const { blob, tBlob } = captureVideoFrame(cell, null, 'jpeg');
+    if (blob) {
+      const fileName = setFileName(1);
+      const uuid = uuidV4();
+      const createdDate = new Date();
+      const createdTime = createdDate.getTime();
+      const violationTime = Math.floor(createdDate.setMilliseconds(0) / 1000);
+      let eventFile = {
+        id: '',
+        uuid: uuid,
+        eventUuid: '',
+        eventName: '',
+        name: fileName,
+        violationTime: violationTime,
+        createdTime: createdTime,
+        note: '',
+        cameraUuid: camera.uuid,
+        cameraName: camera.name,
+        type: 1,
+        length: 0,
+        address: '',
+        rootFileUuid: '',
+        pathFile: '',
+        isImportant: false,
+        thumbnailData: [''],
+        nginx_host: '',
+        blob: blob,
+        tBlob: tBlob,
+      };
+      ExportEventFileApi.uploadFile(eventFile.uuid + '.jpeg', eventFile.blob).then(
+        async (result) => {
+          if (result && result.payload && result.payload.fileUploadInfoList.length > 0) {
+            let path = result.payload.fileUploadInfoList[0].path;
+            let { blob, tBlob, ...requestObject } = eventFile;
+            getBase64(eventFile.tBlob, async (thumbnailData) => {
+              requestObject = Object.assign({
+                ...requestObject,
+                pathFile: path,
+                thumbnailData: [thumbnailData.replace('data:image/jpeg;base64,', '')],
+              });
+              const response = await ExportEventFileApi.createNewEventFile(requestObject);
+              if (response) {
+                notify('success', 'Playback', 'noti.successfully_take_photo_and_save');
+              }
+            });
+          } else {
+            notify('warning', 'Playback', 'noti.error_save_file');
+          }
+        },
+      );
+    }
+  };
+  const handleClosePopup = (type, cameraUuid) => {
+    type === TYPE_FORM_ACTION_ON_MAP.cam && closeCamera(cameraUuid);
     popupAttachMarkerRef.current && popupAttachMarkerRef.current.remove();
   };
+
   const hanldeExposePopup = (el, popup, data = null) => {
     popup.on('open', (e) => {
-      // cameraOnMap.forEach((cam) => {
-      // data && CameraService.closeCamera(cam.uuid);
-      // });
       popupAttachMarkerRef.current = e.target;
-      // data &&
-      // CameraService.playCameraOnline(data, data.uuid).then((res) => {
-      // console.log(res);
-      // });
+      data && startCamera(data, 'webrtc');
     });
-
     el.addEventListener('click', (e) => {
       if (markerTargetRef.current && markerTargetRef.current != e.target) {
         handleClosePopup();
@@ -181,7 +377,7 @@ const Maps = ({ dispatch, metadata, cameraList, cameraAIList, AdminisUnitList })
             closeOnClick: false,
             className: 'mapboxql-control-popup',
           }).setDOMContent(mapCardNode);
-          const marker = new mapboxgl.Marker({ element: el, draggable: true })
+          const marker = new mapboxgl.Marker({ element: el })
             .setLngLat([camera.long_, camera.lat_])
             .setPopup(popup)
             .addTo(mapboxRef.current);
@@ -211,6 +407,9 @@ const Maps = ({ dispatch, metadata, cameraList, cameraAIList, AdminisUnitList })
         handleControlZoomMarker();
       });
   }, []);
+  useEffect(() => {
+    setIsEditDrawer(false);
+  }, [closeDrawerState]);
   return (
     <>
       <MapHeader>
@@ -250,11 +449,13 @@ const Maps = ({ dispatch, metadata, cameraList, cameraAIList, AdminisUnitList })
         />
         <ViewLiveCameras />
       </MapContainer>
+      <EditCamera isEditDrawer={isEditDrawer} setIsEditDrawer={setIsEditDrawer} />
     </>
   );
 };
 const mapStateToProps = (state) => {
   const { metadata, cameraList, cameraAIList, AdminisUnitList } = state.maps;
-  return { metadata, cameraList, cameraAIList, AdminisUnitList };
+  const { closeDrawerState } = state.camera;
+  return { metadata, cameraList, cameraAIList, AdminisUnitList, closeDrawerState };
 };
 export default connect(mapStateToProps)(Maps);

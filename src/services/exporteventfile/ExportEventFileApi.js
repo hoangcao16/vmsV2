@@ -1,7 +1,7 @@
 import { notify } from '@/components/Notify';
-import { fileRequestClient } from '@/utils/request';
+import request, { fileRequestClient } from '@/utils/request';
 import _uniqueId from 'lodash/uniqueId';
-
+const EVENT_FILE_ENDPOINT = '/cctv-controller-svc/api/v1/event-files';
 const ExportEventFileApi = {
   uploadAvatar: async (avatarFileName, file) => {
     let result;
@@ -32,7 +32,6 @@ const ExportEventFileApi = {
     }
     return result;
   },
-
   getAvatar: async (avatarFileName) => {
     let result;
     try {
@@ -48,6 +47,50 @@ const ExportEventFileApi = {
         responseType: 'blob',
       });
     } catch (e) {
+      return {};
+    }
+    return result;
+  },
+  uploadFile: async (fileName, file) => {
+    let result;
+    const fmData = new FormData();
+    fmData.append(
+      'fileInfo',
+      new Blob(['{"fileName": "' + fileName + '"}'], {
+        type: 'application/json',
+      }),
+      'fileInfo.json',
+    );
+    fmData.append('files', file);
+    try {
+      result = await fileRequestClient.request({
+        method: 'POST',
+        url: '/api/v1/uploadFile',
+        data: fmData,
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+          requestId: _uniqueId('cctv'),
+        },
+      });
+    } catch (e) {
+      console.log(e);
+      // notify('error', 'noti.archived_file', e.toString());
+      return {};
+    }
+    return result;
+  },
+  createNewEventFile: async (record) => {
+    let result;
+    try {
+      result = await request.request({
+        method: 'POST',
+        url: EVENT_FILE_ENDPOINT,
+        data: record,
+      });
+    } catch (e) {
+      console.log(e);
+      // notify('error', 'noti.archived_file', e.toString());
       return {};
     }
     return result;
