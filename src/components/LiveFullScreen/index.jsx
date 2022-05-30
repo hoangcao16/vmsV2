@@ -1,26 +1,29 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useIntl } from 'umi';
 import { connect } from 'dva';
-import { useEffect, useState, useRef } from 'react';
+import { StyledDrawer, Header } from './style';
+import { Space, Button, Spin, Select } from 'antd';
+import { useIntl } from 'umi';
+import { useState, useRef, useEffect } from 'react';
+import { SaveOutlined, CloseOutlined, LoadingOutlined } from '@ant-design/icons';
 import CameraApi from '@/services/camera/CameraApi';
 import camProxyService from '@/services/camProxy';
 import { notify } from '@/components/Notify';
-import { Container, StyledLoading } from './style';
-import { Button, Spin } from 'antd';
-import CircleIcon from '@/assets/img/iconCircle';
-import {
-  CloseOutlined,
-  LoadingOutlined,
-  ExpandOutlined,
-  CompressOutlined,
-} from '@ant-design/icons';
-const CamLiveItem = ({ dispatch, cameraIndex, cameraUuid, listStreaming }) => {
-  const [loading, setLoading] = useState(false);
-  const videoRef = useRef(null);
-  const pcRef = useRef(null);
-  const [isMaximize, setIsMaximize] = useState(false);
+const LiveFullScreen = ({ dispatch, isOpenDrawer, selectedCamera, cameraList }) => {
   const intl = useIntl();
-  const cameraStreaming = listStreaming.find((item) => item?.uuid === cameraUuid);
+  const pcRef = useRef(null);
+  const videoRef = useRef(null);
+  const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState(null);
+  const onClose = () => {
+    closeRTCPeerConnection();
+
+    if (selected?.hls) {
+      selected?.hls?.destroy();
+    }
+    dispatch({
+      type: 'liveFullScreen/closeDrawer',
+    });
+  };
   const closeRTCPeerConnection = (slotIdx) => {
     // CLOSE STREAM
     let pcLstTmp = pcRef.current;
@@ -28,20 +31,12 @@ const CamLiveItem = ({ dispatch, cameraIndex, cameraUuid, listStreaming }) => {
       pcLstTmp.pc.close();
     }
   };
-  const maxMinCamera = () => {
-    dispatch({
-      type: 'liveFullScreen/saveSelectedCamera',
-      payload: cameraStreaming,
-    });
-    // setIsMaximize(!isMaximize);
-  };
   useEffect(() => {
-    if (cameraUuid) {
-      startCamera(cameraUuid, 'webrtc');
-    } else {
-      stopCamera();
+    if (selectedCamera?.uuid) {
+      startCamera(selectedCamera?.uuid, 'webrtc');
+      setSelected(formatOptions(cameraList).find((item) => item.value === selectedCamera?.uuid));
     }
-  }, [cameraUuid]);
+  }, [selectedCamera]);
   const startCamera = async (camUuid, mode) => {
     setLoading(true);
     const data = await CameraApi.checkPermissionForViewOnline({
@@ -61,7 +56,7 @@ const CamLiveItem = ({ dispatch, cameraIndex, cameraUuid, listStreaming }) => {
         ],
       };
       const pc = new RTCPeerConnection();
-      const newCameraStreaming = { ...cameraStreaming, pc: pc };
+      const newCameraStreaming = { ...selectedCamera, pc: pc };
       pcRef.current = newCameraStreaming;
       let peerCode = (Math.random() + 1).toString(36).substring(10);
 
@@ -143,73 +138,86 @@ const CamLiveItem = ({ dispatch, cameraIndex, cameraUuid, listStreaming }) => {
         .finally(() => {});
     }
   };
-  const closeCamera = (e) => {
-    e.stopPropagation();
-    const cell = document.getElementById('video-slot-' + cameraIndex);
-
-    if (cell) {
-      cell.srcObject = null;
-    }
-    if (cameraStreaming?.hls) {
-      cameraStreaming?.hls?.destroy();
-    }
-    closeRTCPeerConnection(cameraIndex);
-    const newLiveCameraList = [...listStreaming];
-    newLiveCameraList.splice(cameraIndex, 1);
-    dispatch({
-      type: 'viewLiveCameras/saveListStreaming',
-      payload: newLiveCameraList,
+  const formatOptions = (options) => {
+    return options.map((item) => {
+      return {
+        label: item.name,
+        value: item.uuid,
+      };
     });
-    setIsMaximize(false);
   };
-  const stopCamera = () => {
-    videoRef.current.srcObject = null;
-    videoRef.current.innerHTML = null;
-    videoRef.current.style = 'display:none;';
+  const handleChange = (value) => {
+    closeRTCPeerConnection();
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+      videoRef.current.innerHTML = null;
+      videoRef.current.style = 'display:none;';
+    }
+    const selectedCam = cameraList.find((item) => item.uuid === value);
+    if (selectedCam) {
+      setSelected(selectedCam);
+      dispatch({
+        type: 'liveFullScreen/saveSelectedCamera',
+        payload: selectedCam,
+      });
+    }
   };
-  return (
-    <Container data-type={isMaximize ? 'fullsize' : ''}>
-      {loading && (
-        <StyledLoading>
-          <Spin indicator={<LoadingOutlined size={48} />} />
-        </StyledLoading>
-      )}
-      {cameraStreaming && cameraStreaming?.isPlay && (
-        <>
-          <Button className="close-btn" icon={<CloseOutlined />} onClick={closeCamera} />
-          <Button
-            className="fullsize-btn"
-            icon={isMaximize ? <CompressOutlined /> : <ExpandOutlined />}
-            onClick={maxMinCamera}
-          />
-        </>
-      )}
 
-      <video
-        ref={videoRef}
-        className="video-stream"
-        id={'video-slot-' + cameraIndex}
-        preload="auto"
-        width="100%"
-        height="100%"
-        autoPlay
-        muted="muted"
-        onPlay={() => setLoading(false)}
-      />
-      {cameraStreaming && (
-        <div className={`map__live-slot-cam-name`}>
-          <span>
-            <CircleIcon />
-            {cameraStreaming?.name}
-          </span>
+  return (
+    <StyledDrawer
+      openDrawer={isOpenDrawer}
+      onClose={onClose}
+      width={'80%'}
+      zIndex={1000}
+      placement="right"
+      extra={
+        <Space>
+          <Button type="primary" htmlType="submit" onClick={() => {}}>
+            <SaveOutlined />
+            {intl.formatMessage({ id: 'view.map.button_save' })}
+          </Button>
+          <Button onClick={onClose}>
+            <CloseOutlined />
+            {intl.formatMessage({ id: 'view.map.cancel' })}
+          </Button>
+        </Space>
+      }
+    >
+      <Header>
+        <div className="title">{intl.formatMessage({ id: 'view.live.view_fullscreen' })}</div>
+        <div className="select">
+          {intl.formatMessage({ id: 'camera' })}:{' '}
+          <Select
+            className="select-ant"
+            onChange={handleChange}
+            value={selected}
+            options={formatOptions(cameraList)}
+          />
         </div>
-      )}
-    </Container>
+      </Header>
+      <Spin indicator={<LoadingOutlined size={48} />} spinning={loading}>
+        <video
+          ref={videoRef}
+          className="video-stream"
+          id={'video-slot-' + selectedCamera?.uuid}
+          preload="auto"
+          width="100%"
+          height="100%"
+          autoPlay
+          muted="muted"
+          onPlay={() => setLoading(false)}
+        />
+      </Spin>
+    </StyledDrawer>
   );
 };
-
 function mapStateToProps(state) {
-  const { liveCameraList, listStreaming } = state.viewLiveCameras;
-  return { liveCameraList, listStreaming };
+  const { isOpenDrawer, selectedCamera } = state.liveFullScreen;
+  const { cameraList } = state.maps;
+  return {
+    isOpenDrawer,
+    selectedCamera,
+    cameraList,
+  };
 }
-export default connect(mapStateToProps)(CamLiveItem);
+export default connect(mapStateToProps)(LiveFullScreen);

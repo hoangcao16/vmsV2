@@ -149,6 +149,7 @@ export default {
   'view.live.alert_info': 'Alert information',
   'view.live.detail': 'Detail',
   'view.live.plate_number': 'Plate number',
+  'view.live.view_fullscreen': 'View camera fullscreen',
   // View Map
   'view.map.search': 'Search',
   'view.map.camera_list': '{cam} List',

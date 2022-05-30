@@ -20,7 +20,7 @@ const MapAddCamera = ({ resultSearchMap, handleSelectMap, defaultLongLat, isEdit
       if (!mapboxRef.current) {
         //khởi tạo map
         mapboxRef.current = new mapboxgl.Map({
-          container: 'map',
+          container: 'mini-map',
           style: MAP_STYLES[STYLE_MODE.normal],
           hash: true,
           center: currentLan ? currentLan : LAT_LNG,
@@ -130,7 +130,7 @@ const MapAddCamera = ({ resultSearchMap, handleSelectMap, defaultLongLat, isEdit
   }, [isEdit, defaultLongLat]);
   return (
     <>
-      <MapContainer key="map" id="map"></MapContainer>
+      <MapContainer key="map" id="mini-map"></MapContainer>
     </>
   );
 };
