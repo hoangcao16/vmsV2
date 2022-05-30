@@ -8,7 +8,6 @@ export default {
     metadata: {
       page: 1,
       size: 10,
-      name: '',
     },
   },
   reducers: {
@@ -41,7 +40,11 @@ export default {
         );
         yield put({ type: 'reload' });
       } catch (error) {
-        notify('error', 'pages.setting-user.list-user.titleErrors');
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
     *editZone({ payload: { id, values } }, { call, put }) {
@@ -54,7 +57,11 @@ export default {
         );
         yield put({ type: 'reload' });
       } catch (error) {
-        notify('error', 'pages.setting-user.list-user.titleErrors');
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
     *deleteZone({ payload: { id } }, { call, put }) {
@@ -67,12 +74,16 @@ export default {
         );
         yield put({ type: 'reload' });
       } catch (error) {
-        notify('error', 'pages.setting-user.list-user.titleErrors');
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
     *reload(action, { put, select }) {
-      const page = yield select((state) => state.zone.page);
-      yield put({ type: 'fetchAllZone', payload: { page } });
+      const metadata = yield select((state) => state.zone.metadata);
+      yield put({ type: 'fetchAllZone', payload: { page: metadata?.page, size: metadata?.size } });
     },
   },
 };

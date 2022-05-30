@@ -114,6 +114,10 @@ const AddCamera = ({
     setAvatarUrl('');
     setAvatarFileName('');
     setResultSearchMap(null);
+    setDistrict([]);
+    setWard([]);
+    setCurrentLat(null);
+    setCurrentLng(null);
     form.resetFields();
     dispatch({
       type: 'scanCamera/saveSelectedIp',

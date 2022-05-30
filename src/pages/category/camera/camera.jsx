@@ -18,7 +18,7 @@ import EditCamera from './components/EditCamera';
 import ScanCamera from './components/ScanCamera';
 import debounce from 'lodash/debounce';
 import { CAMERASTATUS } from '@/constants/common';
-
+import { getLocale } from 'umi';
 const formItemLayout = {
   labelCol: { span: 7 },
   wrapperCol: { span: 24 },
@@ -277,6 +277,7 @@ const CameraList = ({
     },
   ];
   const onPaginationChange = (page, size) => {
+    console.log(page, size);
     const dataParam = Object.assign({ ...searchParam, page, size });
     setSearchParam(dataParam);
     handleGetListCamera(dataParam);
@@ -296,9 +297,10 @@ const CameraList = ({
   }, [closeDrawerState]);
   //export excel camera
   const handleExport = async () => {
+    const data = { ...searchParam, lang: `${getLocale() == 'en-US' ? 'en' : 'vn'}` };
     dispatch({
       type: 'camera/exportDataCamera',
-      payload: searchParam,
+      payload: data,
     });
   };
   return (

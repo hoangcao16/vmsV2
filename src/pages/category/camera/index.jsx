@@ -5,7 +5,7 @@ import { connect } from 'dva';
 import { useIntl } from 'umi';
 import CameraList from './camera';
 import GroupCamera from './groupCamera';
-import { StyledTabs } from './style';
+import { StyledTabs, TabsStyle } from './style';
 import TableCameraCategory from './components/cameraCategory/TableCameraCategory';
 import { useState } from 'react';
 const CameraDevice = () => {
@@ -13,7 +13,7 @@ const CameraDevice = () => {
   const [type, setType] = useState('camera');
   return (
     <PageContainer>
-      <Tabs defaultActiveKey={type} onChange={(key) => setType(key)}>
+      <TabsStyle defaultActiveKey={type} onChange={(key) => setType(key)}>
         <StyledTabs
           tab={`${intl.formatMessage({
             id: 'camera',
@@ -75,7 +75,7 @@ const CameraDevice = () => {
         >
           <TableCameraCategory type={type} />
         </StyledTabs>
-      </Tabs>
+      </TabsStyle>
     </PageContainer>
   );
 };

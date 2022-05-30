@@ -5,6 +5,8 @@ import {
   CloseOutlined,
   EditOutlined,
   CameraOutlined,
+  BankOutlined,
+  TrademarkOutlined,
 } from '@ant-design/icons';
 import { Tooltip, Spin, Button } from 'antd';
 import { TYPE_FORM_ACTION_ON_MAP } from '@/constants/map';
@@ -12,7 +14,7 @@ import camImgSrcDefault from '@/assets/img/cam-default.png';
 import adUnitImgSrcDefault from '@/assets/img/adminis-unit-default.png';
 import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
 import { isEmpty } from 'lodash';
-// import { useSelector, useDispatch } from "react-redux";
+import { Container } from './style';
 
 const CamInfoPopup = (props) => {
   const {
@@ -24,6 +26,7 @@ const CamInfoPopup = (props) => {
     trans: intl,
   } = props;
   const [imageUrl, setImageUrl] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadImageFileHanleler = (avatarFileName) => {
@@ -52,12 +55,14 @@ const CamInfoPopup = (props) => {
       </li>
 
       <li>
+        <BankOutlined className="camera-info__icon camera-info__icon--black" />
         <span className="camera-info__detail-desc camera-info__detail-address camera-info__detail--adminis">
           {dataDetailInfo?.administrativeUnitName ? dataDetailInfo.administrativeUnitName : ''}
         </span>
       </li>
 
       <li>
+        <TrademarkOutlined className="camera-info__icon camera-info__icon--black" />
         <span className="camera-info__detail-desc camera-info__detail-address camera-info__detail--venderName">
           {dataDetailInfo?.vendorName ? dataDetailInfo.vendorName : ''}
         </span>
@@ -105,14 +110,15 @@ const CamInfoPopup = (props) => {
   );
 
   return (
-    <div className="camera-info">
+    <Container className="camera-info">
       <div className="camera-info__header">
         {type === TYPE_FORM_ACTION_ON_MAP.cam && (
           <Spin
             tip={intl.formatMessage({ id: 'view.maps.loading' })}
             className="camera-info__header--loading"
             id={`cam-loading-${dataDetailInfo.uuid}`}
-          ></Spin>
+            spinning={loading}
+          />
         )}
         {type === TYPE_FORM_ACTION_ON_MAP.cam ? (
           <video
@@ -123,6 +129,7 @@ const CamInfoPopup = (props) => {
             height="100%"
             poster={imageUrl ? imageUrl : camImgSrcDefault}
             data-setup="{}"
+            onPlay={() => setLoading(false)}
           />
         ) : (
           <img
@@ -131,30 +138,23 @@ const CamInfoPopup = (props) => {
           />
         )}
         <div className="camera-info__header-action">
-          <span
-            className="camera-info__icon icon-item icon-item__pin"
-            id={`icon-pin-cam-${dataDetailInfo.uuid}`}
-          >
-            <Button
-              icon={<CameraOutlined />}
-              onClick={() => {
-                startSnapshotCamera(type, dataDetailInfo);
-              }}
-            />
-          </span>
-
-          <span className="edit-info__icon icon-item">
-            <Button icon={<EditOutlined />} onClick={() => handleEditInfo(dataDetailInfo)} />
-          </span>
-
-          <span className="close-info__icon icon-item">
-            <Button
-              icon={<CloseOutlined />}
-              onClick={() => {
-                onClosePopup(type, dataDetailInfo.uuid);
-              }}
-            />
-          </span>
+          <Button
+            icon={<CameraOutlined />}
+            onClick={() => {
+              startSnapshotCamera(type, dataDetailInfo);
+            }}
+          />
+          <Button
+            icon={<EditOutlined />}
+            onClick={() => handleEditInfo(dataDetailInfo)}
+            className="middle"
+          />
+          <Button
+            icon={<CloseOutlined />}
+            onClick={() => {
+              onClosePopup(type, dataDetailInfo.uuid);
+            }}
+          />
         </div>
       </div>
       <Tooltip placement="top" title={dataDetailInfo.name}>
@@ -167,7 +167,7 @@ const CamInfoPopup = (props) => {
           {type === TYPE_FORM_ACTION_ON_MAP.cam ? renderCamInfo() : renderAdminisUnitInfo()}
         </ul>
       </div>
-    </div>
+    </Container>
   );
 };
 

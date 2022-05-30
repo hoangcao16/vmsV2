@@ -325,15 +325,15 @@ export default {
   'view.storage.storage_threshold_setting': 'Storage threshold setting',
   'view.storage.set_max_archive_file_length': 'Set the maximum archive file length',
   'view.storage.set_max_archive_file_length_desc':
-    'By setting the maximum video storage file length, video playback will become easier to process and detect events, and file management will also become more optimal.',
-  'view.storage.maximum_length_video_archive': 'Maximum length video archive',
+    'Set maximum recording duration for archived video',
+  'view.storage.maximum_length_video_archive': 'Maximum length',
   'view.storage.seconds': 'Seconds',
   'view.storage.what_is_cs': 'What is cleanup setting?',
   'view.storage.cs_desc':
-    "You don't always use all downloaded video files. The storage of these videos gradually becomes a burden on the system, causing a waste of resources and resources. Meanwhile, manual cleaning becomes overwhelming for anyone who wants to do this due to the huge amount of files stored. The setting of automatic cleaning mode helps the unit optimize memory and save more costs.",
+    'Set automatic cleaning mode to help the unit optimize memory and save more costs',
   'view.storage.what_is_sts': 'What is storage thresholdhrehold setting?',
   'view.storage.sts_desc':
-    "Storage threshold setting is set up to receive an alert when the storage capacity is used up to a set level. You'll get an alert about your remaining storage capacity and estimated remaining usage time.",
+    "Set up to receive alerts when storage space is low. You'll get an alert about your remaining storage capacity and estimated remaining usage time.",
   'view.storage.maximum_storage_time': 'Maximum storage time',
   'view.storage.invalid_format': 'Invalid format',
   'view.storage.file_capture': 'File capture',
@@ -341,21 +341,28 @@ export default {
   'view.storage.day': 'Day',
   'view.storage.month': 'Month',
   'view.storage.year': 'Year',
-  'view.storage.autosave_file': 'Autosave file',
+  'view.storage.autosave_file': 'Daily save file',
   'view.storage.event_file': 'Event file',
   'view.storage.clean_important_file': 'Clean important file',
-  'view.storage.level_1': 'Level 1 storage warning threshold:',
-  'view.storage.level_2': 'Level 2 storage warning threshold:',
+  'view.storage.receive_attention': 'Receive attention warning',
+  'view.storage.receive_danger': 'Receive danger warning',
+  'view.storage.attention_threshold': 'Attention Warning Threshold',
+  'view.storage.danger_threshold': 'Danger warning threshold',
   'view.storage.greater_than_level_2': 'Greater than level 2 warning threshold',
   'view.storage.smaller_than_level_1': 'Smaller than level 1 warning threshold',
   'view.storage.from': 'From',
   'view.storage.insecurity_level': 'Insecurity level',
+  'view.storage.hard_drive_from': 'When the hard drive capacity from',
+  'view.storage.alarm_resend_cycle': 'Alarm resend cycle',
   'view.storage.alarm_frequency': 'Alarm frequency',
   'view.storage.time_execution': 'time / execution',
   'view.storage.not_be_warned': 'You will not be warned',
   'view.storage.automatically_95_percent': 'Automatically delete to 95% when the memory is full',
   'view.storage.automatically_5gb': 'Automatically delete to 5GB when the memory is full',
   'view.storage.email_sending_to_users_setting': 'Email sending to users setting',
+  'view.storage.email_sending_to_users_setting_desc':
+    'Set up an email list of recipients of notifications from the system',
+  'view.storage.email_received': 'List of emails received',
   'view.storage.daily_record': 'File Daily Record',
   'view.storage.choose': 'Choose',
   'view.storage.record': 'records',
@@ -733,6 +740,7 @@ export default {
   'noti.at_least_10_characters': 'At least 10 characters',
   'noti.at_least_9_characters': 'At least 9 characters',
   'noti.max_characters': 'Up to {max} characters',
+  'noti.min_characters': 'At least {min} characters',
   'noti.at_least_8_characters': 'At least 8 characters',
   'noti.no_valid_results_found': 'No valid results found',
 
@@ -865,4 +873,6 @@ export default {
   'AI.attendance': 'Attendance',
 
   //Ver2================================================================================================================================
+
+  'view.ai_humans.status': 'Status',
 };

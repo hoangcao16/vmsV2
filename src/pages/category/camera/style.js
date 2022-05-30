@@ -46,6 +46,17 @@ export const ContainerFilterDailyArchive = styled.div`
     padding-top: 16px;
   }
 `;
+export const TabsStyle = styled(Tabs)`
+  .ant-tabs-nav {
+    margin-bottom: 0;
+    background-color: #1f1f1f;
+  }
+  .ant-tabs-nav-wrap {
+    margin-left: 16px;
+    padding-top: 12px;
+    padding-bottom: 6px;
+  }
+`;
 export const StyledTabs = styled(TabPane)`
   background-color: #fff;
 `;
