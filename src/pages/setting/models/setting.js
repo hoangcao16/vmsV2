@@ -97,6 +97,15 @@ export default {
         notify('error', 'noti.faid', `pages.setting-user.list-user.${error?.code}`);
       }
     },
+    *postDataWarningDisk({ payload }, { call, put }) {
+      try {
+        yield call(settingApi.postDataWarningDisk, payload);
+        notify('success', 'noti.success', 'noti.successful_setting');
+        yield put({ type: 'setting/fetchWarningStoreSetting' });
+      } catch (error) {
+        notify('error', 'noti.faid', `pages.setting-user.list-user.${error?.code}`);
+      }
+    },
   },
   subscriptions: {
     setup({ dispatch, history }) {

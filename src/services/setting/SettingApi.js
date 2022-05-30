@@ -31,6 +31,13 @@ const settingApi = {
       },
     });
   },
+  postDataWarningDisk(data) {
+    return request.post('/cctv-monitor-ctrl-svc/api/v1/config/warning-disk', data, {
+      headers: {
+        requestId: _uniqueId('cctv'),
+      },
+    });
+  },
 };
 
 export default settingApi;
