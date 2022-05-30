@@ -1,4 +1,3 @@
-import FieldEventApi from '@/services/fieldEvent/FieldEventApi';
 import { ConfigProvider, DatePicker, Form, Select, Space } from 'antd';
 import locale from 'antd/es/locale/en_GB';
 import { connect } from 'dva';
@@ -48,7 +47,6 @@ const DatePickerForm = (props) => {
   const [format, setFormat] = useState('DD/MM/YYYY');
   const [formatParams, setFormatParams] = useState('DDMMYYYY');
   const [form] = Form.useForm();
-  const [allFields, setAllFields] = useState([]);
   const [eventsUuid, setEventsUuid] = useState([]);
   const intl = useIntl();
 
@@ -57,17 +55,7 @@ const DatePickerForm = (props) => {
   }, []);
 
   useEffect(() => {
-    try {
-      FieldEventApi.getAllFieldEvent().then((result) => {
-        setAllFields(result?.payload);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isEmpty(allFields)) {
+    if (isEmpty(props?.allFields)) {
       props.dispatch({
         type: 'chartControl/emptyFieldId',
         boolean: true,
@@ -77,7 +65,7 @@ const DatePickerForm = (props) => {
         boolean: true,
       });
     } else {
-      const fieldFilter = allFields.filter((item) => item.nameNoAccent == feildData.feild);
+      const fieldFilter = props?.allFields.filter((item) => item.nameNoAccent == feildData.feild);
       if (!isEmpty(fieldFilter)) {
         const eventsFilter = fieldFilter[0]?.eventList.filter(
           (item) =>
@@ -92,8 +80,8 @@ const DatePickerForm = (props) => {
           });
         }
       } else {
-        setEventsUuid(allFields[0]?.eventList[0]?.uuid || []);
-        if (isEmpty(allFields[0]?.eventList[0]?.uuid)) {
+        setEventsUuid(props?.allFields[0]?.eventList[0]?.uuid || []);
+        if (isEmpty(props?.allFields[0]?.eventList[0]?.uuid)) {
           props.dispatch({
             type: 'chartControl/emptyEventIds',
             boolean: true,
@@ -111,7 +99,7 @@ const DatePickerForm = (props) => {
       });
     }
     form.submit();
-  }, [allFields]);
+  }, [props?.allFields]);
 
   const handleFilter = ({ typeDate, startDate, endDate }) => {
     if (
@@ -272,7 +260,7 @@ const DatePickerForm = (props) => {
 };
 
 function mapStateToProps(state) {
-  return {};
+  return { allFields: state?.globalstore?.fieldsOptions };
 }
 
 export default connect(mapStateToProps)(DatePickerForm);

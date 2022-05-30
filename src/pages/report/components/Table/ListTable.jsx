@@ -11,7 +11,11 @@ const ListTable = ({ dataWebSocketAiEventList, dispatch, loading }) => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    const ws = new WebSocket('ws://192.168.50.145:8883/integration-ai-events');
+    // websocket custom to test
+    // const ws = new WebSocket('ws://192.168.50.145:8883/integration-ai-events');
+
+    // websocket from Edso
+    const ws = new WebSocket('ws://cctv-uat.edsolabs.com:8441/ai-events');
 
     const apiCall = {
       event: 'bts:subscribe',
@@ -43,17 +47,8 @@ const ListTable = ({ dataWebSocketAiEventList, dispatch, loading }) => {
     setSize(size);
   };
 
-  const formatDate = (time) => {
-    if (time < 10) {
-      return `0${time}`;
-    }
-    return time;
-  };
-
   const dateForm = (date) => {
-    let formatted_date =
-      formatDate(date.getDate()) + '-' + formatDate(date.getMonth() + 1) + '-' + date.getFullYear();
-    return formatted_date;
+    return moment(date).format('DD/MM/YYYY | hh:mm:ss');
   };
 
   const columns = [
@@ -62,11 +57,7 @@ const ListTable = ({ dataWebSocketAiEventList, dispatch, loading }) => {
       dataIndex: 'createdTime',
       key: 'createdTime',
       render: (text) => {
-        return (
-          <SpanCode>
-            {dateForm(new Date(text))} | {new Date(text).toLocaleTimeString()}
-          </SpanCode>
-        );
+        return <SpanCode>{dateForm(text)}</SpanCode>;
       },
     },
     {

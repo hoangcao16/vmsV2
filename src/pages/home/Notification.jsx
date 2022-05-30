@@ -2,6 +2,7 @@ import NotiApi from '@/services/notification/NotiApi';
 import { Badge, Typography } from 'antd';
 import { connect } from 'dva';
 import { isEmpty } from 'lodash';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getLocale, useIntl } from 'umi';
@@ -56,17 +57,8 @@ const Notification = (props) => {
     });
   };
 
-  const formatDate = (time) => {
-    if (time < 10) {
-      return `0${time}`;
-    }
-    return time;
-  };
-
   const dateForm = (date) => {
-    let formatted_date =
-      formatDate(date.getDate()) + '-' + formatDate(date.getMonth() + 1) + '-' + date.getFullYear();
-    return formatted_date;
+    return moment(date).format('DD/MM/YYYY | hh:mm:ss');
   };
 
   const renderTitle = (type) => {
@@ -155,11 +147,7 @@ const Notification = (props) => {
   };
   const renderTime = (createdTime) => {
     if (isEmpty(createdTime)) {
-      return (
-        <Text>
-          {dateForm(new Date(createdTime))} | {new Date(createdTime).toLocaleTimeString()}
-        </Text>
-      );
+      return <Text>{dateForm(createdTime)}</Text>;
     }
     return (
       <Text>
