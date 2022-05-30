@@ -3,8 +3,8 @@ import {
   filterOptionForChart,
   normalizeOptions,
 } from '@/components/select/CustomSelect';
-import AddressApi from '@/services/address/AddressApi';
-import cameraApi from '@/services/controller-api/cameraService';
+import AddressApi from '@/services/addressApi';
+import cameraApi from '@/services/controllerApi/cameraService';
 import { Checkbox, Col, ConfigProvider, DatePicker, Form, Row, Select, Tag } from 'antd';
 import locale from 'antd/es/locale/en_GB';
 import { connect } from 'dva';

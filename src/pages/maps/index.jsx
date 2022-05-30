@@ -21,38 +21,30 @@ import camProxyService from '@/services/camProxy';
 import { notify } from '@/components/Notify';
 import { v4 as uuidV4 } from 'uuid';
 import getBase64 from '@/utils/getBase64';
-import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
+import ExportEventFileApi from '@/services/exportEventFile';
 import moment from 'moment';
 import { captureVideoFrame } from '@/utils/captureVideoFrame';
 import EditCamera from '@/pages/category/camera/components/EditCamera';
 import LiveFullScreen from '@/components/LiveFullScreen';
-const Maps = ({
-  dispatch,
-  metadata,
-  cameraList,
-  cameraAIList,
-  AdminisUnitList,
-  closeDrawerState,
-}) => {
+import _ from 'lodash';
+const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraListDrawer }) => {
   const intl = useIntl();
   const mapboxRef = useRef(null);
   const mapBoxDrawRef = useRef(null);
   const mapCamMarkersRef = useRef([]);
-  const mapAdUnitMarkersRef = useRef([]);
   const popupAttachMarkerRef = useRef(null);
   const mapMarkersRef = useRef([]);
   const markerTargetRef = useRef(null);
   const [currentLan, setCurrentLan] = useState(null);
   const [isEditDrawer, setIsEditDrawer] = useState(false);
-  const [isOpenCameraListDrawer, setIsOpenCameraListDrawer] = useState(false);
   const [cameraOnMap, setCameraOnMap] = useState([]);
   const streamingPopupRef = useRef(null);
   const zoom = 13;
   const closeRTCPeerConnection = (slotIdx) => {
     // CLOSE STREAM
     let pcLstTmp = streamingPopupRef.current;
-    if (pcLstTmp.pc) {
-      pcLstTmp.pc.close();
+    if (pcLstTmp?.pc) {
+      pcLstTmp?.pc?.close();
     }
   };
   const startCamera = async (camera, mode) => {
@@ -175,26 +167,108 @@ const Maps = ({
       });
   };
   useEffect(() => {
-    setCameraOnMap(cameraList);
-  }, [cameraList]);
+    setCameraOnMap(list);
+  }, [list]);
   // Tạo maker
   useEffect(() => {
     resetMarker(mapMarkersRef.current);
     displayMarkerCamOnMap(cameraOnMap);
   }, [cameraOnMap]);
-  const hanldeOpenCameraAIDrawer = () => {};
-  const hanldeOpenAdminisUnitDrawer = () => {};
+  const hanldeOpenCameraAIDrawer = () => {
+    if (type !== 'cameraAI') {
+      dispatch({
+        type: 'maps/fetchAllCameraAI',
+        payload: {
+          page: 1,
+          size: metadata?.size,
+        },
+      });
+      dispatch({
+        type: 'maps/saveIsOpenCameraListDrawer',
+        payload: true,
+      });
+    } else {
+      if (isOpenCameraListDrawer) {
+        dispatch({
+          type: 'maps/saveIsOpenCameraListDrawer',
+          payload: false,
+        });
+      } else {
+        dispatch({
+          type: 'maps/saveIsOpenCameraListDrawer',
+          payload: true,
+        });
+      }
+    }
+  };
+  const hanldeOpenAdminisUnitDrawer = () => {
+    if (type !== 'adminisUnit') {
+      dispatch({
+        type: 'maps/fetchAllAdDivisions',
+        payload: {
+          page: 1,
+          size: metadata?.size,
+        },
+      });
+      dispatch({
+        type: 'maps/saveIsOpenCameraListDrawer',
+        payload: true,
+      });
+    } else {
+      if (isOpenCameraListDrawer) {
+        dispatch({
+          type: 'maps/saveIsOpenCameraListDrawer',
+          payload: false,
+        });
+      } else {
+        dispatch({
+          type: 'maps/saveIsOpenCameraListDrawer',
+          payload: true,
+        });
+      }
+    }
+  };
   const hanldeOpenCameraDrawer = () => {
-    setIsOpenCameraListDrawer(true);
+    if (type !== 'camera') {
+      dispatch({
+        type: 'maps/fetchCameraList',
+        payload: {
+          page: 1,
+          size: metadata?.size,
+        },
+      });
+      dispatch({
+        type: 'maps/saveIsOpenCameraListDrawer',
+        payload: true,
+      });
+    } else {
+      if (isOpenCameraListDrawer) {
+        dispatch({
+          type: 'maps/saveIsOpenCameraListDrawer',
+          payload: false,
+        });
+      } else {
+        dispatch({
+          type: 'maps/saveIsOpenCameraListDrawer',
+          payload: true,
+        });
+      }
+    }
   };
   const renderCameraIcon = (cam) => {
-    if (cam.recordingStatus === 1) {
-      return `data:image/svg+xml;charset=utf-8;base64,` + btoa(CameraIcon('cameraGreen'));
+    if (type === 'adminisUnit') {
+      return `data:image/svg+xml;charset=utf-8;base64,` + btoa(CameraIcon('adminisUnit'));
+    } else if (type === 'cameraAI') {
+      return `data:image/svg+xml;charset=utf-8;base64,` + btoa(CameraIcon('cameraAI'));
+    } else {
+      if (cam.recordingStatus === 1) {
+        return `data:image/svg+xml;charset=utf-8;base64,` + btoa(CameraIcon('cameraGreen'));
+      }
+      if (cam.recordingStatus === 0) {
+        return `data:image/svg+xml;charset=utf-8;base64,` + btoa(CameraIcon('cameraRed'));
+      }
+      return `data:image/svg+xml;charset=utf-8;base64,` + btoa(CameraIcon('icon'));
     }
-    if (cam.recordingStatus === 0) {
-      return `data:image/svg+xml;charset=utf-8;base64,` + btoa(CameraIcon('cameraRed'));
-    }
-    return `data:image/svg+xml;charset=utf-8;base64,` + btoa(CameraIcon('icon'));
   };
   //Khoi tao map
   const showViewMap = () => {
@@ -256,10 +330,6 @@ const Maps = ({
     const currentZoom = mapboxRef.current.getZoom();
     mapCamMarkersRef.current &&
       mapCamMarkersRef.current?.forEach((marker) => {
-        calRatioZoom(marker, currentZoom);
-      });
-    mapAdUnitMarkersRef.current &&
-      mapAdUnitMarkersRef.current?.forEach((marker) => {
         calRatioZoom(marker, currentZoom);
       });
   };
@@ -349,7 +419,6 @@ const Maps = ({
     });
   };
   const createMarkerCam = (listCam, markerRef) => {
-    console.log('createMarkerCam', listCam);
     if (listCam.length > 0) {
       listCam.forEach((camera, index) => {
         if (_.inRange(camera.lat_, -90, 90)) {
@@ -364,7 +433,11 @@ const Maps = ({
           ReactDOM.render(
             <CamInfoPopup
               trans={intl}
-              type={TYPE_FORM_ACTION_ON_MAP.cam}
+              type={
+                type === 'adminisUnit'
+                  ? TYPE_FORM_ACTION_ON_MAP.ad_unit
+                  : TYPE_FORM_ACTION_ON_MAP.cam
+              }
               // editMode={editMode}
               dataDetailInfo={camera}
               onClosePopup={handleClosePopup}
@@ -444,10 +517,7 @@ const Maps = ({
       </MapHeader>
       <MapContainer>
         <div key="map" id="map" />
-        <CameraListDrawer
-          isOpenCameraListDrawer={isOpenCameraListDrawer}
-          setIsOpenCameraListDrawer={setIsOpenCameraListDrawer}
-        />
+        <CameraListDrawer />
         <ViewLiveCameras />
       </MapContainer>
       <EditCamera isEditDrawer={isEditDrawer} setIsEditDrawer={setIsEditDrawer} />
@@ -456,8 +526,17 @@ const Maps = ({
   );
 };
 const mapStateToProps = (state) => {
-  const { metadata, cameraList, cameraAIList, AdminisUnitList } = state.maps;
+  const { metadata, list, cameraAIList, AdminisUnitList, type, isOpenCameraListDrawer } =
+    state.maps;
   const { closeDrawerState } = state.camera;
-  return { metadata, cameraList, cameraAIList, AdminisUnitList, closeDrawerState };
+  return {
+    metadata,
+    list,
+    cameraAIList,
+    AdminisUnitList,
+    closeDrawerState,
+    type,
+    isOpenCameraListDrawer,
+  };
 };
 export default connect(mapStateToProps)(Maps);

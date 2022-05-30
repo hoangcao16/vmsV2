@@ -1,6 +1,6 @@
 import { LIVE_MODE } from '@/constants/common';
 import useClickOutside from '@/hooks/useClickOutside';
-import cameraApi from '@/services/controller-api/cameraService';
+import cameraApi from '@/services/controllerApi/cameraService';
 import { FilterFilled } from '@ant-design/icons';
 import { Button, Form, Input, Pagination, Space, Tooltip } from 'antd';
 import React, { useEffect, useRef } from 'react';

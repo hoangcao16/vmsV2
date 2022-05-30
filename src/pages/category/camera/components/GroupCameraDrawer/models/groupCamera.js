@@ -1,4 +1,4 @@
-import cameraApi from '@/services/controller-api/cameraService';
+import cameraApi from '@/services/controllerApi/cameraService';
 import { notify } from '@/components/Notify';
 export default {
   namespace: 'groupcamera',

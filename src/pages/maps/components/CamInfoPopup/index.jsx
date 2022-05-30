@@ -7,12 +7,13 @@ import {
   CameraOutlined,
   BankOutlined,
   TrademarkOutlined,
+  PhoneOutlined,
 } from '@ant-design/icons';
 import { Tooltip, Spin, Button } from 'antd';
 import { TYPE_FORM_ACTION_ON_MAP } from '@/constants/map';
 import camImgSrcDefault from '@/assets/img/cam-default.png';
 import adUnitImgSrcDefault from '@/assets/img/adminis-unit-default.png';
-import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
+import ExportEventFileApi from '@/services/exportEventFile';
 import { isEmpty } from 'lodash';
 import { Container } from './style';
 
@@ -93,6 +94,7 @@ const CamInfoPopup = (props) => {
       </li>
 
       <li>
+        <PhoneOutlined className="camera-info__icon camera-info__icon--black" />
         <span className="camera-info__detail-desc camera-info__detail--phone">
           {dataDetailInfo?.tel ? `+${dataDetailInfo.tel}` : '+XXXXXXXXXX'}
         </span>

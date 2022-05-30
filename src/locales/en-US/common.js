@@ -657,7 +657,6 @@ export default {
   'view.penaltyTicket.select-recipients': 'Select recipients',
   // preset
   'preset.choose_one_preset_tour': 'Choose one preset tour',
-
   //noti
   'noti.no_information': 'No information',
   'noti.warning_hard_drive_is_full': 'Warning: Hard drive is full',

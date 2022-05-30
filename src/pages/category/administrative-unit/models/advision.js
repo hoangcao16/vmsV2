@@ -1,5 +1,5 @@
 import { notify } from '@/components/Notify';
-import AdDivisionApi from '@/services/advision/AdDivision';
+import AdDivisionApi from '@/services/advisionApi';
 
 export default {
   namespace: 'advision',

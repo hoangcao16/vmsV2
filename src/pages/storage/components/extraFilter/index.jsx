@@ -18,10 +18,10 @@ import {
   IMPORTANT_NAMESPACE,
   LIST_VIEW,
 } from '../../constants';
-import AddressApi from '@/services/address/AddressApi';
-import cameraApi from '@/services/controller-api/cameraService';
-import AdDivisionApi from '@/services/advision/AdDivision';
-import eventApi from '@/services/controller-api/eventApi';
+import AddressApi from '@/services/addressApi';
+import cameraApi from '@/services/controllerApi/cameraService';
+import AdDivisionApi from '@/services/advisionApi';
+import eventApi from '@/services/controllerApi/eventApi';
 
 const layoutLong = {
   labelCol: { span: 6 },
