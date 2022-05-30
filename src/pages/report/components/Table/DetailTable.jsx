@@ -3,6 +3,7 @@ import { SpanCode } from '@/pages/category/camera/components/GroupCameraDrawer/s
 import ReportApi from '@/services/report/ReportApi';
 import { Col, Row } from 'antd';
 import { connect } from 'dva';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 
@@ -29,25 +30,8 @@ const DetailTable = (props) => {
     getData();
   }, [props?.filterParams, page, size]);
 
-  const formatDate = (time) => {
-    if (time < 10) {
-      return `0${time}`;
-    }
-    return time;
-  };
-
   const dateForm = (date) => {
-    let formatted_date =
-      formatDate(date.getHours()) +
-      ':' +
-      formatDate(date.getMinutes()) +
-      ' ' +
-      formatDate(date.getDate()) +
-      '/' +
-      formatDate(date.getMonth() + 1) +
-      '/' +
-      date.getFullYear();
-    return formatted_date;
+    return moment(date).format('DD/MM/YYYY | hh:mm:ss');
   };
 
   const onPaginationChange = (page, size) => {
@@ -61,7 +45,7 @@ const DetailTable = (props) => {
       dataIndex: 'createdTime',
       key: 'createdTime',
       render: (text) => {
-        return <SpanCode>{dateForm(new Date(text))}</SpanCode>;
+        return <SpanCode>{dateForm(text)}</SpanCode>;
       },
     },
     {

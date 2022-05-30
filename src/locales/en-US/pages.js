@@ -67,6 +67,10 @@ export default {
   'pages.report.chart.note': 'Note',
   'pages.report.chart.event': 'event',
   'pages.report.chart.trafficViolationsStatistics': 'Traffic violations statistics',
+  'pages.report.chart.trafficViolationsList': 'Traffic violations list',
+  'pages.report.chart.recordCamera': 'Record Camera',
+  'pages.report.chart.violationType': 'Violation type',
+  'pages.report.chart.address': 'Address',
 
   //User
 

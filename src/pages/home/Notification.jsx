@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'dva';
-import { useIntl } from 'umi';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { getLocale } from 'umi';
 import NotiApi from '@/services/notification/NotiApi';
-import './Notificaltion.less';
 import { Badge, Typography } from 'antd';
+import { connect } from 'dva';
 import { isEmpty } from 'lodash';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { getLocale, useIntl } from 'umi';
+import './Notificaltion.less';
 
 const { Text } = Typography;
 
@@ -57,9 +57,8 @@ const Notification = (props) => {
     });
   };
 
-  const formatDate = (date) => {
-    let formatted_date = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
-    return formatted_date;
+  const dateForm = (date) => {
+    return moment(date).format('DD/MM/YYYY | hh:mm:ss');
   };
 
   const renderTitle = (type) => {
@@ -148,11 +147,7 @@ const Notification = (props) => {
   };
   const renderTime = (createdTime) => {
     if (isEmpty(createdTime)) {
-      return (
-        <Text>
-          {formatDate(new Date(createdTime))} | {new Date(createdTime).toLocaleTimeString()}
-        </Text>
-      );
+      return <Text>{dateForm(createdTime)}</Text>;
     }
     return (
       <Text>
