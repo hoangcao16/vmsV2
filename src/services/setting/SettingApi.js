@@ -24,6 +24,13 @@ const settingApi = {
       },
     });
   },
+  postDataCleanFile(data) {
+    return request.post('/cctv-monitor-ctrl-svc/api/v1/config/clean-file', data, {
+      headers: {
+        requestId: _uniqueId('cctv'),
+      },
+    });
+  },
 };
 
 export default settingApi;
