@@ -1,10 +1,10 @@
-import AddressApi from '@/services/address/AddressApi';
-import AdDivisionApi from '@/services/advision/AdDivision';
-import cameraApi from '@/services/controller-api/cameraService';
+import AddressApi from '@/services/addressApi';
+import AdDivisionApi from '@/services/advisionApi';
+import cameraApi from '@/services/controllerApi/cameraService';
 import FieldEventApi from '@/services/fieldEvent/FieldEventApi';
-import TagApi from '@/services/tag/tagApi';
-import VendorApi from '@/services/vendor/VendorApi';
-import ZoneApi from '@/services/zone/ZoneApi';
+import TagApi from '@/services/tagApi';
+import VendorApi from '@/services/vendorApi';
+import ZoneApi from '@/services/zoneApi';
 
 export default {
   namespace: 'globalstore',

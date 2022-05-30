@@ -46,7 +46,7 @@ const ViewLiveCameras = ({ dispatch, liveCameraList, cameraList }) => {
 };
 function mapStateToProps(state) {
   const { liveCameraList } = state.viewLiveCameras;
-  const { cameraList } = state.maps;
+  const { cameraList } = state.liveFullScreen;
   return { liveCameraList, cameraList };
 }
 export default connect(mapStateToProps)(ViewLiveCameras);

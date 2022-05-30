@@ -1,4 +1,4 @@
-import camLiveApi from '@/services/controller-api/cameraLiveService';
+import camLiveApi from '@/services/controllerApi/cameraLiveService';
 export default {
   namespace: 'viewLiveCameras',
   state: {

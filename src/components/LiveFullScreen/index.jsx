@@ -212,8 +212,7 @@ const LiveFullScreen = ({ dispatch, isOpenDrawer, selectedCamera, cameraList }) 
   );
 };
 function mapStateToProps(state) {
-  const { isOpenDrawer, selectedCamera } = state.liveFullScreen;
-  const { cameraList } = state.maps;
+  const { isOpenDrawer, selectedCamera, cameraList } = state.liveFullScreen;
   return {
     isOpenDrawer,
     selectedCamera,

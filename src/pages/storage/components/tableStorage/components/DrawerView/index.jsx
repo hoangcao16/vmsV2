@@ -1,5 +1,5 @@
 import { AI_SOURCE } from '@/constants/common';
-import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
+import ExportEventFileApi from '@/services/exportEventFile';
 import EventAiAPI from '@/services/storage-api/eventAI-api';
 import {
   CloseOutlined,

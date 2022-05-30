@@ -6,7 +6,7 @@ import {
   EVENT_FILES_NAMESPACE,
   IMPORTANT_NAMESPACE,
 } from '@/pages/storage/constants';
-import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
+import ExportEventFileApi from '@/services/exportEventFile';
 import DailyArchiveApi from '@/services/storage-api/dailyArchiveApi';
 import getBase64 from '@/utils/getBase64';
 import { Button, Col, Row, Space, Spin, Tooltip } from 'antd';

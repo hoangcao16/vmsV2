@@ -16,9 +16,9 @@ import { v4 as uuidV4 } from 'uuid';
 import clearData from '@/utils/CleanData';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
 import { notify } from '@/components/Notify';
-import AddressApi from '@/services/address/AddressApi';
+import AddressApi from '@/services/addressApi';
 import VietMapApi from '@/services/vietmapApi';
-import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
+import ExportEventFileApi from '@/services/exportEventFile';
 import getBase64 from '@/utils/getBase64';
 const { Dragger } = Upload;
 const formItemLayout = {

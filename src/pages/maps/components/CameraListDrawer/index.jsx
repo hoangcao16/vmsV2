@@ -1,45 +1,49 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { StyledDrawer, ProTableStyle } from './style';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useIntl } from 'umi';
 import { connect } from 'dva';
-const CameraListDrawer = ({
-  isOpenCameraListDrawer,
-  setIsOpenCameraListDrawer,
-  dispatch,
-  cameraList,
-  metadata,
-}) => {
+const CameraListDrawer = ({ isOpenCameraListDrawer, dispatch, list, metadata, type }) => {
   const intl = useIntl();
-  const searchCaptureFileParamDefault = {
-    page: metadata?.page,
-    size: metadata?.size,
+  const [currentPage, setCurrentPage] = useState(metadata?.page);
+  const currentSize = 16;
+  useEffect(() => {
+    setCurrentPage(metadata?.page);
+  }, [list]);
+  const columns = () => {
+    if (type === 'adminisUnit') {
+      return [{ title: '', dataIndex: 'name', key: 'name' }];
+    } else {
+      return [
+        {
+          title: '',
+          dataIndex: 'recordingStatus',
+          key: 'recordingStatus',
+          valueEnum: (text) => {
+            return {
+              0: {
+                text: text?.name,
+                status: 'Default',
+              },
+              1: {
+                text: text?.name,
+                status: 'Success',
+              },
+              2: {
+                text: text?.name,
+                status: 'Error',
+              },
+            };
+          },
+        },
+      ];
+    }
   };
-  const [searchParam, setSearchParam] = useState(searchCaptureFileParamDefault);
-  const columns = [
-    {
-      title: '',
-      dataIndex: 'recordingStatus',
-      key: 'recordingStatus',
-      valueEnum: (text) => {
-        return {
-          0: {
-            text: text?.name,
-            status: 'Default',
-          },
-          1: {
-            text: text?.name,
-            status: 'Success',
-          },
-          2: {
-            text: text?.name,
-            status: 'Error',
-          },
-        };
-      },
-    },
-  ];
   const onClose = () => {
-    setIsOpenCameraListDrawer(false);
+    dispatch({
+      type: 'maps/saveIsOpenCameraListDrawer',
+      payload: false,
+    });
   };
   const handleGetListCamera = (searchParam) => {
     dispatch({
@@ -62,22 +66,28 @@ const CameraListDrawer = ({
         showHeader={false}
         search={false}
         options={false}
-        dataSource={cameraList}
-        columns={columns}
+        dataSource={list}
+        columns={columns()}
         pagination={{
           showTotal: false,
           total: metadata?.total,
-          pageSize: 16,
+          pageSize: currentSize,
+          current: currentPage,
+          onChange: (page) => {
+            setCurrentPage(page);
+          },
         }}
       />
     </StyledDrawer>
   );
 };
 function mapStateToProps(state) {
-  const { cameraList, metadata } = state.maps;
+  const { list, metadata, isOpenCameraListDrawer, type } = state.maps;
   return {
-    cameraList,
+    list,
     metadata,
+    isOpenCameraListDrawer,
+    type,
   };
 }
 export default connect(mapStateToProps)(CameraListDrawer);

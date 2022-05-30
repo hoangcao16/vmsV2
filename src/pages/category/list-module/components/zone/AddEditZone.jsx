@@ -1,6 +1,6 @@
 import MSFormItem from '@/components/Form/Item';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
-import AddressApi from '@/services/address/AddressApi';
+import AddressApi from '@/services/addressApi';
 import ModuleApi from '@/services/module-api/ModuleApi';
 import { CloseOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Form, Input, Popconfirm, Row, Select, Space } from 'antd';

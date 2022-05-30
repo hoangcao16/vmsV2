@@ -1,5 +1,5 @@
 import { notify } from '@/components/Notify';
-import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
+import ExportEventFileApi from '@/services/exportEventFile';
 import getBase64 from '@/utils/getBase64';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';

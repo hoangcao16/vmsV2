@@ -1,8 +1,8 @@
 import MSFormItem from '@/components/Form/Item';
 import { notify } from '@/components/Notify';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
-import AddressApi from '@/services/address/AddressApi';
-import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
+import AddressApi from '@/services/addressApi';
+import ExportEventFileApi from '@/services/exportEventFile';
 import getBase64 from '@/utils/getBase64';
 import {
   CloseOutlined,

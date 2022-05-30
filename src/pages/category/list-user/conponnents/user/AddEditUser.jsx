@@ -1,6 +1,6 @@
 import MSCustomizeDrawer from '@/components/Drawer';
 import MSFormItem from '@/components/Form/Item';
-import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
+import ExportEventFileApi from '@/services/exportEventFile';
 import getBase64 from '@/utils/getBase64';
 import permissionCheck from '@/utils/PermissionCheck';
 import {

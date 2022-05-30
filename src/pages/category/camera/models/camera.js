@@ -1,6 +1,6 @@
 import { ExportFileDownload } from '@/components/ExportFileDownload';
 import { notify } from '@/components/Notify';
-import cameraApi from '@/services/controller-api/cameraService';
+import cameraApi from '@/services/controllerApi/cameraService';
 export default {
   namespace: 'camera',
   state: {

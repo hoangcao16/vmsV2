@@ -1,7 +1,7 @@
 import { notify } from '@/components/Notify';
-import cameraApi from '@/services/controller-api/cameraService';
-import TagApi from '@/services/tag/tagApi';
-import VendorApi from '@/services/vendor/VendorApi';
+import cameraApi from '@/services/controllerApi/cameraService';
+import TagApi from '@/services/tagApi';
+import VendorApi from '@/services/vendorApi';
 
 export default {
   namespace: 'cameraCategory',

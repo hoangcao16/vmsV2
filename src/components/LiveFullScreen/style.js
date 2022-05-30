@@ -9,9 +9,9 @@ export const StyledDrawer = styled(MSCustomizeDrawer)`
   }
   .ant-drawer-body {
     height: 100%;
-    overflow: hidden;
+    /* overflow: hidden; */
     video {
-      height: calc(100% - 80px) !important;
+      height: 82vh !important;
       margin-top: 20px;
       /* object-fit: cover; */
     }

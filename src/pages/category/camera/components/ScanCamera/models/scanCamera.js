@@ -1,5 +1,5 @@
 import { notify } from '@/components/Notify';
-import cameraApi from '@/services/controller-api/cameraService';
+import cameraApi from '@/services/controllerApi/cameraService';
 export default {
   namespace: 'scanCamera',
   state: {
