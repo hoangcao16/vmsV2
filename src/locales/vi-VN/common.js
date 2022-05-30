@@ -149,6 +149,7 @@ export default {
   'view.live.alert_info': 'Thông tin báo động',
   'view.live.detail': 'Chi tiết',
   'view.live.plate_number': 'Biển số xe',
+  'view.live.view_fullscreen': 'Xem phóng to camera',
   //view map
   'view.map.search': 'Tìm kiếm',
   'view.map.camera_list': 'Danh sách {cam}',

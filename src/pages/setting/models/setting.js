@@ -89,6 +89,14 @@ export default {
         notify('error', 'noti.faid', `pages.setting-user.list-user.${error?.code}`);
       }
     },
+    *postCleanSetting({ payload }, { call, put }) {
+      try {
+        yield call(settingApi.postDataCleanFile, payload);
+        notify('success', 'noti.success', 'noti.successful_setting');
+      } catch (error) {
+        notify('error', 'noti.faid', `pages.setting-user.list-user.${error?.code}`);
+      }
+    },
   },
   subscriptions: {
     setup({ dispatch, history }) {

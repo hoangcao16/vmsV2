@@ -25,6 +25,7 @@ import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
 import moment from 'moment';
 import { captureVideoFrame } from '@/utils/captureVideoFrame';
 import EditCamera from '@/pages/category/camera/components/EditCamera';
+import LiveFullScreen from '@/components/LiveFullScreen';
 const Maps = ({
   dispatch,
   metadata,
@@ -450,6 +451,7 @@ const Maps = ({
         <ViewLiveCameras />
       </MapContainer>
       <EditCamera isEditDrawer={isEditDrawer} setIsEditDrawer={setIsEditDrawer} />
+      <LiveFullScreen />
     </>
   );
 };
