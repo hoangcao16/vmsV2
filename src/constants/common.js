@@ -36,3 +36,8 @@ export const CAMERASTATUS = {
 export const LIVE_MODE = {
   CAMERA_LIST_DROPPABLE_ID: 'camera_list_droppable_id',
 };
+
+export const AI_SOURCE = {
+  PHILONG: 'philong',
+  EDSO: 'edso',
+};

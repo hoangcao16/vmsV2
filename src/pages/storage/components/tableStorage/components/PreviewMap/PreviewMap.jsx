@@ -228,10 +228,6 @@ const PreviewMap = ({ data, fileCurrent, listLongLat }) => {
       mapboxRef.current.on('zoom', function () {
         // handleControlZoomMarker();
       });
-
-    const canvas = mapboxRef.current.getCanvas();
-    canvas.style.width = '100%';
-    // mapboxRef.current && mapboxRef.current.resize();
   }, []);
 
   // Tạo marker khi chọn sự kiện

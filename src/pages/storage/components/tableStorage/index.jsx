@@ -95,7 +95,13 @@ function TableStorage({ dispatch, state, nameSpace }) {
         }),
         dataIndex: 'createdTime',
         render: (text) => {
-          return <CellCreateTime>{moment(text * 1000).format('DD/MM/YYYY HH:mm')}</CellCreateTime>;
+          return (
+            <CellCreateTime>
+              {moment(nameSpace === DAILY_ARCHIVE_NAMESPACE ? text * 1000 : text).format(
+                'DD/MM/YYYY HH:mm',
+              )}
+            </CellCreateTime>
+          );
         },
       },
     ];
@@ -291,11 +297,9 @@ function TableStorage({ dispatch, state, nameSpace }) {
             }),
             dataIndex: 'fileType',
             render: (text) => {
-              if (text === 0)
-                return intl.formatMessage({
-                  id: 'view.storage.type_video',
-                });
-              if (text === 1) return 'view.storage.type_image';
+              return intl.formatMessage({
+                id: 'view.storage.type_image',
+              });
             },
           },
           {
@@ -353,14 +357,13 @@ function TableStorage({ dispatch, state, nameSpace }) {
     return columns;
   };
 
-  // RENDER
-  if (viewType === GRID_VIEW) {
-    return <GridViewTable nameSpace={nameSpace} />;
-  }
+  return (
+    <div>
+      {viewType === GRID_VIEW && (
+        <GridViewTable nameSpace={nameSpace} handleOnRow={handleOpenDrawerView} />
+      )}
 
-  if (viewType === LIST_VIEW)
-    return (
-      <div>
+      {viewType === LIST_VIEW && (
         <ProTableStyled
           loading={loading}
           rowKey={'id'}
@@ -390,17 +393,18 @@ function TableStorage({ dispatch, state, nameSpace }) {
             current: metadata?.page,
           }}
         />
+      )}
 
-        {captureSelected !== null && (
-          <DrawerView
-            isOpenView={isOpenView}
-            data={captureSelected}
-            onClose={handleCloseDrawerView}
-            nameSpace={nameSpace}
-          />
-        )}
-      </div>
-    );
+      {captureSelected !== null && (
+        <DrawerView
+          isOpenView={isOpenView}
+          data={captureSelected}
+          onClose={handleCloseDrawerView}
+          nameSpace={nameSpace}
+        />
+      )}
+    </div>
+  );
 }
 
 function mapStateToProps(state) {

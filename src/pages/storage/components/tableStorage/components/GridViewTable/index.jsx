@@ -5,7 +5,7 @@ import React from 'react';
 import { connect, useIntl } from 'umi';
 import { GridViewTableStyled } from './style';
 
-function GridViewTable({ state, dispatch, nameSpace }) {
+function GridViewTable({ state, dispatch, nameSpace, handleOnRow }) {
   const intl = useIntl();
   const { list, metadata } = state[nameSpace];
   const loading = state.loading.models[nameSpace] ? state.loading.models[nameSpace] : false;
@@ -23,12 +23,16 @@ function GridViewTable({ state, dispatch, nameSpace }) {
     });
   };
 
+  const handleClickItem = (item) => {
+    handleOnRow(item);
+  };
+
   return (
     <GridViewTableStyled>
       {list.map((item, index) => {
         return (
           <div className="card-event" key={item.id}>
-            <div className="card-img">
+            <div className="card-img" onClick={() => handleClickItem(item)}>
               <img
                 className="imageFile"
                 src={

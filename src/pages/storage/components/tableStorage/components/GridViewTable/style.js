@@ -14,6 +14,7 @@ export const GridViewTableStyled = styled.div`
 
   .card-img {
     width: 40%;
+    cursor: pointer;
 
     .imageFile {
       width: 100%;

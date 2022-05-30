@@ -1,10 +1,10 @@
 import { Drawer } from 'antd';
 import React from 'react';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { CloseOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
 function CustomCloseIcon() {
-  return <ArrowLeftOutlined style={{ color: '#ffffff', fontSize: '20px' }} />;
+  return <CloseOutlined style={{ color: '#ffffff', fontSize: '20px' }} />;
 }
 export default function MSCustomizeDrawer(props) {
   const { children, openDrawer, zIndex = 1001, closeIcon, ...rest } = props;
