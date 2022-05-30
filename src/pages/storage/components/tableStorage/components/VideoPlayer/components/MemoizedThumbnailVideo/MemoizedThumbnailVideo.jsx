@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import './thumnail-video.css';
 import _ from 'lodash';
+import { EVENT_AI_NAMESPACE } from '@/pages/storage/constants';
 
 function format(seconds) {
   if (!seconds || 0 || isNaN(seconds)) {
@@ -21,7 +22,7 @@ function pad(string) {
 }
 
 const ThumbnailVideo = (props) => {
-  const { duration, playerVideo, fileCurrent, viewFileType } = props;
+  const { duration, playerVideo, fileCurrent, nameSpace } = props;
   const controlBarRef = useRef(null);
   const cbLeftRef = useRef(null);
   const cbRightRef = useRef(null);
@@ -46,7 +47,7 @@ const ThumbnailVideo = (props) => {
     const numOfImg = Math.ceil(thumbWidth / (80 * 3));
     let fakeImages = [];
 
-    if (fileCurrent.thumbnailData && viewFileType !== 4) {
+    if (fileCurrent.thumbnailData && nameSpace !== EVENT_AI_NAMESPACE) {
       for (let i = 0; i < fileCurrent.thumbnailData.length; i++) {
         for (let j = 0; j < numOfImg; j++) {
           fakeImages.push(fileCurrent.thumbnailData[i]);

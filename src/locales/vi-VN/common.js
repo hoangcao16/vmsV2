@@ -627,6 +627,7 @@ export default {
   'view.ai_events.processingStatus.process': 'Chưa xử lý',
   'view.ai_events.processingStatus.processed': 'Đã xử lý',
   'view.ai_events.processingStatus.not_processed': 'Hủy',
+  'view.ai_events.err_image': 'Hình ảnh vi phạm',
   //view department
   'view.department.administrative': 'Đơn vị hành chính',
   'view.department.edit_department': 'Chỉnh sửa thông tin phòng ban',

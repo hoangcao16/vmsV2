@@ -1,14 +1,25 @@
+import { AI_SOURCE } from '@/constants/common';
+import {
+  CAPTURED_NAMESPACE,
+  DAILY_ARCHIVE_NAMESPACE,
+  EVENT_AI_NAMESPACE,
+  EVENT_FILES_NAMESPACE,
+  IMPORTANT_NAMESPACE,
+} from '@/pages/storage/constants';
+import ExportEventFileApi from '@/services/exporteventfile/ExportEventFileApi';
+import DailyArchiveApi from '@/services/storage-api/dailyArchiveApi';
+import getBase64 from '@/utils/getBase64';
 import { Button, Col, Row, Space, Spin, Tooltip } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
-import { MemoizedHlsPlayer } from './components/MemoizedHlsPlayer/MemoizedHlsPlayer';
-import { MemoizedThumbnailVideo } from './components/MemoizedThumbnailVideo/MemoizedThumbnailVideo';
 import { FiCamera, FiFastForward, FiPause, FiPlay, FiRewind, FiScissors } from 'react-icons/fi';
-import { ContainerCapture, HeaderPanelStyled, ViewFileContainer } from './style';
-import imagePoster from './videoposter.png';
-import DailyArchiveApi from '@/services/storage-api/dailyArchiveApi';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { useIntl } from 'umi';
+import { MemoizedHlsPlayer } from './components/MemoizedHlsPlayer/MemoizedHlsPlayer';
 import { MemoizedTableEventFile } from './components/MemoizedTableEventFile/MemoizedTableEventFile';
+import { MemoizedThumbnailVideo } from './components/MemoizedThumbnailVideo/MemoizedThumbnailVideo';
+import TableDetailEventAI from './components/TableDetailEventAI';
+import { ContainerCapture, ContainerEventsAI, HeaderPanelStyled, ViewFileContainer } from './style';
+import imagePoster from './videoposter.png';
 
 let defaultEventFile = {
   id: '',
@@ -35,7 +46,7 @@ let defaultEventFile = {
 };
 let playbackRate = 1;
 
-function VideoPlayer({ data }) {
+function VideoPlayer({ data, nameSpace, tracingList }) {
   const intl = useIntl();
 
   const [playerReady, setPlayerReady] = useState(false);
@@ -61,8 +72,8 @@ function VideoPlayer({ data }) {
   const [downloadFileName, setDownloadFileName] = useState('');
   const [eventList, setEventList] = useState([]);
 
-  let addDataToEvent = (row, vFileType) => {
-    if (vFileType === 0) {
+  let addDataToEvent = (row, nameSpace) => {
+    if (nameSpace === DAILY_ARCHIVE_NAMESPACE) {
       let value = {
         ...defaultEventFile,
         name: setFileName(0),
@@ -80,6 +91,62 @@ function VideoPlayer({ data }) {
       setEventFileCurrent({ ...row, blob: null, isSaved: false });
     }
     setCurrNode(row.note);
+  };
+
+  const playEventFile = async (row) => {
+    setUrlVideoTimeline(null);
+    let user = reactLocalStorage.getObject('user_permissions', null);
+    if (user !== undefined && user !== null) {
+      const playbackPermissionReq = {
+        cameraUuid: row.cameraUuid,
+        domain: row.domain,
+        date: 0,
+        userId: user.userUuid,
+        diskId: row.diskId,
+      };
+      try {
+        setLoading(true);
+        let checkPerRes = await DailyArchiveApi.checkPermissionForViewOnline(playbackPermissionReq);
+        if (checkPerRes) {
+          const playReq = {
+            fileAbsName: row.pathFile,
+            domain: row.domain,
+            userId: user.userUuid,
+            token: checkPerRes.token,
+          };
+          const payload = await DailyArchiveApi.playSingleFile(checkPerRes.playbackUrl, playReq);
+          if (payload) {
+            let videoSrc = checkPerRes.playbackUrl + '/play/hls/' + payload.reqUuid + '/index.m3u8';
+            setDownloadFileName(row.name);
+            setDuration(row.length);
+            setFileCurrent({ ...row, tableName: 'event_file' });
+            setPlayerReady(true);
+            setPlayerSrc(videoSrc);
+            playHandler('default');
+
+            // Call Nginx to get blob data of file
+            // await ExportEventFileApi.getFileData(row.id, row.type, row.nginx_host).then(async (result) => {
+            //     const blob = new Blob([result.data], {type: "octet/stream"});
+            //     const url = window.URL.createObjectURL(blob);
+            //
+            //     setUrlVideo(url);
+            //     setDownloadFileName(row.name);
+            //     setDuration(row.length);
+            //     setUrlVideoTimeline(new File([blob], row.name));
+            //
+            //     setFileCurrent({...row, tableName: 'event_file'});
+            //     setPlayerReady(true);
+            //     setPlayerSrc(videoSrc);
+            //     playHandler("default");
+            // });
+          }
+        }
+      } catch (e) {
+        console.log('e:', e.toString());
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   const openFile = async (file) => {
@@ -109,7 +176,7 @@ function VideoPlayer({ data }) {
         // Play file
         playFile(file);
 
-        addDataToEvent(file, 0);
+        addDataToEvent(file, DAILY_ARCHIVE_NAMESPACE);
       }
     } catch (e) {
       // Notification({
@@ -122,12 +189,97 @@ function VideoPlayer({ data }) {
     }
   };
 
+  const openEventFile = async (file) => {
+    if (nameSpace === CAPTURED_NAMESPACE) {
+      setFileCurrent({ ...file, tableName: 'event_file' });
+
+      //setUrlSnapshot("data:image/jpeg;base64," + file.thumbnailData[0]);
+      // Call Nginx to get blob data of file
+      ExportEventFileApi.downloadFile(file.uuid + '.jpeg', file.type).then(async (result) => {
+        const blob = new Blob([result.data], { type: 'octet/stream' });
+        getBase64(blob, (image) => {
+          setUrlSnapshot(image);
+        });
+      });
+    }
+
+    if (nameSpace === EVENT_FILES_NAMESPACE) {
+      setFileCurrent({ ...file, tableName: 'event_file' });
+
+      if (file.tableName === 'file') {
+        // Play file
+        await playFile(file);
+      } else {
+        // Play event file
+        await playEventFile(file);
+      }
+    }
+
+    if (nameSpace === IMPORTANT_NAMESPACE) {
+      setFileCurrent({ ...file });
+
+      if (file.tableName === 'file') {
+        // Play file
+        await playFile(file);
+      } else {
+        // Play event file
+        await playEventFile(file);
+      }
+    }
+
+    if (nameSpace === EVENT_AI_NAMESPACE) {
+      if (REACT_APP_AI_SOURCE === AI_SOURCE.PHILONG) {
+        await ExportEventFileApi.downloadAIIntegrationFile(file.uuid, 'ImageViolate.jpg').then(
+          (result) => {
+            const blob = new Blob([result], { type: 'octet/stream' });
+            getBase64(blob, async (image) => {
+              setUrlSnapshot(image);
+            });
+          },
+        );
+      } else {
+        await ExportEventFileApi.downloadFileAI(
+          file.cameraUuid,
+          file.trackingId,
+          file.uuid,
+          file.fileName,
+          4,
+        ).then(async (result) => {
+          const blob = new Blob([result.data], { type: 'octet/stream' });
+          getBase64(blob, async (image) => {
+            setUrlSnapshot(image);
+          });
+        });
+
+        // setUrlSnapshot("data:image/jpeg;base64," + file.thumbnailData);
+      }
+
+      setFileCurrent({ ...file, fileType: '4' });
+    }
+
+    if (nameSpace === EVENT_AI_NAMESPACE) {
+      if (REACT_APP_AI_SOURCE === AI_SOURCE.PHILONG) {
+        setDownloadFileName('ImageViolate.jpg');
+      } else {
+        setDownloadFileName(file.fileName);
+      }
+    } else {
+      setDownloadFileName(file.name);
+    }
+
+    addDataToEvent(file, CAPTURED_NAMESPACE);
+  };
+
   const onClickTableFileHandler = (row) => {
     if (row) {
       setCaptureMode(false);
       setUrlVideoTimeline(null);
       setUrlSnapshot('');
-      openFile(row);
+      if (nameSpace === DAILY_ARCHIVE_NAMESPACE) {
+        openFile(row);
+      } else {
+        openEventFile(row);
+      }
     }
   };
 
@@ -136,6 +288,8 @@ function VideoPlayer({ data }) {
     if (urlSnapshot) return 'disabled';
     if (!fileCurrent) return 'disabled';
     if (fileCurrent.uuid === '') return 'disabled';
+
+    if (nameSpace === EVENT_AI_NAMESPACE) return 'disabled';
     return '';
   };
 
@@ -349,7 +503,7 @@ function VideoPlayer({ data }) {
     //   ) {
     //     let path = result.data.payload.fileUploadInfoList[0].path;
     //     let { blob, tBlob, isSaved, ...requestObject } = eventFile; //Create requestObject without blob, isSaved fields
-    //     getBase64Text(eventFile.tBlob, async (thumbnailData) => {
+    //     getBase64(eventFile.tBlob, async (thumbnailData) => {
     //       requestObject = Object.assign({
     //         ...requestObject,
     //         pathFile: path,
@@ -474,7 +628,7 @@ function VideoPlayer({ data }) {
               videoFile={urlVideoTimeline}
               playerVideo={playerVideo}
               fileCurrent={fileCurrent}
-              viewFileType={0}
+              nameSpace={nameSpace}
               zoom={zoom}
             />
           )}
@@ -548,18 +702,20 @@ function VideoPlayer({ data }) {
         </Col>
 
         <Col span={7} className="captureContainer">
-          {checkDisabled() && eventFileCurrent.type !== -1 && (
-            <Tooltip
-              placement="bottomLeft"
-              title={intl.formatMessage({
-                id: 'view.storage.org',
-              })}
-            >
-              <span className="ogLabel" onClick={originalHandler}>
-                ORG
-              </span>
-            </Tooltip>
-          )}
+          {checkDisabled() &&
+            nameSpace === DAILY_ARCHIVE_NAMESPACE &&
+            eventFileCurrent.type !== -1 && (
+              <Tooltip
+                placement="bottomLeft"
+                title={intl.formatMessage({
+                  id: 'view.storage.org',
+                })}
+              >
+                <span className="ogLabel" onClick={originalHandler}>
+                  ORG
+                </span>
+              </Tooltip>
+            )}
 
           {checkBtnEditRootFileDisabled() && (
             <Tooltip
@@ -675,24 +831,37 @@ function VideoPlayer({ data }) {
         </Col>
       </Row>
 
-      <ContainerCapture>
-        <HeaderPanelStyled>
-          {intl.formatMessage({
-            id: 'view.storage.list_capture_files',
-          })}
-        </HeaderPanelStyled>
+      {nameSpace === DAILY_ARCHIVE_NAMESPACE && (
+        <ContainerCapture>
+          <HeaderPanelStyled>
+            {intl.formatMessage({
+              id: 'view.storage.list_capture_files',
+            })}
+          </HeaderPanelStyled>
 
-        <MemoizedTableEventFile
-          key="uuid"
-          dataList={[...listEventFiles]}
-          eventList={[...eventList]}
-          onClickRow={clickTableEventFileHandler}
-          onDeleteEventFile={deleteEventFileHandler}
-          onEditEventFile={editEventFileHandler}
-          onSaveEventFile={saveEventFileHandler}
-          onChangeEditModeHandler={changeEditModeHandler}
-        />
-      </ContainerCapture>
+          <MemoizedTableEventFile
+            key="uuid"
+            dataList={[...listEventFiles]}
+            eventList={[...eventList]}
+            onClickRow={clickTableEventFileHandler}
+            onDeleteEventFile={deleteEventFileHandler}
+            onEditEventFile={editEventFileHandler}
+            onSaveEventFile={saveEventFileHandler}
+            onChangeEditModeHandler={changeEditModeHandler}
+          />
+        </ContainerCapture>
+      )}
+
+      {nameSpace === EVENT_AI_NAMESPACE && (
+        <ContainerEventsAI>
+          <HeaderPanelStyled>
+            {intl.formatMessage({
+              id: 'view.storage.list_capture_files',
+            })}
+          </HeaderPanelStyled>
+          <TableDetailEventAI tracingList={tracingList} />
+        </ContainerEventsAI>
+      )}
     </ViewFileContainer>
   );
 }

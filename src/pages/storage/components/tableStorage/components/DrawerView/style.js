@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import MSCustomizeDrawer from '@/components/Drawer';
-import { Collapse } from 'antd';
+import { Collapse, Row } from 'antd';
 
 // $vms-status-07: rgba(208, 229, 255, 0.7);
 // $vms-bg-sub: #333333;
@@ -314,4 +314,90 @@ export const ViewFileContainer = styled.div`
 export const ContainerCapture = styled.div`
   border-top: 1px solid #e8e8e8;
   padding: 24px;
+`;
+
+export const StyledEventFileDetail = styled(Row)`
+  width: 100%;
+  margin-bottom: 12px;
+  .detail-item {
+    align-items: center;
+    min-height: 40px;
+    padding: 6px 0;
+    color: #d0e5ff;
+  }
+  .title {
+    color: #d0e5ff;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  .err_image {
+    margin-top: 8px;
+    ul {
+      display: flex;
+      align-items: center;
+      padding-left: 0 !important;
+    }
+  }
+`;
+
+export const VideoOverlay = styled.li`
+  position: relative;
+  list-style-type: none;
+  display: inline-block;
+  margin-right: 20px;
+  cursor: pointer;
+
+  .filter-blur {
+    -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
+    filter: blur(5px);
+  }
+
+  .play_icon {
+    position: absolute;
+    top: 50%;
+    right: 0px;
+    left: 0px;
+    margin: 0px auto;
+    font-size: 42px;
+    transform: translateY(-50%);
+  }
+
+  .imageOther-img,
+  .imageOther-video {
+    width: 120px;
+    height: 120px;
+    cursor: pointer;
+  }
+
+  .imageOther-container,
+  .videoErrorURL-container {
+    width: 90%;
+    padding-bottom: 10px;
+  }
+
+  .imageOther-item,
+  .videoErrorURL-item {
+    position: relative;
+  }
+
+  .videoErrorURL-img,
+  .videoErrorURL-video {
+    width: 120px;
+    height: 120px;
+    cursor: pointer;
+  }
+
+  .imageOther-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    background: red;
+    border-radius: 50%;
+    /* padding: 15px */
+  }
 `;
