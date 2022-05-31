@@ -1,23 +1,48 @@
 import { notify } from '@/components/Notify';
+import { LIVE_MODE } from '@/constants/common';
 import CameraApi from '@/services/camera/CameraApi';
 import camProxyService from '@/services/camProxy';
+import cheetahService from '@/services/cheetah';
+import exportEventFileApi from '@/services/exportEventFile';
+import { captureVideoFrame } from '@/utils/captureVideoFrame';
+import getBase64 from '@/utils/getBase64';
 import { LoadingOutlined } from '@ant-design/icons';
-import { Button, Spin } from 'antd';
+import { Spin } from 'antd';
+import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { FormattedMessage } from 'umi';
+import { connect, FormattedMessage } from 'umi';
+import { v4 as uuidv4 } from 'uuid';
 
-const CameraSlot = ({ cameraUuid, type, children }) => {
+import CameraSlotControl from './CameraSlotControl';
+
+const CameraSlot = ({ camera, dispatch, isDraggingOver }) => {
   const [loading, setLoading] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+  const [currentPlaybackTime, setCurrentPlaybackTime] = useState(moment().subtract(1, 'h').unix());
   const videoRef = useRef(null);
+  const peerRef = useRef(null);
+  const timerRef = useRef(null);
+  const requestId = useRef(uuidv4());
 
   useEffect(() => {
-    if (cameraUuid) {
-      startCamera(cameraUuid, type, 'webrtc');
+    if (camera.uuid) {
+      startCamera(camera.uuid, camera.type, 'webrtc');
     } else {
-      stopCamera();
+      closeCamera();
     }
-  }, [cameraUuid]);
+  }, [camera]);
+
+  useEffect(() => {
+    if (isRecording) {
+      timerRef.current = setInterval(() => {
+        setCountdown(countdown + 1);
+      }, 1000);
+    }
+
+    return () => clearInterval(timerRef.current);
+  }, [isRecording, countdown]);
 
   const startCamera = async (camUuid, type, mode) => {
     setLoading(true);
@@ -28,6 +53,7 @@ const CameraSlot = ({ cameraUuid, type, children }) => {
 
     if (data == null) {
       notify('warning', 'noti.default_screen', 'noti.error_camera_address');
+      setLoading(false);
       return;
     }
 
@@ -39,13 +65,13 @@ const CameraSlot = ({ cameraUuid, type, children }) => {
           },
         ],
       };
-      const pc = new RTCPeerConnection();
+      peerRef.current = new RTCPeerConnection();
       let peerCode = (Math.random() + 1).toString(36).substring(10);
 
-      pc.setConfiguration(restartConfig);
-      pc.addTransceiver('video');
+      peerRef.current?.setConfiguration(restartConfig);
+      peerRef.current?.addTransceiver('video');
 
-      pc.ontrack = (event) => {
+      peerRef.current.ontrack = (event) => {
         if (videoRef.current) {
           videoRef.current.srcObject = event.streams[0];
           videoRef.current.style = 'display:block;';
@@ -55,9 +81,9 @@ const CameraSlot = ({ cameraUuid, type, children }) => {
 
       const thisTime = new Date().getTime();
       const token = (Math.random() + 1).toString(36).substring(10) + thisTime;
-      let dc = pc.createDataChannel(token);
+      let dc = peerRef.current?.createDataChannel(token);
 
-      pc.ondatachannel = (event) => {
+      peerRef.current.ondatachannel = (event) => {
         dc = event.channel;
         let dcTimeout = null;
         dc.onmessage = (evt) => {
@@ -78,8 +104,8 @@ const CameraSlot = ({ cameraUuid, type, children }) => {
         };
       };
 
-      pc.onconnectionstatechange = function (event) {
-        switch (pc.connectionState) {
+      peerRef.current.onconnectionstatechange = function (event) {
+        switch (peerRef.current?.connectionState) {
           case 'connected':
             break;
           case 'disconnected':
@@ -92,11 +118,12 @@ const CameraSlot = ({ cameraUuid, type, children }) => {
       };
 
       const API = data.camproxyApi;
-      pc.createOffer({
-        iceRestart: true,
-      })
+      peerRef.current
+        ?.createOffer({
+          iceRestart: true,
+        })
         .then((offer) => {
-          pc.setLocalDescription(offer);
+          peerRef.current?.setLocalDescription(offer);
 
           camProxyService
             .playCamera(API, {
@@ -107,7 +134,7 @@ const CameraSlot = ({ cameraUuid, type, children }) => {
             })
             .then((res) => {
               if (res) {
-                pc.setRemoteDescription(res.payload);
+                peerRef.current?.setRemoteDescription(res.payload);
               } else {
                 console.log('Failed');
               }
@@ -141,32 +168,231 @@ const CameraSlot = ({ cameraUuid, type, children }) => {
     }
   };
 
-  const stopCamera = () => {
-    videoRef.current.srcObject = null;
-    videoRef.current.innerHTML = null;
-    videoRef.current.style = 'display:none;';
+  const closeCamera = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.srcObject = null;
+      videoRef.current.innerHTML = null;
+      videoRef.current.style = 'display:none;';
+    }
+    peerRef.current?.close();
+
+    dispatch({
+      type: 'live/closeCamera',
+      payload: camera,
+    });
   };
 
-  const Type = ({ type }) => {
-    switch (type) {
-      case 'live':
-        return 'Live';
-      default:
-        return '';
+  const getFileName = (type) => {
+    if (type === 0) {
+      return 'Cut.' + moment().format('DDMMYYYY.hhmmss') + '.mp4';
+    }
+    return 'Cap.' + moment().format('DDMMYYYY.hhmmss') + '.jpg';
+  };
+
+  const recordVideo = async () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  };
+
+  const startRecording = async () => {
+    clearInterval(timerRef.current);
+    try {
+      if (camera.type === LIVE_MODE.LIVE) {
+        const fileName = getFileName(0);
+
+        const params = {
+          cameraId: camera.id,
+          cameraName: camera.name,
+          startCaptureTime: Date.now(),
+          fileName: fileName,
+          requestId: requestId.current,
+        };
+
+        await cheetahService.startCaptureStream(params);
+      }
+
+      notify('success', 'Playback', {
+        id: 'noti.start_record_for_camera',
+        params: {
+          name: camera.name,
+        },
+      });
+      setIsRecording(true);
+    } catch (e) {
+      console.log('Error recording: ', e);
+      notify('error', 'Playback', {
+        id: 'noti.start_record_for_camera_failed',
+        params: {
+          name: camera.name,
+        },
+      });
+    }
+  };
+
+  const stopRecording = async () => {
+    clearInterval(timerRef.current);
+    try {
+      if (camera.type === LIVE_MODE.LIVE) {
+        const params = {
+          cameraId: camera.id,
+          cameraName: camera.name,
+          stopCaptureTime: Date.now(),
+          requestId: requestId.current,
+        };
+
+        await cheetahService.stopCaptureStream(params);
+      } else if (videoRef.current) {
+        const playbackTimeInSecond = Math.floor(videoRef.current.currentTime);
+        const startTime = currentPlaybackTime + playbackTimeInSecond;
+        const stopTime = startTime + countdown;
+        const fileName = getFileName(0);
+
+        const params = {
+          cameraId: camera.id,
+          cameraName: camera.name,
+          startCaptureTime: +startTime,
+          stopCaptureTime: +stopTime,
+          fileName: fileName,
+          requestId: requestId.current,
+        };
+
+        const { payload } = await cheetahService.capturePlayback(params);
+
+        const uuid = uuidv4();
+
+        let requestObject = {
+          id: '',
+          uuid: uuid,
+          eventUuid: '',
+          eventName: '',
+          name: fileName,
+          violationTime: startTime,
+          createdTime: Date.now(),
+          note: '',
+          cameraUuid: camera.uuid,
+          cameraName: camera.name,
+          type: 0,
+          length: payload.length,
+          address: '',
+          rootFileUuid: '',
+          pathFile: payload.path + '/' + fileName,
+          isImportant: false,
+          thumbnailData: payload.thumbnailData,
+          nginx_host: payload.nginx_host,
+          diskId: payload.diskId,
+        };
+
+        await exportEventFileApi.createNewEventFile(requestObject);
+      }
+
+      notify('success', 'Playback', {
+        id: 'noti.stop_record_for_camera',
+        params: {
+          name: camera.name,
+        },
+      });
+      setCountdown(0);
+      setIsRecording(false);
+    } catch (error) {
+      console.log('Error recording: ', error);
+      notify('error', 'Playback', {
+        id: 'noti.stop_record_for_camera_failed',
+        params: {
+          name: camera.name,
+        },
+      });
+    }
+  };
+
+  const captureCamera = async () => {
+    try {
+      const { blob, tBlob } = captureVideoFrame(videoRef.current, null, 'jpeg');
+      if (blob) {
+        const fileName = getFileName(1);
+        const uuid = uuidv4();
+        const createdDate = new Date();
+        const createdTime = createdDate.getTime();
+        const violationTime = Math.floor(createdDate.setMilliseconds(0) / 1000);
+
+        const eventFile = {
+          id: '',
+          uuid: uuid,
+          eventUuid: '',
+          eventName: '',
+          name: fileName,
+          violationTime: violationTime,
+          createdTime: createdTime,
+          note: '',
+          cameraUuid: camera.uuid,
+          cameraName: camera.name,
+          type: 1,
+          length: 0,
+          address: '',
+          rootFileUuid: '',
+          pathFile: '',
+          isImportant: false,
+          thumbnailData: [''],
+          nginx_host: '',
+          blob: blob,
+          tBlob: tBlob,
+        };
+
+        const { payload } = await exportEventFileApi.uploadFile(eventFile.uuid, blob);
+        if (payload && payload.fileUploadInfoList.length > 0) {
+          let path = payload.fileUploadInfoList[0].path;
+          let { blob, tBlob, ...rest } = eventFile;
+
+          getBase64(tBlob, async (thumbnailData) => {
+            rest = {
+              ...rest,
+              pathFile: path,
+              thumbnailData: [thumbnailData.replace('data:image/jpeg;base64,', '')],
+            };
+
+            const response = await exportEventFileApi.createNewEventFile(rest);
+            if (response) {
+              notify('success', 'Save file', 'noti.successfully_take_photo_and_save');
+            }
+          });
+        } else {
+          throw new Error();
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      notify('error', 'Save file', 'noti.error_save_file');
     }
   };
 
   return (
-    <>
+    <StyledCameraSlot isDraggingOver={isDraggingOver}>
       {loading && (
         <StyledLoading>
           <Spin indicator={<LoadingOutlined size={48} />} />
         </StyledLoading>
       )}
-      {cameraUuid && (
-        <StyledMode type="primary" size="small">
-          <Type type={type} />
-        </StyledMode>
+      {camera && (
+        <>
+          <StyledCameraSlotControl
+            camera={camera}
+            isRecording={isRecording}
+            onCapture={captureCamera}
+            onRecord={recordVideo}
+            onClose={closeCamera}
+          />
+          <StyledCameraBottom>
+            <StyledCameraName>{camera.name}</StyledCameraName>
+            {isRecording && (
+              <StyledCountdown>
+                {moment('00:00:00', 'HH:mm:ss').add(countdown, 'second').format('HH:mm:ss')}
+              </StyledCountdown>
+            )}
+          </StyledCameraBottom>
+        </>
       )}
       <StyledVideo
         ref={videoRef}
@@ -181,16 +407,32 @@ const CameraSlot = ({ cameraUuid, type, children }) => {
       >
         <FormattedMessage id="noti.browser_not_support_video" />
       </StyledVideo>
-      {children}
-    </>
+    </StyledCameraSlot>
   );
 };
+
+const StyledCameraSlotControl = styled(CameraSlotControl)``;
+
+const StyledCameraSlot = styled.div`
+  width: 100%;
+  height: 100%;
+  ${(props) => props.isDraggingOver && 'display: none;'}
+
+  &:hover {
+    cursor: pointer;
+
+    ${StyledCameraSlotControl} {
+      visibility: visible;
+    }
+  }
+`;
 
 const StyledVideo = styled.video`
   width: 100%;
   height: 100%;
   display: block;
   object-fit: fill;
+  z-index: 10;
 `;
 
 const StyledLoading = styled.div`
@@ -202,13 +444,45 @@ const StyledLoading = styled.div`
   height: 100%;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 999;
 `;
 
-const StyledMode = styled(Button)`
-  position: absolute !important;
-  top: 15px;
-  right: 15px;
+const StyledCameraBottom = styled.div`
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
 `;
 
-export default React.memo(CameraSlot);
+const StyledCameraName = styled.div`
+  position: relative;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: #ccc;
+  z-index: 11;
+  padding: 0 15px;
+  flex: 1;
+  line-height: 1.6rem;
+
+  &::after {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 7px;
+    height: 7px;
+    border: 1px solid #000;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    content: '';
+  }
+`;
+
+const StyledCountdown = styled.div`
+  background-color: #f00;
+  padding: 2px 8px;
+  border-radius: 2px;
+`;
+
+export default connect()(React.memo(CameraSlot));

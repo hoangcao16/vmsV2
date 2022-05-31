@@ -796,8 +796,10 @@ export default {
   'noti.camera_filter': 'Lọc Camera',
   'noti.errors_in_the_process_of_camera_filter': 'Lỗi trong quá trình lọc Camera',
   'noti.incorrect_camera_type': 'Định dạng Camera không đúng',
-  'noti.start_record_for_camera': 'Bắt đầu ghi hình cho Camera ',
-  'noti.stop_record_for_camera': 'Dừng ghi hình cho Camera ',
+  'noti.start_record_for_camera': 'Bắt đầu ghi hình cho Camera {name} thành công',
+  'noti.start_record_for_camera_failed': 'Bắt đầu ghi hình cho Camera {name} thất bại',
+  'noti.stop_record_for_camera': 'Dừng ghi hình cho Camera {name} thành công',
+  'noti.stop_record_for_camera_failed': 'Dừng ghi hình cho Camera {name} thất bại',
   'noti.successfully_take_photo_and_save':
     'Bạn đã chụp ảnh Camera thành công, tệp được lưu trong danh sách tệp lưu trữ',
   'noti.error_no_camera_in_grid': 'Lỗi: Không có Camera nào trong lưới',

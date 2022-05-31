@@ -1,4 +1,4 @@
-export default function clearData(obj) {
+export function clearData(obj) {
   const propNames = Object.getOwnPropertyNames(obj);
 
   for (let i = 0; i < propNames.length; i += 1) {

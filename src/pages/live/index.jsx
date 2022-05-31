@@ -1,12 +1,14 @@
 import { LIVE_MODE } from '@/constants/common';
 import { GRID1X1, GRID2X2, GRID3X3, GRID4X4 } from '@/constants/grid';
 import bookmarkService from '@/services/bookmark';
+import cameraService from '@/services/controllerApi/cameraService';
 import { HeartOutlined, OrderedListOutlined, SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Select, Space } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { connect, FormattedMessage } from 'umi';
+
 import ActionGrid from './components/ActionGrid';
 import CameraList from './components/CameraList';
 import GridPanel from './components/GridPanel';
@@ -24,20 +26,33 @@ const Live = ({ availableList, screen, dispatch }) => {
     initScreen(payload[0] || undefined);
   };
 
-  const initScreen = (screen) => {
+  const initScreen = async (screen) => {
     if (screen) {
       const { cameraUuids = [], gridType, viewTypes = [] } = screen;
+      const cameraNameWithUuids = {};
+
+      const { payload } = await cameraService.searchCamerasWithUuids({
+        uuids: cameraUuids.filter(Boolean),
+      });
+
+      if (payload && payload.length) {
+        payload.forEach((camera) => {
+          cameraNameWithUuids[camera.uuid] = camera;
+        });
+      }
 
       const grids = cameraUuids.map((uuid, index) => ({
+        id: cameraNameWithUuids[uuid] ? cameraNameWithUuids[uuid].id : '',
         uuid,
         type: viewTypes[index],
+        name: cameraNameWithUuids[uuid] ? cameraNameWithUuids[uuid].name : '',
       }));
 
       dispatch({
         type: 'live/saveScreen',
         payload: {
           grids: grids,
-          gridType: screen.gridType,
+          gridType: gridType,
         },
       });
     } else {
@@ -64,8 +79,10 @@ const Live = ({ availableList, screen, dispatch }) => {
 
   const initEmptyGrid = (number) => {
     return Array.from(new Array(number)).map((_, index) => ({
+      id: '',
       uuid: '',
       type: '',
+      name: '',
     }));
   };
 
@@ -75,21 +92,17 @@ const Live = ({ availableList, screen, dispatch }) => {
     if (source.droppableId === LIVE_MODE.CAMERA_LIST_DROPPABLE_ID) {
       const draggableCam = availableList[source.index];
       screen.grids[destination.index] = {
+        id: draggableCam.id,
         uuid: draggableCam?.uuid,
         type: 'live',
+        name: draggableCam?.name,
       };
-      const newAvailableList = availableList.filter((_, index) => index !== source.index);
 
       dispatch({
         type: 'live/saveScreen',
         payload: {
           ...screen,
         },
-      });
-
-      dispatch({
-        type: 'live/saveAvailableList',
-        payload: newAvailableList,
       });
     } else {
       const camObj = screen.grids[source.index];
@@ -154,9 +167,10 @@ const Live = ({ availableList, screen, dispatch }) => {
       <DragDropContext onDragEnd={onDragEnd}>
         <GridPanel screen={screen} />
         <CameraList
+          title={<FormattedMessage id="pages.live-mode.list.camera" />}
           cameras={availableList}
           visible={visibleCameraList}
-          onCancel={() => setVisibleCameraList(false)}
+          onClose={() => setVisibleCameraList(false)}
         />
       </DragDropContext>
     </PageContainer>

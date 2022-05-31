@@ -1,4 +1,5 @@
 export const API_URL = REACT_APP_BASE_URL || 'http://10.0.0.62:10001';
+export const API_CHEETAH_URL = REACT_APP_CHEETAH_URL || 'http://10.0.0.62:10001';
 export const API_FILE_URL = REACT_APP_BASE_FILE_URL || 'http://10.0.0.62:8841';
 
 export const STORAGE = {
@@ -15,7 +16,7 @@ export const STORAGE = {
 export const PAGE_SIZE = 20;
 export const STATUS_CODE = {
   LIST_SUCCESS_CODE: [
-    201, 202, 600, 700, 800, 1000, 1100, 1300, 1400, 1600, 1700, 601, 12000, 15000,
+    201, 202, 600, 700, 800, 1000, 1100, 1300, 1400, 1600, 1700, 601, 12000, 15000, 900,
   ],
   SUCCESS: 700,
   CREATED: 201,
@@ -35,6 +36,8 @@ export const CAMERASTATUS = {
 
 export const LIVE_MODE = {
   CAMERA_LIST_DROPPABLE_ID: 'camera_list_droppable_id',
+  LIVE: 'live',
+  PLAYBACK: 'playback',
 };
 
 export const AI_SOURCE = {

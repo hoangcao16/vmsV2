@@ -47,6 +47,7 @@ export default {
   'view.camera.camera_detail': '{cam} detail',
   'view.camera.active_stt': 'Active status',
   'view.camera.close': 'Close',
+  'view.map.administrative_unit': 'Administrative unit',
   'view.camera.choose_zone': 'Choose zone',
   'view.camera.edit_camera_group': 'Edit {cam} {G}',
   'view.camera.add_cam_in_group': 'Add Camera to Camera group',
@@ -795,8 +796,11 @@ export default {
   'noti.camera_filter': 'Camera filter',
   'noti.errors_in_the_process_of_camera_filter': 'Errors in the process of Camera filter',
   'noti.incorrect_camera_type': 'Camera type is incorrect',
-  'noti.start_record_for_camera': 'Start record for Camera ',
-  'noti.stop_record_for_camera': 'Stop record for Camera ',
+
+  'noti.start_record_for_camera': 'Start record for Camera {name} successfully',
+  'noti.start_record_for_camera_failed': 'Start record for Camera {name} failed',
+  'noti.stop_record_for_camera': 'Stop record for Camera {name} successfully',
+  'noti.stop_record_for_camera_failed': 'Stop record for Camera {name} failed',
   'noti.successfully_take_photo_and_save':
     'Successfully taken a photo for Camera, file will be save in saved file',
   'noti.error_no_camera_in_grid': "Error: There's no Camera in this grid",
