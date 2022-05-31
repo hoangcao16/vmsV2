@@ -101,7 +101,16 @@ export default {
       try {
         yield call(settingApi.postDataWarningDisk, payload);
         notify('success', 'noti.success', 'noti.successful_setting');
-        yield put({ type: 'setting/fetchWarningStoreSetting' });
+        yield put({ type: 'fetchWarningStoreSetting' });
+      } catch (error) {
+        notify('error', 'noti.faid', `pages.setting-user.list-user.${error?.code}`);
+      }
+    },
+    *updateEmail({ payload }, { call, put }) {
+      try {
+        yield call(settingApi.updateEmail, payload);
+        notify('success', 'noti.success', 'noti.successful_setting');
+        yield put({ type: 'fetchEmailConfig' });
       } catch (error) {
         notify('error', 'noti.faid', `pages.setting-user.list-user.${error?.code}`);
       }

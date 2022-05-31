@@ -38,6 +38,13 @@ const settingApi = {
       },
     });
   },
+  updateEmail(data) {
+    return request.post('/cctv-monitor-ctrl-svc/api/v1/email/update-email', data, {
+      headers: {
+        requestId: _uniqueId('cctv'),
+      },
+    });
+  },
 };
 
 export default settingApi;
