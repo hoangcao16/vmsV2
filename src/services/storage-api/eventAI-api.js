@@ -25,6 +25,19 @@ const EventAiAPI = {
   getEventsByTrackingId: (uuid) => {
     return request.get(`/vms-ai/api/v1/ai-events/${uuid}`);
   },
+
+  editInfoOfEvent: (uuid, params) => {
+    let url = '/vms-ai/api/v1/ai-events';
+    if (REACT_APP_AI_SOURCE === 'philong') {
+      url = `/vms-ai/api/v1/integration-ai-events/${uuid}`;
+    }
+
+    return request.put(url, params);
+  },
+
+  sendTicket: (params) => {
+    return request.post(`/vms-ai/api/v1/send-ticket`, params);
+  },
 };
 
 export default EventAiAPI;

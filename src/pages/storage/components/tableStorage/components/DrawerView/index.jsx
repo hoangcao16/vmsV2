@@ -15,8 +15,12 @@ import { Button, Col, Collapse, Input, Row, Space, Spin } from 'antd';
 import Popconfirm from 'antd/es/popconfirm';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { useIntl } from 'umi';
-import { DAILY_ARCHIVE_NAMESPACE, EVENT_AI_NAMESPACE } from '../../../../constants';
+import { useIntl, connect } from 'umi';
+import {
+  DAILY_ARCHIVE_NAMESPACE,
+  EVENT_AI_NAMESPACE,
+  PROCESSING_STATUS_OPTIONS,
+} from '../../../../constants';
 import PreviewMap from '../PreviewMap/PreviewMap';
 import VideoPlayer from '../VideoPlayer';
 import {
@@ -26,6 +30,8 @@ import {
   StyledEventFileDetail,
   VideoOverlay,
 } from './style';
+import DrawerTicket from './components/DrawerTicket';
+
 const { Panel } = Collapse;
 
 let defaultEventFile = {
@@ -52,22 +58,7 @@ let defaultEventFile = {
   tBlob: null,
 };
 
-const processingstatusOptions = [
-  {
-    value: 'process',
-    label: 'view.ai_events.processing-status.process',
-  },
-  {
-    value: 'processed',
-    label: 'view.ai_events.processing-status.processed',
-  },
-  {
-    value: 'not_processed',
-    label: 'view.ai_events.processing-status.not_processed',
-  },
-];
-
-function DrawerView({ isOpenView, data, onClose, nameSpace }) {
+function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
   const intl = useIntl();
 
   const [detailAI, setDetailAI] = useState(defaultEventFile);
@@ -75,9 +66,12 @@ function DrawerView({ isOpenView, data, onClose, nameSpace }) {
   const [listLongLat, setListLongLat] = useState([]);
   const [tracingList, setTracingList] = useState([]);
 
-  const [processState, setProcessState] = useState(processingstatusOptions[0]);
+  const [processState, setProcessState] = useState(PROCESSING_STATUS_OPTIONS[0]);
 
   const [imageViolate, setImageViolate] = useState(null);
+  const [plateNumber, setPlateNumber] = useState(null);
+  const [imageVehicle, setImageVehicle] = useState(null);
+
   const [imageAICurrent, setImageAICurrent] = useState(null);
 
   const [currNode, setCurrNode] = useState('');
@@ -88,7 +82,26 @@ function DrawerView({ isOpenView, data, onClose, nameSpace }) {
 
   const [loading, setLoading] = useState(false);
 
+  const [openDrawerTicket, setOpenDrawerTicket] = useState(false);
+
   const hasVideo = detailAI?.videoUrl ? true : false;
+
+  const handleOpenDrawerTicket = () => {
+    setOpenDrawerTicket(true);
+  };
+
+  const handleCloseDrawerTicket = () => {
+    setOpenDrawerTicket(false);
+  };
+
+  const handleRefresh = () => {
+    const { metadata } = state[EVENT_AI_NAMESPACE];
+    const dataParam = Object.assign({ ...metadata });
+    dispatch({
+      type: `${EVENT_AI_NAMESPACE}/fetchAll`,
+      payload: dataParam,
+    });
+  };
 
   const getTracingEvents = () => {
     const payload = {
@@ -530,7 +543,7 @@ function DrawerView({ isOpenView, data, onClose, nameSpace }) {
         setDetailAI({
           ...data,
         });
-        // setProcessState(processingstatusOptions.find((e) => e.value === data?.status));
+        // setProcessState(PROCESSING_STATUS_OPTIONS.find((e) => e.value === data?.status));
         const getViolateUrl = ExportEventFileApi.downloadAIIntegrationFile(
           data.uuid,
           'ImageViolate.jpg',
@@ -548,8 +561,6 @@ function DrawerView({ isOpenView, data, onClose, nameSpace }) {
           .then(async (value) => {
             if (value[0] instanceof Blob) {
               const blob = new Blob([value[0]], { type: 'octet/stream' });
-              // getBase64Text(blob, (image) => {
-
               imageOther.push({
                 id: 'violate',
                 fileName: 'ImageViolate.jpg',
@@ -557,29 +568,28 @@ function DrawerView({ isOpenView, data, onClose, nameSpace }) {
                 image: URL.createObjectURL(blob),
               });
               setImageViolate(URL.createObjectURL(blob));
-              // });
             }
+
             if (value[1] instanceof Blob) {
               const blob = new Blob([value[1]], { type: 'octet/stream' });
-              // getBase64Text(blob, (image) => {
               imageOther.push({
                 id: 'plate',
                 fileName: 'ImagePlate.jpg',
                 uuid: data.uuid,
                 image: URL.createObjectURL(blob),
               });
-              // });
+              setPlateNumber(URL.createObjectURL(blob));
             }
+
             if (value[2] instanceof Blob) {
               const blob = new Blob([value[2]], { type: 'octet/stream' });
-              // getBase64Text(blob, (image) => {
               imageOther.push({
                 id: 'vehicle',
                 fileName: 'ImageVehicle.jpg',
                 uuid: data.uuid,
                 image: URL.createObjectURL(blob),
               });
-              // });
+              setImageVehicle(URL.createObjectURL(blob));
             }
             // if (!isEmpty(value[3])) {
             //   const blob = new Blob([value[3].data], { type: 'octet/stream' });
@@ -593,7 +603,6 @@ function DrawerView({ isOpenView, data, onClose, nameSpace }) {
             // }
           })
           .then(() => {
-            console.log('imageOther   []  ', imageOther);
             setImageOther(imageOther);
           });
         setImageAICurrent({
@@ -633,7 +642,7 @@ function DrawerView({ isOpenView, data, onClose, nameSpace }) {
               });
               setCurrNode(data?.payload?.note);
               // setProcessState(
-              //   processingstatusOptions.find((e) => e.value === data?.payload?.status),
+              //   PROCESSING_STATUS_OPTIONS.find((e) => e.value === data?.payload?.status),
               // );
               setObjectType(
                 typeObjects.find(
@@ -691,7 +700,7 @@ function DrawerView({ isOpenView, data, onClose, nameSpace }) {
 
           {nameSpace === EVENT_AI_NAMESPACE && (
             <>
-              <Button icon={<CreditCardOutlined />}>
+              <Button icon={<CreditCardOutlined />} onClick={handleOpenDrawerTicket}>
                 {intl.formatMessage({
                   id: 'view.common_device.ticket',
                 })}
@@ -745,8 +754,24 @@ function DrawerView({ isOpenView, data, onClose, nameSpace }) {
       </CollapseStyled>
 
       <VideoPlayer data={data} nameSpace={nameSpace} tracingList={tracingList} />
+
+      {nameSpace === EVENT_AI_NAMESPACE && (
+        <DrawerTicket
+          imageViolate={imageViolate}
+          plateNumber={plateNumber}
+          imageVehicle={imageVehicle}
+          data={data}
+          isOpenView={openDrawerTicket}
+          onClose={handleCloseDrawerTicket}
+          onRefresh={handleRefresh}
+        />
+      )}
     </MSCustomizeDrawerStyled>
   );
 }
 
-export default DrawerView;
+function mapStateToProps(state) {
+  return { state };
+}
+
+export default connect(mapStateToProps)(DrawerView);

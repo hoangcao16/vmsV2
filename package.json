@@ -94,6 +94,7 @@
         "react-infinite-scroll-component": "^6.1.0",
         "react-phone-number-input": "^3.1.52",
         "react-router": "^4.3.1",
+        "react-to-print": "^2.14.4",
         "reactjs-localstorage": "^1.0.1",
         "styled-components": "^5.3.5",
         "umi": "^3.5.0",
