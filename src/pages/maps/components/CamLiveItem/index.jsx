@@ -14,18 +14,19 @@ import {
   ExpandOutlined,
   CompressOutlined,
 } from '@ant-design/icons';
-const CamLiveItem = ({ dispatch, cameraIndex, cameraUuid, listStreaming }) => {
+const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
   const [loading, setLoading] = useState(false);
   const videoRef = useRef(null);
   const pcRef = useRef(null);
   const [isMaximize, setIsMaximize] = useState(false);
   const intl = useIntl();
-  const cameraStreaming = listStreaming.find((item) => item?.uuid === cameraUuid);
+  const cameraStreaming = listStreaming[cameraIndex];
+
   const closeRTCPeerConnection = (slotIdx) => {
     // CLOSE STREAM
     let pcLstTmp = pcRef.current;
-    if (pcLstTmp.pc) {
-      pcLstTmp.pc.close();
+    if (pcLstTmp?.pc) {
+      pcLstTmp?.pc?.close();
     }
   };
   const maxMinCamera = () => {
@@ -36,12 +37,15 @@ const CamLiveItem = ({ dispatch, cameraIndex, cameraUuid, listStreaming }) => {
     // setIsMaximize(!isMaximize);
   };
   useEffect(() => {
-    if (cameraUuid) {
-      startCamera(cameraUuid, 'webrtc');
+    if (cameraStreaming) {
+      startCamera(cameraStreaming?.uuid, 'webrtc');
     } else {
       stopCamera();
     }
-  }, [cameraUuid]);
+    return () => {
+      closeRTCPeerConnection();
+    };
+  }, [cameraStreaming]);
   const startCamera = async (camUuid, mode) => {
     setLoading(true);
     const data = await CameraApi.checkPermissionForViewOnline({
@@ -168,7 +172,7 @@ const CamLiveItem = ({ dispatch, cameraIndex, cameraUuid, listStreaming }) => {
     videoRef.current.style = 'display:none;';
   };
   return (
-    <Container data-type={isMaximize ? 'fullsize' : ''}>
+    <Container data-type={isMaximize ? 'fullsize' : ''} className="map__live-card" id={cameraIndex}>
       {loading && (
         <StyledLoading>
           <Spin indicator={<LoadingOutlined size={48} />} />

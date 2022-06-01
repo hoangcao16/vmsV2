@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { LeftSider, HeaderSider } from './style';
 import { useIntl } from 'umi';
@@ -6,9 +7,39 @@ import { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import { DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
 import CamLiveItem from '../CamLiveItem';
-const ViewLiveCameras = ({ dispatch, liveCameraList, cameraList }) => {
+const ViewLiveCameras = ({ dispatch, liveCameraList, cameraList, listStreaming }) => {
   const intl = useIntl();
   const [isCollapsedCameraLive, setIsCollapsedCameraForm] = useState(false);
+  const [cameraSlots, setCameraSlots] = useState([
+    {
+      pc: null,
+      slotId: 0,
+      camId: '',
+      isPlay: false,
+      hls: null,
+    },
+    {
+      pc: null,
+      slotId: 1,
+      camId: '',
+      isPlay: false,
+      hls: null,
+    },
+    {
+      pc: null,
+      slotId: 2,
+      camId: '',
+      isPlay: false,
+      hls: null,
+    },
+    {
+      pc: null,
+      slotId: 3,
+      camId: '',
+      isPlay: false,
+      hls: null,
+    },
+  ]);
   const toggleCollapsedCameraLive = () => {
     setIsCollapsedCameraForm(!isCollapsedCameraLive);
   };
@@ -37,16 +68,16 @@ const ViewLiveCameras = ({ dispatch, liveCameraList, cameraList }) => {
         />
       </HeaderSider>
       <div className="content">
-        {liveCameraList.map((item, index) => {
-          return <CamLiveItem key={item} cameraIndex={index} cameraUuid={item} />;
+        {cameraSlots.map((item, index) => {
+          return <CamLiveItem key={index} cameraIndex={index} cameraUuid={item?.uuid} />;
         })}
       </div>
     </LeftSider>
   );
 };
 function mapStateToProps(state) {
-  const { liveCameraList } = state.viewLiveCameras;
+  const { liveCameraList, listStreaming } = state.viewLiveCameras;
   const { cameraList } = state.liveFullScreen;
-  return { liveCameraList, cameraList };
+  return { liveCameraList, cameraList, listStreaming };
 }
 export default connect(mapStateToProps)(ViewLiveCameras);
