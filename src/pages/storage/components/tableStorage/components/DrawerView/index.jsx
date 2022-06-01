@@ -1,6 +1,9 @@
+import { notify } from '@/components/Notify';
 import { AI_SOURCE } from '@/constants/common';
 import ExportEventFileApi from '@/services/exportEventFile';
 import EventAiAPI from '@/services/storage-api/eventAI-api';
+import eventFilesApi from '@/services/storage-api/eventFilesApi';
+import permissionCheck from '@/utils/PermissionCheck';
 import {
   CloseOutlined,
   CreditCardOutlined,
@@ -15,14 +18,18 @@ import { Button, Col, Collapse, Input, Row, Space, Spin } from 'antd';
 import Popconfirm from 'antd/es/popconfirm';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { useIntl, connect } from 'umi';
+import { connect, useIntl } from 'umi';
 import {
+  CAPTURED_NAMESPACE,
   DAILY_ARCHIVE_NAMESPACE,
   EVENT_AI_NAMESPACE,
+  EVENT_FILES_NAMESPACE,
+  IMPORTANT_NAMESPACE,
   PROCESSING_STATUS_OPTIONS,
 } from '../../../../constants';
 import PreviewMap from '../PreviewMap/PreviewMap';
 import VideoPlayer from '../VideoPlayer';
+import DrawerTicket from './components/DrawerTicket';
 import {
   CollapseStyled,
   HeaderPanelStyled,
@@ -30,7 +37,6 @@ import {
   StyledEventFileDetail,
   VideoOverlay,
 } from './style';
-import DrawerTicket from './components/DrawerTicket';
 
 const { Panel } = Collapse;
 
@@ -119,6 +125,70 @@ function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
       .catch((err) => {
         console.log('getTracingEvents err', err);
       });
+  };
+
+  const handleMarkImportantFile = (isImportant) => {
+    const per = permissionCheck('mark_important_file');
+    if (!per) {
+      notify('error', 'noti.archived_file', 'noti.do_not_have_permission_to_action');
+      return;
+    }
+
+    if (nameSpace === EVENT_AI_NAMESPACE) {
+      //no function
+      return;
+    }
+
+    if (nameSpace === DAILY_ARCHIVE_NAMESPACE) {
+      // file
+      const params = Object.assign({ ...data, tableName: 'file', isImportant: isImportant });
+      eventFilesApi
+        .updateFile(params, params.uuid)
+        .then((res) => {
+          notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
+        })
+        .catch((err) => {
+          notify('error', 'noti.archived_file', 'noti.ERROR');
+        });
+
+      return;
+    }
+
+    if (nameSpace === CAPTURED_NAMESPACE || nameSpace === EVENT_FILES_NAMESPACE) {
+      // event_file
+      const params = Object.assign({
+        ...data,
+        tableName: 'event_file',
+        isImportant: isImportant,
+      });
+
+      eventFilesApi
+        .updateEventFile(params, params.uuid)
+        .then((res) => {
+          notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
+        })
+        .catch((err) => {
+          notify('error', 'noti.archived_file', 'noti.ERROR');
+        });
+      return;
+    }
+
+    if (nameSpace === IMPORTANT_NAMESPACE) {
+      const params = Object.assign({
+        ...data,
+        isImportant: isImportant,
+      });
+      eventFilesApi
+        .updateEventFile(params, params.uuid)
+        .then((res) => {
+          notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
+        })
+        .catch((err) => {
+          notify('error', 'noti.archived_file', 'noti.ERROR');
+        });
+
+      return;
+    }
   };
 
   const renderTitle = () => {
@@ -692,11 +762,20 @@ function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
               id: 'view.storage.delete',
             })}
           </Button>
-          <Button icon={<StarOutlined />}>
-            {intl.formatMessage({
-              id: 'view.storage.tick',
-            })}
-          </Button>
+
+          {data.important === false ? (
+            <Button icon={<StarOutlined />} onClick={() => handleMarkImportantFile(true)}>
+              {intl.formatMessage({
+                id: 'view.storage.tick',
+              })}
+            </Button>
+          ) : (
+            <Button icon={<StarOutlined />} onClick={() => handleMarkImportantFile(false)}>
+              {intl.formatMessage({
+                id: 'view.storage.untick',
+              })}
+            </Button>
+          )}
 
           {nameSpace === EVENT_AI_NAMESPACE && (
             <>
