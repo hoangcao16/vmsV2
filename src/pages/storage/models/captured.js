@@ -35,8 +35,9 @@ export default {
       return { ...state, metadata: { ...state.metadata, ...initSearchCaptured } };
     },
 
-    save(state, { payload: { data: list, metadata } }) {
-      return { ...state, list, metadata: { ...state.metadata, ...metadata } };
+    save(state, { payload: { data: danhsach, metadata } }) {
+      console.log('❗TuanHQ🐞 💻 save 💻 danhsach', danhsach);
+      return { ...state, list: danhsach, metadata: { ...state.metadata, ...metadata } };
     },
 
     saveSearchParam(state, { payload }) {
