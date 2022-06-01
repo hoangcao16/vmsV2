@@ -27,8 +27,8 @@ const LiveFullScreen = ({ dispatch, isOpenDrawer, selectedCamera, cameraList }) 
   const closeRTCPeerConnection = (slotIdx) => {
     // CLOSE STREAM
     let pcLstTmp = pcRef.current;
-    if (pcLstTmp.pc) {
-      pcLstTmp.pc.close();
+    if (pcLstTmp?.pc) {
+      pcLstTmp?.pc?.close();
     }
   };
   useEffect(() => {

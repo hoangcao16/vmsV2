@@ -33,4 +33,18 @@ export const ProTableStyle = styled(ProTable)`
   .ant-pagination {
     justify-content: center;
   }
+  .ant-table-cell {
+    .ant-badge-status {
+      display: flex;
+      align-items: center;
+      &-text {
+        flex: 1;
+      }
+    }
+  }
+`;
+export const TableRowStyle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
