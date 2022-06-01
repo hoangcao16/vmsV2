@@ -77,6 +77,7 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
         payload: {
           name: value,
           size: metadata?.size,
+          page: 1,
         },
       });
     } else if (type === 'camera_type') {
@@ -85,6 +86,16 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
         payload: {
           name: value,
           size: metadata?.size,
+          page: 1,
+        },
+      });
+    } else if (type === 'camera_tags') {
+      dispatch({
+        type: 'cameraCategory/fetchAllTags',
+        payload: {
+          key: value,
+          size: metadata?.size,
+          page: 1,
         },
       });
     }
@@ -96,7 +107,11 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
         headerTitle={`${intl.formatMessage(
           {
             id: `view.${
-              type === 'camera_vendor' ? 'category.camera_vendor' : 'camera.camera_type'
+              type === 'camera_vendor'
+                ? 'category.camera_vendor'
+                : type === 'camera_type'
+                ? 'camera.camera_type'
+                : 'category.tags'
             }`,
           },
           {
@@ -167,7 +182,11 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
             })} ${total} ${intl.formatMessage(
               {
                 id: `view.${
-                  type === 'camera_vendor' ? 'category.camera_vendor' : 'camera.camera_type'
+                  type === 'camera_vendor'
+                    ? 'category.camera_vendor'
+                    : type === 'camera_type'
+                    ? 'camera.camera_type'
+                    : 'category.tags'
                 }`,
               },
               {
