@@ -38,6 +38,18 @@ const AddEditCameraCategory = ({ onClose, selectedRecord, dispatch, openDrawer, 
           payload: { id: selectedRecord?.uuid, values: { ...payload } },
         });
       }
+    } else if (type === 'camera_tags') {
+      if (isEmpty(selectedRecord)) {
+        dispatch({
+          type: 'cameraCategory/addTags',
+          payload: payload,
+        });
+      } else {
+        dispatch({
+          type: 'cameraCategory/editTags',
+          payload: { id: selectedRecord?.uuid, values: { ...payload } },
+        });
+      }
     }
 
     onClose();
@@ -52,6 +64,11 @@ const AddEditCameraCategory = ({ onClose, selectedRecord, dispatch, openDrawer, 
     } else if (type === 'camera_type') {
       dispatch({
         type: 'cameraCategory/deleteType',
+        id: selectedRecord?.uuid,
+      });
+    } else if (type === 'camera_tags') {
+      dispatch({
+        type: 'cameraCategory/deleteTags',
         id: selectedRecord?.uuid,
       });
     }
@@ -118,7 +135,11 @@ const AddEditCameraCategory = ({ onClose, selectedRecord, dispatch, openDrawer, 
                 label={`${intl.formatMessage(
                   {
                     id: `view.${
-                      type === 'camera_vendor' ? 'category.camera_vendor' : 'camera.camera_type'
+                      type === 'camera_vendor'
+                        ? 'category.camera_vendor'
+                        : type === 'camera_type'
+                        ? 'camera.camera_type'
+                        : 'category.tags'
                     }`,
                   },
                   {
@@ -128,7 +149,7 @@ const AddEditCameraCategory = ({ onClose, selectedRecord, dispatch, openDrawer, 
                   },
                 )}`}
                 type="input"
-                name="name"
+                name={type === 'camera_tags' ? 'key' : 'name'}
                 maxLength={255}
                 required={true}
               >

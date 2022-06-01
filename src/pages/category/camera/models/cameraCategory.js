@@ -169,5 +169,57 @@ export default {
     *reloadType(action, { put, select }) {
       yield put({ type: 'fetchAllType', payload: { size: 100 } });
     },
+
+    *addTags({ payload }, { call, put }) {
+      try {
+        yield call(TagApi.addTag, payload);
+        notify('success', 'pages.setting-user.list-user.titleSuccess', 'noti.successfully_add');
+        yield put({ type: 'reloadTags' });
+      } catch (error) {
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
+      }
+    },
+
+    *editTags({ payload: { id, values } }, { call, put }) {
+      try {
+        yield call(TagApi.updateTagById, id, values);
+        notify(
+          'success',
+          'pages.setting-user.list-user.titleSuccess',
+          'noti.successfully_edit_name',
+        );
+        yield put({ type: 'reloadTags' });
+      } catch (error) {
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
+      }
+    },
+
+    *deleteTags({ id }, { call, put }) {
+      try {
+        yield call(TagApi.deleteTagById, id);
+        notify('success', 'pages.setting-user.list-user.titleSuccess', 'noti.delete_successful');
+        yield put({ type: 'reloadTags' });
+      } catch (error) {
+        console.log('error', error);
+
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
+      }
+    },
+
+    *reloadTags(action, { put, select }) {
+      yield put({ type: 'fetchAllTags', payload: { size: 100 } });
+    },
   },
 };
