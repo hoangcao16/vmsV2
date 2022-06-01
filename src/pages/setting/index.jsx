@@ -12,7 +12,12 @@ const Setting = ({ listRecord, listClean, listDisk, loading, dispatch, allEmails
         <RecordSetting list={listRecord} dispatch={dispatch} loading={loading} />
         <CleanSetting list={listClean} dispatch={dispatch} loading={loading} />
         <WarningStoreSetting list={listDisk} dispatch={dispatch} loading={loading} />
-        <EmailConfig listAllEmail={allEmails} listEmail={listEmail} />
+        <EmailConfig
+          listAllEmail={allEmails}
+          listEmail={listEmail}
+          dispatch={dispatch}
+          loading={loading}
+        />
       </>
     </PageContainer>
   );

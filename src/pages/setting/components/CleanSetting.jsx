@@ -1,6 +1,6 @@
 import { ClearOutlined, CloseOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Col, Input, InputNumber, Row, Select, Tooltip } from 'antd';
-import { isEmpty, isNaN, parseInt } from 'lodash';
+import { Button, Checkbox, Col, Input, Row, Select, Tooltip } from 'antd';
+import { isEmpty, parseInt } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import { StyledCard } from '../style';
