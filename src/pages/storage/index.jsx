@@ -16,7 +16,7 @@ const { TabPane } = Tabs;
 
 function Storage({ dispatch }) {
   const intl = useIntl();
-  const [nameSpace, setNameSpace] = useState(EVENT_AI_NAMESPACE);
+  const [nameSpace, setNameSpace] = useState(DAILY_ARCHIVE_NAMESPACE);
 
   const init = (activeKey) => {
     if (!activeKey) {
