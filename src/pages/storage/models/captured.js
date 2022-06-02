@@ -36,7 +36,6 @@ export default {
     },
 
     save(state, { payload: { data: danhsach, metadata } }) {
-      console.log('❗TuanHQ🐞 💻 save 💻 danhsach', danhsach);
       return { ...state, list: danhsach, metadata: { ...state.metadata, ...metadata } };
     },
 
