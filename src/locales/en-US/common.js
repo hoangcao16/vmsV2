@@ -653,7 +653,7 @@ export default {
   'view.penaltyTicket.outside-the-system': 'Outside the system',
   'view.penaltyTicket.leader': 'Leader',
   'view.penaltyTicket.require-email': 'Enter/paste email address',
-  'view.penaltyTicket.validate-email': 'Enter malformed email e.g. abc@gmail.com, xyz@gmail.com',
+  'view.penaltyTicket.validate-email': 'Enter malformed email e.g. abc@gmail.com,xyz@gmail.com',
   'view.penaltyTicket.send-a-ticket': 'Send ticket',
   'view.penaltyTicket.send': 'Send',
   'view.penaltyTicket.cancel-a-ticket': 'Cancel',

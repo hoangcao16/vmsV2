@@ -37,6 +37,12 @@ const ReportApi = {
   //   return result;
   // // },
 
+  getExportDataToMail: async (params) => {
+    return request.get(`/owl/api/v1/send-export-excel-data`, {
+      params,
+    });
+  },
+
   // getTableData: async (body) => {
   //   let result;
   //   try {

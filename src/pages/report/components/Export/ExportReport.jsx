@@ -30,7 +30,11 @@ const ExportReport = (props) => {
     }
   };
 
-  return <ExportOutlined onClick={handleExport} />;
+  return (
+    <div>
+      <ExportOutlined onClick={handleExport} />
+    </div>
+  );
 };
 
 function mapStateToProps(state) {
