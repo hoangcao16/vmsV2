@@ -37,6 +37,10 @@ const ModuleApi = {
   editCamproxy: async (camproxyId, values) => {
     return request.put(`/cctv-controller-svc/api/v1/camproxy/${camproxyId}`, values);
   },
+
+  getAllHardDrive: async (params) => {
+    return request.get(`/cctv-monitor-ctrl-svc/api/v1/config/disk-info`, { params: params });
+  },
 };
 
 export default ModuleApi;

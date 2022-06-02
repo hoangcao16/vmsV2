@@ -38,6 +38,10 @@ export const ProTableStyle = styled(ProTable)`
   .ant-select-auto-complete {
     width: 100%;
   }
+
+  .ant-table-cell {
+    padding: 16px !important;
+  }
 `;
 
 export const TabsStyle = styled(Tabs)`
