@@ -656,7 +656,7 @@ export default {
   'view.penaltyTicket.leader': 'Lãnh đạo',
   'view.penaltyTicket.require-email': 'Nhập/dán địa chỉ email',
   'view.penaltyTicket.validate-email':
-    'Nhập email không đúng định dạng, ví dụ: abc@gmail.com, xyz@gmail.com',
+    'Nhập email không đúng định dạng, ví dụ: abc@gmail.com,xyz@gmail.com',
   'view.penaltyTicket.send-a-ticket': 'Gửi phiếu phạt',
   'view.penaltyTicket.cancel-a-ticket': 'Hủy bỏ',
   'view.penaltyTicket.send': 'Gửi',
