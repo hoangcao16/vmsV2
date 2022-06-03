@@ -1,25 +1,6 @@
 import styled from 'styled-components';
 export const Container = styled.div`
   position: relative;
-  &[data-type='fullsize'] {
-    position: fixed !important;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-    width: auto !important;
-    height: 100vh !important;
-    padding-top: 48px;
-
-    .close-btn {
-      top: 64px;
-      right: 20px;
-    }
-    .fullsize-btn {
-      top: 100px;
-      right: 20px;
-    }
-  }
   .close-btn {
     position: absolute;
     top: 6px;
@@ -37,7 +18,7 @@ export const Container = styled.div`
   }
   .map__live-slot-cam-name {
     position: absolute;
-    bottom: 0;
+    bottom: 12px;
     width: 100%;
     height: 24px;
     background: #000000;

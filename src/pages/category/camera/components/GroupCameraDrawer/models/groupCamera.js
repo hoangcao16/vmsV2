@@ -5,7 +5,7 @@ export default {
   state: {
     groupCameraParentOptions: [],
     selectedGroupCamera: {},
-    closeDrawerState: false,
+    isOpenDrawer: false,
     cameraGroupExistsed: [],
     metadataCameraGroupExistsed: {
       total: 0,
@@ -36,9 +36,8 @@ export default {
         metadataCameraGroupExistsed,
       };
     },
-    closeDrawer(state) {
-      console.log(state);
-      return { ...state, closeDrawerState: !state.closeDrawerState };
+    saveIsOpenDrawer(state, { payload }) {
+      return { ...state, isOpenDrawer: payload };
     },
   },
   effects: {
@@ -92,7 +91,8 @@ export default {
             },
           });
           yield put({
-            type: 'closeDrawer',
+            type: 'saveIsOpenDrawer',
+            payload: false,
           });
           notify('success', 'noti.success', 'noti.successfully_add_camera_group');
         }
@@ -112,9 +112,6 @@ export default {
             page: 0,
             size: 1000,
           },
-        });
-        yield put({
-          type: 'closeDrawer',
         });
         notify('success', 'noti.success', 'noti.successfully_edit_camera_group');
         // }

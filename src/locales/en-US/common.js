@@ -231,6 +231,7 @@ export default {
   'view.maps.add_tracking_location': '{add} tracking {loc}',
   'view.maps.select_date': 'Select date',
   'view.maps.select_time': 'Select time',
+  'view.maps.please_text_placeholder': '{plsEnter} {txt}',
   // View Report
   'view.report.cameraIsWorking': 'Camera is working',
   'view.report.cameraIsNotWorking': 'Camera is not working',

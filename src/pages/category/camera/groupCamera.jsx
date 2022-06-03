@@ -16,6 +16,7 @@ import isEmpty from 'lodash/isEmpty';
 import CircleIcon from '@/assets/img/iconCircle';
 import debounce from 'lodash/debounce';
 import GroupCameraDrawer from './components/GroupCameraDrawer';
+import _ from 'lodash';
 const { Search } = Input;
 
 const unflatten = (array, parent, tree) => {
@@ -69,7 +70,6 @@ const GroupCamera = ({ dispatch, groupCameraParentOptions }) => {
   const [camGroupUuid, setCamGroupUuid] = useState(null);
   const [treeNodeCamList, setTreeNodeCamList] = useState([]);
   const [valueSearch, setValueSearch] = useState();
-  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [cameraGroupUuid, setCameraGroupUuid] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   // get camera group parent options
@@ -169,7 +169,10 @@ const GroupCamera = ({ dispatch, groupCameraParentOptions }) => {
   //show drawer
   const showDrawer = (id) => {
     setValueSearch(null);
-    setIsOpenDrawer(true);
+    dispatch({
+      type: 'groupcamera/saveIsOpenDrawer',
+      payload: true,
+    });
     setCameraGroupUuid(id);
   };
   const onExpand = (expandedKeys) => {
@@ -293,13 +296,7 @@ const GroupCamera = ({ dispatch, groupCameraParentOptions }) => {
           )}
         </Col>
       </GroupCameraContainer>
-      <GroupCameraDrawer
-        isOpenDrawer={isOpenDrawer}
-        setIsOpenDrawer={setIsOpenDrawer}
-        cameraGroupUuid={cameraGroupUuid}
-        isEdit={isEdit}
-        setIsEdit={setIsEdit}
-      />
+      <GroupCameraDrawer cameraGroupUuid={cameraGroupUuid} isEdit={isEdit} setIsEdit={setIsEdit} />
     </>
   );
 };
