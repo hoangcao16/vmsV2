@@ -70,6 +70,13 @@ export default {
             },
           });
           yield put({
+            type: 'maps/fetchCameraList',
+            payload: {
+              page: 1,
+              size: 1000,
+            },
+          });
+          yield put({
             type: 'closeDrawer',
           });
           notify('success', 'noti.success', 'noti.successfully_add_camera');
