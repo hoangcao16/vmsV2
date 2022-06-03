@@ -3,16 +3,14 @@ import { StyledDrawer, SpanCode } from './style';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
 import { Space, Button, Form, Input, Row, Col } from 'antd';
-import { SaveOutlined, CloseOutlined } from '@ant-design/icons';
+import { SaveOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect, useState } from 'react';
 import ProTable, { EditableProTable } from '@ant-design/pro-table';
 const GroupCameraDrawer = ({
   dispatch,
   isOpenDrawer,
-  setIsOpenDrawer,
   cameraGroupUuid,
-  closeDrawerState,
   isEdit,
   setIsEdit,
   selectedGroupCamera,
@@ -50,7 +48,10 @@ const GroupCameraDrawer = ({
   }, [selectedGroupCamera]);
   //close drawer
   const onClose = () => {
-    setIsOpenDrawer(false);
+    dispatch({
+      type: 'groupcamera/saveIsOpenDrawer',
+      payload: false,
+    });
     setIsEdit(false);
     setCameraListInGroup([]);
     setSelectedCameraToAdd([]);
@@ -60,9 +61,6 @@ const GroupCameraDrawer = ({
   const onCloseDrawerAdd = () => {
     setIsOpenDrawerCamera(false);
   };
-  useEffect(() => {
-    onClose();
-  }, [closeDrawerState]);
   const handleSubmit = async (value) => {
     const cameraUuidList = cameraListInGroup?.map((camera) => camera.uuid);
     if (isEdit) {
@@ -70,6 +68,10 @@ const GroupCameraDrawer = ({
         type: 'groupcamera/updateGroupCamera',
         payload: { ...value, cameraUuidList },
         uuid: cameraGroupUuid,
+      });
+      await dispatch({
+        type: 'groupcamera/saveIsOpenDrawer',
+        payload: false,
       });
     } else {
       const payload = {
@@ -86,94 +88,207 @@ const GroupCameraDrawer = ({
       });
     }
   };
-  const columns = [
-    {
-      title: intl.formatMessage(
-        { id: 'view.map.camera_id' },
+  const handleDeleteCameraFromGroup = async (camera) => {
+    const index = cameraListInGroup.findIndex((item) => item.uuid === camera.uuid);
+    const cameraList = [...cameraListInGroup];
+    cameraList.splice(index, 1);
+    const cameraUuidList = cameraList?.map((cam) => cam.uuid);
+    setCameraListInGroup(cameraList);
+    await dispatch({
+      type: 'groupcamera/updateGroupCamera',
+      payload: { cameraUuidList },
+      uuid: cameraGroupUuid,
+    });
+  };
+  const columns = () => {
+    if (isEdit && !isOpenDrawerCamera) {
+      return [
         {
-          cam: '',
+          title: intl.formatMessage(
+            { id: 'view.map.camera_id' },
+            {
+              cam: '',
+            },
+          ),
+          dataIndex: 'code',
+          key: 'code',
+          render: (text) => {
+            return <SpanCode>{text}</SpanCode>;
+          },
         },
-      ),
-      dataIndex: 'code',
-      key: 'code',
-      render: (text) => {
-        return <SpanCode>{text}</SpanCode>;
-      },
-    },
-    {
-      title: intl.formatMessage(
-        { id: 'view.map.camera_name' },
         {
-          cam: intl.formatMessage({ id: 'camera' }),
+          title: intl.formatMessage(
+            { id: 'view.map.camera_name' },
+            {
+              cam: intl.formatMessage({ id: 'camera' }),
+            },
+          ),
+          dataIndex: 'name',
+          key: 'name',
         },
-      ),
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: intl.formatMessage({
-        id: 'view.map.province_id',
-      }),
-      dataIndex: 'provinceName',
-      key: 'provinceName',
-    },
-    {
-      title: intl.formatMessage({
-        id: 'view.map.district_id',
-      }),
-      dataIndex: 'districtName',
-      key: 'districtName',
-    },
-    {
-      title: intl.formatMessage({
-        id: 'view.map.ward_id',
-      }),
-      dataIndex: 'wardName',
-      key: 'wardName',
-    },
-    {
-      title: intl.formatMessage({
-        id: 'view.map.address',
-      }),
-      dataIndex: 'address',
-      key: 'address',
-    },
-    {
-      title: intl.formatMessage({
-        id: 'view.map.zone',
-      }),
-      dataIndex: 'zoneName',
-      key: 'zoneName',
-    },
-    {
-      title: intl.formatMessage({
-        id: 'view.common_device.status',
-      }),
-      dataIndex: 'recordingStatus',
-      hideInForm: true,
-      valueEnum: {
-        0: {
-          text: intl.formatMessage({
-            id: 'view.user.detail_list.pause',
+        {
+          title: intl.formatMessage({
+            id: 'view.map.province_id',
           }),
-          status: 'Default',
+          dataIndex: 'provinceName',
+          key: 'provinceName',
         },
-        1: {
-          text: intl.formatMessage({
-            id: 'view.camera.active',
+        {
+          title: intl.formatMessage({
+            id: 'view.map.district_id',
           }),
-          status: 'Success',
+          dataIndex: 'districtName',
+          key: 'districtName',
         },
-        2: {
-          text: intl.formatMessage({
-            id: 'view.camera.error',
+        {
+          title: intl.formatMessage({
+            id: 'view.map.ward_id',
           }),
-          status: 'Error',
+          dataIndex: 'wardName',
+          key: 'wardName',
         },
-      },
-      key: 'cameraStatus',
-    },
-  ];
+        {
+          title: intl.formatMessage({
+            id: 'view.map.address',
+          }),
+          dataIndex: 'address',
+          key: 'address',
+        },
+        {
+          title: intl.formatMessage({
+            id: 'view.map.zone',
+          }),
+          dataIndex: 'zoneName',
+          key: 'zoneName',
+        },
+        {
+          title: intl.formatMessage({
+            id: 'view.common_device.status',
+          }),
+          dataIndex: 'recordingStatus',
+          hideInForm: true,
+          valueEnum: {
+            0: {
+              text: intl.formatMessage({
+                id: 'view.user.detail_list.pause',
+              }),
+              status: 'Default',
+            },
+            1: {
+              text: intl.formatMessage({
+                id: 'view.camera.active',
+              }),
+              status: 'Success',
+            },
+            2: {
+              text: intl.formatMessage({
+                id: 'view.camera.error',
+              }),
+              status: 'Error',
+            },
+          },
+          key: 'cameraStatus',
+        },
+        {
+          title: '',
+          key: 'zoneName',
+          width: '5%',
+          render: (text, record) => {
+            return <DeleteOutlined onClick={() => handleDeleteCameraFromGroup(record)} />;
+          },
+        },
+      ];
+    } else {
+      return [
+        {
+          title: intl.formatMessage(
+            { id: 'view.map.camera_id' },
+            {
+              cam: '',
+            },
+          ),
+          dataIndex: 'code',
+          key: 'code',
+          render: (text) => {
+            return <SpanCode>{text}</SpanCode>;
+          },
+        },
+        {
+          title: intl.formatMessage(
+            { id: 'view.map.camera_name' },
+            {
+              cam: intl.formatMessage({ id: 'camera' }),
+            },
+          ),
+          dataIndex: 'name',
+          key: 'name',
+        },
+        {
+          title: intl.formatMessage({
+            id: 'view.map.province_id',
+          }),
+          dataIndex: 'provinceName',
+          key: 'provinceName',
+        },
+        {
+          title: intl.formatMessage({
+            id: 'view.map.district_id',
+          }),
+          dataIndex: 'districtName',
+          key: 'districtName',
+        },
+        {
+          title: intl.formatMessage({
+            id: 'view.map.ward_id',
+          }),
+          dataIndex: 'wardName',
+          key: 'wardName',
+        },
+        {
+          title: intl.formatMessage({
+            id: 'view.map.address',
+          }),
+          dataIndex: 'address',
+          key: 'address',
+        },
+        {
+          title: intl.formatMessage({
+            id: 'view.map.zone',
+          }),
+          dataIndex: 'zoneName',
+          key: 'zoneName',
+        },
+        {
+          title: intl.formatMessage({
+            id: 'view.common_device.status',
+          }),
+          dataIndex: 'recordingStatus',
+          hideInForm: true,
+          valueEnum: {
+            0: {
+              text: intl.formatMessage({
+                id: 'view.user.detail_list.pause',
+              }),
+              status: 'Default',
+            },
+            1: {
+              text: intl.formatMessage({
+                id: 'view.camera.active',
+              }),
+              status: 'Success',
+            },
+            2: {
+              text: intl.formatMessage({
+                id: 'view.camera.error',
+              }),
+              status: 'Error',
+            },
+          },
+          key: 'cameraStatus',
+        },
+      ];
+    }
+  };
   const handleSelectCamera = async () => {
     dispatch({
       type: 'groupcamera/fetchCameraGroupExistsed',
@@ -302,7 +417,7 @@ const GroupCameraDrawer = ({
         <EditableProTable
           options={false}
           value={cameraListInGroup}
-          columns={columns}
+          columns={columns()}
           rowKey="uuid"
           search={false}
           recordCreatorProps={{
@@ -341,7 +456,7 @@ const GroupCameraDrawer = ({
         <ProTable
           options={false}
           dataSource={cameraGroupExistsed}
-          columns={columns}
+          columns={columns()}
           rowKey="uuid"
           search={false}
           rowSelection={{
@@ -368,17 +483,13 @@ const GroupCameraDrawer = ({
 };
 
 function mapStateToProps(state) {
-  const {
-    closeDrawerState,
-    selectedGroupCamera,
-    cameraGroupExistsed,
-    metadataCameraGroupExistsed,
-  } = state.groupcamera;
+  const { selectedGroupCamera, cameraGroupExistsed, metadataCameraGroupExistsed, isOpenDrawer } =
+    state.groupcamera;
   return {
-    closeDrawerState,
     selectedGroupCamera,
     cameraGroupExistsed,
     metadataCameraGroupExistsed,
+    isOpenDrawer,
   };
 }
 export default connect(mapStateToProps)(GroupCameraDrawer);
