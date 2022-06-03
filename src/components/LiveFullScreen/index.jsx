@@ -170,18 +170,6 @@ const LiveFullScreen = ({ dispatch, isOpenDrawer, selectedCamera, cameraList }) 
       width={'80%'}
       zIndex={1000}
       placement="right"
-      extra={
-        <Space>
-          <Button type="primary" htmlType="submit" onClick={() => {}}>
-            <SaveOutlined />
-            {intl.formatMessage({ id: 'view.map.button_save' })}
-          </Button>
-          <Button onClick={onClose}>
-            <CloseOutlined />
-            {intl.formatMessage({ id: 'view.map.cancel' })}
-          </Button>
-        </Space>
-      }
     >
       <Header>
         <div className="title">{intl.formatMessage({ id: 'view.live.view_fullscreen' })}</div>

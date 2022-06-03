@@ -18,7 +18,6 @@ const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
   const [loading, setLoading] = useState(false);
   const videoRef = useRef(null);
   const pcRef = useRef(null);
-  const [isMaximize, setIsMaximize] = useState(false);
   const intl = useIntl();
   const cameraStreaming = listStreaming[cameraIndex];
 
@@ -34,7 +33,6 @@ const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
       type: 'liveFullScreen/saveSelectedCamera',
       payload: cameraStreaming,
     });
-    // setIsMaximize(!isMaximize);
   };
   useEffect(() => {
     if (cameraStreaming) {
@@ -75,7 +73,6 @@ const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
       pc.ontrack = (event) => {
         if (videoRef.current) {
           videoRef.current.srcObject = event.streams[0];
-          videoRef.current.style = 'display:block;';
           videoRef.current.play();
         }
       };
@@ -164,15 +161,12 @@ const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
       type: 'viewLiveCameras/saveListStreaming',
       payload: newLiveCameraList,
     });
-    setIsMaximize(false);
   };
   const stopCamera = () => {
     videoRef.current.srcObject = null;
-    videoRef.current.innerHTML = null;
-    videoRef.current.style = 'display:none;';
   };
   return (
-    <Container data-type={isMaximize ? 'fullsize' : ''} className="map__live-card" id={cameraIndex}>
+    <Container className="map__live-card" id={cameraIndex}>
       {loading && (
         <StyledLoading>
           <Spin indicator={<LoadingOutlined size={48} />} />
@@ -181,11 +175,7 @@ const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
       {cameraStreaming && cameraStreaming?.isPlay && (
         <>
           <Button className="close-btn" icon={<CloseOutlined />} onClick={closeCamera} />
-          <Button
-            className="fullsize-btn"
-            icon={isMaximize ? <CompressOutlined /> : <ExpandOutlined />}
-            onClick={maxMinCamera}
-          />
+          <Button className="fullsize-btn" icon={<ExpandOutlined />} onClick={maxMinCamera} />
         </>
       )}
 
