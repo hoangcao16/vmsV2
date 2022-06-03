@@ -27,34 +27,17 @@ const ReportApi = {
     });
   },
 
-  // getExportDataToMail: async (body) => {
-  //   let result;
-  //   try {
-  //     result = await MyService.getRequestData('/owl/api/v1/send-export-excel-data', body);
-  //   } catch (error) {
-  //     console.log(JSON.stringify(error));
-  //   }
-  //   return result;
-  // // },
-
   getExportDataToMail: async (params) => {
     return request.get(`/owl/api/v1/send-export-excel-data`, {
       params,
     });
   },
 
-  // getTableData: async (body) => {
-  //   let result;
-  //   try {
-  //     result = await MyService.getRequestData('/owl/api/v1/get-data-table', body);
-  //   } catch (error) {
-  //     console.log(JSON.stringify(error));
-  //   }
-  //   if (handleErrCodeReport(result) === null) {
-  //     return [];
-  //   }
-  //   return result;
-  // },
+  getTableData: async (params) => {
+    return request.get(`/owl/api/v1/get-data-table`, {
+      params,
+    });
+  },
 
   getData: async (params) => {
     return request.get(`/owl/api/v2/get-data-line`, {

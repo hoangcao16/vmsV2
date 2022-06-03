@@ -65,7 +65,7 @@ export default {
   'pages.report.chart.processing': 'Processing',
   'pages.report.chart.processed': 'Processed',
   'pages.report.chart.note': 'Note',
-  'pages.report.chart.event': 'event',
+  'pages.report.chart.event': 'event(s)',
   'pages.report.chart.trafficViolationsStatistics': 'Traffic violations statistics',
   'pages.report.chart.trafficViolationsList': 'Traffic violations list',
   'pages.report.chart.recordCamera': 'Record Camera',
