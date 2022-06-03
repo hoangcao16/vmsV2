@@ -39,6 +39,7 @@ import {
   StyledEventFileDetail,
   VideoOverlay,
 } from './style';
+import debounce from 'lodash/debounce';
 
 const { Panel } = Collapse;
 
@@ -66,8 +67,10 @@ let defaultEventFile = {
   tBlob: null,
 };
 
-function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
+function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispatch }) {
   const intl = useIntl();
+  const [data, setData] = useState(dataSelected);
+  const [note, setNote] = useState(data.note ? data.note : '');
 
   const [detailAI, setDetailAI] = useState(defaultEventFile);
 
@@ -113,11 +116,15 @@ function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
     setOpenDrawerTicket(false);
   };
 
-  const handleRefresh = () => {
-    const { metadata } = state[EVENT_AI_NAMESPACE];
+  const handleRefresh = (payload = null) => {
+    if (payload) {
+      setData(payload);
+    }
+
+    const { metadata } = state[nameSpace];
     const dataParam = Object.assign({ ...metadata });
     dispatch({
-      type: `${EVENT_AI_NAMESPACE}/fetchAll`,
+      type: `${nameSpace}/fetchAll`,
       payload: dataParam,
     });
   };
@@ -140,8 +147,20 @@ function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
       });
   };
 
-  const handleMarkImportantFile = (isImportant) => {
-    const per = permissionCheck('mark_important_file');
+  const handleChangeNote = (e) => {
+    setNote(e.target.value);
+  };
+
+  const handleSaveNote = () => {
+    handleUpdateFile(null, note);
+  };
+
+  const handleUpdateFile = (isImportant = null, noteValue = null) => {
+    let perStr = '';
+    if (isImportant !== null) perStr = 'mark_important_file';
+    if (noteValue !== null) perStr = 'edit_file_note';
+    const per = permissionCheck(perStr);
+
     if (!per) {
       notify('error', 'noti.archived_file', 'noti.do_not_have_permission_to_action');
       return;
@@ -152,13 +171,20 @@ function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
       return;
     }
 
+    let params = Object.assign({ ...data });
+
+    if (isImportant !== null) params = Object.assign({ ...params, isImportant: isImportant });
+    if (noteValue !== null) params = Object.assign({ ...params, note: noteValue });
+
     if (nameSpace === DAILY_ARCHIVE_NAMESPACE) {
       // file
-      const params = Object.assign({ ...data, tableName: 'file', isImportant: isImportant });
+      params = Object.assign({ ...params, tableName: 'file' });
+
       eventFilesApi
         .updateFile(params, params.uuid)
         .then((res) => {
           notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
+          handleRefresh(res.payload);
         })
         .catch((err) => {
           notify('error', 'noti.archived_file', 'noti.ERROR');
@@ -169,15 +195,15 @@ function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
 
     if (nameSpace === CAPTURED_NAMESPACE || nameSpace === EVENT_FILES_NAMESPACE) {
       // event_file
-      const params = Object.assign({
-        ...data,
+      params = Object.assign({
+        ...params,
         tableName: 'event_file',
-        isImportant: isImportant,
       });
 
       eventFilesApi
         .updateEventFile(params, params.uuid)
         .then((res) => {
+          handleRefresh(res.payload);
           notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
         })
         .catch((err) => {
@@ -187,13 +213,10 @@ function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
     }
 
     if (nameSpace === IMPORTANT_NAMESPACE) {
-      const params = Object.assign({
-        ...data,
-        isImportant: isImportant,
-      });
       eventFilesApi
         .updateEventFile(params, params.uuid)
         .then((res) => {
+          handleRefresh(res.payload);
           notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
         })
         .catch((err) => {
@@ -447,7 +470,11 @@ function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
               :
             </div>
             <div className="detailInfo-content">
-              <Input.TextArea />
+              <Input.TextArea
+                className="detailInfo-content__note"
+                value={note}
+                onChange={handleChangeNote}
+              />
             </div>
           </div>
         </Col>
@@ -723,6 +750,7 @@ function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
   }, [nameSpace]);
 
   useEffect(() => {
+    setNote(data.note);
     if (nameSpace === EVENT_AI_NAMESPACE && data != null) {
       let imageOther = [];
       if (REACT_APP_AI_SOURCE === AI_SOURCE.PHILONG) {
@@ -863,7 +891,7 @@ function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
       title={renderTitle()}
       extra={
         <Space>
-          <Button icon={<SaveOutlined />} type="primary">
+          <Button icon={<SaveOutlined />} type="primary" onClick={handleSaveNote}>
             {intl.formatMessage({
               id: 'view.storage.save_note',
             })}
@@ -880,13 +908,13 @@ function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
           </Button>
 
           {data.important === false ? (
-            <Button icon={<StarOutlined />} onClick={() => handleMarkImportantFile(true)}>
+            <Button icon={<StarOutlined />} onClick={() => handleUpdateFile(true)}>
               {intl.formatMessage({
                 id: 'view.storage.tick',
               })}
             </Button>
           ) : (
-            <Button icon={<StarOutlined />} onClick={() => handleMarkImportantFile(false)}>
+            <Button icon={<StarOutlined />} onClick={() => handleUpdateFile(false)}>
               {intl.formatMessage({
                 id: 'view.storage.untick',
               })}

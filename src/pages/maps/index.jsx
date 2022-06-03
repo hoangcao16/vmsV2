@@ -484,6 +484,15 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
   useEffect(() => {
     setIsEditDrawer(false);
   }, [closeDrawerState]);
+  const onRowClick = (record) => {
+    setCurrentLan([record?.long_, record?.lat_]);
+  };
+  useEffect(() => {
+    mapboxRef.current &&
+      mapboxRef.current.flyTo({
+        center: currentLan,
+      });
+  }, [currentLan]);
   return (
     <>
       <MapHeader>
@@ -517,7 +526,7 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
       </MapHeader>
       <MapContainer>
         <div key="map" id="map" />
-        <CameraListDrawer />
+        <CameraListDrawer onRowClick={onRowClick} />
         <ViewLiveCameras />
       </MapContainer>
       <EditCamera isEditDrawer={isEditDrawer} setIsEditDrawer={setIsEditDrawer} />

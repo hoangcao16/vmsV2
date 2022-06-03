@@ -11,7 +11,7 @@ export const StyledDrawer = styled(MSCustomizeDrawer)`
     height: 100%;
     /* overflow: hidden; */
     video {
-      height: 82vh !important;
+      height: 86vh !important;
       margin-top: 20px;
       /* object-fit: cover; */
     }

@@ -44,13 +44,15 @@ const ViewLiveCameras = ({ dispatch, liveCameraList, cameraList, listStreaming }
     setIsCollapsedCameraForm(!isCollapsedCameraLive);
   };
   useEffect(() => {
-    const listStreaming = liveCameraList.map((itemLive) => {
-      const finded = cameraList.find((item) => item.uuid === itemLive);
-      if (finded) {
-        finded.isPlay = true;
-        return finded;
-      }
-    });
+    const listStreaming = liveCameraList
+      .map((itemLive) => {
+        const finded = cameraList.find((item) => item.uuid === itemLive);
+        if (finded) {
+          finded.isPlay = true;
+          return finded;
+        }
+      })
+      .filter((item) => item !== undefined);
     dispatch({
       type: 'viewLiveCameras/saveListStreaming',
       payload: listStreaming,
