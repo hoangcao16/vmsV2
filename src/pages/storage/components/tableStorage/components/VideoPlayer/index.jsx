@@ -46,7 +46,7 @@ let defaultEventFile = {
 };
 let playbackRate = 1;
 
-function VideoPlayer({ data, nameSpace, tracingList }) {
+function VideoPlayer({ data, nameSpace, tracingList, saveUrlSnapshot, saveFileDownloadFileName }) {
   const intl = useIntl();
 
   const [playerReady, setPlayerReady] = useState(false);
@@ -195,12 +195,16 @@ function VideoPlayer({ data, nameSpace, tracingList }) {
 
       //setUrlSnapshot("data:image/jpeg;base64," + file.thumbnailData[0]);
       // Call Nginx to get blob data of file
-      ExportEventFileApi.downloadFile(file.uuid + '.jpeg', file.type).then(async (result) => {
-        const blob = new Blob([result.data], { type: 'octet/stream' });
-        getBase64(blob, (image) => {
-          setUrlSnapshot(image);
+      ExportEventFileApi.downloadFile(file.uuid + '.jpeg', file.type)
+        .then(async (result) => {
+          const blob = new Blob([result], { type: 'octet/stream' });
+          getBase64(blob, async (image) => {
+            setUrlSnapshot(image);
+          });
+        })
+        .catch((err) => {
+          console.log(err);
         });
-      });
     }
 
     if (nameSpace === EVENT_FILES_NAMESPACE) {
@@ -561,6 +565,17 @@ function VideoPlayer({ data, nameSpace, tracingList }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
+
+  // save
+  useEffect(() => {
+    saveUrlSnapshot(urlSnapshot);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlSnapshot]);
+
+  useEffect(() => {
+    saveFileDownloadFileName(downloadFileName);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [downloadFileName]);
 
   return (
     <ViewFileContainer>

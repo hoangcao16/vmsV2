@@ -70,6 +70,7 @@
         "btoa": "^1.2.1",
         "classnames": "^2.3.0",
         "dotenv": "^16.0.0",
+        "file-saver": "^2.0.5",
         "gg-editor": "^2.0.2",
         "js-file-download": "^0.4.12",
         "lodash": "^4.17.21",

@@ -4,6 +4,8 @@ import ExportEventFileApi from '@/services/exportEventFile';
 import EventAiAPI from '@/services/storage-api/eventAI-api';
 import eventFilesApi from '@/services/storage-api/eventFilesApi';
 import permissionCheck from '@/utils/PermissionCheck';
+import { saveAs } from 'file-saver';
+
 import {
   CloseOutlined,
   CreditCardOutlined,
@@ -91,6 +93,17 @@ function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
   const [openDrawerTicket, setOpenDrawerTicket] = useState(false);
 
   const hasVideo = detailAI?.videoUrl ? true : false;
+
+  const [urlSnapshot, setUrlSnapshot] = useState('');
+  const [downloadFileName, setDownloadFileName] = useState('');
+
+  const saveUrlSnapshot = (url) => {
+    setUrlSnapshot(url);
+  };
+
+  const saveFileDownloadFileName = (filename) => {
+    setDownloadFileName(filename);
+  };
 
   const handleOpenDrawerTicket = () => {
     setOpenDrawerTicket(true);
@@ -213,6 +226,109 @@ function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
     }
 
     return <></>;
+  };
+
+  const getPermissionCheckDownload = () => {
+    if (nameSpace === DAILY_ARCHIVE_NAMESPACE) return permissionCheck('download_record_file');
+
+    if (nameSpace === CAPTURED_NAMESPACE) return permissionCheck('download_capture_file');
+
+    if (nameSpace === EVENT_FILES_NAMESPACE) return permissionCheck('download_event_file');
+
+    if (nameSpace === EVENT_AI_NAMESPACE) return permissionCheck('download_event_file');
+
+    if (nameSpace === IMPORTANT_NAMESPACE) {
+      if (data.tableName === 'file') {
+        return permissionCheck('download_record_file');
+      } else if (data.eventUuid !== '') {
+        return permissionCheck('download_event_file');
+      } else {
+        return permissionCheck('download_capture_file');
+      }
+    }
+    return false;
+  };
+
+  const handleDownloadFile = () => {
+    const per = getPermissionCheckDownload();
+    if (!per) {
+      notify('error', 'noti.archived_file', 'noti.do_not_have_permission_to_action');
+      return;
+    }
+
+    if (data.type === 1) {
+      //image
+      saveAs(urlSnapshot, downloadFileName);
+      return;
+    }
+
+    if (nameSpace === DAILY_ARCHIVE_NAMESPACE) {
+      // Call Nginx to get blob data of file
+      ExportEventFileApi.downloadFileNginx(data.id, data.fileType, data.nginx_host)
+        .then(async (result) => {
+          const blob = new Blob([result], { type: 'octet/stream' });
+          const url = window.URL.createObjectURL(blob);
+          saveAs(url, downloadFileName);
+        })
+        .catch((e) => {
+          console.log(e);
+          notify('warning', 'noti.archived_file', 'noti.error_download_file');
+        });
+
+      return;
+    }
+
+    if (nameSpace === EVENT_AI_NAMESPACE) {
+      if (REACT_APP_AI_SOURCE === AI_SOURCE.PHILONG) {
+        ExportEventFileApi.downloadAIIntegrationFile(imageAICurrent.uuid, imageAICurrent.fileName)
+          .then(async (result) => {
+            const blob = new Blob([result], {
+              type: 'octet/stream',
+            });
+            const url = window.URL.createObjectURL(blob);
+            saveAs(url, imageAICurrent.fileName);
+          })
+          .catch((e) => {
+            console.log(e);
+            notify('warning', 'noti.archived_file', 'noti.error_download_file');
+          });
+      } else {
+        ExportEventFileApi.downloadFileAI(
+          imageAICurrent.cameraUuid,
+          imageAICurrent.trackingId,
+          imageAICurrent.uuid,
+          imageAICurrent.fileName,
+          4,
+        )
+          .then(async (result) => {
+            const blob = new Blob([result], {
+              type: 'octet/stream',
+            });
+            const url = window.URL.createObjectURL(blob);
+            saveAs(url, downloadFileName);
+          })
+          .catch((e) => {
+            console.log(e);
+            notify('warning', 'noti.archived_file', 'noti.error_download_file');
+          });
+      }
+
+      return;
+    }
+
+    ExportEventFileApi.downloadFileNginx(data.id, data.type, data.nginx_host)
+      .then(async (result) => {
+        const blob = new Blob([result], {
+          type: 'octet/stream',
+        });
+        const url = window.URL.createObjectURL(blob);
+        saveAs(url, downloadFileName);
+      })
+      .catch((e) => {
+        console.log(e);
+        notify('warning', 'noti.archived_file', 'noti.error_download_file');
+      });
+    return;
   };
 
   const renderDailyArchiveNameSpace = () => {
@@ -752,7 +868,7 @@ function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
               id: 'view.storage.save_note',
             })}
           </Button>
-          <Button icon={<DownloadOutlined />}>
+          <Button icon={<DownloadOutlined />} onClick={handleDownloadFile}>
             {intl.formatMessage({
               id: 'view.storage.download_file',
             })}
@@ -832,7 +948,13 @@ function DrawerView({ isOpenView, data, onClose, state, nameSpace, dispatch }) {
         </Panel>
       </CollapseStyled>
 
-      <VideoPlayer data={data} nameSpace={nameSpace} tracingList={tracingList} />
+      <VideoPlayer
+        data={data}
+        nameSpace={nameSpace}
+        tracingList={tracingList}
+        saveUrlSnapshot={saveUrlSnapshot}
+        saveFileDownloadFileName={saveFileDownloadFileName}
+      />
 
       {nameSpace === EVENT_AI_NAMESPACE && (
         <DrawerTicket

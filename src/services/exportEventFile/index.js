@@ -60,6 +60,11 @@ const ExportEventFileApi = {
       method: 'GET',
       url: '/api/v1/downloadFile',
       params: { fileId: fileId, fileType: fileType },
+      headers: {
+        ...getHeadersDownload(),
+        requestId: _uniqueId('cctv'),
+      },
+      responseType: 'blob',
     });
   },
 
@@ -102,6 +107,12 @@ const ExportEventFileApi = {
       method: 'GET',
       url: '/api/v1/downloadAIFile',
       params: { cameraUuid: cameraUuid, trackingId: trackingId, uuid: uuid, fileName: fileName },
+
+      headers: {
+        ...getHeadersDownload(),
+        requestId: _uniqueId('cctv'),
+      },
+      responseType: 'blob',
     });
   },
 
@@ -110,6 +121,20 @@ const ExportEventFileApi = {
       method: 'POST',
       url: EVENT_FILE_ENDPOINT,
       data: record,
+    });
+  },
+
+  downloadFileNginx: (fileId, fileType, nginx_host) => {
+    return fileRequestClient.request({
+      method: 'GET',
+      url: '/api/v1/downloadFileNginx',
+      params: { fileId: fileId, fileType: fileType, nginxHost: nginx_host },
+
+      headers: {
+        ...getHeadersDownload(),
+        requestId: _uniqueId('cctv'),
+      },
+      responseType: 'blob',
     });
   },
 };
