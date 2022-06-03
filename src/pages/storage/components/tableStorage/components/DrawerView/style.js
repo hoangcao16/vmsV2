@@ -47,6 +47,14 @@ export const CollapseStyled = styled(Collapse)`
   .detailInfo-title {
     min-width: 130px;
   }
+
+  .detailInfo-content {
+    flex: 1;
+  }
+
+  .detailInfo-content__note {
+    max-width: 395px;
+  }
 `;
 
 export const HeaderPanelStyled = styled.div`

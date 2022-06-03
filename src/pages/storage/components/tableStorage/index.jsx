@@ -25,6 +25,9 @@ function TableStorage({ dispatch, state, nameSpace }) {
   const [captureSelected, setCaptureSelected] = useState(null);
 
   const handleOpenDrawerView = (value) => {
+    if (!value) {
+      return;
+    }
     setIsOpenView(true);
     setCaptureSelected(value);
   };
@@ -398,7 +401,7 @@ function TableStorage({ dispatch, state, nameSpace }) {
       {captureSelected !== null && (
         <DrawerView
           isOpenView={isOpenView}
-          data={captureSelected}
+          dataSelected={captureSelected}
           onClose={handleCloseDrawerView}
           nameSpace={nameSpace}
         />
