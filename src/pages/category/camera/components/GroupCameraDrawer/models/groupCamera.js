@@ -87,7 +87,7 @@ export default {
               parent: 'all',
               name: '',
               page: 0,
-              size: 1000,
+              size: 10000,
             },
           });
           yield put({
@@ -110,7 +110,7 @@ export default {
             parent: 'all',
             name: '',
             page: 0,
-            size: 1000,
+            size: 10000,
           },
         });
         notify('success', 'noti.success', 'noti.successfully_edit_camera_group');
@@ -129,7 +129,7 @@ export default {
             parent: 'all',
             name: '',
             page: 0,
-            size: 1000,
+            size: 10000,
           },
         });
         notify('success', 'noti.success', 'noti.successfully_delete_camera_group');

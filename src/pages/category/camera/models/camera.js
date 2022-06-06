@@ -73,7 +73,7 @@ export default {
             type: 'maps/fetchCameraList',
             payload: {
               page: 1,
-              size: 1000,
+              size: 10000,
             },
           });
           yield put({

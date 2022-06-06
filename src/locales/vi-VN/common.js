@@ -232,6 +232,7 @@ export default {
   'view.maps.select_date': 'Chọn ngày',
   'view.maps.select_time': 'Chọn giờ',
   'view.maps.please_text_placeholder': '{plsEnter} {txt}',
+  'view.maps.empty_camera': 'Chưa có {cam}',
   //view report
   'view.report.cameraIsWorking': 'Camera đang hoạt động',
   'view.report.cameraIsNotWorking': 'Camera không hoạt động',

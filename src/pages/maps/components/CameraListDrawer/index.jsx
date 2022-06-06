@@ -153,7 +153,7 @@ const CameraListDrawer = ({
   const handleSearch = (dataForm) => {
     const data = {
       page: 1,
-      size: 1000,
+      size: 10000,
       ...dataForm,
     };
     if (type === 'camera') {

@@ -8,7 +8,7 @@ export default {
     metadata: {
       total: 0,
       page: 1,
-      size: 1000,
+      size: 10000,
     },
   },
   reducers: {
@@ -47,7 +47,7 @@ export default {
       return history.listen(({ pathname, query }) => {
         const data = {
           page: 1,
-          size: 1000,
+          size: 10000,
         };
         if (pathname !== '/user/login' && pathname !== '/user/register') {
           dispatch({ type: 'fetchCameraList', payload: data });

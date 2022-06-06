@@ -232,6 +232,7 @@ export default {
   'view.maps.select_date': 'Select date',
   'view.maps.select_time': 'Select time',
   'view.maps.please_text_placeholder': '{plsEnter} {txt}',
+  'view.maps.empty_camera': 'No {cam}',
   // View Report
   'view.report.cameraIsWorking': 'Camera is working',
   'view.report.cameraIsNotWorking': 'Camera is not working',
