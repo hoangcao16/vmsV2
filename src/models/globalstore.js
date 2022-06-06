@@ -162,7 +162,7 @@ export default {
           id: '',
           provinceId: '',
           districtId: '',
-          size: 1000,
+          size: 10000,
         };
         if (pathname !== '/user/login' && pathname !== '/user/register') {
           dispatch({ type: 'fetchAllCameraTypes', payload: data });

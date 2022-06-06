@@ -4,7 +4,8 @@ export const LeftSider = styled.div`
     width: 40px;
     .close-btn,
     .fullsize-btn,
-    .map__live-slot-cam-name {
+    .map__live-slot-cam-name,
+    .emptycamera {
       display: none;
     }
   }
@@ -41,5 +42,18 @@ export const HeaderSider = styled.div`
       outline: none !important;
       box-shadow: none !important;
     }
+  }
+`;
+export const EmptyCameraStyled = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  .desc {
+    margin: 24px 0;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
   }
 `;
