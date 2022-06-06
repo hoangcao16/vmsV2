@@ -4,6 +4,21 @@ import { reactLocalStorage } from 'reactjs-localstorage';
 
 const EVENT_FILE_ENDPOINT = '/cctv-controller-svc/api/v1/event-files';
 
+const getHeaders = () => {
+  let headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json; charset=utf-8',
+  };
+  let user = reactLocalStorage.getObject('user_permissions', null);
+  if (user !== null) {
+    let token = user.token;
+    if (token) {
+      headers.Authorization = token;
+    }
+  }
+  return headers;
+};
+
 const getHeadersDownload = () => {
   let headers = {
     Accept: 'application/octet-stream',
@@ -121,6 +136,51 @@ const ExportEventFileApi = {
       method: 'POST',
       url: EVENT_FILE_ENDPOINT,
       data: record,
+    });
+  },
+
+  deletePhysicalFile: (uuid) => {
+    const data = { listUuid: [uuid] };
+    return request.request({
+      method: 'POST',
+      url: `/cctv-monitor-ctrl-svc/api/v1/file/delete-file`,
+      data: data,
+      headers: {
+        requestId: _uniqueId('cctv'),
+      },
+    });
+  },
+
+  deleteFile: (uuid) => {
+    return request.request({
+      method: 'delete',
+      url: `/cctv-controller-svc/api/v1/files/${uuid}`,
+      headers: {
+        requestId: _uniqueId('cctv'),
+      },
+    });
+  },
+
+  deleteEventFile: (uuid) => {
+    return request.request({
+      method: 'delete',
+      url: `/cctv-controller-svc/api/v1/event-files/${uuid}`,
+      headers: {
+        requestId: _uniqueId('cctv'),
+      },
+    });
+  },
+
+  deleteFileData: (pathFile) => {
+    return request.request({
+      method: 'post',
+      url: REACT_APP_BASE_FILE_URL + '/api/v1/deleteFile',
+      data: { fileName: pathFile },
+
+      headers: {
+        ...getHeaders(),
+        requestId: _uniqueId('cctv'),
+      },
     });
   },
 
