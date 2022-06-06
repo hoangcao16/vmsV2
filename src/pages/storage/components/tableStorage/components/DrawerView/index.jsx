@@ -70,7 +70,7 @@ let defaultEventFile = {
 function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispatch }) {
   const intl = useIntl();
   const [data, setData] = useState(dataSelected);
-  const [note, setNote] = useState(data.note ? data.note : '');
+  const [note, setNote] = useState(dataSelected.note ? dataSelected.note : '');
 
   const [detailAI, setDetailAI] = useState(defaultEventFile);
 
@@ -145,6 +145,109 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
       .catch((err) => {
         console.log('getTracingEvents err', err);
       });
+  };
+
+  const renderTitle = () => {
+    if (nameSpace === DAILY_ARCHIVE_NAMESPACE) {
+      return (
+        <>
+          {intl.formatMessage({
+            id: 'view.storage.detail_file',
+          })}
+        </>
+      );
+    }
+
+    if (nameSpace === EVENT_AI_NAMESPACE) {
+      return (
+        <>
+          {intl.formatMessage({
+            id: 'view.storage.detail_file_AI',
+          })}
+        </>
+      );
+    }
+
+    return <></>;
+  };
+
+  const handleDeleteFile = () => {
+    console.log('data', data);
+    if (nameSpace === DAILY_ARCHIVE_NAMESPACE || data.tableName === 'file') {
+      //DAILY ARCHIVE
+      ExportEventFileApi.deletePhysicalFile(data.uuid)
+        .then((res) => {
+          if (res.code === 800) {
+            return ExportEventFileApi.deleteFile(data.uuid);
+          }
+        })
+        .then((res) => {
+          notify('success', 'noti.archived_file', 'noti.successfully_delete_file');
+          handleRefresh();
+          onClose();
+        })
+        .catch((err) => {
+          console.log(err);
+          notify('error', 'noti.archived_file', 'noti.error_delete_file');
+        });
+
+      return;
+    }
+
+    if (nameSpace === EVENT_AI_NAMESPACE) {
+      // Event AI
+      EventAiAPI.delete(data.uuid)
+        .then((res) => {
+          notify('success', 'noti.archived_file', 'noti.successfully_delete_file');
+          handleRefresh();
+          onClose();
+        })
+        .catch((err) => {
+          console.log(err);
+          notify('error', 'noti.archived_file', 'noti.error_delete_file');
+        });
+      return;
+    }
+
+    if (data.type === 0) {
+      // CAPTURED - VIDEO | IMPORTANT - VIDEO | EVENT - VIDEO
+      ExportEventFileApi.deletePhysicalFile(data.uuid)
+        .then((res) => {
+          if (res.code === 800) {
+            return ExportEventFileApi.deleteEventFile(data.uuid);
+          }
+        })
+        .then((res) => {
+          notify('success', 'noti.archived_file', 'noti.successfully_delete_file');
+          handleRefresh();
+          onClose();
+        })
+        .catch((err) => {
+          console.log(err);
+          notify('error', 'noti.archived_file', 'noti.error_delete_file');
+        });
+
+      return;
+    }
+
+    // CAPTURED - IMAGE  | IMPORTANT - IMAGE | EVENT - IMAGE
+    ExportEventFileApi.deleteFileData(data.pathFile)
+      .then((res) => {
+        if (res.code === '1600') {
+          return ExportEventFileApi.deleteEventFile(data.uuid);
+        }
+      })
+      .then((res) => {
+        notify('success', 'noti.archived_file', 'noti.successfully_delete_file');
+        handleRefresh();
+        onClose();
+      })
+      .catch((err) => {
+        console.log(err);
+        notify('error', 'noti.archived_file', 'noti.error_delete_file');
+      });
+
+    return;
   };
 
   const handleChangeNote = (e) => {
@@ -225,30 +328,6 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
 
       return;
     }
-  };
-
-  const renderTitle = () => {
-    if (nameSpace === DAILY_ARCHIVE_NAMESPACE) {
-      return (
-        <>
-          {intl.formatMessage({
-            id: 'view.storage.detail_file',
-          })}
-        </>
-      );
-    }
-
-    if (nameSpace === EVENT_AI_NAMESPACE) {
-      return (
-        <>
-          {intl.formatMessage({
-            id: 'view.storage.detail_file_AI',
-          })}
-        </>
-      );
-    }
-
-    return <></>;
   };
 
   const getPermissionCheckDownload = () => {
@@ -901,7 +980,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
               id: 'view.storage.download_file',
             })}
           </Button>
-          <Button icon={<DeleteOutlined />}>
+          <Button icon={<DeleteOutlined />} onClick={handleDeleteFile}>
             {intl.formatMessage({
               id: 'view.storage.delete',
             })}
@@ -954,7 +1033,8 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
         defaultActiveKey={['1', '2']}
       >
         <Panel header={<HeaderPanelStyled>{renderTitleDetail()}</HeaderPanelStyled>} key="1">
-          {nameSpace === DAILY_ARCHIVE_NAMESPACE && renderDailyArchiveNameSpace()}
+          {/* {nameSpace === DAILY_ARCHIVE_NAMESPACE && renderDailyArchiveNameSpace()} */}
+          {nameSpace !== EVENT_AI_NAMESPACE && renderDailyArchiveNameSpace()}
           {nameSpace === EVENT_AI_NAMESPACE && renderEventAiNameSpace()}
         </Panel>
 

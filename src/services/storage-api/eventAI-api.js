@@ -10,7 +10,7 @@ const EventAiAPI = {
   },
 
   getTracingEvents: (uuid, params) => {
-    let url = '/vms-ai/api/v1/ai-events';
+    let url = `/vms-ai/api/v1/ai-events/${uuid}`;
     if (REACT_APP_AI_SOURCE === 'philong') {
       url = `/vms-ai/api/v1/integration-ai-events/tracing-event/${uuid}`;
     }
@@ -27,7 +27,7 @@ const EventAiAPI = {
   },
 
   editInfoOfEvent: (uuid, params) => {
-    let url = '/vms-ai/api/v1/ai-events';
+    let url = `/vms-ai/api/v1/ai-events/${uuid}`;
     if (REACT_APP_AI_SOURCE === 'philong') {
       url = `/vms-ai/api/v1/integration-ai-events/${uuid}`;
     }
@@ -37,6 +37,14 @@ const EventAiAPI = {
 
   sendTicket: (params) => {
     return request.post(`/vms-ai/api/v1/send-ticket`, params);
+  },
+
+  delete: (uuid) => {
+    let url = `/vms-ai/api/v1/ai-events/${uuid}`;
+    if (REACT_APP_AI_SOURCE === 'philong') {
+      url = `/vms-ai/api/v1/integration-ai-events/${uuid}`;
+    }
+    return request.delete(url);
   },
 };
 
