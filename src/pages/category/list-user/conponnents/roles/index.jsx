@@ -81,6 +81,7 @@ function UserRole({ dispatch, list, metadata, loading }) {
       payload: {
         page,
         size,
+        filter: search,
       },
     });
   };
@@ -91,8 +92,8 @@ function UserRole({ dispatch, list, metadata, loading }) {
         type: 'userRole/fetchAllUserRole',
         payload: {
           filter: value,
-          page: metadata?.page,
-          size: metadata?.size,
+          page: 1,
+          size: 10,
         },
       });
     }

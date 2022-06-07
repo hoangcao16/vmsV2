@@ -34,6 +34,7 @@ const UserList = ({
   dataListAllUserGroup,
   dataListAllUnit,
   dataListAllPosition,
+  loading,
 }) => {
   const intl = useIntl();
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -143,11 +144,13 @@ const UserList = ({
     },
   ];
   const onPaginationChange = (page, size) => {
+    const filters = form.getFieldValue();
     dispatch({
       type: 'user/fetchAllUser',
       payload: {
         page,
         size,
+        ...filters,
       },
     });
   };
@@ -177,8 +180,8 @@ const UserList = ({
         payload: {
           ...filters,
           searchValue: value,
-          page: metadata?.page,
-          size: metadata?.size,
+          page: 1,
+          size: 10,
         },
       });
     }
@@ -187,7 +190,7 @@ const UserList = ({
   return (
     <PageContainer>
       <ProTable
-        // loading={loading}
+        loading={loading}
         headerTitle={intl.formatMessage({
           id: 'pages.setting-user.list-user.list',
         })}
