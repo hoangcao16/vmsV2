@@ -1,12 +1,13 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { LeftSider, HeaderSider } from './style';
+import { LeftSider, HeaderSider, EmptyCameraStyled } from './style';
 import { useIntl } from 'umi';
 import { connect } from 'dva';
 import { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import { DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
 import CamLiveItem from '../CamLiveItem';
+import { ReactComponent as BackgroundImage } from '@/assets/img/emptycamera.svg';
 const ViewLiveCameras = ({ dispatch, liveCameraList, cameraList, listStreaming }) => {
   const intl = useIntl();
   const [isCollapsedCameraLive, setIsCollapsedCameraForm] = useState(false);
@@ -58,6 +59,37 @@ const ViewLiveCameras = ({ dispatch, liveCameraList, cameraList, listStreaming }
       payload: listStreaming,
     });
   }, [liveCameraList, cameraList]);
+  const handleOpenCameraList = () => {
+    dispatch({
+      type: 'maps/fetchCameraList',
+      payload: {
+        page: 1,
+        size: 10000,
+      },
+    });
+    dispatch({
+      type: 'maps/saveIsOpenCameraListDrawer',
+      payload: true,
+    });
+  };
+  const EmptyCamera = () => {
+    return (
+      <EmptyCameraStyled className="emptycamera">
+        <BackgroundImage />
+        <div className="desc">
+          {intl.formatMessage(
+            { id: 'view.maps.empty_camera' },
+            {
+              cam: intl.formatMessage({ id: 'camera' }),
+            },
+          )}
+        </div>
+        <Button type="primary" onClick={() => handleOpenCameraList()}>
+          {intl.formatMessage({ id: 'add' })}
+        </Button>
+      </EmptyCameraStyled>
+    );
+  };
   return (
     <LeftSider data-type={isCollapsedCameraLive ? 'collapsed' : ''}>
       <HeaderSider>
@@ -70,10 +102,12 @@ const ViewLiveCameras = ({ dispatch, liveCameraList, cameraList, listStreaming }
         />
       </HeaderSider>
       <div className="content">
-        {cameraSlots.map((item, index) => {
-          return <CamLiveItem key={index} cameraIndex={index} cameraUuid={item?.uuid} />;
-        })}
+        {listStreaming.length > 0 &&
+          cameraSlots.map((item, index) => {
+            return <CamLiveItem key={index} cameraIndex={index} cameraUuid={item?.uuid} />;
+          })}
       </div>
+      {listStreaming.length === 0 && <EmptyCamera />}
     </LeftSider>
   );
 };
