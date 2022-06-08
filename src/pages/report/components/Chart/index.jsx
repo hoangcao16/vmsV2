@@ -37,6 +37,10 @@ const HeaderExport = styled.div`
   justify-content: space-between;
 `;
 
+const ExportCursonPointer = styled.div`
+  cursor: pointer;
+`;
+
 const Chart = (props) => {
   const intl = useIntl();
   return (
@@ -58,8 +62,12 @@ const Chart = (props) => {
                   })}
                 </HeaderTitle>
                 <HeaderExport>
-                  <ExportReportToMail />
-                  <ExportReport />
+                  <ExportCursonPointer>
+                    <ExportReportToMail />
+                  </ExportCursonPointer>
+                  <ExportCursonPointer>
+                    <ExportReport />
+                  </ExportCursonPointer>
                 </HeaderExport>
               </HeaderWrapper>
               <Divider />
