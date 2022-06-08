@@ -202,4 +202,5 @@ export default {
   'pages.live-mode.action.save': 'Save',
   'pages.live-mode.action.edit': 'Edit',
   'pages.live-mode.action.delete': 'Delete',
+  'pages.live-mode.speed': 'Speed',
 };

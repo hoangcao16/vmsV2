@@ -12,6 +12,7 @@ import { connect, FormattedMessage } from 'umi';
 import ActionGrid from './components/ActionGrid';
 import CameraList from './components/CameraList';
 import GridPanel from './components/GridPanel';
+import PlaybackControl from './components/player/PlaybackControl';
 import { StyledTabs, StyledText } from './style';
 
 const Live = ({ availableList, screen, dispatch }) => {
@@ -51,6 +52,7 @@ const Live = ({ availableList, screen, dispatch }) => {
       dispatch({
         type: 'live/saveScreen',
         payload: {
+          mode: 'live',
           grids: grids,
           gridType: gridType,
         },
@@ -59,6 +61,7 @@ const Live = ({ availableList, screen, dispatch }) => {
       dispatch({
         type: 'live/saveScreen',
         payload: {
+          mode: 'live',
           grids: initEmptyGrid(1),
           gridType: GRID1X1,
         },
@@ -81,7 +84,6 @@ const Live = ({ availableList, screen, dispatch }) => {
     return Array.from(new Array(number)).map((_, index) => ({
       id: '',
       uuid: '',
-      type: '',
       name: '',
     }));
   };
@@ -131,6 +133,16 @@ const Live = ({ availableList, screen, dispatch }) => {
     }
   };
 
+  const handleChangeMode = (mode) => {
+    dispatch({
+      type: 'live/saveScreen',
+      payload: {
+        ...screen,
+        mode,
+      },
+    });
+  };
+
   return (
     <PageContainer
       extra={[
@@ -148,6 +160,7 @@ const Live = ({ availableList, screen, dispatch }) => {
       ]}
     >
       <StyledTabs
+        onChange={handleChangeMode}
         tabBarExtraContent={{
           right: [
             <Space size={8}>
@@ -161,8 +174,10 @@ const Live = ({ availableList, screen, dispatch }) => {
           ],
         }}
       >
-        <StyledTabs.TabPane key={1} tab={<FormattedMessage id="pages.live-mode.mode.live" />} />
-        <StyledTabs.TabPane key={2} tab={<FormattedMessage id="pages.live-mode.mode.review" />} />
+        <StyledTabs.TabPane key="live" tab={<FormattedMessage id="pages.live-mode.mode.live" />} />
+        <StyledTabs.TabPane key="play" tab={<FormattedMessage id="pages.live-mode.mode.review" />}>
+          <PlaybackControl />
+        </StyledTabs.TabPane>
       </StyledTabs>
       <DragDropContext onDragEnd={onDragEnd}>
         <GridPanel screen={screen} />
