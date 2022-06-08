@@ -1,6 +1,7 @@
 import { Col, Row } from 'antd';
 import { connect } from 'dva';
 import React from 'react';
+import styled from 'styled-components';
 import { useIntl } from 'umi';
 import CameraStatistics from './components/CameraStatistics';
 import Chart from './components/Chart';
@@ -29,6 +30,13 @@ const controlCol = {
   },
 };
 
+const StickeyControl = styled.div`
+  position: -webkit-sticky;
+  position: sticky;
+  top: 70px;
+  margin-bottom: 24px;
+`;
+
 const Report = ({ timeoutFieldData, timeoutEventData }) => {
   const intl = useIntl();
   return (
@@ -53,9 +61,9 @@ const Report = ({ timeoutFieldData, timeoutEventData }) => {
           )}
         </Col>
         <Col {...controlCol}>
-          <div className="chartControl">
+          <StickeyControl>
             <ChartControl />
-          </div>
+          </StickeyControl>
         </Col>
       </Row>
     </div>
