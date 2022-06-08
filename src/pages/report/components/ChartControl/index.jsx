@@ -45,7 +45,10 @@ const typeTime = {
 const CheckAll = styled.div`
   background-color: #434343;
   padding: 0 12px;
-  margin: 12px 0 6px;
+  margin: 12px 0 0;
+  .ant-form-item {
+    margin-bottom: 0px;
+  }
 `;
 
 const TypeWapper = styled.div`

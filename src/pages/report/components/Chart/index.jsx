@@ -7,6 +7,7 @@ import { ChartBackground, TimeoutChart } from '../../style';
 import ExportReport from '../Export/ExportReport';
 import ExportReportToMail from '../Export/ExportReportToMail';
 import DetailTable from '../Table/DetailTable';
+import GeneralTable from '../Table/GeneralTable';
 import BarChart from './BarChart';
 import LineChart from './LineChart';
 import PieChart from './PieChart';
@@ -36,6 +37,10 @@ const HeaderExport = styled.div`
   justify-content: space-between;
 `;
 
+const ExportCursonPointer = styled.div`
+  cursor: pointer;
+`;
+
 const Chart = (props) => {
   const intl = useIntl();
   return (
@@ -57,8 +62,12 @@ const Chart = (props) => {
                   })}
                 </HeaderTitle>
                 <HeaderExport>
-                  <ExportReportToMail />
-                  <ExportReport />
+                  <ExportCursonPointer>
+                    <ExportReportToMail />
+                  </ExportCursonPointer>
+                  <ExportCursonPointer>
+                    <ExportReport />
+                  </ExportCursonPointer>
                 </HeaderExport>
               </HeaderWrapper>
               <Divider />
@@ -106,6 +115,9 @@ const Chart = (props) => {
                 </ChartBackground>
               </TabPane>
             </Tabs>
+          </ChartBackground>
+          <ChartBackground>
+            <GeneralTable />
           </ChartBackground>
           <ChartBackground>
             <DetailTable />

@@ -14,9 +14,7 @@ const PieChart = (props) => {
   useEffect(() => {
     if (!isEmpty(props.data)) {
       props.data.forEach((item) => {
-        if (parseFloat(item.percent) <= 100) {
-          item.percent = parseFloat(item.percent) * 100;
-        }
+        item.percent = parseFloat(item.percent);
       });
       setData(props.data);
     }

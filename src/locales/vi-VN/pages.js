@@ -71,6 +71,7 @@ export default {
   'pages.report.chart.recordCamera': 'Camera ghi nhận',
   'pages.report.chart.violationType': 'Loại vi phạm',
   'pages.report.chart.address': 'Địa điểm',
+  'pages.report.chart.cameraName': 'Tên Camera',
   'pages.report.export.confirm': 'Xác nhận',
   'pages.report.export.exportReprot': 'Xuất báo cáo',
   'pages.report.export.contentMessage': 'Bạn đã chắc chắn gửi báo cáo cho Email này?',
