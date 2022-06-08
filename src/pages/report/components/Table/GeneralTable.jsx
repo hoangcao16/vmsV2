@@ -183,7 +183,9 @@ const GeneralTable = (props) => {
 
   var columns = [
     {
-      title: 'type',
+      title: intl.formatMessage({
+        id: 'pages.report.chart.eventType',
+      }),
       dataIndex: 'type',
       key: 'type',
       fixed: 'left',
@@ -191,14 +193,18 @@ const GeneralTable = (props) => {
       onCell: (_, index) => mergeColumn(_, index),
     },
     {
-      title: 'nameCamera',
+      title: intl.formatMessage({
+        id: 'pages.report.chart.cameraName',
+      }),
       dataIndex: 'nameCamera',
       key: 'nameCamera',
       fixed: 'left',
       width: 150,
     },
     {
-      title: 'nameLocation',
+      title: intl.formatMessage({
+        id: 'pages.report.chart.address',
+      }),
       dataIndex: 'nameLocation',
       key: 'nameLocation',
       fixed: 'left',
@@ -217,23 +223,21 @@ const GeneralTable = (props) => {
     <Table
       dataSource={parseData}
       columns={columns}
-      scroll={{ x: 'max-content', y: 500 }}
-      // pagination={{
-      //   pageSizeOptions: [3, 5, 7],
-      //   showQuickJumper: true,
-      //   showSizeChanger: true,
-      //   showTotal: (total) =>
-      //     `${intl.formatMessage({
-      //       id: 'view.camera.total',
-      //     })} ${total} ${intl.formatMessage({
-      //       id: 'pages.report.chart.event',
-      //     })}`,
-      //   total: total,
-      //   onChange: onPaginationChange,
-      //   pageSize: size,
-      //   current: page,
-      // }}
-      pagination={false}
+      scroll={{ x: 1000, y: 500 }}
+      pagination={{
+        showQuickJumper: true,
+        showSizeChanger: true,
+        showTotal: (total) =>
+          `${intl.formatMessage({
+            id: 'view.camera.total',
+          })} ${total} ${intl.formatMessage({
+            id: 'pages.report.chart.event',
+          })}`,
+        total: total,
+        onChange: onPaginationChange,
+        pageSize: size,
+        current: page,
+      }}
     />
   );
 };

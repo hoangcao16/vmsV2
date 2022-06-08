@@ -71,6 +71,7 @@ export default {
   'pages.report.chart.recordCamera': 'Record Camera',
   'pages.report.chart.violationType': 'Violation type',
   'pages.report.chart.address': 'Address',
+  'pages.report.chart.cameraName': 'Camera name',
   'pages.report.export.exportReprot': 'Export report',
   'pages.report.export.confirm': 'Confirm',
   'pages.report.export.contentMessage': 'Are you sure to send this report to this Email?',
