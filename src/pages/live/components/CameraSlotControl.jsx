@@ -12,14 +12,17 @@ const CameraSlotControl = ({
   onCapture,
   onRecord,
   onClose,
+  mode,
   ...props
 }) => {
   const intl = useIntl();
 
   const Type = () => {
-    switch (camera?.type) {
+    switch (mode) {
       case 'live':
         return 'Live';
+      case 'play':
+        return 'Play';
       default:
         return '';
     }

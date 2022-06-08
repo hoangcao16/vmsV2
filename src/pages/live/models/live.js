@@ -5,6 +5,7 @@ export default {
   state: {
     availableList: [],
     screen: {
+      mode: 'live',
       grids: [],
       gridType: GRID1X1,
     },
@@ -25,7 +26,6 @@ export default {
         state.screen.grids[cameraIndex] = {
           id: '',
           uuid: '',
-          type: '',
           name: '',
         };
       }
