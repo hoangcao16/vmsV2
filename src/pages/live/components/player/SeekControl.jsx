@@ -135,6 +135,7 @@ const StyledMarkerItemHour = styled.p`
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
+  font-size: 10px;
 `;
 const StyledMarkerItemDate = styled.p`
   position: absolute;
@@ -142,6 +143,7 @@ const StyledMarkerItemDate = styled.p`
   bottom: 0;
   transform: translateX(-50%);
   margin: 0;
+  font-size: 10px;
 `;
 
 export default SeekControl;

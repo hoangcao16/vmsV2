@@ -28,12 +28,12 @@ export async function getInitialState() {
   };
 
   if (history.location.pathname !== loginPath) {
-    // const currentUser = await fetchUserInfo();
-    // return {
-    //   fetchUserInfo,
-    //   currentUser,
-    //   settings: defaultSettings,
-    // };
+    const currentUser = await fetchUserInfo();
+    return {
+      fetchUserInfo,
+      currentUser,
+      settings: defaultSettings,
+    };
   }
 
   return {
@@ -53,9 +53,9 @@ export const layout = ({ initialState, setInitialState }) => {
     onPageChange: () => {
       const { location } = history;
 
-      // if (!initialState?.currentUser && location.pathname !== loginPath) {
-      //   history.push(loginPath);
-      // }
+      if (!initialState?.currentUser && location.pathname !== loginPath) {
+        history.push(loginPath);
+      }
     },
 
     menuHeaderRender: undefined,
