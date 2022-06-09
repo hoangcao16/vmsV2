@@ -14,7 +14,7 @@ export const Container = styled.div`
     z-index: 3;
   }
   .video-stream {
-    height: calc((324px * 9) / 16);
+    max-height: calc((324px * 9) / 16);
     margin: 0 0 6px 0;
   }
   .map__live-slot-cam-name {
