@@ -47,7 +47,6 @@ export default {
   'view.camera.camera_detail': '{cam} detail',
   'view.camera.active_stt': 'Active status',
   'view.camera.close': 'Close',
-  'view.map.administrative_unit': 'Administrative unit',
   'view.camera.choose_zone': 'Choose zone',
   'view.camera.edit_camera_group': 'Edit {cam} {G}',
   'view.camera.add_cam_in_group': 'Add Camera to Camera group',
@@ -886,6 +885,4 @@ export default {
   'AI.attendance': 'Attendance',
 
   //Ver2================================================================================================================================
-
-  'view.ai_humans.status': 'Status',
 };
