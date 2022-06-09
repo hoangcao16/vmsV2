@@ -873,6 +873,9 @@ export default {
   'noti.start_ip_less_end_ip': 'End IP must be greater than start IP',
   'noti.unknown_device': 'Unknown device',
   'noti.device_type': 'Device type',
+  'noti.save_live_camera_successfully': 'Online camera saved successful',
+  'noti.update_live_camera_successfully': 'Online camera update successful',
+  'noti.delete_live_camera_successfully': 'Delete online camera successfully',
   // breadcrumd
   'breadcrumd.report': 'Report Management',
   'breadcrumd.info': 'Information',

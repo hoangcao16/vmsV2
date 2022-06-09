@@ -874,6 +874,9 @@ export default {
   'noti.start_ip_less_end_ip': 'IP kết thúc phải lớn hơn IP bắt đầu',
   'noti.unknown_device': 'Thiết bị không xác định',
   'noti.device_type': 'Loại thiết bị',
+  'noti.save_live_camera_successfully': 'Lưu camera trực tuyến thành công',
+  'noti.update_live_camera_successfully': 'Cập nhật camera trực tuyến thành công',
+  'noti.delete_live_camera_successfully': 'Xóa camera trực tuyến thành công',
   //breadcrumd
   'breadcrumd.report': 'Quản lý báo cáo',
   'breadcrumd.info': 'Thông tin cá nhân',
