@@ -284,6 +284,7 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
           center: currentLan ? currentLan : LAT_LNG,
           zoom: zoom,
           attributionControl: false,
+          trackResize: true,
         });
 
         //thêm phần thanh công cụ zoom

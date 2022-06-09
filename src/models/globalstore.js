@@ -17,9 +17,13 @@ export default {
     tagsOptions: [],
     provincesOptions: [],
     fieldsOptions: [],
+    layoutCollapsed: false,
   },
 
   reducers: {
+    changeLayoutCollapsed(state) {
+      return { ...state, layoutCollapsed: !state.layoutCollapsed };
+    },
     saveCameraTypes(state, { payload }) {
       return {
         ...state,

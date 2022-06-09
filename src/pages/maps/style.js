@@ -16,6 +16,9 @@ export const MapContainer = styled.div`
     padding: 0;
     border-radius: 8px;
   }
+  .mapboxgl-canvas {
+    width: 100% !important;
+  }
 `;
 export const MapHeader = styled.div`
   display: flex;

@@ -36,11 +36,11 @@ const CameraListDrawer = ({
     setCurrentPage(metadata?.page);
   }, [list]);
   useEffect(() => {
-    const listStreamingUuid = listStreaming.map((item) => item?.uuid);
-    const convertData = list.map((item) => {
+    const listStreamingUuid = listStreaming?.map((item) => item?.uuid);
+    const convertData = list?.map((item) => {
       return {
         ...item,
-        isPlay: listStreamingUuid.includes(item.uuid),
+        isPlay: listStreamingUuid?.includes(item.uuid),
       };
     });
     setDataSource(convertData);
@@ -51,7 +51,7 @@ const CameraListDrawer = ({
   const handleClickPlay = (item, event) => {
     event.stopPropagation();
     if (item?.isPlay) {
-      const finded = listStreaming.findIndex((itemStreaming) => itemStreaming?.uuid === item.uuid);
+      const finded = listStreaming?.findIndex((itemStreaming) => itemStreaming?.uuid === item.uuid);
       if (finded !== -1) {
         const newListStreaming = [...listStreaming];
         newListStreaming[finded] = undefined;
@@ -62,9 +62,9 @@ const CameraListDrawer = ({
       }
     } else {
       const newItem = { ...item, isPlay: true };
-      const checkUndefined = listStreaming.findIndex((item) => item === undefined);
+      const checkUndefined = listStreaming?.findIndex((item) => item === undefined);
       if (checkUndefined === -1) {
-        if (listStreaming.length < 4) {
+        if (listStreaming?.length < 4) {
           const newListStreaming = [...listStreaming, newItem];
           dispatch({
             type: 'viewLiveCameras/saveListStreaming',

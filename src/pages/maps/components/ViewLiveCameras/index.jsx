@@ -5,10 +5,18 @@ import { useIntl } from 'umi';
 import { connect } from 'dva';
 import { useEffect, useState } from 'react';
 import { Button } from 'antd';
-import { DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
+import { DoubleLeftOutlined, DoubleRightOutlined, SaveOutlined } from '@ant-design/icons';
 import CamLiveItem from '../CamLiveItem';
 import { ReactComponent as BackgroundImage } from '@/assets/img/emptycamera.svg';
-const ViewLiveCameras = ({ dispatch, liveCameraList, cameraList, listStreaming }) => {
+import { CAM_LIVE_ITEMS } from '@/constants/map';
+import isEmpty from 'lodash/isEmpty';
+const ViewLiveCameras = ({
+  dispatch,
+  liveCameraList,
+  cameraList,
+  listStreaming,
+  liveCameraUuid,
+}) => {
   const intl = useIntl();
   const [isCollapsedCameraLive, setIsCollapsedCameraForm] = useState(false);
   const [cameraSlots, setCameraSlots] = useState([
@@ -46,8 +54,8 @@ const ViewLiveCameras = ({ dispatch, liveCameraList, cameraList, listStreaming }
   };
   useEffect(() => {
     const listStreaming = liveCameraList
-      .map((itemLive) => {
-        const finded = cameraList.find((item) => item.uuid === itemLive);
+      ?.map((itemLive) => {
+        const finded = cameraList?.find((item) => item.uuid === itemLive);
         if (finded) {
           finded.isPlay = true;
           return finded;
@@ -71,6 +79,33 @@ const ViewLiveCameras = ({ dispatch, liveCameraList, cameraList, listStreaming }
       type: 'maps/saveIsOpenCameraListDrawer',
       payload: true,
     });
+  };
+  const handleSaveListLiveCam = () => {
+    const cameraUuids = listStreaming?.map((cam) => cam.uuid);
+    const payload = {
+      type: '4x1',
+      cameraUuids,
+    };
+    sessionStorage.setItem(CAM_LIVE_ITEMS, JSON.stringify(cameraUuids));
+    if (isEmpty(liveCameraList)) {
+      dispatch({
+        type: 'viewLiveCameras/createLiveCameraList',
+        payload,
+      });
+    } else {
+      if (listStreaming?.length > 0) {
+        dispatch({
+          type: 'viewLiveCameras/updateLiveCameraList',
+          payload,
+          uuid: liveCameraUuid,
+        });
+      } else {
+        dispatch({
+          type: 'viewLiveCameras/deleteLiveCameraList',
+          uuid: liveCameraUuid,
+        });
+      }
+    }
   };
   const EmptyCamera = () => {
     return (
@@ -96,24 +131,32 @@ const ViewLiveCameras = ({ dispatch, liveCameraList, cameraList, listStreaming }
         <div className="title" data-type={isCollapsedCameraLive ? 'collapsed' : ''}>
           {intl.formatMessage({ id: 'view.user.detail_list.view_online' })}
         </div>
-        <Button
-          icon={isCollapsedCameraLive ? <DoubleRightOutlined /> : <DoubleLeftOutlined />}
-          onClick={toggleCollapsedCameraLive}
-        />
+        <div className="right-action">
+          <Button
+            type="primary"
+            icon={<SaveOutlined />}
+            onClick={handleSaveListLiveCam}
+            className="save-btn"
+          />
+          <Button
+            icon={isCollapsedCameraLive ? <DoubleRightOutlined /> : <DoubleLeftOutlined />}
+            onClick={toggleCollapsedCameraLive}
+          />
+        </div>
       </HeaderSider>
       <div className="content">
-        {listStreaming.length > 0 &&
+        {listStreaming?.length > 0 &&
           cameraSlots.map((item, index) => {
             return <CamLiveItem key={index} cameraIndex={index} cameraUuid={item?.uuid} />;
           })}
       </div>
-      {listStreaming.length === 0 && <EmptyCamera />}
+      {(!listStreaming || listStreaming?.length === 0) && <EmptyCamera />}
     </LeftSider>
   );
 };
 function mapStateToProps(state) {
-  const { liveCameraList, listStreaming } = state.viewLiveCameras;
+  const { liveCameraList, listStreaming, liveCameraUuid } = state.viewLiveCameras;
   const { cameraList } = state.liveFullScreen;
-  return { liveCameraList, cameraList, listStreaming };
+  return { liveCameraList, cameraList, listStreaming, liveCameraUuid };
 }
 export default connect(mapStateToProps)(ViewLiveCameras);

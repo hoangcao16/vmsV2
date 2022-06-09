@@ -1,7 +1,7 @@
 import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import { PageLoading, SettingDrawer } from '@ant-design/pro-layout';
-import { history } from 'umi';
+import { history, getDvaApp } from 'umi';
 
 import defaultSettings from '../config/defaultSettings';
 import { IntlGlobalProvider } from './components/IntlGlobalProvider';
@@ -57,7 +57,13 @@ export const layout = ({ initialState, setInitialState }) => {
         history.push(loginPath);
       }
     },
-
+    onCollapse: (collapsed) => {
+      const app = getDvaApp();
+      const dispatch = app._store.dispatch;
+      dispatch({
+        type: 'globalstore/changeLayoutCollapsed',
+      });
+    },
     menuHeaderRender: undefined,
 
     childrenRender: (children, props) => {

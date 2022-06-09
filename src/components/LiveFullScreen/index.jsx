@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from 'dva';
 import { StyledDrawer, Header } from './style';
-import { Space, Button, Spin, Select } from 'antd';
+import { Button, Spin, Select } from 'antd';
 import { useIntl } from 'umi';
 import { useState, useRef, useEffect } from 'react';
-import { SaveOutlined, CloseOutlined, LoadingOutlined } from '@ant-design/icons';
+import { LoadingOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import CameraApi from '@/services/camera/CameraApi';
 import camProxyService from '@/services/camProxy';
 import { notify } from '@/components/Notify';
@@ -167,12 +167,16 @@ const LiveFullScreen = ({ dispatch, isOpenDrawer, selectedCamera, cameraList }) 
     <StyledDrawer
       openDrawer={isOpenDrawer}
       onClose={onClose}
-      width={'80%'}
+      width={'100%'}
       zIndex={1000}
       placement="right"
+      closable={false}
     >
       <Header>
-        <div className="title">{intl.formatMessage({ id: 'view.live.view_fullscreen' })}</div>
+        <div className="title">
+          <ArrowLeftOutlined className="close-icon" onClick={onClose} />
+          {intl.formatMessage({ id: 'view.live.view_fullscreen' })}
+        </div>
         <div className="select">
           {intl.formatMessage({ id: 'camera' })}:{' '}
           <Select

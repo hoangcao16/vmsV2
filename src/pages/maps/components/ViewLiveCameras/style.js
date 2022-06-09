@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 export const LeftSider = styled.div`
   &[data-type='collapsed'] {
-    width: 40px;
+    width: 46px;
     .close-btn,
     .fullsize-btn,
     .map__live-slot-cam-name,
+    .save-btn,
     .emptycamera {
       display: none;
     }
@@ -33,7 +34,9 @@ export const HeaderSider = styled.div`
       display: none;
     }
   }
-
+  .right-action {
+    height: 100%;
+  }
   .ant-btn {
     border: none;
     outline: none !important;

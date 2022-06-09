@@ -11,13 +11,14 @@ export const StyledDrawer = styled(MSCustomizeDrawer)`
     height: 100%;
     /* overflow: hidden; */
     video {
-      height: 86vh !important;
+      height: calc(100vh - 80px) !important;
       margin-top: 20px;
       /* object-fit: cover; */
     }
   }
   .ant-spin-nested-loading {
-    height: calc(100% - 80px) !important;
+    height: calc(100vh - 80px) !important;
+    overflow: hidden;
     .ant-spin-spinning {
       max-height: unset;
     }
@@ -27,6 +28,9 @@ export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   height: 30px;
+  .close-icon {
+    margin-right: 10px;
+  }
   .title {
     font-weight: 500;
     font-size: 20px;
