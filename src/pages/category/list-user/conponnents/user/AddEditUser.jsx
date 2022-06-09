@@ -41,6 +41,11 @@ const TABS_SELECTED = {
   PERMISSION: '2',
 };
 
+const layoutLong = {
+  labelCol: { span: 5 },
+  wrapperCol: { span: 24 },
+};
+
 function AddEditUser({
   dispatch,
   onClose,
@@ -213,6 +218,7 @@ function AddEditUser({
                       label={intl.formatMessage({
                         id: 'pages.setting-user.list-user.imageUrl',
                       })}
+                      {...layoutLong}
                     >
                       <StyledDragger
                         accept=".png,.jpeg,.jpg"
@@ -240,6 +246,7 @@ function AddEditUser({
 
                   <Col span={24}>
                     <MSFormItem
+                      {...layoutLong}
                       label={intl.formatMessage({
                         id: 'pages.setting-user.list-user.name',
                       })}
@@ -255,6 +262,7 @@ function AddEditUser({
 
                   <Col span={24}>
                     <MSFormItem
+                      {...layoutLong}
                       label={intl.formatMessage({
                         id: 'pages.setting-user.list-user.sex',
                       })}
@@ -284,6 +292,21 @@ function AddEditUser({
                       </Radio.Group>
                     </MSFormItem>
                   </Col>
+                  <Col span={24}>
+                    <MSFormItem
+                      {...layoutLong}
+                      label={intl.formatMessage({
+                        id: 'pages.setting-user.list-user.position',
+                      })}
+                      type="input"
+                      name="position"
+                      minLength={5}
+                      maxLength={255}
+                      required={true}
+                    >
+                      <Input autoComplete="new-password" />
+                    </MSFormItem>
+                  </Col>
                   <Form.Item
                     hidden={true}
                     name={['avatar_file_name']}
@@ -292,10 +315,11 @@ function AddEditUser({
                     <Input type="hidden" />
                   </Form.Item>
                 </Col>
-                <Col span={12}>
+                <Col span={12} className="pb-1">
                   <Col span={24}>
                     <Form.Item
                       name={['phone']}
+                      {...layoutLong}
                       label={intl.formatMessage({
                         id: 'pages.setting-user.list-user.phone',
                       })}
@@ -340,6 +364,7 @@ function AddEditUser({
                   </Col>
                   <Col span={24}>
                     <Form.Item
+                      {...layoutLong}
                       name="date_of_birth"
                       label={intl.formatMessage({
                         id: 'pages.setting-user.list-user.date_of_birth',
@@ -360,6 +385,7 @@ function AddEditUser({
                       />
                     </Form.Item>
                   </Col>
+
                   <Col span={24}>
                     <MSFormItem
                       label="Email"
@@ -368,6 +394,7 @@ function AddEditUser({
                       minLength={5}
                       maxLength={255}
                       required={true}
+                      {...layoutLong}
                     >
                       <Input autoComplete="new-password" />
                     </MSFormItem>
@@ -382,8 +409,24 @@ function AddEditUser({
                       minLength={8}
                       maxLength={255}
                       required={true}
+                      {...layoutLong}
                     >
                       <Input type="password" autoComplete="new-password" />
+                    </MSFormItem>
+                  </Col>
+                  <Col span={24}>
+                    <MSFormItem
+                      {...layoutLong}
+                      label={intl.formatMessage({
+                        id: 'pages.setting-user.list-user.unit',
+                      })}
+                      type="input"
+                      name="unit"
+                      minLength={5}
+                      maxLength={255}
+                      required={true}
+                    >
+                      <Input autoComplete="new-password" />
                     </MSFormItem>
                   </Col>
                 </Col>

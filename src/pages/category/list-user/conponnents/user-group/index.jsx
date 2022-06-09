@@ -72,6 +72,7 @@ function UserGroup({ dispatch, list, metadata, loading }) {
       payload: {
         page,
         size,
+        filter: search,
       },
     });
   };
@@ -91,8 +92,8 @@ function UserGroup({ dispatch, list, metadata, loading }) {
         type: 'userGroup/fetchAllUserGroup',
         payload: {
           filter: value,
-          page: metadata?.page,
-          size: metadata?.size,
+          page: 1,
+          size: 10,
         },
       });
     }
