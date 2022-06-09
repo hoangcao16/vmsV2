@@ -15,7 +15,7 @@ const TableEventFile = (props) => {
   let dataList = props.dataList || [];
 
   const [page, setPage] = useState(1);
-  const [size, setSize] = useState(2);
+  const [size, setSize] = useState(10);
 
   const renderViolationTime = (value) => {
     return moment(value * 1000).format('DD/MM/YYYY HH:mm');
