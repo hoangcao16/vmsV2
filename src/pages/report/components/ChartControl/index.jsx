@@ -56,7 +56,7 @@ const TypeWapper = styled.div`
 `;
 
 const ChartControl = (props) => {
-  const defaultProvinceId = '2';
+  const defaultProvinceId = ['2'];
   const [format, setFormat] = useState('DD/MM/YYYY');
   const [formatParams, setFormatParams] = useState('DDMMYYYY');
   const [form] = Form.useForm();
@@ -484,6 +484,7 @@ const ChartControl = (props) => {
               {intl.formatMessage({
                 id: `pages.report.chart.area`,
               })}
+              :
             </span>
             <Form.Item name="provinceId">
               <Select
