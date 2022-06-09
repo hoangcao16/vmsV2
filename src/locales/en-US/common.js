@@ -449,7 +449,7 @@ export default {
   'view.user.detail_list.out_of': 'out of',
   'view.user.detail_list.indexes': 'indexes',
   'view.user.detail_list.no_valid_results_found': 'No valid results found',
-  'view.user.detail_list.group_user_list': '{G} {U} List',
+  'view.user.detail_list.group_user_list': '{g} {u} List',
   'view.user.detail_list.add_group': '{add} {G}',
   'view.user.detail_list.group_user_name': '{G} {u} name',
   'view.user.detail_list.desc': 'Description',
