@@ -1062,6 +1062,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
         tracingList={tracingList}
         saveUrlSnapshot={saveUrlSnapshot}
         saveFileDownloadFileName={saveFileDownloadFileName}
+        handleRefresh={handleRefresh}
       />
 
       {nameSpace === EVENT_AI_NAMESPACE && (

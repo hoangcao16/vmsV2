@@ -8,6 +8,7 @@ import {
 } from '@/pages/storage/constants';
 import ExportEventFileApi from '@/services/exportEventFile';
 import DailyArchiveApi from '@/services/storage-api/dailyArchiveApi';
+import { captureVideoFrame } from '@/utils/captureVideoFrame';
 import getBase64 from '@/utils/getBase64';
 import { Button, Col, Row, Space, Spin, Tooltip } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
@@ -20,6 +21,10 @@ import { MemoizedThumbnailVideo } from './components/MemoizedThumbnailVideo/Memo
 import TableDetailEventAI from './components/TableDetailEventAI';
 import { ContainerCapture, ContainerEventsAI, HeaderPanelStyled, ViewFileContainer } from './style';
 import imagePoster from './videoposter.png';
+import moment from 'moment';
+import { v4 as uuidV4 } from 'uuid';
+import { notify } from '@/components/Notify';
+import { debounce } from 'lodash';
 
 let defaultEventFile = {
   id: '',
@@ -46,7 +51,14 @@ let defaultEventFile = {
 };
 let playbackRate = 1;
 
-function VideoPlayer({ data, nameSpace, tracingList, saveUrlSnapshot, saveFileDownloadFileName }) {
+function VideoPlayer({
+  data,
+  nameSpace,
+  tracingList,
+  saveUrlSnapshot,
+  saveFileDownloadFileName,
+  handleRefresh,
+}) {
   const intl = useIntl();
 
   const [playerReady, setPlayerReady] = useState(false);
@@ -336,7 +348,9 @@ function VideoPlayer({ data, nameSpace, tracingList, saveUrlSnapshot, saveFileDo
           const data = await DailyArchiveApi.playSingleFile(checkPerRes.playbackUrl, playReq);
           const payload = data.payload;
           if (payload) {
-            let videoSrc = checkPerRes.playbackUrl + '/play/hls/' + payload.reqUuid + '/index.m3u8';
+            let videoSrc =
+              'http://10.0.0.63:18602/playback1' + '/play/hls/' + payload.reqUuid + '/index.m3u8';
+            // let videoSrc = checkPerRes.playbackUrl + '/play/hls/' + payload.reqUuid + '/index.m3u8';
             setDownloadFileName(file.name);
             setDuration(file.length);
             setFileCurrent({ ...file, tableName: 'file' });
@@ -557,6 +571,54 @@ function VideoPlayer({ data, nameSpace, tracingList, saveUrlSnapshot, saveFileDo
     setCaptureMode(false);
     setUrlSnapshot('');
     setFileCurrent(originalFile);
+  };
+
+  const setFileName = (type) => {
+    if (type === 0) {
+      return 'Cut.' + moment().format('DDMMYYYY.hhmmss') + '.mp4';
+    }
+    return 'Cap.' + moment().format('DDMMYYYY.hhmmss') + '.jpg';
+  };
+
+  const captureSnapshotHandler = () => {
+    const { blob, tBlob } = captureVideoFrame(playerVideo.current, refCanvas.current, 'jpeg');
+
+    const uuid = uuidV4();
+    const fileName = setFileName(1);
+
+    const eventFile = {
+      ...eventFileCurrent,
+      uuid: uuid,
+      type: 1,
+      name: fileName,
+      blob: blob,
+      tBlob: tBlob,
+    };
+
+    ExportEventFileApi.uploadFile(eventFile.uuid, eventFile.blob)
+      .then((result) => {
+        let path = result.payload.fileUploadInfoList[0].path;
+        let { blob, tBlob, isSaved, ...requestObject } = eventFile; //Create requestObject without blob, isSaved fields
+        getBase64(eventFile.tBlob, async (thumbnailData) => {
+          requestObject = Object.assign({
+            ...requestObject,
+            pathFile: path,
+            isSaved: true,
+            thumbnailData: [thumbnailData.replace('data:image/jpeg;base64,', '')],
+          });
+          ExportEventFileApi.createNewEventFile(requestObject)
+            .then((res) => {
+              notify('success', 'noti.archived_file', 'noti.successfully_add_file');
+              onClickTableFileHandler(data);
+            })
+            .catch((err) => {
+              notify('warning', 'noti.archived_file', 'noti.error_save_file');
+            });
+        });
+      })
+      .catch((err) => {
+        notify('warning', 'noti.archived_file', 'noti.error_save_file');
+      });
   };
 
   useEffect(() => {
@@ -817,9 +879,7 @@ function VideoPlayer({ data, nameSpace, tracingList, saveUrlSnapshot, saveFileDo
                 className="btn-action"
                 type="link"
                 icon={<FiCamera className="action" />}
-                onClick={() => {
-                  // captureSnapshotHandler();
-                }}
+                onClick={debounce(captureSnapshotHandler, 500)}
               >
                 {intl.formatMessage({
                   id: 'view.storage.capture_snapshot',
