@@ -447,26 +447,57 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
             <div className="detailInfo-content">{data?.name}</div>
           </div>
 
-          <div className="detailInfo">
-            <div className="detailInfo-title">
-              {intl.formatMessage({
-                id: 'view.storage.file_type',
-              })}
-              :
-            </div>
-            <div className="detailInfo-content">
-              {data?.fileType === 0 &&
-                intl.formatMessage({
-                  id: 'view.storage.type_video',
+          {nameSpace === DAILY_ARCHIVE_NAMESPACE ? (
+            <div className="detailInfo">
+              <div className="detailInfo-title">
+                {intl.formatMessage({
+                  id: 'view.storage.file_type',
                 })}
+                :
+              </div>
+
+              {data?.fileType === 0 && (
+                <div className="detailInfo-content">
+                  {intl.formatMessage({
+                    id: 'view.storage.type_video',
+                  })}
+                </div>
+              )}
+
+              {data?.fileType === 1 && (
+                <div className="detailInfo-content">
+                  {intl.formatMessage({
+                    id: 'view.storage.type_image',
+                  })}
+                </div>
+              )}
             </div>
-            <div className="detailInfo-content">
-              {data?.fileType === 1 &&
-                intl.formatMessage({
-                  id: 'view.storage.type_image',
+          ) : (
+            <div className="detailInfo">
+              <div className="detailInfo-title">
+                {intl.formatMessage({
+                  id: 'view.storage.file_type',
                 })}
+                :
+              </div>
+
+              {data?.type === 0 && (
+                <div className="detailInfo-content">
+                  {intl.formatMessage({
+                    id: 'view.storage.type_video',
+                  })}
+                </div>
+              )}
+
+              {data?.type === 1 && (
+                <div className="detailInfo-content">
+                  {intl.formatMessage({
+                    id: 'view.storage.type_image',
+                  })}
+                </div>
+              )}
             </div>
-          </div>
+          )}
 
           <div className="detailInfo">
             <div className="detailInfo-title">
@@ -490,9 +521,18 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
               })}
               :
             </div>
-            <div className="detailInfo-content">
-              {moment(data?.createdTime * 1000).format('DD/MM/YYYY HH:mm')}
-            </div>
+
+            {nameSpace === DAILY_ARCHIVE_NAMESPACE && (
+              <div className="detailInfo-content">
+                {moment(data?.createdTime * 1000).format('DD/MM/YYYY HH:mm')}
+              </div>
+            )}
+
+            {nameSpace !== DAILY_ARCHIVE_NAMESPACE && (
+              <div className="detailInfo-content">
+                {moment(data?.createdTime).format('DD/MM/YYYY HH:mm')}
+              </div>
+            )}
           </div>
 
           <div className="detailInfo">
@@ -526,7 +566,14 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
               })}
               :
             </div>
-            <div className="detailInfo-content">{data?.path}</div>
+
+            {nameSpace === DAILY_ARCHIVE_NAMESPACE && (
+              <div className="detailInfo-content">{data?.path}</div>
+            )}
+
+            {nameSpace !== DAILY_ARCHIVE_NAMESPACE && (
+              <div className="detailInfo-content">{data?.pathFile}</div>
+            )}
           </div>
 
           <div className="detailInfo">
@@ -816,7 +863,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
     }
 
     return intl.formatMessage({
-      id: 'view.map.map',
+      id: 'view.storage.detail_information',
     });
   };
 
@@ -980,11 +1027,23 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
               id: 'view.storage.download_file',
             })}
           </Button>
-          <Button icon={<DeleteOutlined />} onClick={handleDeleteFile}>
-            {intl.formatMessage({
-              id: 'view.storage.delete',
+          <Popconfirm
+            placement="bottom"
+            title={intl.formatMessage({ id: 'noti.delete' })}
+            onConfirm={handleDeleteFile}
+            okText={intl.formatMessage({
+              id: 'view.user.detail_list.confirm',
             })}
-          </Button>
+            cancelText={intl.formatMessage({
+              id: 'view.user.detail_list.cancel',
+            })}
+          >
+            <Button icon={<DeleteOutlined />}>
+              {intl.formatMessage({
+                id: 'view.storage.delete',
+              })}
+            </Button>
+          </Popconfirm>
 
           {data.important === false ? (
             <Button icon={<StarOutlined />} onClick={() => handleUpdateFile(true)}>
