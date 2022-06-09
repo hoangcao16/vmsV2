@@ -9,12 +9,14 @@ import ChartHeader from './ChartHeader';
 const PieChart = (props) => {
   const intl = useIntl();
   const [data, setData] = useState([]);
+  console.log('data', data);
   const G = G2.getEngine('canvas');
 
   useEffect(() => {
     if (!isEmpty(props.data)) {
       props.data.forEach((item) => {
         item.percent = parseFloat(item.percent);
+        item.total = parseInt(item.total);
       });
       setData(props.data);
     }
@@ -23,46 +25,19 @@ const PieChart = (props) => {
   const config = {
     appendPadding: 10,
     data,
-    angleField: 'percent',
+    angleField: 'total',
     colorField: 'type',
     radius: 0.8,
     label: {
       type: 'spider',
-      labelHeight: 40,
-      formatter: (data, mappingData) => {
-        const group = new G.Group({});
-        group.addShape({
-          type: 'circle',
-          attrs: {
-            x: 0,
-            y: 0,
-            width: 40,
-            height: 50,
-            r: 5,
-            fill: mappingData.color,
-          },
-        });
-        group.addShape({
-          type: 'text',
-          attrs: {
-            x: 10,
-            y: 8,
-            text: `${data.type}`,
-            fill: mappingData.color,
-          },
-        });
-        group.addShape({
-          type: 'text',
-          attrs: {
-            x: 0,
-            y: 25,
-            text: `${data.total} | ${data.percent * 100}%`,
-            fill: mappingData.color,
-            fontWeight: 700,
-          },
-        });
-        return group;
+      labelHeight: 28,
+      content: '{name}: {value} | {percentage}',
+      style: {
+        fill: 'white',
       },
+    },
+    legend: {
+      position: 'bottom',
     },
     interactions: [
       {
