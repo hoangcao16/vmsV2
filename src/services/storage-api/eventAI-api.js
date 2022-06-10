@@ -22,9 +22,9 @@ const EventAiAPI = {
     return request.get(`/vms-ai/api/v1/ai-events/by-tracking/${trackingId}`);
   },
 
-  getEventsByTrackingId: (uuid) => {
-    return request.get(`/vms-ai/api/v1/ai-events/${uuid}`);
-  },
+  // getEventsByTrackingId: (uuid) => {
+  //   return request.get(`/vms-ai/api/v1/ai-events/${uuid}`);
+  // },
 
   editInfoOfEvent: (uuid, params) => {
     let url = `/vms-ai/api/v1/ai-events/${uuid}`;
