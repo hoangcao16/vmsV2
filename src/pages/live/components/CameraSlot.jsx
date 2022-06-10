@@ -16,10 +16,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 import CameraSlotControl from './CameraSlotControl';
 
-const CameraSlot = ({ screen, camera, dispatch, isDraggingOver }) => {
+const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed }) => {
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [countdown, setCountdown] = useState(0);
+  const [zoomIn, setZoomIn] = useState(false);
   const [currentPlaybackTime, setCurrentPlaybackTime] = useState(moment().subtract(1, 'h').unix());
   const videoRef = useRef(null);
   const peerRef = useRef(null);
@@ -368,8 +369,18 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver }) => {
     }
   };
 
+  const zoomCamera = () => {
+    setZoomIn(!zoomIn);
+    console.log(!camera?.id);
+  };
+
   return (
-    <StyledCameraSlot isDraggingOver={isDraggingOver}>
+    <StyledCameraSlot
+      isDraggingOver={isDraggingOver}
+      zoomIn={zoomIn}
+      layoutCollapsed={layoutCollapsed}
+      notFoundCamera={!camera?.id}
+    >
       {loading && (
         <StyledLoading>
           <Spin indicator={<LoadingOutlined size={48} />} />
@@ -384,6 +395,8 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver }) => {
             onRecord={recordVideo}
             onClose={closeCamera}
             mode={screen.mode}
+            zoomIn={zoomIn}
+            onZoom={zoomCamera}
           />
           <StyledCameraBottom>
             <StyledCameraName>{camera.name}</StyledCameraName>
@@ -418,6 +431,11 @@ const StyledCameraSlot = styled.div`
   width: 100%;
   height: 100%;
   ${(props) => props.isDraggingOver && 'display: none;'}
+  ${(props) =>
+    props.zoomIn &&
+    `position: fixed; bottom : 0; right: 0; height: calc(100vh - 48px); width: calc(100vw - ${
+      props?.layoutCollapsed ? '53px' : '215px'
+    }) !important; z-index: 1000; ${props.notFoundCamera && 'background-color: #3f4141;'}`}
 
   &:hover {
     cursor: pointer;
@@ -486,8 +504,11 @@ const StyledCountdown = styled.div`
   border-radius: 2px;
 `;
 
-const mapStateToProps = (state) => ({
-  screen: state.live.screen,
-});
+const mapStateToProps = (state) => {
+  return {
+    screen: state.live.screen,
+    layoutCollapsed: state?.globalstore?.layoutCollapsed,
+  };
+};
 
 export default connect(mapStateToProps)(React.memo(CameraSlot));
