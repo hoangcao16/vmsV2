@@ -19,7 +19,6 @@ const TableNVR = ({ dispatch, list, metadata, loading }) => {
   });
 
   useEffect(() => {
-    console.log('searchParam', searchParam);
     dispatch({
       type: 'nvr/fetchAllNVR',
       payload: {
@@ -45,9 +44,28 @@ const TableNVR = ({ dispatch, list, metadata, loading }) => {
 
   const handleSearch = (e) => {
     const value = e.target.value.trim();
-    const dataParam = Object.assign({ ...searchParam, name: value, page: 1, size: 10 });
+    const dataParam = Object.assign({
+      ...searchParam,
+      name: encodeURIComponent(value),
+      page: 1,
+      size: 10,
+    });
     setSearchParam(dataParam);
     handleGetListNVR(dataParam);
+  };
+
+  const handleQuickSearchBlur = (event) => {
+    const value = event.target.value.trim();
+    form.setFieldsValue({
+      searchValue: value,
+    });
+  };
+
+  const handleQuickSearchPaste = (event) => {
+    const value = event.target.value.trimStart();
+    form.setFieldsValue({
+      searchValue: value,
+    });
   };
 
   const onPaginationChange = (page, size) => {
@@ -129,8 +147,8 @@ const TableNVR = ({ dispatch, list, metadata, loading }) => {
         toolbar={{
           multipleLine: true,
           filter: (
-            <Form className="bg-grey" form={form} layout="horizontal">
-              <Form.Item>
+            <Form className="bg-grey" form={form} layout="horizontal" autoComplete="off">
+              <Form.Item name="searchValue">
                 <Input.Search
                   maxLength={255}
                   placeholder={intl.formatMessage(
@@ -142,6 +160,8 @@ const TableNVR = ({ dispatch, list, metadata, loading }) => {
                     },
                   )}
                   onChange={debounce(handleSearch, 1000)}
+                  onPaste={handleQuickSearchPaste}
+                  onBlur={handleQuickSearchBlur}
                 />
               </Form.Item>
             </Form>

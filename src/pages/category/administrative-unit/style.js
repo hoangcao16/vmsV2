@@ -24,6 +24,11 @@ export const StyledDrawer = styled(MSCustomizeDrawer)`
       color: #ff4d4f;
     }
   }
+
+  img {
+    max-height: 100%;
+    object-fit: contain;
+  }
   .PhoneInput {
     .PhoneInputInput {
       padding: 4px 11px;

@@ -5,6 +5,7 @@ export default {
   namespace: 'advision',
   state: {
     list: [],
+    recordId: {},
     metadata: {
       total: 0,
       size: 10,
@@ -14,6 +15,9 @@ export default {
   reducers: {
     save(state, { payload: { data: list, metadata } }) {
       return { ...state, list, metadata };
+    },
+    saveRecord(state, { payload: { recordId } }) {
+      return { ...state, recordId };
     },
   },
   effects: {
@@ -29,6 +33,24 @@ export default {
         });
       } catch (error) {
         console.log(error);
+      }
+    },
+
+    *getByUuid({ id }, { call, put }) {
+      try {
+        const response = yield call(AdDivisionApi.getAdDivisionByUuid, id);
+        yield put({
+          type: 'saveRecord',
+          payload: {
+            recordId: response?.payload,
+          },
+        });
+      } catch (error) {
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
       }
     },
 

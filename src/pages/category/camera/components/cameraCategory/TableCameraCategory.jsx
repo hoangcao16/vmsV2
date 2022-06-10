@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { AutoComplete, Button, Input } from 'antd';
+import { AutoComplete, Button, Form, Input } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ import AddEditCameraCategory from './AddEditCameraCategory';
 
 const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, type }) => {
   const intl = useIntl();
+  const [form] = Form.useForm();
   const [openDrawerAddEdit, setOpenDrawerAddEdit] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
 
@@ -70,7 +71,8 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
     categoryColumns.splice(1, 1, ...addTagColumns);
   }
 
-  const handleSearch = (value) => {
+  const handleSearch = (e) => {
+    const value = e.target.value.trim();
     if (type === 'camera_vendor') {
       dispatch({
         type: 'cameraCategory/fetchAllVendor',
@@ -99,6 +101,20 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
         },
       });
     }
+  };
+
+  const handleQuickSearchBlur = (event) => {
+    const value = event.target.value.trim();
+    form.setFieldsValue({
+      searchValue: value,
+    });
+  };
+
+  const handleQuickSearchPaste = (event) => {
+    const value = event.target.value.trimStart();
+    form.setFieldsValue({
+      searchValue: value,
+    });
   };
 
   return (
@@ -138,26 +154,33 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
         toolbar={{
           multipleLine: true,
           filter: (
-            <AutoComplete
-              key="search"
-              className="search-camera-category"
-              onSearch={debounce(handleSearch, 1000)}
-            >
-              <Input.Search
-                placeholder={intl.formatMessage(
-                  {
-                    id: `view.category.plsEnter_camera_${
-                      type === 'camera_vendor' ? 'vendor' : type === 'camera_type' ? 'type' : 'tags'
-                    }`,
-                  },
-                  {
-                    plsEnter: intl.formatMessage({
-                      id: 'please_enter',
-                    }),
-                  },
-                )}
-              />
-            </AutoComplete>
+            <Form className="bg-grey" form={form} layout="horizontal" autoComplete="off">
+              <Form.Item name="searchValue">
+                <Input.Search
+                  className="search-camera-category"
+                  maxLength={255}
+                  placeholder={intl.formatMessage(
+                    {
+                      id: `view.category.plsEnter_camera_${
+                        type === 'camera_vendor'
+                          ? 'vendor'
+                          : type === 'camera_type'
+                          ? 'type'
+                          : 'tags'
+                      }`,
+                    },
+                    {
+                      plsEnter: intl.formatMessage({
+                        id: 'please_enter',
+                      }),
+                    },
+                  )}
+                  onChange={debounce(handleSearch, 1000)}
+                  onPaste={handleQuickSearchPaste}
+                  onBlur={handleQuickSearchBlur}
+                />
+              </Form.Item>
+            </Form>
           ),
           actions: [
             <Button
