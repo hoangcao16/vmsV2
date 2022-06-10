@@ -9,7 +9,6 @@ import ChartHeader from './ChartHeader';
 const PieChart = (props) => {
   const intl = useIntl();
   const [data, setData] = useState([]);
-  console.log('data', data);
   const G = G2.getEngine('canvas');
 
   useEffect(() => {
