@@ -25,6 +25,7 @@ import moment from 'moment';
 import { v4 as uuidV4 } from 'uuid';
 import { notify } from '@/components/Notify';
 import { debounce } from 'lodash';
+import CheetahSvcApi from '@/services/storage-api/cheetahSvcApi';
 
 let defaultEventFile = {
   id: '',
@@ -113,51 +114,38 @@ function VideoPlayer({
         cameraUuid: row.cameraUuid,
         domain: row.domain,
         date: 0,
-        userId: user.userUuid,
+        userId: user.user_uuid,
         diskId: row.diskId,
       };
-      try {
-        setLoading(true);
-        let checkPerRes = await DailyArchiveApi.checkPermissionForViewOnline(playbackPermissionReq);
-        if (checkPerRes) {
+
+      DailyArchiveApi.checkPermissionForViewOnline(playbackPermissionReq)
+        .then((checkPerRes) => {
           const playReq = {
             fileAbsName: row.pathFile,
             domain: row.domain,
-            userId: user.userUuid,
-            token: checkPerRes.token,
+            userId: user.user_uuid,
+            token: checkPerRes.payload.token,
           };
-          const payload = await DailyArchiveApi.playSingleFile(checkPerRes.playbackUrl, playReq);
-          if (payload) {
-            let videoSrc = checkPerRes.playbackUrl + '/play/hls/' + payload.reqUuid + '/index.m3u8';
-            setDownloadFileName(row.name);
-            setDuration(row.length);
-            setFileCurrent({ ...row, tableName: 'event_file' });
-            setPlayerReady(true);
-            setPlayerSrc(videoSrc);
-            playHandler('default');
 
-            // Call Nginx to get blob data of file
-            // await ExportEventFileApi.getFileData(row.id, row.type, row.nginx_host).then(async (result) => {
-            //     const blob = new Blob([result.data], {type: "octet/stream"});
-            //     const url = window.URL.createObjectURL(blob);
-            //
-            //     setUrlVideo(url);
-            //     setDownloadFileName(row.name);
-            //     setDuration(row.length);
-            //     setUrlVideoTimeline(new File([blob], row.name));
-            //
-            //     setFileCurrent({...row, tableName: 'event_file'});
-            //     setPlayerReady(true);
-            //     setPlayerSrc(videoSrc);
-            //     playHandler("default");
-            // });
-          }
-        }
-      } catch (e) {
-        console.log('e:', e.toString());
-      } finally {
-        setLoading(false);
-      }
+          return DailyArchiveApi.playSingleFile(checkPerRes.playbackUrl, playReq);
+        })
+        .then((res) => {
+          let videoSrc =
+            'http://10.0.0.63:18602/playback1' + '/play/hls/' + res.payload.reqUuid + '/index.m3u8';
+          // let videoSrc = checkPerRes.playbackUrl + '/play/hls/' + payload.reqUuid + '/index.m3u8';
+          setDownloadFileName(row.name);
+          setDuration(row.length);
+          setFileCurrent({ ...row, tableName: 'event_file' });
+          setPlayerReady(true);
+          setPlayerSrc(videoSrc);
+          playHandler('default');
+        })
+        .catch((e) => {
+          console.log(e);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   };
 
@@ -202,7 +190,8 @@ function VideoPlayer({
   };
 
   const openEventFile = async (file) => {
-    if (nameSpace === CAPTURED_NAMESPACE) {
+    // IMAGE
+    if (file.type === 1) {
       setFileCurrent({ ...file, tableName: 'event_file' });
 
       //setUrlSnapshot("data:image/jpeg;base64," + file.thumbnailData[0]);
@@ -217,32 +206,12 @@ function VideoPlayer({
         .catch((err) => {
           console.log(err);
         });
+
+      return;
     }
 
-    if (nameSpace === EVENT_FILES_NAMESPACE) {
-      setFileCurrent({ ...file, tableName: 'event_file' });
-
-      if (file.tableName === 'file') {
-        // Play file
-        await playFile(file);
-      } else {
-        // Play event file
-        await playEventFile(file);
-      }
-    }
-
-    if (nameSpace === IMPORTANT_NAMESPACE) {
-      setFileCurrent({ ...file });
-
-      if (file.tableName === 'file') {
-        // Play file
-        await playFile(file);
-      } else {
-        // Play event file
-        await playEventFile(file);
-      }
-    }
-
+    // VIDEO
+    //viewFileType === 4
     if (nameSpace === EVENT_AI_NAMESPACE) {
       if (REACT_APP_AI_SOURCE === AI_SOURCE.PHILONG) {
         await ExportEventFileApi.downloadAIIntegrationFile(file.uuid, 'ImageViolate.jpg').then(
@@ -273,6 +242,24 @@ function VideoPlayer({
       setFileCurrent({ ...file, fileType: '4' });
     }
 
+    //
+    if (file.tableName === 'file') {
+      // Play file
+      playFile(file);
+    } else {
+      // Play event file
+      playEventFile(file);
+    }
+
+    if (nameSpace === EVENT_FILES_NAMESPACE) {
+      setFileCurrent({ ...file, tableName: 'event_file' });
+    }
+
+    if (nameSpace === IMPORTANT_NAMESPACE) {
+      setFileCurrent({ ...file });
+    }
+
+    // setDownloadFileName()
     if (nameSpace === EVENT_AI_NAMESPACE) {
       if (REACT_APP_AI_SOURCE === AI_SOURCE.PHILONG) {
         setDownloadFileName('ImageViolate.jpg');
@@ -621,6 +608,43 @@ function VideoPlayer({
       });
   };
 
+  const captureVideoHandler = async () => {
+    const cbLeft = document.getElementById('cb-left');
+    const cbRight = document.getElementById('cb-right');
+    const sTime = cbLeft.getAttribute('data-start_time');
+    const eTime = cbRight.getAttribute('data-end_time');
+    const fileName = fileCurrent.path + '/' + fileCurrent.name;
+    const captureFileReq = {
+      startCaptureTime: +sTime,
+      stopCaptureTime: +eTime,
+      fileName: setFileName(0),
+      originalFileName: fileName,
+    };
+    CheetahSvcApi.captureFile(captureFileReq)
+      .then((captureFileRes) => {
+        let eventFile = {
+          ...eventFileCurrent,
+          uuid: uuidV4(),
+          type: 0,
+          name: captureFileRes.payload.fileName,
+          length: captureFileRes.payload.length,
+          pathFile: captureFileRes.payload.path + '/' + captureFileRes.payload.fileName,
+          thumbnailData: captureFileRes.payload.thumbnailData,
+          nginx_host: captureFileRes.payload.nginx_host,
+          isSaved: true,
+          diskId: fileCurrent.diskId,
+        };
+        let { blob, isSaved, ...requestObject } = eventFile;
+
+        ExportEventFileApi.createNewEventFile(requestObject).then((res) => {
+          notify('success', 'noti.archived_file', 'noti.successfully_add_file');
+        });
+      })
+      .catch((err) => {
+        notify('warning', 'noti.archived_file', 'noti.error_save_file');
+      });
+  };
+
   useEffect(() => {
     if (data) {
       onClickTableFileHandler(data);
@@ -858,7 +882,7 @@ function VideoPlayer({
                 type="link"
                 icon={<FiScissors className="action" />}
                 onClick={() => {
-                  // captureVideoHandler().then();
+                  captureVideoHandler();
                 }}
               >
                 {intl.formatMessage({
