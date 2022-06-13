@@ -48,7 +48,7 @@ export default {
   'view.camera.active_stt': 'Active status',
   'view.camera.close': 'Close',
   'view.camera.choose_zone': 'Choose zone',
-  'view.camera.edit_camera_group': 'Edit {cam} {G}',
+  'view.camera.edit_camera_group': 'Edit group camera',
   'view.camera.add_cam_in_group': 'Add Camera to Camera group',
   'view.camera.add_new_cam_in_group': 'Add New Camera to Camera group',
   'view.camera.scannable_successfully': 'Scan Successfully',
