@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { AutoComplete, Button, Input } from 'antd';
+import { AutoComplete, Button, Form, Input } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -8,6 +8,7 @@ import { ProTableStyle } from '../../style';
 import AddEditZone from './AddEditZone';
 
 const TableZone = ({ dispatch, list, metadata, loading }) => {
+  const [form] = Form.useForm();
   const intl = useIntl();
   const [openDrawerAddEdit, setOpenDrawerAddEdit] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
@@ -33,10 +34,30 @@ const TableZone = ({ dispatch, list, metadata, loading }) => {
     });
   };
 
-  const handleSearch = (value) => {
-    const dataParam = Object.assign({ ...searchParam, name: value, page: 1, size: 10 });
+  const handleSearch = (e) => {
+    const value = e.target.value.trim();
+    const dataParam = Object.assign({
+      ...searchParam,
+      name: encodeURIComponent(value),
+      page: 1,
+      size: 10,
+    });
     setSearchParam(dataParam);
     handleGetListZone(dataParam);
+  };
+
+  const handleQuickSearchBlur = (event) => {
+    const value = event.target.value.trim();
+    form.setFieldsValue({
+      searchValue: value,
+    });
+  };
+
+  const handleQuickSearchPaste = (event) => {
+    const value = event.target.value.trimStart();
+    form.setFieldsValue({
+      searchValue: value,
+    });
   };
 
   const onPaginationChange = (page, size) => {
@@ -100,18 +121,24 @@ const TableZone = ({ dispatch, list, metadata, loading }) => {
         toolbar={{
           multipleLine: true,
           filter: (
-            <AutoComplete key="search" onSearch={debounce(handleSearch, 1000)}>
-              <Input.Search
-                placeholder={intl.formatMessage(
-                  { id: 'view.common_device.please_enter_zone_name' },
-                  {
-                    plsEnter: intl.formatMessage({
-                      id: 'please_enter',
-                    }),
-                  },
-                )}
-              />
-            </AutoComplete>
+            <Form className="bg-grey" form={form} layout="horizontal" autoComplete="off">
+              <Form.Item name="searchValue">
+                <Input.Search
+                  maxLength={255}
+                  placeholder={intl.formatMessage(
+                    { id: 'view.common_device.please_enter_zone_name' },
+                    {
+                      plsEnter: intl.formatMessage({
+                        id: 'please_enter',
+                      }),
+                    },
+                  )}
+                  onChange={debounce(handleSearch, 1000)}
+                  onPaste={handleQuickSearchPaste}
+                  onBlur={handleQuickSearchBlur}
+                />
+              </Form.Item>
+            </Form>
           ),
           actions: [
             <Button

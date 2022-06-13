@@ -1,6 +1,7 @@
+import AdDivisionApi from '@/services/advisionApi';
 import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
-import { AutoComplete, Button, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -10,6 +11,7 @@ import { ProTableStyle } from './style';
 
 const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
   const intl = useIntl();
+  const [form] = Form.useForm();
   const [openDrawerAddEdit, setOpenDrawerAddEdit] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [searchParam, setSearchParam] = useState({
@@ -51,7 +53,8 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
     });
   };
 
-  const handleSearch = (value) => {
+  const handleSearch = (e) => {
+    const value = e.target.value.trim();
     const dataParam = Object.assign({
       ...searchParam,
       name: value,
@@ -60,6 +63,20 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
     });
     setSearchParam(dataParam);
     handleGetListAdvision(dataParam);
+  };
+
+  const handleQuickSearchBlur = (event) => {
+    const value = event.target.value.trim();
+    form.setFieldsValue({
+      searchValue: value,
+    });
+  };
+
+  const handleQuickSearchPaste = (event) => {
+    const value = event.target.value.trimStart();
+    form.setFieldsValue({
+      searchValue: value,
+    });
   };
 
   const onPaginationChange = (page, size) => {
@@ -93,27 +110,35 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
           options={false}
           onRow={(record) => {
             return {
-              onClick: () => {
+              onClick: async () => {
+                await AdDivisionApi.getAdDivisionByUuid(record.uuid).then((data) => {
+                  setSelectedRecord(data?.payload);
+                });
                 setOpenDrawerAddEdit(true);
-                setSelectedRecord(record);
               },
             };
           }}
           toolbar={{
             multipleLine: true,
             filter: (
-              <AutoComplete key="search" onSearch={debounce(handleSearch, 1000)}>
-                <Input.Search
-                  placeholder={intl.formatMessage(
-                    { id: 'view.category.plsEnter_administrative_unit_name' },
-                    {
-                      plsEnter: intl.formatMessage({
-                        id: 'please_enter',
-                      }),
-                    },
-                  )}
-                />
-              </AutoComplete>
+              <Form className="bg-grey" form={form} layout="horizontal" autoComplete="off">
+                <Form.Item name="searchValue">
+                  <Input.Search
+                    maxLength={255}
+                    placeholder={intl.formatMessage(
+                      { id: 'view.category.plsEnter_administrative_unit_name' },
+                      {
+                        plsEnter: intl.formatMessage({
+                          id: 'please_enter',
+                        }),
+                      },
+                    )}
+                    onChange={debounce(handleSearch, 1000)}
+                    onPaste={handleQuickSearchPaste}
+                    onBlur={handleQuickSearchBlur}
+                  />
+                </Form.Item>
+              </Form>
             ),
             actions: [
               <Button
