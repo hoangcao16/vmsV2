@@ -694,7 +694,7 @@ const EditCamera = ({
                         });
                       }}
                       onSearch={(value) => handleSearchMap(value)}
-                      maxLength={2000}
+                      maxLength={255}
                     />
                   </Form.Item>
                 </Col>
@@ -1044,7 +1044,7 @@ const EditCamera = ({
                           ip: e.clipboardData.getData('text').trim(),
                         });
                       }}
-                      maxLength={2000}
+                      maxLength={255}
                     />
                   </Form.Item>
                 </Col>
