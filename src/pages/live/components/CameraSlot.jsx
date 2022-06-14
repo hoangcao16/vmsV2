@@ -26,8 +26,6 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed 
   const peerRef = useRef(null);
   const timerRef = useRef(null);
   const requestId = useRef(uuidv4());
-  const cameraSlotRef = useRef(null);
-  const headerHeight = document.getElementsByClassName('ant-layout-header')[0]?.clientHeight;
   useEffect(() => {
     if (camera.uuid) {
       startCamera(camera.uuid, camera.type, 'webrtc');
@@ -376,12 +374,10 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed 
 
   return (
     <StyledCameraSlot
-      ref={cameraSlotRef}
       isDraggingOver={isDraggingOver}
       zoomIn={zoomIn}
       layoutCollapsed={layoutCollapsed}
       notFoundCamera={!camera?.id}
-      clientHeight={headerHeight}
     >
       {loading && (
         <StyledLoading>
@@ -432,7 +428,7 @@ const StyledCameraSlotControl = styled(CameraSlotControl)``;
 const StyledCameraSlot = styled.div`
   width: 100%;
   height: 100%;
-  transition: background 0.3s, width 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
+  transition: all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
   &:hover {
     cursor: pointer !important;
 
@@ -440,15 +436,18 @@ const StyledCameraSlot = styled.div`
       visibility: visible;
     }
   }
+
   ${(props) => props.isDraggingOver && 'display: none;'}
   ${(props) =>
     props.zoomIn &&
     `position: fixed;
      z-index: 15;
      bottom : 0; 
-     right: 0; 
-     height: calc(100vh - ${props.clientHeight}px); 
-     width: ${props.layoutCollapsed ? 'calc(100vw - 55px);' : 'calc(100vw - 215px);'};
+     right: 0;
+     width: unset;
+     height: unset; 
+     top: 48px;
+     left: ${props.layoutCollapsed ? 48 : 208}px;
      ${props.notFoundCamera && 'background-color: #3f4141;'}`}
 `;
 
