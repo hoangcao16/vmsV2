@@ -89,7 +89,7 @@ const TableTags = ({ dispatch, listTags, metadataTags, type, loading }) => {
       <ProTableStyle
         headerTitle={`${intl.formatMessage(
           {
-            id: `view.category.camera_vendor`,
+            id: `view.category.tags`,
           },
           {
             cam: intl.formatMessage({
@@ -121,7 +121,7 @@ const TableTags = ({ dispatch, listTags, metadataTags, type, loading }) => {
                   maxLength={255}
                   placeholder={intl.formatMessage(
                     {
-                      id: `view.category.plsEnter_camera_vendor`,
+                      id: `view.category.plsEnter_camera_tags`,
                     },
                     {
                       plsEnter: intl.formatMessage({
@@ -158,7 +158,7 @@ const TableTags = ({ dispatch, listTags, metadataTags, type, loading }) => {
               id: 'view.camera.total',
             })} ${total} ${intl.formatMessage(
               {
-                id: `view.category.camera_vendor`,
+                id: `view.category.tags`,
               },
               {
                 cam: intl.formatMessage({
