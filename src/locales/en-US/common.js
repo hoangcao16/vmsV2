@@ -150,6 +150,7 @@ export default {
   'view.live.detail': 'Detail',
   'view.live.plate_number': 'Plate number',
   'view.live.view_fullscreen': 'View camera fullscreen',
+  'view.live.view_zoom_out': 'Zoom out camera',
   // View Map
   'view.map.search': 'Search',
   'view.map.camera_list': '{cam} List',

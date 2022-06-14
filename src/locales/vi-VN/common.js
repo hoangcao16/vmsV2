@@ -151,6 +151,7 @@ export default {
   'view.live.detail': 'Chi tiết',
   'view.live.plate_number': 'Biển số xe',
   'view.live.view_fullscreen': 'Xem phóng to camera',
+  'view.live.view_zoom_out': 'Thu nhỏ camera',
   //view map
   'view.map.search': 'Tìm kiếm',
   'view.map.camera_list': 'Danh sách {cam}',

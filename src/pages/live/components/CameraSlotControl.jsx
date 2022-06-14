@@ -1,7 +1,7 @@
 import { Permission } from '@/utils/PermissionCheck';
-import { FiCamera, FiVideo, FiX } from 'react-icons/fi';
 import { Button, Tooltip } from 'antd';
-import React from 'react';
+import { FiCamera, FiVideo, FiX } from 'react-icons/fi';
+import { TbArrowsDiagonal, TbArrowsDiagonalMinimize } from 'react-icons/tb';
 import styled from 'styled-components';
 import { useIntl } from 'umi';
 
@@ -13,6 +13,8 @@ const CameraSlotControl = ({
   onRecord,
   onClose,
   mode,
+  zoomIn,
+  onZoom,
   ...props
 }) => {
   const intl = useIntl();
@@ -31,7 +33,7 @@ const CameraSlotControl = ({
   return (
     <StyledCameraControl>
       {showControl && (
-        <ListControl className={props.className}>
+        <ListControl className={props.className} zoomIn={zoomIn}>
           <Permission permissionName="capture_video_cam">
             <Tooltip title={intl.formatMessage({ id: 'view.user.record' })}>
               <StyledIcon isRecording={isRecording} onClick={onRecord}>
@@ -46,6 +48,16 @@ const CameraSlotControl = ({
               </StyledIcon>
             </Tooltip>
           </Permission>
+          <Tooltip
+            trigger="hover"
+            title={intl.formatMessage({
+              id: zoomIn ? 'view.live.view_zoom_out' : 'view.live.view_fullscreen',
+            })}
+          >
+            <StyledIcon onClick={onZoom}>
+              {zoomIn ? <TbArrowsDiagonalMinimize size={12} /> : <TbArrowsDiagonal size={12} />}
+            </StyledIcon>
+          </Tooltip>
           <Tooltip title={intl.formatMessage({ id: 'view.live.close_camera' })}>
             <StyledIcon onClick={onClose}>
               <FiX size={12} />
@@ -61,12 +73,15 @@ const CameraSlotControl = ({
 };
 
 const StyledCameraControl = styled.div`
+  z-index: 12;
   position: absolute;
   display: flex;
   top: 15px;
   right: 15px;
   align-items: center;
-  z-index: 999;
+  .ant-btn-primary {
+    z-index: 1;
+  }
 `;
 
 const ListControl = styled.div`
@@ -87,6 +102,7 @@ const StyledIcon = styled.button`
   border-radius: 50%;
   cursor: pointer;
   margin-left: 10px;
+  z-index: 10;
 
   &:hover {
     background-color: #1890ff;
