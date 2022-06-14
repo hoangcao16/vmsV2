@@ -1,12 +1,12 @@
 import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import { PageLoading, SettingDrawer } from '@ant-design/pro-layout';
-import { history, getDvaApp } from 'umi';
+import { getDvaApp, history } from 'umi';
 
+import 'react-phone-number-input/style.css';
 import defaultSettings from '../config/defaultSettings';
 import { IntlGlobalProvider } from './components/IntlGlobalProvider';
 import AuthZApi from './services/authz/AuthZApi';
-import 'react-phone-number-input/style.css';
 
 const loginPath = '/user/login';
 

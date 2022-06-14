@@ -26,7 +26,8 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed 
   const peerRef = useRef(null);
   const timerRef = useRef(null);
   const requestId = useRef(uuidv4());
-
+  const cameraSlotRef = useRef(null);
+  const headerHeight = document.getElementsByClassName('ant-layout-header')[0]?.clientHeight;
   useEffect(() => {
     if (camera.uuid) {
       startCamera(camera.uuid, camera.type, 'webrtc');
@@ -371,15 +372,16 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed 
 
   const zoomCamera = () => {
     setZoomIn(!zoomIn);
-    console.log(!camera?.id);
   };
 
   return (
     <StyledCameraSlot
+      ref={cameraSlotRef}
       isDraggingOver={isDraggingOver}
       zoomIn={zoomIn}
       layoutCollapsed={layoutCollapsed}
       notFoundCamera={!camera?.id}
+      clientHeight={headerHeight}
     >
       {loading && (
         <StyledLoading>
@@ -430,20 +432,24 @@ const StyledCameraSlotControl = styled(CameraSlotControl)``;
 const StyledCameraSlot = styled.div`
   width: 100%;
   height: 100%;
-  ${(props) => props.isDraggingOver && 'display: none;'}
-  ${(props) =>
-    props.zoomIn &&
-    `position: fixed; bottom : 0; right: 0; height: calc(100vh - 48px); width: calc(100vw - ${
-      props?.layoutCollapsed ? '53px' : '215px'
-    }) !important; z-index: 1000; ${props.notFoundCamera && 'background-color: #3f4141;'}`}
-
+  transition: background 0.3s, width 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
   &:hover {
-    cursor: pointer;
+    cursor: pointer !important;
 
     ${StyledCameraSlotControl} {
       visibility: visible;
     }
   }
+  ${(props) => props.isDraggingOver && 'display: none;'}
+  ${(props) =>
+    props.zoomIn &&
+    `position: fixed;
+     z-index: 15;
+     bottom : 0; 
+     right: 0; 
+     height: calc(100vh - ${props.clientHeight}px); 
+     width: ${props.layoutCollapsed ? 'calc(100vw - 55px);' : 'calc(100vw - 215px);'};
+     ${props.notFoundCamera && 'background-color: #3f4141;'}`}
 `;
 
 const StyledVideo = styled.video`

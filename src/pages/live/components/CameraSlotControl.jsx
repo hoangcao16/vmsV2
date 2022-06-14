@@ -33,7 +33,7 @@ const CameraSlotControl = ({
   return (
     <StyledCameraControl>
       {showControl && (
-        <ListControl className={props.className}>
+        <ListControl className={props.className} zoomIn={zoomIn}>
           <Permission permissionName="capture_video_cam">
             <Tooltip title={intl.formatMessage({ id: 'view.user.record' })}>
               <StyledIcon isRecording={isRecording} onClick={onRecord}>
@@ -73,14 +73,14 @@ const CameraSlotControl = ({
 };
 
 const StyledCameraControl = styled.div`
+  z-index: 12;
   position: absolute;
   display: flex;
   top: 15px;
   right: 15px;
   align-items: center;
-  z-index: 10;
   .ant-btn-primary {
-    z-index: -1;
+    z-index: 1;
   }
 `;
 
