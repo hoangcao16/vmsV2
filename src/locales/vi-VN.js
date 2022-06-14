@@ -6,6 +6,7 @@ import pwa from './vi-VN/pwa';
 import settingDrawer from './vi-VN/settingDrawer';
 import settings from './vi-VN/settings';
 import common from './vi-VN/common';
+import errorMessage from './vi-VN/errorMessage';
 export default {
   'navBar.lang': 'Languages',
   'layout.user.link.help': 'Help',
@@ -23,4 +24,5 @@ export default {
   ...component,
   ...pages,
   ...common,
+  ...errorMessage,
 };
