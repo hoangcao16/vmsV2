@@ -2,7 +2,7 @@
 import { StyledDrawer, SpanCode } from './style';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
-import { Space, Button, Form, Input, Row, Col } from 'antd';
+import { Space, Button, Form, Input, Row, Col, Card } from 'antd';
 import { SaveOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect, useState } from 'react';
@@ -341,92 +341,100 @@ const GroupCameraDrawer = ({
           </Space>
         }
       >
-        <Form className="bg-grey" form={form} onFinish={handleSubmit}>
-          <Row gutter={24}>
-            <Col span={12}>
-              <Form.Item
-                name={['name']}
-                rules={[
-                  {
-                    required: true,
-                    message: `${intl.formatMessage({ id: 'view.map.required_field' })}`,
-                  },
-                  {
-                    max: 255,
-                    message: `${intl.formatMessage({ id: 'noti.255_characters_limit' })}`,
-                  },
-                ]}
-                label={intl.formatMessage({ id: 'view.camera.camera_group_name' })}
-              >
-                <Input
-                  placeholder={intl.formatMessage(
-                    { id: 'view.camera.please_enter_new_camera_group_name' },
+        <Card
+          title={intl.formatMessage({
+            id: isEdit ? 'view.camera.edit_camera_group' : 'view.camera.add_new_camera_group',
+          })}
+        >
+          <Form className="bg-grey" form={form} onFinish={handleSubmit}>
+            <Row gutter={24}>
+              <Col span={12}>
+                <Form.Item
+                  name={['name']}
+                  rules={[
                     {
-                      plsEnter: intl.formatMessage({ id: 'please_enter' }),
-                      cam: intl.formatMessage({ id: 'camera' }),
+                      required: true,
+                      message: `${intl.formatMessage({ id: 'view.map.required_field' })}`,
                     },
-                  )}
-                  onBlur={(e) => {
-                    form.setFieldsValue({
-                      name: e.target.value.trim(),
-                    });
-                  }}
-                  onPaste={(e) => {
-                    e.preventDefault();
-                    form.setFieldsValue({
-                      name: e.clipboardData.getData('text').trim(),
-                    });
-                  }}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name={['description']}
-                rules={[
-                  {
-                    required: true,
-                    message: `${intl.formatMessage({ id: 'view.map.required_field' })}`,
-                  },
-                  {
-                    max: 255,
-                    message: `${intl.formatMessage({ id: 'noti.255_characters_limit' })}`,
-                  },
-                ]}
-                label={intl.formatMessage({ id: 'view.common_device.desc' })}
-              >
-                <Input.TextArea
-                  autoSize
-                  placeholder={intl.formatMessage({ id: 'view.user.detail_list.desc' })}
-                  onBlur={(e) => {
-                    form.setFieldsValue({
-                      description: e.target.value.trim(),
-                    });
-                  }}
-                  onPaste={(e) => {
-                    e.preventDefault();
-                    form.setFieldsValue({
-                      description: e.clipboardData.getData('text').trim(),
-                    });
-                  }}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-        <EditableProTable
-          options={false}
-          value={cameraListInGroup}
-          columns={columns()}
-          rowKey="uuid"
-          search={false}
-          recordCreatorProps={{
-            creatorButtonText: intl.formatMessage({
-              id: 'view.camera.add_cam_in_group',
-            }),
-            onClick: () => handleSelectCamera(),
-          }}
-        />
+                    {
+                      max: 255,
+                      message: `${intl.formatMessage({ id: 'noti.255_characters_limit' })}`,
+                    },
+                  ]}
+                  label={intl.formatMessage({ id: 'view.camera.camera_group_name' })}
+                >
+                  <Input
+                    maxLength={255}
+                    placeholder={intl.formatMessage(
+                      { id: 'view.camera.please_enter_new_camera_group_name' },
+                      {
+                        plsEnter: intl.formatMessage({ id: 'please_enter' }),
+                        cam: intl.formatMessage({ id: 'camera' }),
+                      },
+                    )}
+                    onBlur={(e) => {
+                      form.setFieldsValue({
+                        name: e.target.value.trim(),
+                      });
+                    }}
+                    onPaste={(e) => {
+                      e.preventDefault();
+                      form.setFieldsValue({
+                        name: e.clipboardData.getData('text').trim(),
+                      });
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name={['description']}
+                  rules={[
+                    {
+                      required: true,
+                      message: `${intl.formatMessage({ id: 'view.map.required_field' })}`,
+                    },
+                    // {
+                    //   max: 255,
+                    //   message: `${intl.formatMessage({ id: 'noti.255_characters_limit' })}`,
+                    // },
+                  ]}
+                  label={intl.formatMessage({ id: 'view.common_device.desc' })}
+                >
+                  <Input.TextArea
+                    autoSize
+                    maxLength={2000}
+                    placeholder={intl.formatMessage({ id: 'view.user.detail_list.desc' })}
+                    onBlur={(e) => {
+                      form.setFieldsValue({
+                        description: e.target.value.trim(),
+                      });
+                    }}
+                    onPaste={(e) => {
+                      e.preventDefault();
+                      form.setFieldsValue({
+                        description: e.clipboardData.getData('text').trim(),
+                      });
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+          <EditableProTable
+            options={false}
+            value={cameraListInGroup}
+            columns={columns()}
+            rowKey="uuid"
+            search={false}
+            recordCreatorProps={{
+              creatorButtonText: intl.formatMessage({
+                id: 'view.camera.add_cam_in_group',
+              }),
+              onClick: () => handleSelectCamera(),
+            }}
+          />
+        </Card>
       </StyledDrawer>
       <StyledDrawer
         openDrawer={isOpenDrawerCamera}

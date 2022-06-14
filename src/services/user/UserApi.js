@@ -45,7 +45,10 @@ const UserApi = {
   getUserGroupById: async (uuid) => {
     return request.get(`/authz/api/v0/groups/${uuid}`);
   },
-
+  // getPermission
+  getPermissions: async (params) => {
+    return request.get(`/authz/api/v0/permissions`, { params });
+  },
   //get all permission
   getAllPermission: async (params) => {
     return request.get(`/authz/api/v0/permission_groups`, { params });

@@ -85,7 +85,7 @@ const ChartControl = (props) => {
 
   useEffect(() => {
     const params = {
-      provinceIds: defaultProvinceId,
+      provinceIds: defaultProvinceId.toString(),
       districtIds: '',
       wardIds: '',
       size: 100000,
