@@ -2,6 +2,7 @@ import AuthZApi from '@/services/authz/AuthZApi';
 import axios, { AxiosInstance } from 'axios';
 // import { store } from "store";
 import { API_FILE_URL, API_URL, STATUS_CODE, STORAGE } from '../constants/common';
+import HandleErrorCode from '@/components/HandleErrorCode';
 export class BaseService {
   private baseUrl;
   private withToken;
@@ -46,6 +47,7 @@ export class BaseService {
           return response.data;
         }
         if (!STATUS_CODE.LIST_SUCCESS_CODE.includes(responseCode)) {
+          HandleErrorCode(response?.data);
           return Promise.reject(response?.data);
         }
         return response.data;
