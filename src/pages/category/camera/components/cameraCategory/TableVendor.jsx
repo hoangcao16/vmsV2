@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { AutoComplete, Button, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -7,32 +7,22 @@ import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
 import AddEditCameraCategory from './AddEditCameraCategory';
 
-const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, type }) => {
+const TableVendor = ({ dispatch, listVendor, metadataVendor, type, loading }) => {
   const intl = useIntl();
   const [form] = Form.useForm();
   const [openDrawerAddEdit, setOpenDrawerAddEdit] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [searchParam, setSearchParam] = useState({
+    page: metadataVendor?.page,
+    size: metadataVendor?.size,
+  });
 
   useEffect(() => {
     dispatch({
       type: 'cameraCategory/fetchAllVendor',
       payload: {
-        name: metadata?.name,
-        size: metadata?.size,
-      },
-    });
-    dispatch({
-      type: 'cameraCategory/fetchAllType',
-      payload: {
-        name: metadata?.name,
-        size: metadata?.size,
-      },
-    });
-    dispatch({
-      type: 'cameraCategory/fetchAllTags',
-      payload: {
-        name: metadata?.name,
-        size: metadata?.size,
+        page: metadataVendor?.page,
+        size: metadataVendor?.size,
       },
     });
   }, []);
@@ -57,50 +47,24 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
     },
   ];
 
-  const addTagColumns = [
-    {
-      title: intl.formatMessage({
-        id: 'view.category.category_name',
-      }),
-      dataIndex: 'key',
-      key: 'key',
-    },
-  ];
+  const handleGetListVendor = (searchParam) => {
+    dispatch({
+      type: 'cameraCategory/fetchAllVendor',
+      payload: searchParam,
+    });
+  };
 
-  if (type === 'camera_tags') {
-    categoryColumns.splice(1, 1, ...addTagColumns);
-  }
+  const onPaginationChange = (page, pageSize) => {
+    const dataParam = Object.assign({ ...searchParam, page: page, size: pageSize });
+    setSearchParam(dataParam);
+    handleGetListVendor(dataParam);
+  };
 
   const handleSearch = (e) => {
     const value = e.target.value.trim();
-    if (type === 'camera_vendor') {
-      dispatch({
-        type: 'cameraCategory/fetchAllVendor',
-        payload: {
-          name: value,
-          size: metadata?.size,
-          page: 1,
-        },
-      });
-    } else if (type === 'camera_type') {
-      dispatch({
-        type: 'cameraCategory/fetchAllType',
-        payload: {
-          name: value,
-          size: metadata?.size,
-          page: 1,
-        },
-      });
-    } else if (type === 'camera_tags') {
-      dispatch({
-        type: 'cameraCategory/fetchAllTags',
-        payload: {
-          key: value,
-          size: metadata?.size,
-          page: 1,
-        },
-      });
-    }
+    const dataParam = Object.assign({ ...searchParam, page: 1, name: value });
+    setSearchParam(dataParam);
+    handleGetListVendor(dataParam);
   };
 
   const handleQuickSearchBlur = (event) => {
@@ -117,18 +81,16 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
     });
   };
 
+  const resetForm = () => {
+    form.setFieldsValue({ searchValue: '' });
+  };
+
   return (
     <>
       <ProTableStyle
         headerTitle={`${intl.formatMessage(
           {
-            id: `view.${
-              type === 'camera_vendor'
-                ? 'category.camera_vendor'
-                : type === 'camera_type'
-                ? 'camera.camera_type'
-                : 'category.tags'
-            }`,
+            id: `view.category.camera_vendor`,
           },
           {
             cam: intl.formatMessage({
@@ -138,9 +100,8 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
         )}`}
         rowKey="id"
         search={false}
-        dataSource={
-          type === 'camera_vendor' ? listVendor : type === 'camera_type' ? listType : listTags
-        }
+        dataSource={listVendor}
+        loading={loading}
         columns={categoryColumns}
         options={false}
         onRow={(record) => {
@@ -161,13 +122,7 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
                   maxLength={255}
                   placeholder={intl.formatMessage(
                     {
-                      id: `view.category.plsEnter_camera_${
-                        type === 'camera_vendor'
-                          ? 'vendor'
-                          : type === 'camera_type'
-                          ? 'type'
-                          : 'tags'
-                      }`,
+                      id: `view.category.plsEnter_camera_vendor`,
                     },
                     {
                       plsEnter: intl.formatMessage({
@@ -204,13 +159,7 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
               id: 'view.camera.total',
             })} ${total} ${intl.formatMessage(
               {
-                id: `view.${
-                  type === 'camera_vendor'
-                    ? 'category.camera_vendor'
-                    : type === 'camera_type'
-                    ? 'camera.camera_type'
-                    : 'category.tags'
-                }`,
+                id: `view.category.camera_vendor`,
               },
               {
                 cam: intl.formatMessage({
@@ -218,9 +167,10 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
                 }),
               },
             )}`,
-          // total: metadata?.total,
-          pageSize: 10,
-          // current: metadata?.page,
+          onChange: onPaginationChange,
+          total: metadataVendor?.total,
+          pageSize: metadataVendor?.size,
+          current: metadataVendor?.page,
         }}
       />
 
@@ -231,6 +181,7 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
           selectedRecord={selectedRecord}
           openDrawer={openDrawerAddEdit}
           type={type}
+          resetForm={resetForm}
         />
       )}
     </>
@@ -238,14 +189,12 @@ const TableVendorType = ({ dispatch, listVendor, listType, listTags, metadata, t
 };
 
 function mapStateToProps(state) {
-  const { metadata, listVendor, listType, listTags } = state.cameraCategory;
+  const { metadataVendor, listVendor } = state.cameraCategory;
   return {
     loading: state.loading.models.cameraCategory,
-    metadata,
+    metadataVendor,
     listVendor,
-    listType,
-    listTags,
   };
 }
 
-export default connect(mapStateToProps)(TableVendorType);
+export default connect(mapStateToProps)(TableVendor);

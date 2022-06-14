@@ -5,45 +5,66 @@ import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
-import AddEditZone from './AddEditZone';
+import AddEditCameraCategory from './AddEditCameraCategory';
 
-const TableZone = ({ dispatch, list, metadata, loading }) => {
-  const [form] = Form.useForm();
+const TableType = ({ dispatch, listType, metadataType, type, loading }) => {
   const intl = useIntl();
+  const [form] = Form.useForm();
   const [openDrawerAddEdit, setOpenDrawerAddEdit] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [searchParam, setSearchParam] = useState({
-    page: metadata?.page,
-    size: metadata?.size,
+    page: metadataType?.page,
+    size: metadataType?.size,
   });
 
   useEffect(() => {
     dispatch({
-      type: 'zone/fetchAllZone',
+      type: 'cameraCategory/fetchAllType',
       payload: {
-        page: metadata?.page,
-        size: metadata?.size,
+        page: metadataType?.page,
+        size: metadataType?.size,
       },
     });
   }, []);
 
-  const handleGetListZone = (searchParam) => {
+  const categoryColumns = [
+    {
+      title: intl.formatMessage({
+        id: 'view.storage.NO',
+      }),
+      key: 'index',
+      width: '15%',
+      render: (text, record, index) => index + 1,
+    },
+
+    {
+      title: intl.formatMessage({
+        id: 'view.category.category_name',
+      }),
+      dataIndex: 'name',
+      key: 'name',
+      ellipsis: true,
+    },
+  ];
+
+  const handleGetListType = (searchParam) => {
     dispatch({
-      type: 'zone/fetchAllZone',
+      type: 'cameraCategory/fetchAllType',
       payload: searchParam,
     });
   };
 
+  const onPaginationChange = (page, pageSize) => {
+    const dataParam = Object.assign({ ...searchParam, page: page, size: pageSize });
+    setSearchParam(dataParam);
+    handleGetListType(dataParam);
+  };
+
   const handleSearch = (e) => {
     const value = e.target.value.trim();
-    const dataParam = Object.assign({
-      ...searchParam,
-      name: encodeURIComponent(value),
-      page: 1,
-      size: 10,
-    });
+    const dataParam = Object.assign({ ...searchParam, page: 1, name: value });
     setSearchParam(dataParam);
-    handleGetListZone(dataParam);
+    handleGetListType(dataParam);
   };
 
   const handleQuickSearchBlur = (event) => {
@@ -60,60 +81,29 @@ const TableZone = ({ dispatch, list, metadata, loading }) => {
     });
   };
 
-  const onPaginationChange = (page, size) => {
-    const dataParam = Object.assign({ ...searchParam, page, size });
-    setSearchParam(dataParam);
-    handleGetListZone(dataParam);
-  };
-
   const resetForm = () => {
     form.setFieldsValue({ searchValue: '' });
   };
 
-  const columns = [
-    {
-      title: 'STT',
-      key: 'index',
-      width: '6%',
-      render: (text, record, index) => index + 1,
-    },
-    {
-      title: intl.formatMessage({
-        id: 'view.common_device.zone_name',
-      }),
-      dataIndex: 'name',
-      key: 'name',
-      width: '30%',
-    },
-    {
-      title: intl.formatMessage({
-        id: 'view.map.address',
-      }),
-      dataIndex: 'address',
-      key: 'address',
-      width: '30%',
-    },
-    {
-      title: intl.formatMessage({
-        id: 'view.user.detail_list.desc',
-      }),
-      dataIndex: 'description',
-      key: 'description',
-      width: '34%',
-    },
-  ];
   return (
     <>
       <ProTableStyle
-        headerTitle={`${intl.formatMessage({
-          id: 'view.common_device.zone_list',
-        })}`}
+        headerTitle={`${intl.formatMessage(
+          {
+            id: `view.category.camera_vendor`,
+          },
+          {
+            cam: intl.formatMessage({
+              id: 'camera',
+            }),
+          },
+        )}`}
         rowKey="id"
         search={false}
-        dataSource={list}
-        columns={columns}
-        options={false}
+        dataSource={listType}
         loading={loading}
+        columns={categoryColumns}
+        options={false}
         onRow={(record) => {
           return {
             onClick: () => {
@@ -128,9 +118,12 @@ const TableZone = ({ dispatch, list, metadata, loading }) => {
             <Form className="bg-grey" form={form} layout="horizontal" autoComplete="off">
               <Form.Item name="searchValue">
                 <Input.Search
+                  className="search-camera-category"
                   maxLength={255}
                   placeholder={intl.formatMessage(
-                    { id: 'view.common_device.please_enter_zone_name' },
+                    {
+                      id: `view.category.plsEnter_camera_vendor`,
+                    },
                     {
                       plsEnter: intl.formatMessage({
                         id: 'please_enter',
@@ -154,14 +147,7 @@ const TableZone = ({ dispatch, list, metadata, loading }) => {
               }}
             >
               <PlusOutlined />
-              {intl.formatMessage(
-                { id: 'view.common_device.add_zone' },
-                {
-                  add: intl.formatMessage({
-                    id: 'add',
-                  }),
-                },
-              )}
+              {intl.formatMessage({ id: 'add' })}
             </Button>,
           ],
         }}
@@ -171,20 +157,30 @@ const TableZone = ({ dispatch, list, metadata, loading }) => {
           showTotal: (total) =>
             `${intl.formatMessage({
               id: 'view.camera.total',
-            })} ${total} Zone`,
+            })} ${total} ${intl.formatMessage(
+              {
+                id: `view.category.camera_vendor`,
+              },
+              {
+                cam: intl.formatMessage({
+                  id: 'camera',
+                }),
+              },
+            )}`,
           onChange: onPaginationChange,
-          total: metadata?.total,
-          pageSize: metadata?.size,
-          current: metadata?.page,
+          total: metadataType?.total,
+          pageSize: metadataType?.size,
+          current: metadataType?.page,
         }}
       />
 
       {openDrawerAddEdit && (
-        <AddEditZone
+        <AddEditCameraCategory
           onClose={() => setOpenDrawerAddEdit(false)}
           dispatch={dispatch}
           selectedRecord={selectedRecord}
           openDrawer={openDrawerAddEdit}
+          type={type}
           resetForm={resetForm}
         />
       )}
@@ -193,11 +189,12 @@ const TableZone = ({ dispatch, list, metadata, loading }) => {
 };
 
 function mapStateToProps(state) {
-  const { list, metadata } = state.zone;
+  const { metadataType, listType } = state.cameraCategory;
   return {
-    loading: state.loading.models.zone,
-    list,
-    metadata,
+    loading: state.loading.models.cameraCategory,
+    metadataType,
+    listType,
   };
 }
-export default connect(mapStateToProps)(TableZone);
+
+export default connect(mapStateToProps)(TableType);
