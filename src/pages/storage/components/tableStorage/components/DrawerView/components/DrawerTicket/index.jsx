@@ -1,16 +1,18 @@
-import React, { useRef, useState } from 'react';
-import { MSCustomizeDrawerStyled, StyledInput, WrapperPrint } from './style';
-import { useIntl } from 'umi';
-import moment from 'moment';
-import { getText } from '@/utils/toVND';
-import { Button, Col, Modal, Row } from 'antd';
-import { CloseOutlined, PrinterOutlined, SendOutlined } from '@ant-design/icons';
-import { useReactToPrint } from 'react-to-print';
-import PopupSendTicket from '../PopupSendTicket';
-import './style.less';
 import { notify } from '@/components/Notify';
-import EventAiAPI from '@/services/storage-api/eventAI-api';
 import { PROCESSING_STATUS_OPTIONS } from '@/pages/storage/constants';
+import EventAiAPI from '@/services/storage-api/eventAI-api';
+import { getText } from '@/utils/toVND';
+import { CloseOutlined, PrinterOutlined, SendOutlined } from '@ant-design/icons';
+import { Button, Col, Row } from 'antd';
+import moment from 'moment';
+import { useRef, useState } from 'react';
+import { useReactToPrint } from 'react-to-print';
+import { useIntl } from 'umi';
+import DrawerConfirmChangeStatus from '../DrawerConfirmChangeStatus';
+import DrawerConfirmSend from '../DrawerConfirmSend';
+import DrawerSendTicket from '../DrawerSendTicket';
+import { MSCustomizeDrawerStyled, StyledInput, WrapperPrint } from './style';
+import './style.less';
 
 function DrawerTicket({
   data,
@@ -23,20 +25,39 @@ function DrawerTicket({
 }) {
   const intl = useIntl();
   const componentRef = useRef();
+  const receiverRef = useRef();
 
   const [fine, setFine] = useState('');
   const [toText, setToText] = useState('');
 
   const [visibleSendTicket, setVisibleSendTicket] = useState(false);
-
   const [loadingSendEmail, setLoadingSendEmail] = useState(false);
 
-  const handleOpenPopupSendTicket = () => {
+  const [visibleConfirmSend, setVisibleConfirmSend] = useState(false);
+  const [visibleConfirmChangeStatus, setVisibleConfirmChangeStatus] = useState(false);
+
+  const handleOpenDrawerSendTicket = () => {
     setVisibleSendTicket(true);
   };
 
-  const handleClosePopupSendTicket = () => {
+  const handleCloseDrawerSendTicket = () => {
     setVisibleSendTicket(false);
+  };
+
+  const handleOpenDrawerConfirmSend = () => {
+    setVisibleConfirmSend(true);
+  };
+
+  const handleCloseDrawerConfirmSend = () => {
+    setVisibleConfirmSend(false);
+  };
+
+  const handleOpenDrawerConfirmChangeStatus = () => {
+    setVisibleConfirmChangeStatus(true);
+  };
+
+  const handleCloseDrawerConfirmChangeStatus = () => {
+    setVisibleConfirmChangeStatus(false);
   };
 
   const handleSetFine = (e) => {
@@ -91,33 +112,10 @@ function DrawerTicket({
   };
 
   const handleUpdateStatus = () => {
-    Modal.confirm({
-      title: intl.formatMessage({
-        id: 'view.penaltyTicket.confirm_update_status',
-      }),
-      icon: <></>,
-      okText: intl.formatMessage({
-        id: 'view.penaltyTicket.send',
-      }),
-      cancelText: intl.formatMessage({
-        id: 'view.penaltyTicket.cancel-a-ticket',
-      }),
-      zIndex: 1003,
-      className: 'confirm-send-ticket',
-      cancelButtonProps: {
-        className: 'cancel-button-confirm-send-ticket',
-        icon: <CloseOutlined />,
-      },
-      okButtonProps: {
-        icon: <SendOutlined />,
-      },
-      onOk: () => {
-        updateStatusEventAI();
-      },
-    });
+    handleOpenDrawerConfirmChangeStatus();
   };
 
-  const sendTicket = (receiver) => {
+  const sendTicket = () => {
     setLoadingSendEmail(true);
     const dataSend = {
       cameraName: data?.cameraName,
@@ -131,7 +129,7 @@ function DrawerTicket({
       uuid: data?.uuid,
       vehicleType: data?.vehicleType,
       videoUrl: data?.videoUrl,
-      emails: receiver ? receiver.replace(/\s/g, '') : '',
+      emails: receiverRef.current ? receiverRef.current.replace(/\s/g, '') : '',
     };
 
     EventAiAPI.sendTicket(dataSend)
@@ -155,30 +153,8 @@ function DrawerTicket({
   };
 
   const handleSendTicket = (receiver) => {
-    Modal.confirm({
-      title: intl.formatMessage({
-        id: 'view.penaltyTicket.confirm_send',
-      }),
-      icon: <></>,
-      okText: intl.formatMessage({
-        id: 'view.penaltyTicket.send',
-      }),
-      cancelText: intl.formatMessage({
-        id: 'view.penaltyTicket.cancel-a-ticket',
-      }),
-      zIndex: 1003,
-      className: 'confirm-send-ticket',
-      cancelButtonProps: {
-        className: 'cancel-button-confirm-send-ticket',
-        icon: <CloseOutlined />,
-      },
-      okButtonProps: {
-        icon: <SendOutlined />,
-      },
-      onOk: () => {
-        sendTicket(receiver);
-      },
-    });
+    receiverRef.current = receiver;
+    handleOpenDrawerConfirmSend(true);
   };
 
   return (
@@ -375,7 +351,7 @@ function DrawerTicket({
           icon={<SendOutlined />}
           className="btnTicket"
           type="default"
-          onClick={handleOpenPopupSendTicket}
+          onClick={handleOpenDrawerSendTicket}
         >
           {intl.formatMessage({
             id: 'view.penaltyTicket.send_ticket',
@@ -389,12 +365,38 @@ function DrawerTicket({
         </Button>
       </div>
 
-      <PopupSendTicket
+      {/* <PopupSendTicket
         isModalVisible={visibleSendTicket}
         handleOk={handleSendTicket}
         handleCancel={handleClosePopupSendTicket}
         loadingSendEmail={loadingSendEmail}
-      />
+      /> */}
+
+      {visibleSendTicket && (
+        <DrawerSendTicket
+          isOpenView={visibleSendTicket}
+          handleCancel={handleCloseDrawerSendTicket}
+          handleOk={handleSendTicket}
+          loadingSendEmail={loadingSendEmail}
+        />
+      )}
+
+      {visibleConfirmSend && (
+        <DrawerConfirmSend
+          isOpenView={visibleConfirmSend}
+          handleCancel={handleCloseDrawerConfirmSend}
+          handleOk={sendTicket}
+          loadingSendEmail={loadingSendEmail}
+        />
+      )}
+
+      {visibleConfirmChangeStatus && (
+        <DrawerConfirmChangeStatus
+          isOpenView={visibleConfirmChangeStatus}
+          handleCancel={handleCloseDrawerConfirmChangeStatus}
+          handleOk={updateStatusEventAI}
+        />
+      )}
     </MSCustomizeDrawerStyled>
   );
 }
