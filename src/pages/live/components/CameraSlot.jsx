@@ -16,16 +16,16 @@ import { v4 as uuidv4 } from 'uuid';
 
 import CameraSlotControl from './CameraSlotControl';
 
-const CameraSlot = ({ screen, camera, dispatch, isDraggingOver }) => {
+const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed }) => {
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [countdown, setCountdown] = useState(0);
+  const [zoomIn, setZoomIn] = useState(false);
   const [currentPlaybackTime, setCurrentPlaybackTime] = useState(moment().subtract(1, 'h').unix());
   const videoRef = useRef(null);
   const peerRef = useRef(null);
   const timerRef = useRef(null);
   const requestId = useRef(uuidv4());
-
   useEffect(() => {
     if (camera.uuid) {
       startCamera(camera.uuid, camera.type, 'webrtc');
@@ -368,8 +368,17 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver }) => {
     }
   };
 
+  const zoomCamera = () => {
+    setZoomIn(!zoomIn);
+  };
+
   return (
-    <StyledCameraSlot isDraggingOver={isDraggingOver}>
+    <StyledCameraSlot
+      isDraggingOver={isDraggingOver}
+      zoomIn={zoomIn}
+      layoutCollapsed={layoutCollapsed}
+      notFoundCamera={!camera?.id}
+    >
       {loading && (
         <StyledLoading>
           <Spin indicator={<LoadingOutlined size={48} />} />
@@ -384,6 +393,8 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver }) => {
             onRecord={recordVideo}
             onClose={closeCamera}
             mode={screen.mode}
+            zoomIn={zoomIn}
+            onZoom={zoomCamera}
           />
           <StyledCameraBottom>
             <StyledCameraName>{camera.name}</StyledCameraName>
@@ -417,15 +428,27 @@ const StyledCameraSlotControl = styled(CameraSlotControl)``;
 const StyledCameraSlot = styled.div`
   width: 100%;
   height: 100%;
-  ${(props) => props.isDraggingOver && 'display: none;'}
-
+  transition: all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
   &:hover {
-    cursor: pointer;
+    cursor: pointer !important;
 
     ${StyledCameraSlotControl} {
       visibility: visible;
     }
   }
+
+  ${(props) => props.isDraggingOver && 'display: none;'}
+  ${(props) =>
+    props.zoomIn &&
+    `position: fixed;
+     z-index: 15;
+     bottom : 0; 
+     right: 0;
+     width: unset;
+     height: unset; 
+     top: 48px;
+     left: ${props.layoutCollapsed ? 48 : 208}px;
+     ${props.notFoundCamera && 'background-color: #3f4141;'}`}
 `;
 
 const StyledVideo = styled.video`
@@ -486,8 +509,11 @@ const StyledCountdown = styled.div`
   border-radius: 2px;
 `;
 
-const mapStateToProps = (state) => ({
-  screen: state.live.screen,
-});
+const mapStateToProps = (state) => {
+  return {
+    screen: state.live.screen,
+    layoutCollapsed: state?.globalstore?.layoutCollapsed,
+  };
+};
 
 export default connect(mapStateToProps)(React.memo(CameraSlot));

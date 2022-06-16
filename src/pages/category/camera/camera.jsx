@@ -340,7 +340,15 @@ const CameraList = ({
                 form={form}
               >
                 <div className="collapse-filter">
-                  <Form.Item name="searchValue">
+                  <Form.Item
+                    name="searchValue"
+                    // rules={[
+                    //   {
+                    //     max: 254,
+                    //     message: intl.formatMessage({ id: 'noti.255_characters_limit' }),
+                    //   },
+                    // ]}
+                  >
                     <Input.Search
                       placeholder={intl.formatMessage({
                         id: 'view.storage.search_daily_archive',

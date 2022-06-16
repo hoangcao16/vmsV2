@@ -42,6 +42,10 @@ export const ProTableStyle = styled(ProTable)`
   .ant-table-cell {
     padding: 16px !important;
   }
+
+  .ant-pro-table-list-toolbar-left {
+    height: 32px !important;
+  }
 `;
 
 export const TabsStyle = styled(Tabs)`

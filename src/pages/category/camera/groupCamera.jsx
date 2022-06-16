@@ -263,6 +263,7 @@ const GroupCamera = ({ dispatch, groupCameraParentOptions }) => {
               placeholder={intl.formatMessage({
                 id: 'view.map.search',
               })}
+              maxLength={255}
               onSearch={debounce(handleSearch, 1000)}
               value={valueSearch}
               onChange={(e) => setValueSearch(e.target.value)}

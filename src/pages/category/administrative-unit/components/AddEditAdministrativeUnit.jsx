@@ -24,7 +24,6 @@ const DATA_FAKE_UNIT = {
 };
 
 const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDrawer }) => {
-  console.log('selectedRecord', selectedRecord);
   const intl = useIntl();
   const [form] = Form.useForm();
   const [filterOptions, setFilterOptions] = useState(DATA_FAKE_UNIT);
@@ -35,22 +34,29 @@ const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDraw
   const [wards, setWard] = useState([]);
   const [avatarFileName, setAvatarFileName] = useState(selectedRecord?.avatarFileName || '');
 
+  const [loadingDrawer, setLoadingDrawer] = useState(false);
+
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchSelectOptions().then(setFilterOptions);
+    (async () => {
+      await fetchSelectOptions().then(setFilterOptions);
+      setLoadingDrawer(true);
+    })();
   }, []);
+
+  console.log(filterOptions);
 
   useEffect(() => {
     if (provinceId) {
-      AddressApi.getDistrictByProvinceId(provinceId).then((data) => setDistrict(data.payload));
+      AddressApi.getDistrictByProvinceId(provinceId).then((data) => setDistrict(data?.payload));
       setDistrictId(null);
     }
   }, [provinceId]);
 
   useEffect(() => {
     if (districtId) {
-      AddressApi.getWardByDistrictId(districtId).then((data) => setWard(data.payload));
+      AddressApi.getWardByDistrictId(districtId).then((data) => setWard(data?.payload));
     } else {
       setWard([]);
     }
@@ -145,7 +151,7 @@ const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDraw
 
   return (
     <StyledDrawer
-      openDrawer={openDrawer}
+      openDrawer={openDrawer && loadingDrawer}
       onClose={onClose}
       width={'35%'}
       zIndex={1001}

@@ -58,7 +58,9 @@ const AddCamera = ({
       });
     }
   }, [selectedIp]);
-
+  useEffect(() => {
+    form.resetFields();
+  }, [isAddNewDrawer]);
   const onChangeCity = (cityId) => {
     form.setFieldsValue({ districtId: null, wardId: null });
     setWard([]);
@@ -337,7 +339,7 @@ const AddCamera = ({
                           }),
                         },
                       )}
-                      name={['groupCameraUuid']}
+                      name={['cameraGroupUuid']}
                       rules={
                         [
                           // {
@@ -608,7 +610,7 @@ const AddCamera = ({
                         });
                       }}
                       onSearch={(value) => handleSearchMap(value)}
-                      maxLength={2000}
+                      maxLength={255}
                     />
                   </Form.Item>
                 </Col>
@@ -957,7 +959,7 @@ const AddCamera = ({
                           ip: e.clipboardData.getData('text').trim(),
                         });
                       }}
-                      maxLength={2000}
+                      maxLength={255}
                     />
                   </Form.Item>
                 </Col>
