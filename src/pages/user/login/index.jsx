@@ -7,13 +7,20 @@ import React, { useState } from 'react';
 import { FormattedMessage, history, SelectLang, useIntl, useModel } from 'umi';
 import styles from './index.less';
 import { BottomForm } from './style';
-
+import ForgotPassword from './ForgotPassword';
 const Login = () => {
   const [userLoginState, setUserLoginState] = useState({});
   const [type, setType] = useState('account');
   const { initialState, setInitialState } = useModel('@@initialState');
-
+  const [openDrawer, setOpenDrawer] = useState(false);
   const intl = useIntl();
+
+  const showDrawer = () => {
+    setOpenDrawer(true);
+  };
+  const onClose = () => {
+    setOpenDrawer(false);
+  };
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
@@ -126,9 +133,12 @@ const Login = () => {
             <ProFormCheckbox noStyle name="autoLogin">
               <FormattedMessage id="pages.login.rememberMe" />
             </ProFormCheckbox>
-            <a className="forgot-password">
+
+            <a className="forgot-password" onClick={showDrawer}>
               <FormattedMessage id="pages.login.forgotPassword" />
             </a>
+
+            {openDrawer && <ForgotPassword onClose={onClose} openDrawer={openDrawer} />}
           </BottomForm>
         </LoginForm>
       </div>

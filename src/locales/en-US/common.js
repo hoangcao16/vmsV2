@@ -284,6 +284,9 @@ export default {
   'view.pages.enter_new_password': '{plsEnter} new password',
   'view.pages.update': 'Update',
   'view.pages.return_to_homepage': 'Return to homepage',
+  'view.pages.email': 'Enter your email',
+  'view.page.note.recover_password':
+    'Instructions for password recovery will be emailed, please enter your email in the form below',
   // View Storage
   'view.storage.daily_archive_files_list': 'Daily archive files list',
   'view.storage.captured_files_list': 'Captured files list',
