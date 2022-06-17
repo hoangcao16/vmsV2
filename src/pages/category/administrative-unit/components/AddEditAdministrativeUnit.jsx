@@ -23,7 +23,13 @@ const DATA_FAKE_UNIT = {
   provinces: [{ name: '', provinceId: '' }],
 };
 
-const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDrawer }) => {
+const AddEditAdministrativeUnit = ({
+  onClose,
+  selectedRecord,
+  dispatch,
+  openDrawer,
+  resetForm,
+}) => {
   const intl = useIntl();
   const [form] = Form.useForm();
   const [filterOptions, setFilterOptions] = useState(DATA_FAKE_UNIT);
@@ -44,8 +50,6 @@ const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDraw
       setLoadingDrawer(true);
     })();
   }, []);
-
-  console.log(filterOptions);
 
   useEffect(() => {
     if (provinceId) {
@@ -139,6 +143,7 @@ const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDraw
     }
 
     onClose();
+    resetForm();
   };
 
   const onDeleteRecord = () => {
@@ -147,6 +152,7 @@ const AddEditAdministrativeUnit = ({ onClose, selectedRecord, dispatch, openDraw
       id: selectedRecord?.uuid,
     });
     onClose();
+    resetForm();
   };
 
   return (

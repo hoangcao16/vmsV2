@@ -59,7 +59,6 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
       ...searchParam,
       name: value,
       page: 1,
-      size: 10,
     });
     setSearchParam(dataParam);
     handleGetListAdvision(dataParam);
@@ -94,6 +93,10 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
       },
     });
   }, []);
+
+  const resetForm = () => {
+    form.setFieldsValue({ searchValue: '' });
+  };
 
   return (
     <>
@@ -174,6 +177,7 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
           dispatch={dispatch}
           selectedRecord={selectedRecord}
           openDrawer={openDrawerAddEdit}
+          resetForm={resetForm}
         />
       )}
     </>

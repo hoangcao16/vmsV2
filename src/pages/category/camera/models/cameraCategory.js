@@ -9,20 +9,19 @@ export default {
     listVendor: [],
     listType: [],
     listTags: [],
-    metadata: {
-      name: '',
-      size: 100,
-    },
+    metadataVendor: { page: 1, size: 10 },
+    metadataType: { page: 1, size: 10 },
+    metadataTags: { page: 1, size: 10 },
   },
   reducers: {
-    saveVendor(state, { payload: { data: listVendor, metadata } }) {
-      return { ...state, listVendor, metadata };
+    saveVendor(state, { payload: { data: listVendor, metadataVendor } }) {
+      return { ...state, listVendor, metadataVendor };
     },
-    saveType(state, { payload: { data: listType, metadata } }) {
-      return { ...state, listType, metadata };
+    saveType(state, { payload: { data: listType, metadataType } }) {
+      return { ...state, listType, metadataType };
     },
-    saveTags(state, { payload: { data: listTags, metadata } }) {
-      return { ...state, listTags, metadata };
+    saveTags(state, { payload: { data: listTags, metadataTags } }) {
+      return { ...state, listTags, metadataTags };
     },
   },
   effects: {
@@ -33,7 +32,7 @@ export default {
           type: 'saveVendor',
           payload: {
             data: response?.payload,
-            metadata: response?.metadata,
+            metadataVendor: response?.metadata,
           },
         });
       } catch (error) {
@@ -48,7 +47,7 @@ export default {
           type: 'saveType',
           payload: {
             data: response?.payload,
-            metadata: response?.metadata,
+            metadataType: response?.metadata,
           },
         });
       } catch (error) {
@@ -62,7 +61,7 @@ export default {
           type: 'saveTags',
           payload: {
             data: response?.payload,
-            metadata: response?.metadata,
+            metadataTags: response?.metadata,
           },
         });
       } catch (error) {
@@ -116,7 +115,11 @@ export default {
       }
     },
     *reloadVendor(action, { put, select }) {
-      yield put({ type: 'fetchAllVendor', payload: { size: 100 } });
+      const metadataVendor = yield select((state) => state.cameraCategory.metadataVendor);
+      yield put({
+        type: 'fetchAllVendor',
+        payload: { page: metadataVendor?.page, size: metadataVendor?.size },
+      });
     },
 
     *addType({ payload }, { call, put }) {
@@ -167,7 +170,11 @@ export default {
     },
 
     *reloadType(action, { put, select }) {
-      yield put({ type: 'fetchAllType', payload: { size: 100 } });
+      const metadataType = yield select((state) => state.cameraCategory.metadataType);
+      yield put({
+        type: 'fetchAllType',
+        payload: { page: metadataType?.page, size: metadataType?.size },
+      });
     },
 
     *addTags({ payload }, { call, put }) {
@@ -219,7 +226,11 @@ export default {
     },
 
     *reloadTags(action, { put, select }) {
-      yield put({ type: 'fetchAllTags', payload: { size: 100 } });
+      const metadataTags = yield select((state) => state.cameraCategory.metadataTags);
+      yield put({
+        type: 'fetchAllTags',
+        payload: { page: metadataTags?.page, size: metadataTags?.size },
+      });
     },
   },
 };

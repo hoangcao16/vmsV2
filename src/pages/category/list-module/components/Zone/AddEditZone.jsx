@@ -18,7 +18,7 @@ export const DATA_FAKE_ZONE = {
   playback: [{ name: '', uuid: '' }],
 };
 
-const AddEditZone = ({ onClose, selectedRecord, dispatch, openDrawer }) => {
+const AddEditZone = ({ onClose, selectedRecord, dispatch, openDrawer, resetForm }) => {
   const intl = useIntl();
   const [form] = Form.useForm();
   const [filterOptions, setFilterOptions] = useState(DATA_FAKE_ZONE);
@@ -27,8 +27,6 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch, openDrawer }) => {
   const [districts, setDistrict] = useState([]);
   const [districtId, setDistrictId] = useState(selectedRecord?.districtId || null);
   const [wards, setWard] = useState([]);
-
-  console.log(selectedRecord);
 
   const handleSubmit = (value) => {
     const payload = {
@@ -46,6 +44,7 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch, openDrawer }) => {
       });
     }
     onClose();
+    resetForm();
   };
 
   async function fetchSelectOptions() {
@@ -111,6 +110,7 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch, openDrawer }) => {
       payload: { id: selectedRecord?.uuid },
     });
     onClose();
+    resetForm();
   };
 
   return (
