@@ -3,6 +3,7 @@ import { SpanCode } from '@/pages/category/camera/components/GroupCameraDrawer/s
 import ReportApi from '@/services/report/ReportApi';
 import { Col, Row } from 'antd';
 import { connect } from 'dva';
+import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
@@ -18,9 +19,11 @@ const DetailTable = (props) => {
     const params = { page: page, size: size };
     const payload = { ...params, ...props.filterParams };
     try {
-      const result = await ReportApi.getDataDetailChart(payload);
-      setTotal(result?.payload?.metadata?.total);
-      setData(result?.payload?.events);
+      if (!isEmpty(props.filterParams)) {
+        const result = await ReportApi.getDataDetailChart(payload);
+        setTotal(result?.payload?.metadata?.total);
+        setData(result?.payload?.events);
+      }
     } catch (error) {
       console.log(error);
     }

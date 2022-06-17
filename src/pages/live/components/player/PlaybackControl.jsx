@@ -3,16 +3,51 @@ import {
   CaretRightOutlined,
   ForwardOutlined,
   PauseOutlined,
-  PlayCircleOutlined,
 } from '@ant-design/icons';
 import { Button, DatePicker, Select, Space, TimePicker } from 'antd';
+import locale from 'antd/lib/locale/vi_VN';
+import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
-import React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { FormattedMessage } from 'umi';
 import SeekControl from './SeekControl';
 
 const PlaybackControl = () => {
+  const [time, setTime] = useState(Date.now());
+  const [seekTime, setSeekTime] = useState(moment());
+  const [isPlay, setIsPlay] = useState(false);
+  const [seekToDate, setSeekToDate] = useState(null);
+  const [seekToTime, setSeekToTime] = useState(null);
+  const [seekDateTime, setSeekDateTime] = useState(null);
+  const timer = useRef(null);
+  const seekControlRef = useRef(null);
+
+  useEffect(() => {
+    timer.current = setInterval(() => {
+      setTime(Date.now());
+    }, 1000);
+
+    return () => clearInterval(timer.current);
+  }, [time]);
+
+  const handleSeek = (step) => {
+    seekControlRef.current?.handleSeek(step);
+  };
+  const onDateChange = (date, dateString) => {
+    let now = isEmpty(dateString) ? null : moment(dateString, 'DD/MM/YYYY');
+    setSeekToDate(isEmpty(now) ? null : moment(now, 'DD/MM/YYYY'));
+    setSeekToTime(null);
+  };
+  const onTimeChange = (time, timeString) => {
+    setSeekToTime(isEmpty(timeString) ? null : moment(timeString, 'HH:mm:ss'));
+    if (seekToDate) {
+      const seekDateTime = moment(
+        moment(seekToDate).format('YYYY-MM-DD').toString() + 'T' + timeString,
+      );
+      setSeekDateTime(seekDateTime);
+    }
+  };
   return (
     <StyledPlaybackControl>
       <StyledTopControl>
@@ -20,16 +55,34 @@ const PlaybackControl = () => {
           <StyledText>
             <FormattedMessage id="view.maps.select_date" />
           </StyledText>
-          <DatePicker />
+          <DatePicker
+            onChange={onDateChange}
+            value={seekToDate}
+            locale={locale}
+            format="DD/MM/YYYY"
+          />
           <StyledText>
             <FormattedMessage id="view.maps.select_time" />
           </StyledText>
-          <TimePicker />
+          <TimePicker onChange={onTimeChange} value={seekToTime} locale={locale} />
         </StyledSpace>
         <StyledSpace justifyContent="center" size={25}>
-          <StyledControlButton icon={<BackwardOutlined />} shape="circle" />
-          <StyledControlButton playButton icon={<CaretRightOutlined />} shape="circle" />
-          <StyledControlButton icon={<ForwardOutlined />} shape="circle" />
+          <StyledControlButton
+            icon={<BackwardOutlined />}
+            shape="circle"
+            onClick={() => handleSeek(-5)}
+          />
+          <StyledControlButton
+            playButton
+            icon={isPlay ? <PauseOutlined /> : <CaretRightOutlined />}
+            shape="circle"
+            onClick={() => setIsPlay(!isPlay)}
+          />
+          <StyledControlButton
+            icon={<ForwardOutlined />}
+            shape="circle"
+            onClick={() => handleSeek(5)}
+          />
         </StyledSpace>
         <StyledRightControl>
           <Space size={10}>
@@ -41,7 +94,12 @@ const PlaybackControl = () => {
           <StyledText>{moment().format('LTS')}</StyledText>
         </StyledRightControl>
       </StyledTopControl>
-      <SeekControl />
+      <SeekControl
+        ref={seekControlRef}
+        isPlay={isPlay}
+        onChange={setSeekTime}
+        seekDateTime={seekDateTime}
+      />
     </StyledPlaybackControl>
   );
 };

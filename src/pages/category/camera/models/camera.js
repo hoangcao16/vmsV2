@@ -100,6 +100,10 @@ export default {
           yield put({
             type: 'closeDrawer',
           });
+          yield put({
+            type: 'selectUuidEdit',
+            payload: '',
+          });
           notify('success', 'noti.success', 'noti.successfully_edit_camera');
         }
       } catch (error) {

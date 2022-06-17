@@ -4,9 +4,8 @@ const VietMapApi = {
     let result;
     try {
       result = await axios.get(
-        `https://maps.vietmap.vn/api/search?api-version=1.1&apikey=${vietmapApiKey}&text=${value}`,
+        `https://maps.vietmap.vn/api/search?api-version=1.1&apikey=${vietmapApiKey}&text=${value}&layers=address`,
       );
-      console.log(result);
       return result.data;
     } catch (error) {
       console.log(error);

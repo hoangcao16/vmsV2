@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Tabs } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import { connect } from 'dva';
+import { useState } from 'react';
 import { useIntl } from 'umi';
 import CameraList from './camera';
+import TableTags from './components/cameraCategory/TableTags';
+import TableType from './components/cameraCategory/TableType';
+import TableVendor from './components/cameraCategory/TableVendor';
 import GroupCamera from './groupCamera';
 import { StyledTabs, TabsStyle } from './style';
-import TableCameraCategory from './components/cameraCategory/TableCameraCategory';
-import { useState } from 'react';
 const CameraDevice = () => {
   const intl = useIntl();
   const [type, setType] = useState('camera');
@@ -43,7 +44,7 @@ const CameraDevice = () => {
           )}`}
           key="camera_vendor"
         >
-          <TableCameraCategory type={type} />
+          <TableVendor type={type} />
         </StyledTabs>
         <StyledTabs
           tab={`${intl.formatMessage(
@@ -58,7 +59,7 @@ const CameraDevice = () => {
           )}`}
           key="camera_type"
         >
-          <TableCameraCategory type={type} />
+          <TableType type={type} />
         </StyledTabs>
         <StyledTabs
           tab={`${intl.formatMessage(
@@ -73,7 +74,7 @@ const CameraDevice = () => {
           )}`}
           key="camera_tags"
         >
-          <TableCameraCategory type={type} />
+          <TableTags type={type} />
         </StyledTabs>
       </TabsStyle>
     </PageContainer>

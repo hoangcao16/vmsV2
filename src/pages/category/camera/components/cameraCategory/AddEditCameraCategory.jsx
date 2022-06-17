@@ -5,7 +5,14 @@ import { isEmpty } from 'lodash';
 import { useIntl } from 'umi';
 import { StyledDrawer } from '../../style';
 
-const AddEditCameraCategory = ({ onClose, selectedRecord, dispatch, openDrawer, type }) => {
+const AddEditCameraCategory = ({
+  onClose,
+  selectedRecord,
+  dispatch,
+  openDrawer,
+  type,
+  resetForm,
+}) => {
   const intl = useIntl();
   const [form] = Form.useForm();
 
@@ -51,7 +58,7 @@ const AddEditCameraCategory = ({ onClose, selectedRecord, dispatch, openDrawer, 
         });
       }
     }
-
+    resetForm();
     onClose();
   };
 
@@ -72,7 +79,7 @@ const AddEditCameraCategory = ({ onClose, selectedRecord, dispatch, openDrawer, 
         id: selectedRecord?.uuid,
       });
     }
-
+    resetForm();
     onClose();
   };
 

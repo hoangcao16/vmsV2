@@ -1,17 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/self-closing-comp */
-import { useEffect, useState, useRef } from 'react';
-import { MAP_STYLES, STYLE_MODE, NAVIGATION_CONTROL, LAT_LNG } from '@/constants/map';
-import { CircleMode, DirectMode, DragCircleMode, SimpleSelectMode } from 'mapbox-gl-draw-circle';
+import CameraIcon from '@/assets/img/cameraIcon';
+import { LAT_LNG, MAP_STYLES, NAVIGATION_CONTROL, STYLE_MODE } from '@/constants/map';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
+import { isEmpty } from 'lodash';
+import { CircleMode, DirectMode, DragCircleMode, SimpleSelectMode } from 'mapbox-gl-draw-circle';
+import { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'vietmaps-gl';
 import { MapContainer } from './style';
 const MapAddCamera = ({ resultSearchMap, handleSelectMap, defaultLongLat, isEdit }) => {
   const mapboxRef = useRef(null);
   const mapBoxDrawRef = useRef(null);
   const [currentLan, setCurrentLan] = useState(null);
-  const zoom = 13;
+  const zoom = 15;
   //Khoi tao map
   const showViewMap = () => {
     try {
@@ -72,15 +74,33 @@ const MapAddCamera = ({ resultSearchMap, handleSelectMap, defaultLongLat, isEdit
     mapboxRef.current &&
       mapboxRef.current.on('style.load', function () {
         mapboxRef.current.on('click', function (e) {
+          const elem = document.querySelector('.map-camera-marker-node');
+          if (elem) {
+            elem.remove();
+          }
           const lng = e.lngLat.lng;
           const lat = e.lngLat.lat;
           handleSelectMap(lng, lat);
-          new mapboxgl.Popup({
+          const el = document.createElement('div');
+          el.className = 'map-camera-marker-node';
+          const img = document.createElement('img');
+          img.src = `data:image/svg+xml;charset=utf-8;base64,` + btoa(CameraIcon('icon'));
+          el.appendChild(img);
+          const popup = new mapboxgl.Popup({
             closeButton: false,
-          })
+            offset: 20,
+          }).setHTML('Lng:' + lng + '<br/>' + 'Lat:' + lat);
+          const Maker = new mapboxgl.Marker({ element: el, draggable: true })
             .setLngLat([lng, lat])
-            .setHTML('Lng:' + lng + '<br/>' + 'Lat:' + lat)
-            .addTo(mapboxRef.current);
+            .setPopup(popup)
+            .addTo(mapboxRef.current)
+            .togglePopup();
+          Maker.on('dragend', (e) => {
+            const lng = e.target._lngLat.lng;
+            const lat = e.target._lngLat.lat;
+            popup.setHTML('Lng:' + lng + '<br/>' + 'Lat:' + lat);
+            handleSelectMap(lng, lat);
+          });
         });
       });
     return () => {
@@ -89,41 +109,59 @@ const MapAddCamera = ({ resultSearchMap, handleSelectMap, defaultLongLat, isEdit
     };
   }, []);
   useEffect(() => {
-    if (resultSearchMap) {
-      const bbox = resultSearchMap?.data?.bbox;
-      if (bbox?.length > 2) {
-        const currentLatLngSelector = [bbox[0], bbox[1]];
-        setCurrentLan(currentLatLngSelector);
-        mapboxRef.current.flyTo({
-          center: currentLatLngSelector,
-        });
-      } else {
-        setCurrentLan(LAT_LNG);
-        mapboxRef.current.flyTo({
-          center: LAT_LNG,
-        });
-      }
+    if (!isEmpty(resultSearchMap)) {
+      setCurrentLan(resultSearchMap);
+      mapboxRef.current.flyTo({
+        center: resultSearchMap,
+      });
+    } else {
+      setCurrentLan(LAT_LNG);
+      mapboxRef.current.flyTo({
+        center: LAT_LNG,
+      });
     }
   }, [resultSearchMap]);
   useEffect(() => {
     if ((isEdit, defaultLongLat)) {
+      const elem = document.querySelector('.map-camera-marker-node');
+      const elempopup = document.querySelector('.mapboxgl-popup');
+      if (elem) {
+        elem.remove();
+      }
+      if (elempopup) {
+        elempopup.remove();
+      }
       mapboxRef.current &&
         mapboxRef.current.flyTo({
           center: defaultLongLat,
         });
-      new mapboxgl.Popup({
+      const el = document.createElement('div');
+      el.className = 'map-camera-marker-node';
+      const img = document.createElement('img');
+      img.src = `data:image/svg+xml;charset=utf-8;base64,` + btoa(CameraIcon('icon'));
+      el.appendChild(img);
+      const popup = new mapboxgl.Popup({
         closeButton: false,
-        className: 'mapboxgl-popup',
-      })
+        offset: 20,
+      }).setHTML('Lng:' + defaultLongLat[0] + '<br/>' + 'Lat:' + defaultLongLat[1]);
+      const Maker = new mapboxgl.Marker({ element: el, draggable: true })
         .setLngLat(defaultLongLat)
-        .setHTML('Lng:' + defaultLongLat[0] + '<br/>' + 'Lat:' + defaultLongLat[1])
-        .addTo(mapboxRef.current);
+        .setPopup(popup)
+        .addTo(mapboxRef.current)
+        .togglePopup();
+      Maker.on('dragend', (e) => {
+        console.log(e);
+        const lng = e.target._lngLat.lng;
+        const lat = e.target._lngLat.lat;
+        popup.setHTML('Lng:' + lng + '<br/>' + 'Lat:' + lat);
+        handleSelectMap(lng, lat);
+      });
     }
     return () => {
       if (mapboxRef.current) {
-        const popups = document.getElementsByClassName('mapboxgl-popup');
-        if (popups.length) {
-          popups[0].remove();
+        var elem = document.querySelector('.map-camera-marker-node');
+        if (elem) {
+          elem.remove();
         }
       }
     };
