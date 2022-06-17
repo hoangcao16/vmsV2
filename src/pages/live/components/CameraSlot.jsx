@@ -169,6 +169,8 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed 
   };
 
   const closeCamera = () => {
+    stopRecording();
+
     if (videoRef.current) {
       videoRef.current.pause();
       videoRef.current.srcObject = null;
@@ -234,6 +236,7 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed 
   };
 
   const stopRecording = async () => {
+    if (!isRecording) return;
     clearInterval(timerRef.current);
     try {
       if (camera.type === LIVE_MODE.LIVE) {
@@ -369,6 +372,13 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed 
   };
 
   const zoomCamera = () => {
+    const html = document.querySelector('html');
+    if (zoomIn) {
+      html.style.removeProperty('overflow');
+    } else {
+      html.style.overflow = 'hidden';
+    }
+
     setZoomIn(!zoomIn);
   };
 
@@ -400,7 +410,7 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed 
             <StyledCameraName>{camera.name}</StyledCameraName>
             {isRecording && (
               <StyledCountdown>
-                {moment('00:00:00', 'HH:mm:ss').add(countdown, 'second').format('HH:mm:ss')}
+                REC {moment('00:00:00', 'HH:mm:ss').add(countdown, 'second').format('HH:mm:ss')}
               </StyledCountdown>
             )}
           </StyledCameraBottom>
@@ -442,10 +452,10 @@ const StyledCameraSlot = styled.div`
     props.zoomIn &&
     `position: fixed;
      z-index: 15;
-     bottom : 0; 
+     bottom : 0;
      right: 0;
      width: unset;
-     height: unset; 
+     height: unset;
      top: 48px;
      left: ${props.layoutCollapsed ? 48 : 208}px;
      ${props.notFoundCamera && 'background-color: #3f4141;'}`}

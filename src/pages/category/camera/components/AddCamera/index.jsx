@@ -1,25 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'dva';
-import { useState, useEffect } from 'react';
-import { StyledDrawer, StyledSpace, SpaceAddAvatar } from './style';
-import { Space, Button, Card, Row, Col, Form, Input, Upload, Avatar, Select } from 'antd';
-import { useIntl } from 'umi';
+import { notify } from '@/components/Notify';
+import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
+import AddressApi from '@/services/addressApi';
+import ExportEventFileApi from '@/services/exportEventFile';
+import VietMapApi from '@/services/vietmapApi';
+import { clearData } from '@/utils';
+import getBase64 from '@/utils/getBase64';
 import {
-  PlusOutlined,
-  SaveOutlined,
   CloseOutlined,
   InboxOutlined,
+  PlusOutlined,
+  SaveOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import MapAddCamera from '../Map';
+import { Avatar, Button, Card, Col, Form, Input, Row, Select, Space, Upload } from 'antd';
+import { connect } from 'dva';
+import debounce from 'lodash/debounce';
+import { useCallback, useEffect, useState } from 'react';
+import { useIntl } from 'umi';
 import { v4 as uuidV4 } from 'uuid';
-import { clearData } from '@/utils';
-import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
-import { notify } from '@/components/Notify';
-import AddressApi from '@/services/addressApi';
-import VietMapApi from '@/services/vietmapApi';
-import ExportEventFileApi from '@/services/exportEventFile';
-import getBase64 from '@/utils/getBase64';
+import MapAddCamera from '../Map';
+import { SpaceAddAvatar, StyledDrawer, StyledSpace } from './style';
 const { Dragger } = Upload;
 const formItemLayout = {
   wrapperCol: { span: 24 },
@@ -48,6 +49,8 @@ const AddCamera = ({
   const [currentLat, setCurrentLat] = useState(null);
   const [currentLng, setCurrentLng] = useState(null);
   const [isLoading, setLoading] = useState(false);
+  const [searchMapValue, setSearchValue] = useState('');
+  const [searchMapOptions, setSearchMapOptions] = useState([]);
 
   const vietmapApiKey = REACT_APP_VIETMAP_APIKEY;
   // Check Ip scan to add
@@ -168,7 +171,30 @@ const AddCamera = ({
   // search in map
   const handleSearchMap = async (value) => {
     const result = await VietMapApi.search(value, vietmapApiKey);
-    setResultSearchMap(result);
+    const data = result?.data?.features
+      ?.map((item) => {
+        return {
+          value: item?.geometry?.coordinates,
+          label: item?.properties?.label,
+        };
+      })
+      .filter((item) => item !== undefined);
+    setSearchMapOptions(data);
+  };
+  const handleSearch = (query) => {
+    setSearchValue(query);
+    debounceSearch(query);
+  };
+  const debounceSearch = useCallback(
+    debounce((query) => handleSearchMap(query), 1000),
+    [],
+  );
+  const handleSelectSearchMap = (item, option) => {
+    console.log(option);
+    form.setFieldsValue({
+      searchmap: option,
+    });
+    setResultSearchMap(item);
   };
   //select address in map
   const handleSelectMap = (lng, lat) => {
@@ -587,7 +613,13 @@ const AddCamera = ({
                     })}
                     name={['searchmap']}
                   >
-                    <Input.Search
+                    <Select
+                      showSearch
+                      onSearch={handleSearch}
+                      searchValue={searchMapValue}
+                      onSelect={handleSelectSearchMap}
+                      filterOption={filterOption}
+                      options={normalizeOptions('label', 'value', searchMapOptions)}
                       placeholder={intl.formatMessage(
                         {
                           id: 'view.map.please_choose_location',
@@ -598,19 +630,7 @@ const AddCamera = ({
                           }),
                         },
                       )}
-                      onBlur={(e) => {
-                        form.setFieldsValue({
-                          searchmap: e.target.value.trim(),
-                        });
-                      }}
-                      onPaste={(e) => {
-                        e.preventDefault();
-                        form.setFieldsValue({
-                          searchmap: e.clipboardData.getData('text').trim(),
-                        });
-                      }}
-                      onSearch={(value) => handleSearchMap(value)}
-                      maxLength={255}
+                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
                     />
                   </Form.Item>
                 </Col>
