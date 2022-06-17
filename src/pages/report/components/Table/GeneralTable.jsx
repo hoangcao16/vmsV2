@@ -21,9 +21,11 @@ const GeneralTable = (props) => {
 
   useEffect(() => {
     try {
-      ReportApi.getTableData(props?.params).then((result) => {
-        setDataSource(result?.payload?.tableEvents);
-      });
+      if (!isEmpty(props?.params)) {
+        ReportApi.getTableData(props?.params).then((result) => {
+          setDataSource(result?.payload?.tableEvents);
+        });
+      }
     } catch (error) {
       console.log(error);
     }
