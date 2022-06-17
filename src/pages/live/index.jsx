@@ -23,8 +23,12 @@ const Live = ({ availableList, screen, dispatch }) => {
   }, []);
 
   const fetchDefaultScreen = async () => {
-    const { payload } = await bookmarkService.getDefault();
-    initScreen(payload[0] || undefined);
+    try {
+      const { payload } = await bookmarkService.getDefault();
+      initScreen(payload[0]);
+    } catch (error) {
+      initScreen();
+    }
   };
 
   const initScreen = async (screen) => {

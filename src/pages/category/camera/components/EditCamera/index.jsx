@@ -1,40 +1,41 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'dva';
-import { useState, useEffect } from 'react';
-import { StyledDrawer, StyledSpace, SpaceAddAvatar } from './style';
+import { notify } from '@/components/Notify';
+import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
+import AddressApi from '@/services/addressApi';
+import ExportEventFileApi from '@/services/exportEventFile';
+import VietMapApi from '@/services/vietmapApi';
+import { clearData } from '@/utils';
+import getBase64 from '@/utils/getBase64';
 import {
-  Space,
+  CloseOutlined,
+  DeleteOutlined,
+  InboxOutlined,
+  PlusOutlined,
+  QuestionCircleOutlined,
+  SaveOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import {
+  Avatar,
   Button,
   Card,
-  Row,
   Col,
   Form,
   Input,
-  Upload,
-  Avatar,
-  Select,
   Popconfirm,
+  Row,
+  Select,
+  Space,
+  Upload,
 } from 'antd';
+import { connect } from 'dva';
+import debounce from 'lodash/debounce';
+import isEmpty from 'lodash/isEmpty';
+import { useCallback, useEffect, useState } from 'react';
 import { useIntl } from 'umi';
-import {
-  PlusOutlined,
-  SaveOutlined,
-  CloseOutlined,
-  InboxOutlined,
-  DeleteOutlined,
-  QuestionCircleOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import MapAddCamera from '../Map';
 import { v4 as uuidV4 } from 'uuid';
-import { clearData } from '@/utils';
-import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
-import { notify } from '@/components/Notify';
-import AddressApi from '@/services/addressApi';
-import VietMapApi from '@/services/vietmapApi';
-import ExportEventFileApi from '@/services/exportEventFile';
-import getBase64 from '@/utils/getBase64';
-import { isEmpty } from 'lodash';
+import MapAddCamera from '../Map';
+import { SpaceAddAvatar, StyledDrawer, StyledSpace } from './style';
 const { Dragger } = Upload;
 const formItemLayout = {
   wrapperCol: { span: 24 },
@@ -66,6 +67,8 @@ const EditCamera = ({
   const [currentLng, setCurrentLng] = useState(null);
   const [defaultLongLat, setDefaultLongLat] = useState(null);
   const [isLoading, setLoading] = useState(false);
+  const [searchMapValue, setSearchValue] = useState('');
+  const [searchMapOptions, setSearchMapOptions] = useState([]);
   const vietmapApiKey = REACT_APP_VIETMAP_APIKEY;
 
   //Get data camera
@@ -95,6 +98,16 @@ const EditCamera = ({
           };
         });
         form.setFieldsValue({ tags: customTags });
+        if (selectedCamera?.provinceId) {
+          AddressApi.getDistrictByProvinceId(selectedCamera?.provinceId).then((res) => {
+            setDistrict(res?.payload);
+          });
+        }
+        if (selectedCamera?.districtId) {
+          AddressApi.getWardByDistrictId(selectedCamera?.districtId).then((res) => {
+            setWard(res?.payload);
+          });
+        }
         await ExportEventFileApi.getAvatar(selectedCamera?.avatarFileName).then((result) => {
           if (result) {
             let blob = new Blob([result], { type: 'octet/stream' });
@@ -223,10 +236,33 @@ const EditCamera = ({
       });
     }
   };
-  //Search in map
+  // search in map
   const handleSearchMap = async (value) => {
     const result = await VietMapApi.search(value, vietmapApiKey);
-    setResultSearchMap(result);
+    const data = result?.data?.features
+      ?.map((item) => {
+        return {
+          value: item?.geometry?.coordinates,
+          label: item?.properties?.label,
+        };
+      })
+      .filter((item) => item !== undefined);
+    setSearchMapOptions(data);
+  };
+  const handleSearch = (query) => {
+    setSearchValue(query);
+    debounceSearch(query);
+  };
+  const debounceSearch = useCallback(
+    debounce((query) => handleSearchMap(query), 1000),
+    [],
+  );
+  const handleSelectSearchMap = (item, option) => {
+    console.log(option);
+    form.setFieldsValue({
+      searchmap: option,
+    });
+    setResultSearchMap(item);
   };
   //Select location in map
   const handleSelectMap = (lng, lat) => {
@@ -671,7 +707,13 @@ const EditCamera = ({
                     })}
                     name={['searchmap']}
                   >
-                    <Input.Search
+                    <Select
+                      showSearch
+                      onSearch={handleSearch}
+                      searchValue={searchMapValue}
+                      onSelect={handleSelectSearchMap}
+                      filterOption={filterOption}
+                      options={normalizeOptions('label', 'value', searchMapOptions)}
                       placeholder={intl.formatMessage(
                         {
                           id: 'view.map.please_choose_location',
@@ -682,19 +724,7 @@ const EditCamera = ({
                           }),
                         },
                       )}
-                      onBlur={(e) => {
-                        form.setFieldsValue({
-                          searchmap: e.target.value.trim(),
-                        });
-                      }}
-                      onPaste={(e) => {
-                        e.preventDefault();
-                        form.setFieldsValue({
-                          searchmap: e.clipboardData.getData('text').trim(),
-                        });
-                      }}
-                      onSearch={(value) => handleSearchMap(value)}
-                      maxLength={255}
+                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
                     />
                   </Form.Item>
                 </Col>
