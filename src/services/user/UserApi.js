@@ -37,6 +37,10 @@ const UserApi = {
     return request.put(`/authz/api/v0/groups/${id}`, values);
   },
 
+  resetPassWord: async (params) => {
+    return request.post(`/authz/reset_password`, params);
+  },
+
   deleteUserGroup: async (uuid) => {
     return request.delete(`/authz/api/v0/groups/${uuid}`);
   },

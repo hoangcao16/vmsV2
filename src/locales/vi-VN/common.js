@@ -286,6 +286,9 @@ export default {
   'view.pages.enter_new_password': '{plsEnter} mật khẩu mới',
   'view.pages.update': 'Cập nhật',
   'view.pages.return_to_homepage': 'Quay lại trang chủ',
+  'view.pages.email': 'Nhập địa chỉ email',
+  'view.page.note.recover_password':
+    'Hướng dẫn khôi phục mật khẩu sẽ được gửi qua email, vui lòng nhập email của bạn vào form mẫu dưới đây',
   //view storage
   'view.storage.daily_archive_files_list': 'Danh sách tệp lưu trữ hàng ngày',
   'view.storage.captured_files_list': 'Danh sách tệp được chụp',
