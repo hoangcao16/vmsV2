@@ -10,22 +10,17 @@ import { CardNote, CardTitle } from './style';
 
 function ForgotPassword({ openDrawer, onClose }) {
   const intl = useIntl();
-  const [email, setEmail] = useState('');
   const [form] = Form.useForm();
-  const formItemLayout = {
-    wrapperCol: { span: 24 },
-    labelCol: { span: 10 },
-  };
 
   const reset = () => {
     const params = {
-      // email: 'admin@edsolabs.com',
       email: form.getFieldValue('emailresetpass'),
     };
     console.log('object', form.getFieldValue('emailresetpass'));
     ResetPassword.resetPassword(params)
       .then((rs) => {
         if (rs.code === 600) {
+          form.resetFields(['emailresetpass']);
           notify('success', 'noti.success', 'noti.have_sent_email');
         }
         if (rs.code === 608) {
