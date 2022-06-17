@@ -154,7 +154,7 @@ function DrawerTicket({
 
   const handleSendTicket = (receiver) => {
     receiverRef.current = receiver;
-    handleOpenDrawerConfirmSend(true);
+    handleOpenDrawerConfirmSend();
   };
 
   return (
