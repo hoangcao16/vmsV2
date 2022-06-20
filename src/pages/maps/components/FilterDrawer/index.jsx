@@ -3,8 +3,9 @@ import { filterOption, normalizeOptions } from '@/components/select/CustomSelect
 import AddressApi from '@/services/addressApi';
 import { Col, Form, Input, Row, Select } from 'antd';
 import { connect } from 'dva';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
+import { StyledButtonClearFilter } from './style';
 
 function FilterDrawer({
   provincesOptions,
@@ -64,6 +65,10 @@ function FilterDrawer({
   function resetDistrictAndWardData() {
     form.setFieldsValue({ districtId: null, wardId: null });
   }
+
+  const handelClearFilter = () => {
+    form.resetFields();
+  };
 
   const onChangeDistrict = async (districtId) => {
     setDistrictId(districtId);
@@ -175,6 +180,11 @@ function FilterDrawer({
                   ))}
                 </Select>
               </Form.Item>
+              <Col span={24}>
+                <StyledButtonClearFilter type="link" onClick={handelClearFilter}>
+                  {intl.formatMessage({ id: 'view.map.btn_remove_filter' })}
+                </StyledButtonClearFilter>
+              </Col>
             </Col>
           </Row>
         </>
@@ -350,6 +360,11 @@ function FilterDrawer({
                   ))}
                 </Select>
               </Form.Item>
+            </Col>
+            <Col span={24}>
+              <StyledButtonClearFilter type="link" onClick={handelClearFilter}>
+                {intl.formatMessage({ id: 'view.map.btn_remove_filter' })}
+              </StyledButtonClearFilter>
             </Col>
           </Row>
         </>

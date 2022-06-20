@@ -1,19 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  StyledDrawer,
-  ProTableStyle,
-  TableRowStyle,
-  StyledSearch,
-  StyledFilter,
-  StyledTitle,
-} from './style';
-import { useState, useEffect } from 'react';
-import { useIntl } from 'umi';
-import { connect } from 'dva';
-import { Button, Input, Form } from 'antd';
-import { PauseCircleOutlined, PlayCircleOutlined, FilterFilled } from '@ant-design/icons';
-import FilterDrawer from '../FilterDrawer';
 import AddCamera from '@/pages/category/camera/components/AddCamera';
+import { FilterFilled, PauseCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import { Button, Form, Input } from 'antd';
+import { connect } from 'dva';
+import { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
+import FilterDrawer from '../FilterDrawer';
+import {
+  ProTableStyle,
+  StyledDrawer,
+  StyledFilter,
+  StyledSearch,
+  StyledTitle,
+  TableRowStyle,
+} from './style';
 
 const CameraListDrawer = ({
   onRowClick,

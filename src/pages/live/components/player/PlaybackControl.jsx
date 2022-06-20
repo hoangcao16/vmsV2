@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import {
   BackwardOutlined,
   CaretRightOutlined,
@@ -21,6 +22,41 @@ const PlaybackControl = ({ dispatch, isPlay }) => {
   const [seekDateTime, setSeekDateTime] = useState(null);
   const timer = useRef(null);
   const seekControlRef = useRef(null);
+
+  const listSpeedCamera = [
+    {
+      label: 'X0.125',
+      value: 0.125,
+    },
+    {
+      label: 'X0.25',
+      value: 0.25,
+    },
+    {
+      label: 'X0.5',
+      value: 0.5,
+    },
+    {
+      label: 'X1',
+      value: 1,
+    },
+    {
+      label: 'X2',
+      value: 2,
+    },
+    {
+      label: 'X4',
+      value: 4,
+    },
+    {
+      label: 'X8',
+      value: 8,
+    },
+    {
+      label: 'X16',
+      value: 16,
+    },
+  ];
 
   useEffect(() => {
     timer.current = setInterval(() => {
@@ -47,6 +83,10 @@ const PlaybackControl = ({ dispatch, isPlay }) => {
       setSeekDateTime(seekDateTime);
     }
   };
+
+  const handleChangeSpeedCamera = (value) => {
+    console.log(value);
+    }
   const handlePlay = () => {
     dispatch({
       type: 'playMode/saveIsPlay',
@@ -94,7 +134,11 @@ const PlaybackControl = ({ dispatch, isPlay }) => {
             <StyledText>
               <FormattedMessage id="pages.live-mode.speed" />
             </StyledText>
-            <Select value="X1"></Select>
+            <StyledSelectSpeed
+              defaultValue={1}
+              onChange={handleChangeSpeedCamera}
+              options={listSpeedCamera}
+            />
           </Space>
           <StyledText>{moment().format('LTS')}</StyledText>
         </StyledRightControl>
@@ -150,6 +194,9 @@ const StyledControlButton = styled(Button)`
       width: 48px;
       height: 48px;
     }`}
+`;
+const StyledSelectSpeed = styled(Select)`
+  width: 140px;
 `;
 const mapStateToProps = (state) => {
   return {
