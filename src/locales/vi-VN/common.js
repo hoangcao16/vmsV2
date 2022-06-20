@@ -12,6 +12,7 @@ export default {
   R: 'Vai trò',
   r: 'vai trò',
   VMS: 'HỆ THỐNG VMS',
+  playback: 'Xem lại',
   //menu
   'menu.home': 'Trang chủ',
   'menu.map': 'Bản đồ',

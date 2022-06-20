@@ -10,13 +10,12 @@ import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { FormattedMessage } from 'umi';
+import { connect, FormattedMessage } from 'umi';
 import SeekControl from './SeekControl';
 
-const PlaybackControl = () => {
+const PlaybackControl = ({ dispatch, isPlay }) => {
   const [time, setTime] = useState(Date.now());
   const [seekTime, setSeekTime] = useState(moment());
-  const [isPlay, setIsPlay] = useState(false);
   const [seekToDate, setSeekToDate] = useState(null);
   const [seekToTime, setSeekToTime] = useState(null);
   const [seekDateTime, setSeekDateTime] = useState(null);
@@ -48,6 +47,12 @@ const PlaybackControl = () => {
       setSeekDateTime(seekDateTime);
     }
   };
+  const handlePlay = () => {
+    dispatch({
+      type: 'playMode/saveIsPlay',
+      payload: !isPlay,
+    });
+  };
   return (
     <StyledPlaybackControl>
       <StyledTopControl>
@@ -76,7 +81,7 @@ const PlaybackControl = () => {
             playButton
             icon={isPlay ? <PauseOutlined /> : <CaretRightOutlined />}
             shape="circle"
-            onClick={() => setIsPlay(!isPlay)}
+            onClick={() => handlePlay()}
           />
           <StyledControlButton
             icon={<ForwardOutlined />}
@@ -146,5 +151,9 @@ const StyledControlButton = styled(Button)`
       height: 48px;
     }`}
 `;
-
-export default PlaybackControl;
+const mapStateToProps = (state) => {
+  return {
+    isPlay: state?.playMode?.isPlay,
+  };
+};
+export default connect(mapStateToProps)(PlaybackControl);

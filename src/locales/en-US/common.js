@@ -12,6 +12,7 @@ export default {
   R: 'Role',
   r: 'role',
   VMS: 'VMS SYSTEM',
+  playback: 'Playback',
   //menu
   'menu.home': 'Home',
   'menu.map': 'Map',

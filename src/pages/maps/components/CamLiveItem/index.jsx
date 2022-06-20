@@ -1,19 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useIntl } from 'umi';
-import { connect } from 'dva';
-import { useEffect, useState, useRef } from 'react';
+import CircleIcon from '@/assets/img/iconCircle';
+import { notify } from '@/components/Notify';
 import CameraApi from '@/services/camera/CameraApi';
 import camProxyService from '@/services/camProxy';
-import { notify } from '@/components/Notify';
-import { Container, StyledLoading } from './style';
+import { CloseOutlined, ExpandOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Button, Spin } from 'antd';
-import CircleIcon from '@/assets/img/iconCircle';
-import {
-  CloseOutlined,
-  LoadingOutlined,
-  ExpandOutlined,
-  CompressOutlined,
-} from '@ant-design/icons';
+import { connect } from 'dva';
+import { useEffect, useRef, useState } from 'react';
+import { useIntl } from 'umi';
+import { Container, StyledLoading } from './style';
 const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
   const [loading, setLoading] = useState(false);
   const videoRef = useRef(null);
@@ -130,7 +125,7 @@ const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
               viewType: 'live',
             })
             .then((res) => {
-              if (res) {
+              if (res && pc) {
                 pc.setRemoteDescription(res.payload);
               } else {
                 console.log('Failed');

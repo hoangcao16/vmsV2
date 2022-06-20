@@ -1,9 +1,11 @@
 import { GRID1X1 } from '@/constants/grid';
+import moment from 'moment';
 
 export default {
   namespace: 'live',
   state: {
     availableList: [],
+    currentSeekTime: moment(),
     screen: {
       mode: 'live',
       grids: [],
@@ -16,6 +18,9 @@ export default {
     },
     saveScreen(state, { payload }) {
       return { ...state, screen: payload };
+    },
+    saveCurrentSeekTime(state, { payload }) {
+      return { ...state, currentSeekTime: payload };
     },
     closeCamera(state, { payload }) {
       const { uuid } = payload;

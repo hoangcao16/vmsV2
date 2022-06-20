@@ -30,7 +30,6 @@ export default {
   'error.KCheetahNvrNotFound': 'Could not get NVR address',
   'error.KCheetahSendReqFailed': 'Send request to NVR failed',
   'error.KCheetahInternalServerError': 'Got an internal error from server',
-  'error.KPandaCamNotFound': 'Not found any Camera',
   'error.KControllerBadRequest': 'Bad request',
   'error.KControllerForbidden': 'Bad request',
   'error.KControllerNotFound': 'Not found',

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { notify } from '@/components/Notify';
 import { LIVE_MODE } from '@/constants/common';
 import CameraApi from '@/services/camera/CameraApi';
@@ -8,6 +9,7 @@ import { captureVideoFrame } from '@/utils/captureVideoFrame';
 import getBase64 from '@/utils/getBase64';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
+import Hls from 'hls.js';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -16,7 +18,17 @@ import { v4 as uuidv4 } from 'uuid';
 
 import CameraSlotControl from './CameraSlotControl';
 
-const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed }) => {
+const CameraSlot = ({
+  screen,
+  camera,
+  dispatch,
+  isDraggingOver,
+  layoutCollapsed,
+  currentSeekTime,
+  selectedCamera,
+  isPlay,
+  slotIndex,
+}) => {
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [countdown, setCountdown] = useState(0);
@@ -27,12 +39,14 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed 
   const timerRef = useRef(null);
   const requestId = useRef(uuidv4());
   useEffect(() => {
-    if (camera.uuid) {
-      startCamera(camera.uuid, camera.type, 'webrtc');
-    } else {
-      closeCamera();
+    if (screen?.mode === 'live') {
+      if (camera.uuid) {
+        startCamera(camera.uuid, camera.type, 'webrtc');
+      } else {
+        closeCamera();
+      }
     }
-  }, [camera]);
+  }, [camera, screen?.mode]);
 
   useEffect(() => {
     if (isRecording) {
@@ -43,7 +57,81 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed 
 
     return () => clearInterval(timerRef.current);
   }, [isRecording, countdown]);
+  useEffect(() => {
+    if (
+      screen?.mode === 'play' &&
+      isPlay &&
+      selectedCamera?.data?.uuid === camera?.uuid &&
+      selectedCamera?.index === slotIndex
+    ) {
+      playBackCamera(camera?.uuid, currentSeekTime);
+    }
+  }, [isPlay]);
+  const playBackCamera = async (uuid, seekTime) => {
+    const playbackPermissionReq = {
+      cameraUuid: uuid,
+      startTime: moment(seekTime).unix(),
+    };
+    try {
+      const data = await CameraApi.checkPermissionForViewPlayback(playbackPermissionReq);
+      if (data) {
+        const startReq = {
+          cameraId: camera.id,
+          date: moment(seekTime).unix(),
+          token: data.token,
+        };
+        // const payload = await camProxyService.playbackCamera(data.playbackUrl, startReq);
+        const payload = await camProxyService.playbackCamera(
+          'http://10.0.0.63:18602/playback1',
+          startReq,
+        );
+        if (payload === null) return;
+        // const videoSrc = data.playbackUrl + '/play/hls/' + payload.reqUuid + '/index.m3u8';
+        const videoSrc =
+          'http://10.0.0.63:18602/playback1' + '/play/hls/' + payload.reqUuid + '/index.m3u8';
+        if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+          videoRef.current.src = videoSrc;
+        } else if (Hls.isSupported()) {
+          camera.hls = new Hls({
+            autoStartLoad: true,
+            startPosition: -1,
+            debug: false,
+          });
+          camera.hls.loadSource(videoSrc);
+          camera.hls.attachMedia(videoRef.current);
+          camera.hls.on(Hls.Events.ERROR, function (event, data) {
+            if (data.fatal) {
+              switch (data.type) {
+                case Hls.ErrorTypes.NETWORK_ERROR:
+                  // try to recover network error
 
+                  camera.hls.startLoad();
+                  break;
+                case Hls.ErrorTypes.MEDIA_ERROR:
+                  camera.hls.recoverMediaError();
+                  break;
+                default:
+                  camera.hls.destroy();
+                  break;
+              }
+            }
+          });
+          videoRef.current.autoplay = true;
+          videoRef.current.controls = false;
+          videoRef.current.style = 'display:block;';
+          videoRef.current.style.display = 'block';
+          // dispatch(setPlaybackHls(cameraSlot));
+          return;
+        }
+      }
+    } catch (e) {
+      notify(
+        'error',
+        { id: 'noti.error_code', params: { code: 1105 } },
+        'error.KLionInternalFileNotFound',
+      );
+    }
+  };
   const startCamera = async (camUuid, type, mode) => {
     setLoading(true);
     const data = await CameraApi.checkPermissionForViewOnline({
@@ -276,7 +364,7 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed 
           violationTime: startTime,
           createdTime: Date.now(),
           note: '',
-          cameraUuid: camera.uuid,
+          cameraUuid: uuid,
           cameraName: camera.name,
           type: 0,
           length: payload.length,
@@ -330,7 +418,7 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed 
           violationTime: violationTime,
           createdTime: createdTime,
           note: '',
-          cameraUuid: camera.uuid,
+          cameraUuid: uuid,
           cameraName: camera.name,
           type: 1,
           length: 0,
@@ -381,7 +469,6 @@ const CameraSlot = ({ screen, camera, dispatch, isDraggingOver, layoutCollapsed 
 
     setZoomIn(!zoomIn);
   };
-
   return (
     <StyledCameraSlot
       isDraggingOver={isDraggingOver}
@@ -523,6 +610,9 @@ const mapStateToProps = (state) => {
   return {
     screen: state.live.screen,
     layoutCollapsed: state?.globalstore?.layoutCollapsed,
+    currentSeekTime: state?.live?.currentSeekTime,
+    selectedCamera: state?.playMode?.selectedCamera,
+    isPlay: state?.playMode?.isPlay,
   };
 };
 

@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'dva';
-import { StyledDrawer, Header } from './style';
-import { Button, Spin, Select } from 'antd';
-import { useIntl } from 'umi';
-import { useState, useRef, useEffect } from 'react';
-import { LoadingOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { notify } from '@/components/Notify';
 import CameraApi from '@/services/camera/CameraApi';
 import camProxyService from '@/services/camProxy';
-import { notify } from '@/components/Notify';
+import { ArrowLeftOutlined, LoadingOutlined } from '@ant-design/icons';
+import { Select, Spin } from 'antd';
+import { connect } from 'dva';
+import { useEffect, useRef, useState } from 'react';
+import { useIntl } from 'umi';
+import { Header, StyledDrawer } from './style';
 const LiveFullScreen = ({ dispatch, isOpenDrawer, selectedCamera, cameraList }) => {
   const intl = useIntl();
   const pcRef = useRef(null);
@@ -124,7 +124,7 @@ const LiveFullScreen = ({ dispatch, isOpenDrawer, selectedCamera, cameraList }) 
               viewType: 'live',
             })
             .then((res) => {
-              if (res) {
+              if (res && pc) {
                 pc.setRemoteDescription(res.payload);
               } else {
                 console.log('Failed');
