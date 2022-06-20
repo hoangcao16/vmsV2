@@ -19,7 +19,7 @@ import {
 import { Button, Col, Collapse, Input, Row, Space, Spin } from 'antd';
 import Popconfirm from 'antd/es/popconfirm';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect, useIntl } from 'umi';
 import {
   CAPTURED_NAMESPACE,
@@ -39,7 +39,6 @@ import {
   StyledEventFileDetail,
   VideoOverlay,
 } from './style';
-import debounce from 'lodash/debounce';
 
 const { Panel } = Collapse;
 
