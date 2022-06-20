@@ -1,10 +1,34 @@
-import { notify } from '@/components/Notify';
-import React, { useEffect, useMemo } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
+import { connect } from 'umi';
 import CameraSlot from './CameraSlot';
 
-const GridPanel = ({ screen }) => {
+const GridPanel = ({ screen, dispatch, selectedCamera }) => {
+  const handleSelectCamera = (index) => {
+    if (screen?.mode === 'play') {
+      if (
+        selectedCamera?.data?.uuid === screen?.grids[index]?.uuid &&
+        selectedCamera?.index === index
+      ) {
+        dispatch({
+          type: 'playMode/saveSelectedCamera',
+          payload: null,
+        });
+      } else {
+        dispatch({
+          type: 'playMode/saveSelectedCamera',
+          payload: {
+            index: index,
+            data: screen?.grids[index],
+          },
+        });
+      }
+      dispatch({
+        type: 'playMode/saveIsPlay',
+        payload: false,
+      });
+    }
+  };
   return (
     <StyledGrid>
       {screen.grids.map((camera, index) => (
@@ -14,6 +38,7 @@ const GridPanel = ({ screen }) => {
               grid={screen.grids}
               ref={dropProvided.innerRef}
               {...dropProvided.droppableProps}
+              onClick={() => handleSelectCamera(index)}
             >
               <GridItemWrapper isDraggingOver={dropSnapshot.isDraggingOver}>
                 <Draggable
@@ -25,13 +50,23 @@ const GridPanel = ({ screen }) => {
                   {(provided, snapshot) => (
                     <GridItemContent
                       ref={provided.innerRef}
+                      data-type={
+                        selectedCamera?.data?.uuid === camera?.uuid &&
+                        selectedCamera?.index === index
+                          ? 'selected'
+                          : ''
+                      }
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                       style={provided.draggableProps.style}
                       isDragging={snapshot.draggingOver}
                     >
                       {camera?.uuid && (
-                        <CameraSlot isDraggingOver={dropSnapshot.isDraggingOver} camera={camera} />
+                        <CameraSlot
+                          isDraggingOver={dropSnapshot.isDraggingOver}
+                          camera={camera}
+                          slotIndex={index}
+                        />
                       )}
                     </GridItemContent>
                   )}
@@ -69,6 +104,13 @@ const GridItemContent = styled.div`
   top: 0;
   left: 0;
   background-color: ${(prop) => (prop.isDragging ? '#ffff64' : '')};
+  &[data-type='selected'] {
+    border: 2px solid #bee71c;
+  }
 `;
-
-export default GridPanel;
+const mapStateToProps = (state) => {
+  return {
+    selectedCamera: state?.playMode?.selectedCamera,
+  };
+};
+export default connect(mapStateToProps)(GridPanel);

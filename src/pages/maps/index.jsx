@@ -1,32 +1,37 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState, useRef } from 'react';
-import { MAP_STYLES, STYLE_MODE, NAVIGATION_CONTROL, LAT_LNG } from '@/constants/map';
-import { CircleMode, DirectMode, DragCircleMode, SimpleSelectMode } from 'mapbox-gl-draw-circle';
-import MapboxDraw from '@mapbox/mapbox-gl-draw';
-import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
-import mapboxgl from 'vietmaps-gl';
-import { MapContainer, MapHeader } from './style';
-import ReactDOM from 'react-dom';
-import { useIntl } from 'umi';
-import { Button } from 'antd';
-import { UnorderedListOutlined } from '@ant-design/icons';
-import { connect } from 'dva';
-import CameraListDrawer from './components/CameraListDrawer';
-import { TYPE_FORM_ACTION_ON_MAP } from '@/constants/map';
-import CamInfoPopup from './components/CamInfoPopup';
 import CameraIcon from '@/assets/img/cameraIcon';
-import ViewLiveCameras from './components/ViewLiveCameras';
+import LiveFullScreen from '@/components/LiveFullScreen';
+import { notify } from '@/components/Notify';
+import {
+  LAT_LNG,
+  MAP_STYLES,
+  NAVIGATION_CONTROL,
+  STYLE_MODE,
+  TYPE_FORM_ACTION_ON_MAP,
+} from '@/constants/map';
+import EditCamera from '@/pages/category/camera/components/EditCamera';
 import CameraApi from '@/services/camera/CameraApi';
 import camProxyService from '@/services/camProxy';
-import { notify } from '@/components/Notify';
-import { v4 as uuidV4 } from 'uuid';
-import getBase64 from '@/utils/getBase64';
 import ExportEventFileApi from '@/services/exportEventFile';
-import moment from 'moment';
 import { captureVideoFrame } from '@/utils/captureVideoFrame';
-import EditCamera from '@/pages/category/camera/components/EditCamera';
-import LiveFullScreen from '@/components/LiveFullScreen';
+import getBase64 from '@/utils/getBase64';
+import { UnorderedListOutlined } from '@ant-design/icons';
+import MapboxDraw from '@mapbox/mapbox-gl-draw';
+import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
+import { Button } from 'antd';
+import { connect } from 'dva';
 import _ from 'lodash';
+import { CircleMode, DirectMode, DragCircleMode, SimpleSelectMode } from 'mapbox-gl-draw-circle';
+import moment from 'moment';
+import { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { useIntl } from 'umi';
+import { v4 as uuidV4 } from 'uuid';
+import mapboxgl from 'vietmaps-gl';
+import CameraListDrawer from './components/CameraListDrawer';
+import CamInfoPopup from './components/CamInfoPopup';
+import ViewLiveCameras from './components/ViewLiveCameras';
+import { MapContainer, MapHeader } from './style';
 const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraListDrawer }) => {
   const intl = useIntl();
   const mapboxRef = useRef(null);
@@ -134,7 +139,7 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
               viewType: 'live',
             })
             .then((res) => {
-              if (res) {
+              if (res && pc) {
                 pc.setRemoteDescription(res.payload);
               } else {
                 console.log('Failed');

@@ -5,6 +5,9 @@ export default defineConfig({
     // https://github.com/zthxxx/react-dev-inspector
     'react-dev-inspector/plugins/umi/react-inspector',
   ],
+  // devServer: {
+  //   port: 3000,
+  // },
   // https://github.com/zthxxx/react-dev-inspector#inspector-loader-props
   inspectorConfig: {
     exclude: [],

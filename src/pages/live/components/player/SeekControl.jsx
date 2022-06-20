@@ -1,5 +1,6 @@
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
+import { useDispatch } from 'dva';
 import moment from 'moment';
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -10,6 +11,7 @@ const MARK_BAR_WIDTH = 4;
 const MINUTES_PER_PIXEL_RATIO = BAR_WIDTH / BAR_MINUTES;
 
 const SeekControl = forwardRef(({ onChange, isPlay, seekDateTime }, ref) => {
+  const dispatch = useDispatch();
   const containerRef = useRef(null);
   const contentRef = useRef(null);
   const nextRef = useRef(null);
@@ -25,6 +27,10 @@ const SeekControl = forwardRef(({ onChange, isPlay, seekDateTime }, ref) => {
   useEffect(() => {
     if (seekDateTime) {
       setCurrentSeekTime(seekDateTime);
+      dispatch({
+        type: 'live/saveCurrentSeekTime',
+        payload: seekDateTime,
+      });
     }
   }, [seekDateTime]);
   useImperativeHandle(ref, () => ({
@@ -49,6 +55,10 @@ const SeekControl = forwardRef(({ onChange, isPlay, seekDateTime }, ref) => {
     if (isPlay) {
       timerRef.current = setInterval(() => {
         setCurrentSeekTime(currentSeekTime.clone().add(1, 's'));
+        dispatch({
+          type: 'live/saveCurrentSeekTime',
+          payload: currentSeekTime.clone().add(1, 's'),
+        });
       }, 1000);
     }
 
@@ -128,12 +138,20 @@ const SeekControl = forwardRef(({ onChange, isPlay, seekDateTime }, ref) => {
     const nextTime = currentSeekTime.clone().add(changeMinutes, 'minutes');
     onChange && onChange(nextTime);
     setCurrentSeekTime(nextTime);
+    dispatch({
+      type: 'live/saveCurrentSeekTime',
+      payload: nextTime,
+    });
     if (contentRef.current)
       contentRef.current.style.transform = `translateX(${dragState.current.translateX}px)`;
   };
 
   const handleSeek = (step) => {
     setCurrentSeekTime(currentSeekTime.clone().add(step, 'minutes'));
+    dispatch({
+      type: 'live/saveCurrentSeekTime',
+      payload: currentSeekTime.clone().add(step, 'minutes'),
+    });
   };
 
   return (
@@ -273,5 +291,4 @@ const StyledMarkerItemDate = styled.p`
   font-size: 10px;
   padding: 5px;
 `;
-
 export default SeekControl;

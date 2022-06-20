@@ -5,7 +5,7 @@ import cameraService from '@/services/controllerApi/cameraService';
 import { HeartOutlined, OrderedListOutlined, SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Select, Space } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { connect, FormattedMessage } from 'umi';
 
@@ -167,14 +167,14 @@ const Live = ({ availableList, screen, dispatch }) => {
         onChange={handleChangeMode}
         tabBarExtraContent={{
           right: [
-            <Space size={8}>
+            <Space size={8} key="space">
               <StyledText id="pages.live-mode.action.favorite" />
               <Select placeholder={<FormattedMessage id="pages.live-mode.action.choose" />} />
               <Button icon={<SaveOutlined />} type="primary">
                 <StyledText id="pages.live-mode.action.save" />
               </Button>
             </Space>,
-            <ActionGrid grid={screen.gridType} onChange={changeScreen} />,
+            <ActionGrid key="action" grid={screen.gridType} onChange={changeScreen} />,
           ],
         }}
       >
