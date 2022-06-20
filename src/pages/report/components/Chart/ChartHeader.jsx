@@ -33,7 +33,7 @@ const ChartHeader = (props) => {
   let url = useHistory();
 
   useEffect(() => {
-    if (url.location.pathname == '/report') {
+    if (url.location.pathname == '/report' || url.location.pathname == '/report/') {
       setCurrentPathIsReport(true);
     } else {
       setCurrentPathIsReport(false);

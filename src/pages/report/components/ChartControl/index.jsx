@@ -501,7 +501,7 @@ const ChartControl = (props) => {
                     {prop.label}
                   </Tag>
                 )}
-                placeholder="Provinces"
+                placeholder={intl.formatMessage({ id: `view.map.province_id` })}
               >
                 {normalizeOptions('name', 'provinceId', props?.allProvinces).map(
                   ({ label, value }) => (
@@ -523,7 +523,7 @@ const ChartControl = (props) => {
                   showSearch
                   datasource={allDistricts}
                   filterOption={filterOptionForChart}
-                  placeholder="Districts"
+                  placeholder={intl.formatMessage({ id: `view.map.district_id` })}
                 >
                   {normalizeOptions('name', 'districtId', allDistricts).map(({ label, value }) => (
                     <Select.Option
@@ -546,7 +546,7 @@ const ChartControl = (props) => {
                     datasource={allWards}
                     filterOption={filterOptionForChart}
                     // options={normalizeOptions('name', 'id', allWards)}
-                    placeholder="Wards"
+                    placeholder={intl.formatMessage({ id: `view.map.ward_id` })}
                   >
                     {normalizeOptions('name', 'id', allWards).map(({ label, value }) => (
                       <Select.Option
@@ -566,7 +566,7 @@ const ChartControl = (props) => {
                 showSearch
                 datasource={allAiCamera}
                 filterOption={filterOptionForChart}
-                placeholder="AiCamera"
+                placeholder="Camera AI"
               >
                 {normalizeOptions('name', 'uuid', allAiCamera).map(({ label, value }) => (
                   <Select.Option
@@ -589,7 +589,9 @@ const ChartControl = (props) => {
                 showSearch
                 datasource={props?.allFiedls}
                 filterOption={filterOptionForChart}
-                placeholder="Field"
+                placeholder={intl.formatMessage({
+                  id: `pages.report.chart.field`,
+                })}
               >
                 {normalizeOptions('name', 'uuid', props?.allFiedls).map(({ label, value }) => (
                   <Select.Option
