@@ -1,3 +1,4 @@
+import { notify } from '@/components/Notify';
 import { AI_SOURCE } from '@/constants/common';
 import {
   CAPTURED_NAMESPACE,
@@ -7,25 +8,24 @@ import {
   IMPORTANT_NAMESPACE,
 } from '@/pages/storage/constants';
 import ExportEventFileApi from '@/services/exportEventFile';
+import CheetahSvcApi from '@/services/storage-api/cheetahSvcApi';
 import DailyArchiveApi from '@/services/storage-api/dailyArchiveApi';
 import { captureVideoFrame } from '@/utils/captureVideoFrame';
 import getBase64 from '@/utils/getBase64';
 import { Button, Col, Row, Space, Spin, Tooltip } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import { debounce } from 'lodash';
+import moment from 'moment';
+import { useEffect, useRef, useState } from 'react';
 import { FiCamera, FiFastForward, FiPause, FiPlay, FiRewind, FiScissors } from 'react-icons/fi';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { useIntl } from 'umi';
+import { v4 as uuidV4 } from 'uuid';
 import { MemoizedHlsPlayer } from './components/MemoizedHlsPlayer/MemoizedHlsPlayer';
 import { MemoizedTableEventFile } from './components/MemoizedTableEventFile/MemoizedTableEventFile';
 import { MemoizedThumbnailVideo } from './components/MemoizedThumbnailVideo/MemoizedThumbnailVideo';
 import TableDetailEventAI from './components/TableDetailEventAI';
 import { ContainerCapture, ContainerEventsAI, HeaderPanelStyled, ViewFileContainer } from './style';
 import imagePoster from './videoposter.png';
-import moment from 'moment';
-import { v4 as uuidV4 } from 'uuid';
-import { notify } from '@/components/Notify';
-import { debounce } from 'lodash';
-import CheetahSvcApi from '@/services/storage-api/cheetahSvcApi';
 
 let defaultEventFile = {
   id: '',
@@ -190,6 +190,19 @@ function VideoPlayer({
   };
 
   const openEventFile = async (file) => {
+    // setDownloadFileName()
+    if (nameSpace === EVENT_AI_NAMESPACE) {
+      if (REACT_APP_AI_SOURCE === AI_SOURCE.PHILONG) {
+        setDownloadFileName('ImageViolate.jpg');
+      } else {
+        setDownloadFileName(file.fileName);
+      }
+    } else {
+      setDownloadFileName(file.name);
+    }
+
+    addDataToEvent(file, CAPTURED_NAMESPACE);
+
     // IMAGE
     if (file.type === 1) {
       setFileCurrent({ ...file, tableName: 'event_file' });
@@ -258,19 +271,6 @@ function VideoPlayer({
     if (nameSpace === IMPORTANT_NAMESPACE) {
       setFileCurrent({ ...file });
     }
-
-    // setDownloadFileName()
-    if (nameSpace === EVENT_AI_NAMESPACE) {
-      if (REACT_APP_AI_SOURCE === AI_SOURCE.PHILONG) {
-        setDownloadFileName('ImageViolate.jpg');
-      } else {
-        setDownloadFileName(file.fileName);
-      }
-    } else {
-      setDownloadFileName(file.name);
-    }
-
-    addDataToEvent(file, CAPTURED_NAMESPACE);
   };
 
   const onClickTableFileHandler = (row) => {
