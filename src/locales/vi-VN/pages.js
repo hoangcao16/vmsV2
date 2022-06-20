@@ -46,7 +46,7 @@ export default {
   'pages.report.chart.pieChart': 'Biểu đồ tròn',
   'pages.report.chart.barChart': 'Biểu đồ cột',
   'pages.report.chart.emptyField': 'Không có lĩnh vực nào trong hệ thống',
-  'pages.report.chart.emptyEvent': 'Không có sự kiện nào trong lĩnh vực',
+  'pages.report.chart.emptyEvent': 'Chưa chọn sự kiện. Vui lòng chọn sự kiện',
   'pages.report.chart.filter': 'Bộ lọc',
   'pages.report.chart.dateRange': 'Khoảng thời gian',
   'pages.report.chart.area': 'Khu vực',
@@ -72,7 +72,8 @@ export default {
   'pages.report.chart.address': 'Địa điểm',
   'pages.report.chart.cameraName': 'Tên Camera',
   'pages.report.export.confirm': 'Xác nhận',
-  'pages.report.export.exportReprot': 'Xuất báo cáo',
+  'pages.report.export.exportReport': 'Xuất báo cáo',
+  'pages.report.export.sentReport': 'Gửi báo cáo',
   'pages.report.export.contentMessage': 'Bạn đã chắc chắn gửi báo cáo cho Email này?',
   'pages.report.export.cancel': 'Hủy',
 
@@ -171,7 +172,9 @@ export default {
   'pages.setting-user.list-user.user-search': 'Tìm kiếm theo tên, địa chỉ...',
 
   'report.export.success': 'Xuất tệp báo cáo thành công',
+  'report.export.successSent': 'Gửi báo cáo thành công',
   'report.export.failed': 'Xuất tệp báo cáo thất bại',
+  'report.export.failedSent': 'Gửi tệp báo cáo thất bại',
 
   // Code AUTH
   'pages.setting-user.list-user.601': 'Yêu cầu không hợp lệ',

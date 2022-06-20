@@ -92,7 +92,7 @@ const ExportReportToMail = (props) => {
 
   const renderHeader = (dataType) => {
     let name = intl.formatMessage({
-      id: 'pages.report.export.exportReprot',
+      id: 'pages.report.export.exportReport',
     });
     return <ModalTitle>{name}</ModalTitle>;
   };
@@ -121,9 +121,9 @@ const ExportReportToMail = (props) => {
         };
         ReportApi.getExportDataToMail(data).then((value) => {
           if (value.code == '1300') {
-            notify('success', 'noti.success', 'report.export.success');
+            notify('success', 'noti.success', 'report.export.successSent');
           } else {
-            notify('error', 'noti.faid', 'report.export.failed');
+            notify('error', 'noti.faid', 'report.export.failedSent');
           }
         });
       },
@@ -203,7 +203,9 @@ const ExportReportToMail = (props) => {
                   rules={[
                     {
                       required: true,
-                      message: `${'view.map.required_field'}`,
+                      message: `${intl.formatMessage({
+                        id: 'view.map.required_field',
+                      })}`,
                     },
                     () => ({
                       validator(_, value) {
@@ -246,7 +248,7 @@ const ExportReportToMail = (props) => {
             <ButtonWrapper>
               <Button type="primary" htmlType="submit" icon={<SendOutlined />} on>
                 {intl.formatMessage({
-                  id: 'view.penaltyTicket.send-a-ticket',
+                  id: 'pages.report.export.sentReport',
                 })}
               </Button>
               <Button onClick={handleCancel} icon={<CloseOutlined />}>
