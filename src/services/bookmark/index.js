@@ -11,7 +11,7 @@ const bookmarkService = {
   async detail(uuid) {
     return request.get(`${BOOKMARK_ENDPOINT}/${uuid}`);
   },
-  async update(cam, uuid) {
+  async update(uuid, cam) {
     return request.put(`${BOOKMARK_ENDPOINT}/${uuid}`, cam);
   },
   async create(data) {

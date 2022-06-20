@@ -27,6 +27,13 @@ export const StyledTabs = styled(Tabs)`
     display: flex;
     flex: 2;
     flex-flow: row;
-    justify-content: space-between;
+    justify-content: end;
+  }
+`;
+
+export const StyledLive = styled.div`
+  display: flex;
+  .ant-pro-page-container {
+    flex-grow: 1 !important;
   }
 `;

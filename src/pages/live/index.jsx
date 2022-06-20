@@ -4,31 +4,29 @@ import bookmarkService from '@/services/bookmark';
 import cameraService from '@/services/controllerApi/cameraService';
 import { HeartOutlined, OrderedListOutlined, SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Button, Select, Space } from 'antd';
+import { Button, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { connect, FormattedMessage } from 'umi';
 
 import ActionGrid from './components/ActionGrid';
 import CameraList from './components/CameraList';
+import FavoriteList from './components/FavoriteList';
 import GridPanel from './components/GridPanel';
 import PlaybackControl from './components/player/PlaybackControl';
-import { StyledTabs, StyledText } from './style';
+import { StyledLive, StyledTabs, StyledText } from './style';
 
 const Live = ({ availableList, screen, dispatch }) => {
   const [visibleCameraList, setVisibleCameraList] = useState(false);
+  const [visibleFavoriteList, setVisibleFavoriteList] = useState(false);
 
   useEffect(() => {
     fetchDefaultScreen();
   }, []);
 
   const fetchDefaultScreen = async () => {
-    try {
-      const { payload } = await bookmarkService.getDefault();
-      initScreen(payload[0]);
-    } catch (error) {
-      initScreen();
-    }
+    const { payload } = await bookmarkService.getDefault();
+    initScreen(payload[0] || undefined);
   };
 
   const initScreen = async (screen) => {
@@ -94,6 +92,7 @@ const Live = ({ availableList, screen, dispatch }) => {
 
   const onDragEnd = ({ destination, source }) => {
     if (!destination || !source) return;
+    console.log(screen);
 
     if (source.droppableId === LIVE_MODE.CAMERA_LIST_DROPPABLE_ID) {
       const draggableCam = availableList[source.index];
@@ -148,51 +147,68 @@ const Live = ({ availableList, screen, dispatch }) => {
   };
 
   return (
-    <PageContainer
-      extra={[
-        <Button key="2" icon={<HeartOutlined />}>
-          <StyledText id="pages.live-mode.list.favorite" />
-        </Button>,
-        <Button
-          key="1"
-          type="primary"
-          icon={<OrderedListOutlined />}
-          onClick={() => setVisibleCameraList(true)}
-        >
-          <StyledText id="pages.live-mode.list.camera" />
-        </Button>,
-      ]}
-    >
-      <StyledTabs
-        onChange={handleChangeMode}
-        tabBarExtraContent={{
-          right: [
-            <Space size={8} key="space">
-              <StyledText id="pages.live-mode.action.favorite" />
-              <Select placeholder={<FormattedMessage id="pages.live-mode.action.choose" />} />
-              <Button icon={<SaveOutlined />} type="primary">
-                <StyledText id="pages.live-mode.action.save" />
-              </Button>
-            </Space>,
-            <ActionGrid key="action" grid={screen.gridType} onChange={changeScreen} />,
-          ],
-        }}
+    <StyledLive>
+      <PageContainer
+        extra={[
+          <Button
+            key="2"
+            icon={<HeartOutlined />}
+            onClick={() => setVisibleFavoriteList(!visibleFavoriteList)}
+          >
+            <StyledText id="pages.live-mode.list.favorite" />
+          </Button>,
+          <Button
+            key="1"
+            type="primary"
+            icon={<OrderedListOutlined />}
+            onClick={() => setVisibleCameraList(true)}
+          >
+            <StyledText id="pages.live-mode.list.camera" />
+          </Button>,
+        ]}
       >
-        <StyledTabs.TabPane key="live" tab={<FormattedMessage id="pages.live-mode.mode.live" />} />
-        <StyledTabs.TabPane key="play" tab={<FormattedMessage id="pages.live-mode.mode.review" />}>
-          <PlaybackControl />
-        </StyledTabs.TabPane>
-      </StyledTabs>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <GridPanel screen={screen} />
-        <CameraList
-          title={<FormattedMessage id="pages.live-mode.list.camera" />}
-          cameras={availableList}
-          visible={visibleCameraList}
-          onClose={() => setVisibleCameraList(false)}
-        />
-      </DragDropContext>
-    </PageContainer>
+        <StyledTabs
+          onChange={handleChangeMode}
+          tabBarExtraContent={{
+            right: [
+              <>
+                <Space size={16}>
+                  <Button icon={<SaveOutlined />} type="primary">
+                    <StyledText id="pages.live-mode.action.save-favorite" />
+                  </Button>
+                  <ActionGrid grid={screen.gridType} onChange={changeScreen} />
+                </Space>
+              </>,
+            ],
+          }}
+        >
+          <StyledTabs.TabPane
+            key="live"
+            tab={<FormattedMessage id="pages.live-mode.mode.live" />}
+          />
+          <StyledTabs.TabPane
+            key="play"
+            tab={<FormattedMessage id="pages.live-mode.mode.review" />}
+          >
+            <PlaybackControl />
+          </StyledTabs.TabPane>
+        </StyledTabs>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <GridPanel screen={screen} />
+          <CameraList
+            title={<FormattedMessage id="pages.live-mode.list.camera" />}
+            cameras={availableList}
+            visible={visibleCameraList}
+            onClose={() => setVisibleCameraList(false)}
+          />
+        </DragDropContext>
+      </PageContainer>
+      <FavoriteList
+        title={<FormattedMessage id="pages.live-mode.list.favorite" />}
+        visible={visibleFavoriteList}
+        onClose={() => setVisibleFavoriteList(false)}
+      />
+    </StyledLive>
   );
 };
 
