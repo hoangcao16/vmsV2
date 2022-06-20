@@ -2,7 +2,7 @@ import { Divider } from 'antd';
 import { connect } from 'dva';
 import 'moment/locale/en-gb';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import DatePickerForm from './DatePickerForm';
 
@@ -30,10 +30,10 @@ const ChartHeaderInfoWrapperTitle = styled.div`
 
 const ChartHeader = (props) => {
   const [currentPathIsReport, setCurrentPathIsReport] = useState(true);
-  let url = useHistory();
+  let location = useLocation();
 
   useEffect(() => {
-    if (url.location.pathname == '/report' || url.location.pathname == '/report/') {
+    if (location.pathname == '/report' || location.pathname == '/report/') {
       setCurrentPathIsReport(true);
     } else {
       setCurrentPathIsReport(false);
