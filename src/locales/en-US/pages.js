@@ -46,7 +46,7 @@ export default {
   'pages.report.chart.pieChart': 'Pie chart',
   'pages.report.chart.barChart': 'Bar chart',
   'pages.report.chart.emptyField': 'There are no field in the system',
-  'pages.report.chart.emptyEvent': 'No events selected yet. Please choose event',
+  'pages.report.chart.emptyEvent': 'There are no event in the field',
   'pages.report.chart.filter': 'Filter',
   'pages.report.chart.dateRange': 'Date Range',
   'pages.report.chart.area': 'Area',
@@ -71,8 +71,7 @@ export default {
   'pages.report.chart.violationType': 'Violation type',
   'pages.report.chart.address': 'Address',
   'pages.report.chart.cameraName': 'Camera name',
-  'pages.report.export.exportReport': 'Export report',
-  'pages.report.export.sentReport': 'Sent report',
+  'pages.report.export.exportReprot': 'Export report',
   'pages.report.export.confirm': 'Confirm',
   'pages.report.export.contentMessage': 'Are you sure to send this report to this Email?',
   'pages.report.export.cancel': 'Cancel',
@@ -176,9 +175,7 @@ export default {
   'pages.setting-user.list-user.information': 'Information',
 
   'report.export.success': 'Report file export success',
-  'report.export.successSent': 'Report file sent success',
   'report.export.failed': 'Report file export failed',
-  'report.export.failedSent': 'Report file sent failed',
 
   // Code AUTH
   'pages.setting-user.list-user.601': 'BadRequest',
@@ -205,4 +202,8 @@ export default {
   'pages.live-mode.action.edit': 'Edit',
   'pages.live-mode.action.delete': 'Delete',
   'pages.live-mode.speed': 'Speed',
+  'pages.live-mode.action.save-favorite': 'Save as favorite screen',
+  'pages.live-mode.action.add-favorite': 'Update to favorite screen list',
+  'pages.live-mode.noti.name-favorite': 'Successfully edited favorite screen name',
+  'pages.live-mode.noti.name-already': 'Screen name already exists',
 };

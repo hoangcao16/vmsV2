@@ -3,7 +3,7 @@ import cameraApi from '@/services/controllerApi/cameraService';
 import { CloseOutlined, FilterFilled, LoadingOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Pagination, Spin, Tooltip } from 'antd';
 import { connect } from 'dva';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { Scrollbars } from 'react-custom-scrollbars';
 import styled from 'styled-components';
