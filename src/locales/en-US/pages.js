@@ -201,6 +201,8 @@ export default {
   'pages.live-mode.action.save': 'Save',
   'pages.live-mode.action.edit': 'Edit',
   'pages.live-mode.action.delete': 'Delete',
+  'page.live-mode.action.view-fullscreen': 'View full screen',
+  'page.live-mode.action.exit-view-fullscreen': 'Exit full screen view',
   'pages.live-mode.speed': 'Speed',
   'pages.live-mode.action.save-favorite': 'Save as favorite screen',
   'pages.live-mode.action.add-favorite': 'Update to favorite screen list',

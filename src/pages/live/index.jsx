@@ -4,9 +4,10 @@ import bookmarkService from '@/services/bookmark';
 import cameraService from '@/services/controllerApi/cameraService';
 import { HeartOutlined, OrderedListOutlined, SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Button, Space } from 'antd';
+import { Button, Space, Tooltip } from 'antd';
 import { useEffect, useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
+import { BsArrowsFullscreen, BsFullscreenExit } from 'react-icons/bs';
 import { connect, FormattedMessage } from 'umi';
 
 import ActionGrid from './components/ActionGrid';
@@ -14,11 +15,12 @@ import CameraList from './components/CameraList';
 import FavoriteList from './components/FavoriteList';
 import GridPanel from './components/GridPanel';
 import PlaybackControl from './components/player/PlaybackControl';
-import { StyledLive, StyledTabs, StyledText } from './style';
+import { StyledButtonFullScreen, StyledLive, StyledTabs, StyledText } from './style';
 
 const Live = ({ availableList, screen, dispatch }) => {
   const [visibleCameraList, setVisibleCameraList] = useState(false);
   const [visibleFavoriteList, setVisibleFavoriteList] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
     fetchDefaultScreen();
@@ -146,6 +148,10 @@ const Live = ({ availableList, screen, dispatch }) => {
     });
   };
 
+  const handleChangeFullScreen = () => {
+    setIsFullScreen(!isFullScreen);
+  };
+
   return (
     <StyledLive>
       <PageContainer
@@ -202,6 +208,22 @@ const Live = ({ availableList, screen, dispatch }) => {
             onClose={() => setVisibleCameraList(false)}
           />
         </DragDropContext>
+        <Tooltip
+          placement="topLeft"
+          title={
+            <FormattedMessage
+              id={
+                isFullScreen
+                  ? 'page.live-mode.action.view-fullscreen'
+                  : 'page.live-mode.action.exit-view-fullscreen'
+              }
+            />
+          }
+        >
+          <StyledButtonFullScreen onClick={handleChangeFullScreen}>
+            {isFullScreen ? <BsArrowsFullscreen /> : <BsFullscreenExit />}
+          </StyledButtonFullScreen>
+        </Tooltip>
       </PageContainer>
       <FavoriteList
         title={<FormattedMessage id="pages.live-mode.list.favorite" />}

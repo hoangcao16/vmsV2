@@ -16,7 +16,7 @@ import styled from 'styled-components';
 import { connect, FormattedMessage } from 'umi';
 import { v4 as uuidv4 } from 'uuid';
 
-import CameraSlotControl from './CameraSlotControl';
+import CameraSlotControl, { ListControl } from './CameraSlotControl';
 
 const CameraSlot = ({
   screen,
@@ -30,6 +30,7 @@ const CameraSlot = ({
   slotIndex,
 }) => {
   const [loading, setLoading] = useState(false);
+  const [noData, setNodata] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [zoomIn, setZoomIn] = useState(false);
@@ -140,6 +141,7 @@ const CameraSlot = ({
     });
 
     if (data == null) {
+      setNodata(true);
       notify('warning', 'noti.default_screen', 'noti.error_camera_address');
       setLoading(false);
       return;
@@ -474,7 +476,7 @@ const CameraSlot = ({
       isDraggingOver={isDraggingOver}
       zoomIn={zoomIn}
       layoutCollapsed={layoutCollapsed}
-      notFoundCamera={!camera?.id}
+      noData={noData}
     >
       {loading && (
         <StyledLoading>
@@ -526,11 +528,15 @@ const StyledCameraSlot = styled.div`
   width: 100%;
   height: 100%;
   transition: all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
+
   &:hover {
     cursor: pointer !important;
 
-    ${StyledCameraSlotControl} {
-      visibility: visible;
+    .btn-type {
+      opacity: 0;
+    }
+    ${ListControl} {
+      opacity: 1;
     }
   }
 
@@ -545,7 +551,7 @@ const StyledCameraSlot = styled.div`
      height: unset;
      top: 48px;
      left: ${props.layoutCollapsed ? 48 : 208}px;
-     ${props.notFoundCamera && 'background-color: #3f4141;'}`}
+     ${props?.noData && 'background-color: #3f4141;'}`}
 `;
 
 const StyledVideo = styled.video`

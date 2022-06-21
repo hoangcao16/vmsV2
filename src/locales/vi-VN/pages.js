@@ -198,6 +198,8 @@ export default {
   'pages.live-mode.action.save': 'Lưu',
   'pages.live-mode.action.edit': 'Sửa',
   'pages.live-mode.action.delete': 'Xóa',
+  'page.live-mode.action.view-fullscreen': 'Xem toàn màn hình',
+  'page.live-mode.action.exit-view-fullscreen': 'Thoát xem toàn màn hình',
   'pages.live-mode.speed': 'Tốc độ xem',
   'pages.live-mode.action.save-favorite': 'Lưu thành màn hình ưa thích',
   'pages.live-mode.action.add-favorite': 'Cập nhật vào danh sách màn hình yêu thích',
