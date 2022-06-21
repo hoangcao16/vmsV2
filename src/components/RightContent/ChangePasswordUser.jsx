@@ -3,13 +3,43 @@ import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import { Button, Form, Row, Col, Input, Space } from 'antd';
 import { useIntl } from 'umi';
 import { connect } from 'dva';
+import ChangePass from '@/services/changepassword/ChangePasswordAPI';
+import { notify } from '@/components/Notify';
+import { reactLocalStorage } from 'reactjs-localstorage';
 import React, { useState } from 'react';
+import { v4 as uuidV4 } from 'uuid';
+import { fromPairs } from 'lodash';
 function ChangePassword({ openDrawer, onClose }) {
   const intl = useIntl();
   const [form] = Form.useForm();
   const formItemLayout = {
     wrapperCol: { span: 24 },
     labelCol: { span: 10 },
+  };
+
+  const changePass = () => {
+    let user = reactLocalStorage.getObject('user_permissions', null);
+    const params = {
+      password: form.getFieldValue('oldpassword'),
+      new_password: form.getFieldValue('newpassword'),
+      confirm_new_password: form.getFieldValue('confirmpassword'),
+    };
+
+    ChangePass.changePass(user?.user_uuid, params)
+      .then((rs) => {
+        if (rs.code === 600) {
+          notify('success', 'noti.success', 'noti.change_password');
+        }
+        if (rs.code === 601 && params.new_password !== undefined) {
+          notify('error', 'noti.faid', 'noti.fail.change_password');
+        }
+        if ((rs.code === 601 && params.new_password === undefined) || params.new_password === '') {
+          notify('error', 'noti.faid', 'noti.fail.change_pass');
+        }
+      })
+      .catch((error) => {
+        console.log('error:', error);
+      });
   };
   return (
     <>
@@ -29,13 +59,7 @@ function ChangePassword({ openDrawer, onClose }) {
                 <CloseOutlined />
                 {intl.formatMessage({ id: 'view.map.cancel' })}
               </Button>
-              <Button
-                type="primary"
-                htmlType="submit"
-                onClick={() => {
-                  form.submit();
-                }}
-              >
+              <Button type="primary" htmlType="submit" onClick={changePass}>
                 <CheckOutlined />
                 {intl.formatMessage({ id: 'pages.report.export.confirm' })}
               </Button>
@@ -46,12 +70,20 @@ function ChangePassword({ openDrawer, onClose }) {
             <Row>
               <Col span={24}>
                 <Form.Item
-                  labelCol={{ span: 7 }}
-                  wrapperCol={{ span: 17 }}
+                  labelCol={{ span: 8 }}
+                  wrapperCol={{ span: 16 }}
                   name={['oldpassword']}
                   label={intl.formatMessage({
                     id: 'view.user.old_password',
                   })}
+                  rules={[
+                    {
+                      min: 4,
+                      message: `${intl.formatMessage({
+                        id: 'view.user.detail_list.pass_length',
+                      })}`,
+                    },
+                  ]}
                 >
                   <Input.Password
                     maxLength={255}
@@ -71,12 +103,20 @@ function ChangePassword({ openDrawer, onClose }) {
               </Col>
               <Col span={24}>
                 <Form.Item
-                  labelCol={{ span: 7 }}
-                  wrapperCol={{ span: 17 }}
+                  labelCol={{ span: 8 }}
+                  wrapperCol={{ span: 16 }}
                   name={['newpassword']}
                   label={intl.formatMessage({
                     id: 'view.user.new_password',
                   })}
+                  rules={[
+                    {
+                      min: 4,
+                      message: `${intl.formatMessage({
+                        id: 'view.user.detail_list.pass_length',
+                      })}`,
+                    },
+                  ]}
                 >
                   <Input.Password
                     maxLength={255}
@@ -96,12 +136,20 @@ function ChangePassword({ openDrawer, onClose }) {
               </Col>
               <Col span={24}>
                 <Form.Item
-                  labelCol={{ span: 7 }}
-                  wrapperCol={{ span: 17 }}
+                  labelCol={{ span: 8 }}
+                  wrapperCol={{ span: 16 }}
                   name={['confirmpassword']}
                   label={intl.formatMessage({
                     id: 'view.user.confirm_password',
                   })}
+                  rules={[
+                    {
+                      min: 4,
+                      message: `${intl.formatMessage({
+                        id: 'view.user.detail_list.pass_length',
+                      })}`,
+                    },
+                  ]}
                 >
                   <Input.Password
                     maxLength={255}
