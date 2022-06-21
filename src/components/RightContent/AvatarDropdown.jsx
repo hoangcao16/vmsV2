@@ -1,15 +1,23 @@
 import { STORAGE } from '@/constants/common';
 import AuthZApi from '@/services/authz/AuthZApi';
-import { LogoutOutlined } from '@ant-design/icons';
+import { LogoutOutlined, EditOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { history, useIntl, useModel } from 'umi';
 import HeaderDropdown from '../Header/HeaderDropdown';
+import ChangePasswordUser from './ChangePasswordUser';
 import styles from './index.less';
 
 const AvatarDropdown = ({ menu }) => {
   const intl = useIntl();
   const { initialState, setInitialState } = useModel('@@initialState');
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const showDrawer = () => {
+    setOpenDrawer(true);
+  };
+  const onClose = () => {
+    setOpenDrawer(false);
+  };
   const onMenuClick = useCallback(
     async (event) => {
       const { key } = event;
@@ -21,6 +29,9 @@ const AvatarDropdown = ({ menu }) => {
         localStorage.setItem(STORAGE.USER_PERMISSIONS, null);
         const loginPath = '/user/login';
         history.push(loginPath);
+        return;
+      }
+      if (key === 'changepassword') {
         return;
       }
 
@@ -57,6 +68,15 @@ const AvatarDropdown = ({ menu }) => {
         {intl.formatMessage({
           id: 'view.user.log_out',
         })}
+      </Menu.Item>
+      <Menu.Item key="changepassword">
+        <div onClick={showDrawer}>
+          <EditOutlined />
+          {intl.formatMessage({
+            id: 'view.user.change_password',
+          })}
+        </div>
+        {openDrawer && <ChangePasswordUser openDrawer={openDrawer} onClose={onClose} />}
       </Menu.Item>
     </Menu>
   );

@@ -290,6 +290,7 @@ export default {
   'view.pages.email': 'Nhập địa chỉ email',
   'view.page.note.recover_password':
     'Hướng dẫn khôi phục mật khẩu sẽ được gửi qua email, vui lòng nhập email của bạn vào form mẫu dưới đây',
+
   //view storage
   'view.storage.daily_archive_files_list': 'Danh sách tệp lưu trữ hàng ngày',
   'view.storage.captured_files_list': 'Danh sách tệp được chụp',
@@ -406,6 +407,8 @@ export default {
   'view.user.device': 'Modules hệ thống',
   'view.user.category_management': 'Quản lý danh mục',
   'view.user.change_password': 'Đổi mật khẩu',
+  'view.user.old_password': 'Mật khẩu cũ',
+  'view.user.confirm_password': 'Xác thực mật khẩu',
   'view.user.scan': 'Quét Camera',
   'view.user.log_out': 'Đăng xuất',
   'view.user.user_group': '{G} {u}',
@@ -481,6 +484,7 @@ export default {
   'view.user.detail_list.128_characters_limit': 'Giới hạn 128 ký tự',
   'view.user.detail_list.password': 'Mật khẩu',
   'view.user.detail_list.password_length': 'Mật khẩu phải có trên 8 kí tự',
+  'view.user.detail_list.pass_length': 'Mật khẩu phải có từ 4 kí tự',
   'view.user.detail_list.add_new_group': '{add} {g} mới',
   'view.user.detail_list.group_name': 'Tên {g}',
   'view.user.detail_list.enter_group_name': '{plsEnter} tên {g}',
@@ -882,6 +886,9 @@ export default {
   'noti.save_live_camera_successfully': 'Lưu camera trực tuyến thành công',
   'noti.update_live_camera_successfully': 'Cập nhật camera trực tuyến thành công',
   'noti.delete_live_camera_successfully': 'Xóa camera trực tuyến thành công',
+  'noti.change_password': 'Đổi mật khẩu thành công',
+  'noti.fail.change_password': 'Mật khẩu mới phải khác với mật khẩu cũ',
+  'noti.fail.change_pass': 'Mật khẩu cũ không đúng',
   //breadcrumd
   'breadcrumd.report': 'Quản lý báo cáo',
   'breadcrumd.info': 'Thông tin cá nhân',
