@@ -1,4 +1,4 @@
-import { Tabs } from 'antd';
+import { Button, Tabs } from 'antd';
 import styled from 'styled-components';
 import { FormattedMessage } from 'umi';
 
@@ -36,4 +36,11 @@ export const StyledLive = styled.div`
   .ant-pro-page-container {
     flex-grow: 1 !important;
   }
+`;
+
+export const StyledButtonFullScreen = styled(Button)`
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 20px;
+  padding: 5px 10px;
 `;
