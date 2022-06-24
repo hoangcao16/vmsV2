@@ -118,34 +118,35 @@ function VideoPlayer({
         diskId: row.diskId,
       };
 
-      DailyArchiveApi.checkPermissionForViewOnline(playbackPermissionReq)
-        .then((checkPerRes) => {
-          const playReq = {
-            fileAbsName: row.pathFile,
-            domain: row.domain,
-            userId: user.user_uuid,
-            token: checkPerRes.payload.token,
-          };
+      const checkPerRes = await DailyArchiveApi.checkPermissionForViewOnline(playbackPermissionReq);
 
-          return DailyArchiveApi.playSingleFile(checkPerRes.playbackUrl, playReq);
-        })
-        .then((res) => {
-          let videoSrc =
-            'http://10.0.0.63:18602/playback1' + '/play/hls/' + res.payload.reqUuid + '/index.m3u8';
-          // let videoSrc = checkPerRes.playbackUrl + '/play/hls/' + payload.reqUuid + '/index.m3u8';
-          setDownloadFileName(row.name);
-          setDuration(row.length);
-          setFileCurrent({ ...row, tableName: 'event_file' });
-          setPlayerReady(true);
-          setPlayerSrc(videoSrc);
-          playHandler('default');
-        })
-        .catch((e) => {
-          console.log(e);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      if (checkPerRes) {
+        const playReq = {
+          fileAbsName: row.pathFile,
+          domain: row.domain,
+          userId: user.user_uuid,
+          token: checkPerRes.payload.token,
+        };
+
+        DailyArchiveApi.playSingleFile(checkPerRes.payload.playbackUrl, playReq)
+          .then((res) => {
+            const videoSrc =
+              checkPerRes.payload.playbackUrl + '/play/hls/' + res.payload.reqUuid + '/index.m3u8';
+
+            setDownloadFileName(row.name);
+            setDuration(row.length);
+            setFileCurrent({ ...row, tableName: 'event_file' });
+            setPlayerReady(true);
+            setPlayerSrc(videoSrc);
+            playHandler('default');
+          })
+          .catch((e) => {
+            console.log(e);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
     }
   };
 
@@ -335,9 +336,7 @@ function VideoPlayer({
           const data = await DailyArchiveApi.playSingleFile(checkPerRes.playbackUrl, playReq);
           const payload = data.payload;
           if (payload) {
-            let videoSrc =
-              'http://10.0.0.63:18602/playback1' + '/play/hls/' + payload.reqUuid + '/index.m3u8';
-            // let videoSrc = checkPerRes.playbackUrl + '/play/hls/' + payload.reqUuid + '/index.m3u8';
+            let videoSrc = checkPerRes.playbackUrl + '/play/hls/' + payload.reqUuid + '/index.m3u8';
             setDownloadFileName(file.name);
             setDuration(file.length);
             setFileCurrent({ ...file, tableName: 'file' });
