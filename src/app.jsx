@@ -41,18 +41,18 @@ export async function getInitialState() {
   };
 }
 export const layout = ({ initialState, setInitialState }) => {
-  const app = getDvaApp();
-  const state = app?._store?.getState();
-  console.log(window.g_app);
-  const isFullScreen = state?.globalstore?.isFullScreen;
-  console.log(isFullScreen);
+  // const app = getDvaApp();
+  // const state = app?._store?.getState();
+  // console.log(window.g_app);
+  // const isFullScreen = state?.globalstore?.isFullScreen;
+  // console.log(isFullScreen);
   return {
-    rightContentRender: isFullScreen ? false : () => <RightContent />,
+    rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
       content: initialState?.currentUser?.name || 'VMS',
     },
-    footerRender: isFullScreen ? false : () => <Footer />,
+    footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
 

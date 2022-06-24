@@ -86,7 +86,10 @@ const PlaybackControl = ({ dispatch, isPlay, selectedCamera }) => {
   };
 
   const handleChangeSpeedCamera = (value) => {
-    console.log(value);
+    dispatch({
+      type: 'live/saveSpeedVideo',
+      payload: value,
+    });
   };
   const handlePlay = () => {
     if (selectedCamera?.data?.uuid && selectedCamera?.data?.uuid !== '') {

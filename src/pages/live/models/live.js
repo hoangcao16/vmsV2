@@ -12,6 +12,7 @@ export default {
       gridType: GRID1X1,
       name: '',
     },
+    speedVideo: 1,
   },
   reducers: {
     saveAvailableList(state, { payload }) {
@@ -22,6 +23,9 @@ export default {
     },
     saveCurrentSeekTime(state, { payload }) {
       return { ...state, currentSeekTime: payload };
+    },
+    saveSpeedVideo(state, { payload }) {
+      return { ...state, speedVideo: payload };
     },
     closeCamera(state, { payload }) {
       const { uuid } = payload;

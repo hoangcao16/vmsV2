@@ -28,6 +28,7 @@ const CameraSlot = ({
   selectedCamera,
   isPlay,
   slotIndex,
+  speedVideo,
 }) => {
   const [loading, setLoading] = useState(false);
   const [noData, setNodata] = useState(false);
@@ -77,6 +78,7 @@ const CameraSlot = ({
       selectedCamera?.data?.uuid === camera?.uuid &&
       selectedCamera?.index === slotIndex
     ) {
+      setPrevTime(currentSeekTime);
       videoRef.current?.pause();
     }
   }, [isPlay]);
@@ -85,7 +87,6 @@ const CameraSlot = ({
       cameraUuid: uuid,
       startTime: moment(seekTime).unix(),
     };
-    setPrevTime(seekTime);
     try {
       const data = await CameraApi.checkPermissionForViewPlayback(playbackPermissionReq);
       if (data) {
@@ -301,7 +302,11 @@ const CameraSlot = ({
       startRecording();
     }
   };
-
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = speedVideo;
+    }
+  }, [speedVideo]);
   const startRecording = async () => {
     clearInterval(timerRef.current);
     try {
@@ -631,6 +636,7 @@ const mapStateToProps = (state) => {
     currentSeekTime: state?.live?.currentSeekTime,
     selectedCamera: state?.playMode?.selectedCamera,
     isPlay: state?.playMode?.isPlay,
+    speedVideo: state?.live?.speedVideo,
   };
 };
 
