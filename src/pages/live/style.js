@@ -30,14 +30,6 @@ export const StyledTabs = styled(Tabs)`
     justify-content: end;
   }
 `;
-
-export const StyledLive = styled.div`
-  display: flex;
-  .ant-pro-page-container {
-    flex-grow: 1 !important;
-  }
-`;
-
 export const StyledButtonFullScreen = styled(Button)`
   position: fixed;
   bottom: 0;

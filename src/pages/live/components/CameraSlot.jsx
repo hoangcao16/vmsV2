@@ -34,6 +34,7 @@ const CameraSlot = ({
   const [isRecording, setIsRecording] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [zoomIn, setZoomIn] = useState(false);
+  const [prevTime, setPrevTime] = useState(currentSeekTime);
   const [currentPlaybackTime, setCurrentPlaybackTime] = useState(moment().subtract(1, 'h').unix());
   const videoRef = useRef(null);
   const peerRef = useRef(null);
@@ -65,7 +66,18 @@ const CameraSlot = ({
       selectedCamera?.data?.uuid === camera?.uuid &&
       selectedCamera?.index === slotIndex
     ) {
-      playBackCamera(camera?.uuid, currentSeekTime);
+      if (prevTime === currentSeekTime) {
+        videoRef.current?.play();
+      } else {
+        playBackCamera(camera?.uuid, currentSeekTime);
+      }
+    } else if (
+      screen?.mode === 'play' &&
+      !isPlay &&
+      selectedCamera?.data?.uuid === camera?.uuid &&
+      selectedCamera?.index === slotIndex
+    ) {
+      videoRef.current?.pause();
     }
   }, [isPlay]);
   const playBackCamera = async (uuid, seekTime) => {
@@ -73,6 +85,7 @@ const CameraSlot = ({
       cameraUuid: uuid,
       startTime: moment(seekTime).unix(),
     };
+    setPrevTime(seekTime);
     try {
       const data = await CameraApi.checkPermissionForViewPlayback(playbackPermissionReq);
       if (data) {
@@ -121,7 +134,6 @@ const CameraSlot = ({
           videoRef.current.controls = false;
           videoRef.current.style = 'display:block;';
           videoRef.current.style.display = 'block';
-          // dispatch(setPlaybackHls(cameraSlot));
           return;
         }
       }

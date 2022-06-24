@@ -1,9 +1,8 @@
 import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import { PageLoading, SettingDrawer } from '@ant-design/pro-layout';
-import { getDvaApp, history } from 'umi';
-
 import 'react-phone-number-input/style.css';
+import { getDvaApp, history } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 import { IntlGlobalProvider } from './components/IntlGlobalProvider';
 import AuthZApi from './services/authz/AuthZApi';
@@ -41,15 +40,19 @@ export async function getInitialState() {
     settings: defaultSettings,
   };
 }
-
 export const layout = ({ initialState, setInitialState }) => {
+  const app = getDvaApp();
+  const state = app?._store?.getState();
+  console.log(window.g_app);
+  const isFullScreen = state?.globalstore?.isFullScreen;
+  console.log(isFullScreen);
   return {
-    rightContentRender: () => <RightContent />,
+    rightContentRender: isFullScreen ? false : () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
       content: initialState?.currentUser?.name || 'VMS',
     },
-    footerRender: () => <Footer />,
+    footerRender: isFullScreen ? false : () => <Footer />,
     onPageChange: () => {
       const { location } = history;
 

@@ -1,14 +1,11 @@
 import MSCustomizeDrawer from '@/components/Drawer';
-import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
-import { Button, Form, Row, Col, Input, Space } from 'antd';
-import { useIntl } from 'umi';
-import { connect } from 'dva';
-import ChangePass from '@/services/changepassword/ChangePasswordAPI';
 import { notify } from '@/components/Notify';
+import ChangePass from '@/services/changepassword/ChangePasswordAPI';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Input, Row, Space } from 'antd';
+import { connect } from 'dva';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import React, { useState } from 'react';
-import { v4 as uuidV4 } from 'uuid';
-import { fromPairs } from 'lodash';
+import { useIntl } from 'umi';
 function ChangePassword({ openDrawer, onClose }) {
   const intl = useIntl();
   const [form] = Form.useForm();

@@ -18,6 +18,7 @@ export default {
     provincesOptions: [],
     fieldsOptions: [],
     layoutCollapsed: false,
+    isFullScreen: false,
   },
 
   reducers: {
@@ -65,6 +66,9 @@ export default {
     },
     saveFields(state, { payload }) {
       return { ...state, fieldsOptions: payload };
+    },
+    saveIsFullScreen(state, { payload }) {
+      return { ...state, isFullScreen: payload };
     },
   },
 

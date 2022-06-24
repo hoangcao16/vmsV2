@@ -126,6 +126,7 @@ const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
             })
             .then((res) => {
               if (res && pc) {
+                console.log(pc);
                 pc.setRemoteDescription(res.payload);
               } else {
                 console.log('Failed');
