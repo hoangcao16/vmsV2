@@ -30,7 +30,7 @@ export default {
         });
       } catch (error) {}
     },
-    *closeDrawerAddEditPreset({ payload: {} }, { put }) {
+    *closeDrawerAddEditPreset({ payload }, { put }) {
       try {
         yield put({
           type: 'handleCloseDrawerAddEditPreset',
@@ -46,7 +46,7 @@ export default {
         });
       } catch (error) {}
     },
-    *closeDrawerDetailsPreset({ payload: {} }, { put }) {
+    *closeDrawerDetailsPreset({ payload }, { put }) {
       try {
         yield put({
           type: 'handleCloseDrawerDetailsPreset',

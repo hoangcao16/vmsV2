@@ -278,12 +278,14 @@ const CameraSlot = ({
 
   const closeCamera = () => {
     stopRecording();
+    const html = document.querySelector('html');
 
     if (videoRef.current) {
       videoRef.current.pause();
       videoRef.current.srcObject = null;
       videoRef.current.innerHTML = null;
       videoRef.current.style = 'display:none;';
+      html.style.removeProperty('overflow');
     }
     peerRef.current?.close();
 

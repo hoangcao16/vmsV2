@@ -23,7 +23,7 @@ export default {
         });
       } catch (error) {}
     },
-    *closeDrawerAddEditPresetTour({ payload: {} }, { put }) {
+    *closeDrawerAddEditPresetTour({ payload }, { put }) {
       try {
         yield put({
           type: 'closeDrawerAddEditPresetTour',
