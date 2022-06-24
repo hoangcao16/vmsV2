@@ -1,0 +1,134 @@
+.pieContainer {
+    height: 150px;
+    position: relative;
+  }
+  
+  .pie {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
+    clip: rect(0px, 75px, 150px, 0px);
+  
+    &--right {
+      position: absolute;
+      top: 17%;
+      left: 20%;
+      transform: translate(-50%, -50%);
+      transform: rotate(-135deg);
+    }
+  
+    &--bottom {
+      position: absolute;
+      top: 17%;
+      left: 20%;
+      transform: translate(-50%, -50%);
+      transform: rotate(-225deg);
+    }
+  
+    &--left {
+      position: absolute;
+      top: 17%;
+      left: 20%;
+      transform: translate(-50%, -50%);
+      transform: rotate(-315deg);
+    }
+  
+    &--top {
+      position: absolute;
+      top: 17%;
+      left: 20%;
+      transform: translate(-50%, -50%);
+      transform: rotate(-45deg);
+    }
+  }
+  
+  .hold {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
+    clip: rect(0px, 150px, 150px, 75px);
+  }
+  
+  #pieSlice1 {
+    transform: rotate(45deg);
+    margin-left: 5px;
+  }
+  
+  #pieSlice1 .pie {
+    top: 10;
+    background-color: #444;
+    transform: rotate(90deg);
+  }
+  
+  #pieSlice2 {
+    transform: rotate(135deg);
+    margin-top: 5px;
+  }
+  
+  #pieSlice2 .pie {
+    background-color: #444;
+    transform: rotate(90deg);
+  }
+  
+  #pieSlice3 {
+    transform: rotate(225deg);
+    margin-left: -5px;
+  }
+  
+  #pieSlice3 .pie {
+    background-color: #444;
+    transform: rotate(90deg);
+  }
+  
+  #pieSlice4 {
+    transform: rotate(315deg);
+    margin-top: -5px;
+  }
+  
+  #pieSlice4 .pie {
+    background-color: #444;
+    transform: rotate(90deg);
+  }
+  
+  .wrapper-inner-circle {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background-color: rgb(28, 25, 25);
+    border-radius: 100%;
+    top: 40px;
+    left: 40px;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5) inset;
+  }
+  
+  .inner-circle {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: 5px;
+    left: 5px;
+    background-color: #444;
+    border-radius: 100%;
+    border: 2px solid rgb(214, 214, 214);
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5) inset;
+    color: white;
+  }
+  
+  .inner-circle .inner-circle-content {
+    position: absolute;
+    display: block;
+    width: 60px;
+    height: 60px;
+    left: -2px;
+    text-align: center;
+    font-size: 10px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+  
+    &--number {
+      font-size: 14px;
+    }
+  }

@@ -14,6 +14,7 @@ const CameraSlotControl = ({
   onRecord,
   onClose,
   mode,
+  showPresetSetting,
   zoomIn,
   onZoom,
   ...props
@@ -63,9 +64,11 @@ const CameraSlotControl = ({
               {zoomIn ? <TbArrowsDiagonalMinimize size={16} /> : <TbArrowsDiagonal size={16} />}
             </StyledIcon>
           </Tooltip>
-          <StyledIcon>
-            <AiOutlineSetting size={16} />
-          </StyledIcon>
+          <Tooltip title={intl.formatMessage({ id: 'view.live.preset_setting' })} placement="left">
+            <StyledIcon onClick={showPresetSetting}>
+              <AiOutlineSetting size={16} />
+            </StyledIcon>
+          </Tooltip>
           <Tooltip placement="left" title={intl.formatMessage({ id: 'view.live.close_camera' })}>
             <StyledIcon onClick={onClose}>
               <FiX size={16} />

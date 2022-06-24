@@ -9,20 +9,19 @@ import { useEffect, useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { BsArrowsFullscreen, BsFullscreenExit } from 'react-icons/bs';
 import { connect, FormattedMessage } from 'umi';
-
 import ActionGrid from './components/ActionGrid';
 import CameraList from './components/CameraList';
 import FavoriteList from './components/FavoriteList';
 import GridPanel from './components/GridPanel';
 import PlaybackControl from './components/player/PlaybackControl';
 import SaveFavorite from './components/SaveFavorite';
+import SettingPresetDrawer from './components/SettingPresetDrawer';
 import { StyledButtonFullScreen, StyledTabs, StyledTag, StyledText } from './style';
 
-const Live = ({ availableList, screen, dispatch, list }) => {
+const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFullScreen }) => {
   const [visibleCameraList, setVisibleCameraList] = useState(false);
   const [visibleFavoriteList, setVisibleFavoriteList] = useState(false);
   const [visibleSaveFavorite, setVisibleSaveFavorite] = useState(false);
-  const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
     fetchDefaultScreen();
@@ -155,6 +154,9 @@ const Live = ({ availableList, screen, dispatch, list }) => {
     });
   };
 
+  const handleCloseDrawer = () => {
+    dispatch({ type: 'live/closeDrawerSettingCamera' });
+  };
   const handleChangeFullScreen = () => {
     dispatch({
       type: 'globalstore/saveIsFullScreen',
@@ -223,6 +225,12 @@ const Live = ({ availableList, screen, dispatch, list }) => {
             onClose={() => setVisibleCameraList(false)}
           />
         </DragDropContext>
+        {showPresetSetting && (
+          <SettingPresetDrawer
+            showPresetSetting={showPresetSetting}
+            onCloseDrawer={handleCloseDrawer}
+          />
+        )}
         <Tooltip
           placement="topLeft"
           title={
@@ -263,13 +271,14 @@ const Live = ({ availableList, screen, dispatch, list }) => {
 };
 
 const mapStateToProps = ({ live, globalstore, favorite }) => {
-  const { availableList = [], screen = {} } = live;
+  const { availableList = [], screen = {}, showPresetSetting = false } = live;
   const { isFullScreen } = globalstore;
   const { list } = favorite;
   return {
     availableList,
     screen,
     isFullScreen,
+    showPresetSetting,
     list,
   };
 };
