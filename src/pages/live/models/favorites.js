@@ -32,6 +32,21 @@ export default {
       }
     },
 
+    *add({ values }, { call, put }) {
+      try {
+        yield call(bookmarkService.create, values);
+        notify('success', 'noti.success', 'noti.successfully_add');
+
+        yield put({ type: 'reload' });
+      } catch (error) {
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
+      }
+    },
+
     *update({ payload: { id, values } }, { call, put }) {
       try {
         yield call(bookmarkService.update, id, values);
@@ -51,6 +66,21 @@ export default {
       try {
         yield call(bookmarkService.delete, id);
         notify('success', 'noti.success', 'noti.delete_successful');
+
+        yield put({ type: 'reload' });
+      } catch (error) {
+        notify(
+          'error',
+          'pages.setting-user.list-user.titleErrors',
+          `pages.setting-user.list-user.${error?.code}`,
+        );
+      }
+    },
+
+    *setDefault({ id }, { call, put }) {
+      try {
+        yield call(bookmarkService.setDefault, id);
+        notify('success', 'noti.success', 'noti.setting_default_screen');
 
         yield put({ type: 'reload' });
       } catch (error) {

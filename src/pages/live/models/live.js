@@ -10,6 +10,7 @@ export default {
       mode: 'live',
       grids: [],
       gridType: GRID1X1,
+      name: '',
     },
   },
   reducers: {

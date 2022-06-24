@@ -15,11 +15,14 @@ import CameraList from './components/CameraList';
 import FavoriteList from './components/FavoriteList';
 import GridPanel from './components/GridPanel';
 import PlaybackControl from './components/player/PlaybackControl';
-import { StyledButtonFullScreen, StyledTabs, StyledText } from './style';
+import SaveFavorite from './components/SaveFavorite';
+import { StyledButtonFullScreen, StyledTabs, StyledTag, StyledText } from './style';
 
-const Live = ({ availableList, screen, dispatch, isFullScreen }) => {
+const Live = ({ availableList, screen, dispatch, list }) => {
   const [visibleCameraList, setVisibleCameraList] = useState(false);
   const [visibleFavoriteList, setVisibleFavoriteList] = useState(false);
+  const [visibleSaveFavorite, setVisibleSaveFavorite] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
     fetchDefaultScreen();
@@ -32,7 +35,7 @@ const Live = ({ availableList, screen, dispatch, isFullScreen }) => {
 
   const initScreen = async (screen) => {
     if (screen) {
-      const { cameraUuids = [], gridType, viewTypes = [] } = screen;
+      const { cameraUuids = [], gridType, viewTypes = [], name = '' } = screen;
       const cameraNameWithUuids = {};
 
       const { payload } = await cameraService.searchCamerasWithUuids({
@@ -58,6 +61,7 @@ const Live = ({ availableList, screen, dispatch, isFullScreen }) => {
           mode: 'live',
           grids: grids,
           gridType: gridType,
+          name: name,
         },
       });
     } else {
@@ -67,6 +71,7 @@ const Live = ({ availableList, screen, dispatch, isFullScreen }) => {
           mode: 'live',
           grids: initEmptyGrid(1),
           gridType: GRID1X1,
+          name: '',
         },
       });
     }
@@ -79,6 +84,7 @@ const Live = ({ availableList, screen, dispatch, isFullScreen }) => {
         ...screen,
         grids: initEmptyGrid(getGrid(gridType)),
         gridType: gridType,
+        name: '',
       },
     });
   };
@@ -108,6 +114,7 @@ const Live = ({ availableList, screen, dispatch, isFullScreen }) => {
         type: 'live/saveScreen',
         payload: {
           ...screen,
+          name: '',
         },
       });
     } else {
@@ -119,6 +126,7 @@ const Live = ({ availableList, screen, dispatch, isFullScreen }) => {
         type: 'live/saveScreen',
         payload: {
           ...screen,
+          name: '',
         },
       });
     }
@@ -158,11 +166,7 @@ const Live = ({ availableList, screen, dispatch, isFullScreen }) => {
     <>
       <PageContainer
         extra={[
-          <Button
-            key="2"
-            icon={<HeartOutlined />}
-            onClick={() => setVisibleFavoriteList(!visibleFavoriteList)}
-          >
+          <Button key="2" icon={<HeartOutlined />} onClick={() => setVisibleFavoriteList(true)}>
             <StyledText id="pages.live-mode.list.favorite" />
           </Button>,
           <Button
@@ -180,8 +184,17 @@ const Live = ({ availableList, screen, dispatch, isFullScreen }) => {
           tabBarExtraContent={{
             right: [
               <>
+                {screen?.name !== '' && (
+                  <StyledTag icon={<SaveOutlined />} color="#292929">
+                    {screen?.name}
+                  </StyledTag>
+                )}
                 <Space size={16}>
-                  <Button icon={<SaveOutlined />} type="primary">
+                  <Button
+                    icon={<SaveOutlined />}
+                    type="primary"
+                    onClick={() => setVisibleSaveFavorite(true)}
+                  >
                     <StyledText id="pages.live-mode.action.save-favorite" />
                   </Button>
                   <ActionGrid grid={screen.gridType} onChange={changeScreen} />
@@ -231,18 +244,33 @@ const Live = ({ availableList, screen, dispatch, isFullScreen }) => {
         title={<FormattedMessage id="pages.live-mode.list.favorite" />}
         visible={visibleFavoriteList}
         onClose={() => setVisibleFavoriteList(false)}
+        initScreen={initScreen}
+        screen={screen}
       />
+      {visibleSaveFavorite && (
+        <SaveFavorite
+          visible={visibleSaveFavorite}
+          onClose={() => {
+            setVisibleSaveFavorite(false);
+          }}
+          dispatch={dispatch}
+          list={list}
+          screen={screen}
+        />
+      )}
     </>
   );
 };
 
-const mapStateToProps = ({ live, globalstore }) => {
+const mapStateToProps = ({ live, globalstore, favorite }) => {
   const { availableList = [], screen = {} } = live;
   const { isFullScreen } = globalstore;
+  const { list } = favorite;
   return {
     availableList,
     screen,
     isFullScreen,
+    list,
   };
 };
 

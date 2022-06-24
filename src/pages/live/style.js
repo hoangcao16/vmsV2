@@ -1,4 +1,4 @@
-import { Button, Tabs } from 'antd';
+import { Button, Tabs, Tag } from 'antd';
 import styled from 'styled-components';
 import { FormattedMessage } from 'umi';
 
@@ -12,6 +12,7 @@ export const StyledText = styled(Text)``;
 
 export const StyledTabs = styled(Tabs)`
   .ant-tabs-nav {
+    position: relative;
     padding: 16px;
     background-color: #1f1f1f;
   }
@@ -35,4 +36,20 @@ export const StyledButtonFullScreen = styled(Button)`
   bottom: 0;
   margin-bottom: 20px;
   padding: 5px 10px;
+`;
+
+export const StyledTag = styled(Tag)`
+  box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.043);
+  border-radius: 2px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 5px 16px;
+  .anticon svg {
+    font-size: 14px;
+  }
+  span {
+    font-size: 14px;
+  }
 `;
