@@ -99,7 +99,7 @@ const UserList = ({
   const columns = [
     {
       title: intl.formatMessage({
-        id: 'pages.setting-user.list-user.list',
+        id: 'pages.setting-user.list-user.name',
       }),
       dataIndex: 'name',
       render: (text) => {
@@ -115,6 +115,14 @@ const UserList = ({
         id: 'pages.setting-user.list-user.phone',
       }),
       dataIndex: 'phone',
+    },
+    {
+      title: intl.formatMessage({ id: 'view.user.detail_list.position' }),
+      dataIndex: 'position',
+    },
+    {
+      title: intl.formatMessage({ id: 'view.user.detail_list.unit' }),
+      dataIndex: 'unit',
     },
     {
       title: intl.formatMessage({

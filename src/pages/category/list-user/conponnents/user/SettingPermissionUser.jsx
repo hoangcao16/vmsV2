@@ -3,7 +3,7 @@ import { STORAGE } from '@/constants/common';
 import { Col, Form, Radio, Row, Select } from 'antd';
 import { connect } from 'dva';
 import { isEmpty } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 
 function SettingPermissionUser({
@@ -97,7 +97,7 @@ function SettingPermissionUser({
                     form.setFieldsValue({
                       permissionBy: e.target.value,
                     });
-
+                    console.log(e.target.value);
                     setValue(e.target.value);
                   }}
                   value={value}
@@ -153,7 +153,7 @@ function SettingPermissionUser({
                 <Form.Item
                   name={['role_uuid']}
                   label={intl.formatMessage({
-                    id: 'pages.setting-user.list-user.group-user',
+                    id: 'pages.setting-user.list-user.role',
                   })}
                 >
                   <Select
@@ -190,8 +190,8 @@ function mapStateToProps(state) {
     loading: state.loading.models.userSettingData,
     listAllRole,
     listAllUserGroup,
-    rolesOfUser: rolesOfUser.map((r) => r.role_uuid),
-    groupsOfUser: groupsOfUser.map((r) => r.group_uuid),
+    rolesOfUser: rolesOfUser?.map((r) => r.role_uuid),
+    groupsOfUser: groupsOfUser?.map((r) => r.group_uuid),
   };
 }
 
