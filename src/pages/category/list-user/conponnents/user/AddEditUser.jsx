@@ -10,30 +10,18 @@ import {
   PlusOutlined,
   SaveOutlined,
 } from '@ant-design/icons';
-import {
-  Button,
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  Popconfirm,
-  Radio,
-  Row,
-  Space,
-  Tabs,
-  Tooltip,
-} from 'antd';
+import { Button, Col, DatePicker, Form, Input, Radio, Row, Space, Tabs, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useIntl } from 'umi';
 import { v4 as uuidV4 } from 'uuid';
 import './AddEditUser.less';
 import TableCameraPermission from './camera-table/TableCameraPermission';
 import TableGroupCameraPermission from './group-camera-table/TableGroupCameraPermission';
 import SettingPermissionUser from './SettingPermissionUser';
-import { StyledDragger } from './style';
+import { StyledDragger, StyledPopconfirm } from './style';
 const { TabPane } = Tabs;
 
 const TABS_SELECTED = {
@@ -62,6 +50,11 @@ function AddEditUser({
   );
   const [keyActive, setKeyActive] = useState(TABS_SELECTED.INFO);
   const [isLoading, setLoading] = useState(false);
+
+  const disabledDate = (current) => {
+    // Can not select days before today and today
+    return current && current > moment().endOf('day');
+  };
 
   const uploadButton = (
     <div>
@@ -161,15 +154,16 @@ function AddEditUser({
             </Button>
 
             {!isEmpty(selectedRecord) && permissionCheck('delete_user') && (
-              <Popconfirm
+              <StyledPopconfirm
+                style={{ width: '300px' }}
                 title={intl.formatMessage({
                   id: 'pages.setting-user.list-user.delete-confirm',
                 })}
                 onConfirm={() => {
                   handleDeleteUser(selectedRecord?.uuid);
                 }}
-                cancelText="Cancel"
-                okText="Ok"
+                cancelText={intl.formatMessage({ id: 'view.penaltyTicket.cancel-a-ticket' })}
+                okText={intl.formatMessage({ id: 'view.common_device.agree' })}
               >
                 <Tooltip
                   placement="top"
@@ -183,7 +177,7 @@ function AddEditUser({
                     {intl.formatMessage({ id: 'pages.setting-user.list-user.delete' })}
                   </Button>
                 </Tooltip>
-              </Popconfirm>
+              </StyledPopconfirm>
             )}
           </Space>
         }
@@ -327,16 +321,9 @@ function AddEditUser({
                         ({ getFieldValue }) => ({
                           validator(rule, value) {
                             const valiValue = getFieldValue(['phone']);
-                            if (!valiValue.length) {
-                              return Promise.reject(
-                                intl.formatMessage({
-                                  id: 'pages.setting-user.list-user.require',
-                                }),
-                              );
-                            }
 
                             if (!valiValue.startsWith('0')) {
-                              if (valiValue.length < 9) {
+                              if (valiValue.length < 9 && valiValue.length > 0) {
                                 return Promise.reject(new Error('Tối thiểu 9 ký tự'));
                               } else if (valiValue.length > 19) {
                                 return Promise.reject(new Error('Tối đa 19 ký tự'));
@@ -353,7 +340,8 @@ function AddEditUser({
                           },
                         }),
                         {
-                          required: intl.formatMessage({
+                          required: true,
+                          message: intl.formatMessage({
                             id: 'pages.setting-user.list-user.require',
                           }),
                         },
@@ -382,6 +370,7 @@ function AddEditUser({
                         inputReadOnly={true}
                         format={dateFormat}
                         style={{ width: '100%' }}
+                        disabledDate={disabledDate}
                       />
                     </Form.Item>
                   </Col>
@@ -399,21 +388,23 @@ function AddEditUser({
                       <Input autoComplete="new-password" />
                     </MSFormItem>
                   </Col>
-                  <Col span={24}>
-                    <MSFormItem
-                      label={intl.formatMessage({
-                        id: 'pages.setting-user.list-user.password',
-                      })}
-                      type="input"
-                      name="password"
-                      minLength={8}
-                      maxLength={255}
-                      required={true}
-                      {...layoutLong}
-                    >
-                      <Input type="password" autoComplete="new-password" />
-                    </MSFormItem>
-                  </Col>
+                  {isEmpty(selectedRecord) && (
+                    <Col span={24}>
+                      <MSFormItem
+                        label={intl.formatMessage({
+                          id: 'pages.setting-user.list-user.password',
+                        })}
+                        type="input"
+                        name="password"
+                        minLength={8}
+                        maxLength={255}
+                        required={true}
+                        {...layoutLong}
+                      >
+                        <Input type="password" autoComplete="new-password" />
+                      </MSFormItem>
+                    </Col>
+                  )}
                   <Col span={24}>
                     <MSFormItem
                       {...layoutLong}

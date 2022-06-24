@@ -144,7 +144,7 @@ export default {
         });
 
         localStorage.setItem(STORAGE.USER_UUID_SELECTED, res?.payload?.uuid);
-
+        console.log(111, res);
         notify(
           'success',
           'pages.setting-user.list-user.titleSuccess',
@@ -154,11 +154,11 @@ export default {
         yield put({ type: 'reload' });
       } catch (error) {
         console.log(error);
-        notify(
-          'success',
-          'pages.setting-user.list-user.titleSuccess',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
+        // notify(
+        //   'error',
+        //   'pages.setting-user.list-user.titleErrors',
+        //   `pages.setting-user.list-user.${error?.code}`,
+        // );
       }
     },
 
