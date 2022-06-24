@@ -102,12 +102,51 @@ const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFull
 
     if (source.droppableId === LIVE_MODE.CAMERA_LIST_DROPPABLE_ID) {
       const draggableCam = availableList[source.index];
+
       screen.grids[destination.index] = {
         id: draggableCam.id,
         uuid: draggableCam?.uuid,
         type: 'live',
         name: draggableCam?.name,
       };
+
+      let maxCam = 99;
+
+      if (screen.gridType === GRID1X1) {
+        maxCam = 1;
+      } else if (screen.gridType === GRID2X2) {
+        maxCam = 4;
+      } else if (screen.gridType === GRID3X3) {
+        maxCam = 9;
+      } else if (screen.gridType === GRID4X4) {
+        maxCam = 16;
+      }
+
+      if (screen.grids.length > maxCam) {
+        screen.grids.pop();
+        screen.grids[maxCam - 1] = {
+          id: draggableCam.id,
+          uuid: draggableCam?.uuid,
+          type: 'live',
+          name: draggableCam?.name,
+        };
+
+        dispatch({
+          type: 'live/saveScreen',
+          payload: {
+            ...screen,
+            name: '',
+          },
+        });
+      } else {
+        dispatch({
+          type: 'live/saveScreen',
+          payload: {
+            ...screen,
+            name: '',
+          },
+        });
+      }
 
       dispatch({
         type: 'live/saveScreen',
