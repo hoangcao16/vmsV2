@@ -1,4 +1,5 @@
 import { GRID1X1 } from '@/constants/grid';
+import PTZApi from '@/services/ptz/PTZApi';
 import moment from 'moment';
 
 export default {
@@ -12,6 +13,10 @@ export default {
       gridType: GRID1X1,
       name: '',
     },
+    showPresetSetting: false,
+    cameraSelected: {},
+    listPreset: [],
+    listPresetTour: [],
     speedVideo: 1,
   },
   reducers: {
@@ -46,6 +51,70 @@ export default {
 
       return { ...state, screen: newScreen };
     },
+
+    openDrawerSettingCamera(state, { payload: { cameraSelected, listPreset, listPresetTour } }) {
+      return {
+        ...state,
+        showPresetSetting: true,
+        cameraSelected,
+        listPreset,
+        listPresetTour,
+      };
+    },
+
+    closeDrawerSettingCamera(state) {
+      return {
+        ...state,
+        showPresetSetting: false,
+        cameraSelected: {},
+        listPreset: [],
+        listPresetTour: [],
+      };
+    },
   },
-  effects: {},
+  effects: {
+    *openDrawerSettingCamera({ payload: { camera } }, { call, put, all }) {
+      try {
+        const [dataListPreset, dataListPresetTour] = yield all([
+          call(PTZApi.getAllPreset, {
+            cameraUuid: camera?.uuid,
+            sortType: 'asc',
+            sortField: 'name',
+          }),
+          call(PTZApi.getAllPresetTour, {
+            cameraUuid: camera?.uuid,
+            sortType: 'asc',
+            sortField: 'name',
+          }),
+        ]);
+
+        yield put({
+          type: 'openDrawerSettingCamera',
+          payload: {
+            cameraSelected: camera,
+            listPreset: dataListPreset?.payload?.data,
+            listPresetTour: dataListPresetTour?.payload?.data,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    *addPreset({ payload: { body } }, { call, put, all }) {
+      yield call(PTZApi.postSetPreset, body);
+
+      try {
+        yield put({
+          type: 'reloadOpenDrawerSettingCamera',
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    *reloadOpenDrawerSettingCamera(action, { put, select }) {
+      const camera = yield select((state) => state.live.cameraSelected || {});
+      yield put({ type: 'openDrawerSettingCamera', payload: { camera } });
+    },
+  },
 };

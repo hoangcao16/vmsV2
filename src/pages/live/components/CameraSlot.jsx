@@ -15,7 +15,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { connect, FormattedMessage } from 'umi';
 import { v4 as uuidv4 } from 'uuid';
-
 import CameraSlotControl, { ListControl } from './CameraSlotControl';
 
 const CameraSlot = ({
@@ -37,6 +36,7 @@ const CameraSlot = ({
   const [zoomIn, setZoomIn] = useState(false);
   const [prevTime, setPrevTime] = useState(currentSeekTime);
   const [currentPlaybackTime, setCurrentPlaybackTime] = useState(moment().subtract(1, 'h').unix());
+
   const videoRef = useRef(null);
   const peerRef = useRef(null);
   const timerRef = useRef(null);
@@ -418,6 +418,13 @@ const CameraSlot = ({
     }
   };
 
+  const handleShowPresetSetting = () => {
+    dispatch({
+      type: 'live/openDrawerSettingCamera',
+      payload: { camera },
+    });
+  };
+
   const captureCamera = async () => {
     try {
       const { blob, tBlob } = captureVideoFrame(videoRef.current, null, 'jpeg');
@@ -511,6 +518,7 @@ const CameraSlot = ({
             mode={screen.mode}
             zoomIn={zoomIn}
             onZoom={zoomCamera}
+            showPresetSetting={handleShowPresetSetting}
           />
           <StyledCameraBottom>
             <StyledCameraName>{camera.name}</StyledCameraName>
@@ -545,7 +553,6 @@ const StyledCameraSlot = styled.div`
   width: 100%;
   height: 100%;
   transition: all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
-
   &:hover {
     cursor: pointer !important;
 

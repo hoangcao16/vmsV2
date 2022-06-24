@@ -2,6 +2,22 @@ import { Button, Tabs, Tag } from 'antd';
 import styled from 'styled-components';
 import { FormattedMessage } from 'umi';
 
+import MSCustomizeDrawer from '@/components/Drawer';
+
+export const StyledDrawer = styled(MSCustomizeDrawer)`
+  .ant-drawer-header {
+    flex-direction: row-reverse;
+  }
+
+  .ant-drawer-header-title {
+    flex: none;
+  }
+  .ant-drawer-body {
+    width: 100%;
+    padding-top: 15px;
+  }
+`;
+
 const Text = (props) => (
   <span>
     <FormattedMessage {...props} />

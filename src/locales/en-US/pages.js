@@ -204,6 +204,10 @@ export default {
   'page.live-mode.action.view-fullscreen': 'View full screen',
   'page.live-mode.action.exit-view-fullscreen': 'Exit full screen view',
   'pages.live-mode.speed': 'Speed',
+
+  // Preset
+
+  'pages.live-mode.list.setting-camera': 'Setting camera',
   'pages.live-mode.action.save-favorite': 'Save as favorite screen',
   'pages.live-mode.action.add-favorite': 'Update to favorite screen list',
   'pages.live-mode.noti.name-favorite': 'Successfully edited favorite screen name',

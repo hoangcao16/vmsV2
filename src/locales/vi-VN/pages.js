@@ -201,6 +201,10 @@ export default {
   'page.live-mode.action.view-fullscreen': 'Xem toàn màn hình',
   'page.live-mode.action.exit-view-fullscreen': 'Thoát xem toàn màn hình',
   'pages.live-mode.speed': 'Tốc độ xem',
+
+  // Preset
+
+  'pages.live-mode.list.setting-camera': 'Cài đặt camera',
   'pages.live-mode.action.save-favorite': 'Lưu thành màn hình ưa thích',
   'pages.live-mode.action.add-favorite': 'Cập nhật vào danh sách màn hình yêu thích',
   'pages.live-mode.action.edit-favorite': 'Chỉnh sửa tên màn hình yêu thích',
