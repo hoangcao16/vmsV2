@@ -38,7 +38,13 @@ const CameraSlotControl = ({
         <ListControl className={props.className} zoomIn={zoomIn}>
           <Permission permissionName="capture_video_cam">
             <Tooltip placement="left" title={intl.formatMessage({ id: 'view.user.record' })}>
-              <StyledIcon isRecording={isRecording} onClick={onRecord}>
+              <StyledIcon
+                isRecording={isRecording}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRecord();
+                }}
+              >
                 <FiVideo size={16} />
               </StyledIcon>
             </Tooltip>
@@ -48,7 +54,12 @@ const CameraSlotControl = ({
               placement="left"
               title={intl.formatMessage({ id: 'view.storage.capture_snapshot' })}
             >
-              <StyledIcon onClick={onCapture}>
+              <StyledIcon
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onCapture();
+                }}
+              >
                 <FiCamera size={16} />
               </StyledIcon>
             </Tooltip>
@@ -60,17 +71,32 @@ const CameraSlotControl = ({
               id: zoomIn ? 'view.live.view_zoom_out' : 'view.live.view_fullscreen',
             })}
           >
-            <StyledIcon onClick={onZoom}>
+            <StyledIcon
+              onClick={(e) => {
+                e.stopPropagation();
+                onZoom();
+              }}
+            >
               {zoomIn ? <TbArrowsDiagonalMinimize size={16} /> : <TbArrowsDiagonal size={16} />}
             </StyledIcon>
           </Tooltip>
           <Tooltip title={intl.formatMessage({ id: 'view.live.preset_setting' })} placement="left">
-            <StyledIcon onClick={showPresetSetting}>
+            <StyledIcon
+              onClick={(e) => {
+                e.stopPropagation();
+                showPresetSetting();
+              }}
+            >
               <AiOutlineSetting size={16} />
             </StyledIcon>
           </Tooltip>
           <Tooltip placement="left" title={intl.formatMessage({ id: 'view.live.close_camera' })}>
-            <StyledIcon onClick={onClose}>
+            <StyledIcon
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
+            >
               <FiX size={16} />
             </StyledIcon>
           </Tooltip>

@@ -96,17 +96,22 @@ const CameraSlot = ({
           token: data.token,
         };
         // const payload = await camProxyService.playbackCamera(data.playbackUrl, startReq);
-        const payload = await camProxyService.playbackCamera(
-          'http://10.0.0.63:18602/playback1',
-          startReq,
-        );
+        const payload = await camProxyService.playbackCamera(data.playbackUrl, startReq);
+        console.log(payload);
         if (payload === null) return;
         // const videoSrc = data.playbackUrl + '/play/hls/' + payload.reqUuid + '/index.m3u8';
         const videoSrc =
-          'http://10.0.0.63:18602/playback1' + '/play/hls/' + payload.reqUuid + '/index.m3u8';
+          data.playbackUrl + '/play/hls/' + payload?.payload?.reqUuid + '/index.m3u8';
         if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
           videoRef.current.src = videoSrc;
         } else if (Hls.isSupported()) {
+          console.log('hehe');
+          if (camera.hls) {
+            camera.hls.destroy();
+          } else {
+            console.log(camera);
+          }
+          videoRef.current.srcObject = null;
           camera.hls = new Hls({
             autoStartLoad: true,
             startPosition: -1,
@@ -383,7 +388,7 @@ const CameraSlot = ({
           violationTime: startTime,
           createdTime: Date.now(),
           note: '',
-          cameraUuid: uuid,
+          cameraUuid: camera?.uuid,
           cameraName: camera.name,
           type: 0,
           length: payload.length,
@@ -444,7 +449,7 @@ const CameraSlot = ({
           violationTime: violationTime,
           createdTime: createdTime,
           note: '',
-          cameraUuid: uuid,
+          cameraUuid: camera?.uuid,
           cameraName: camera.name,
           type: 1,
           length: 0,
