@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import { LIVE_MODE } from '@/constants/common';
 import cameraApi from '@/services/controllerApi/cameraService';
 import { CloseOutlined, FilterFilled, LoadingOutlined } from '@ant-design/icons';

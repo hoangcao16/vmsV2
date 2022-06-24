@@ -1,6 +1,5 @@
-import { Drawer } from 'antd';
-import React from 'react';
 import { CloseOutlined } from '@ant-design/icons';
+import { Drawer } from 'antd';
 import styled from 'styled-components';
 
 function CustomCloseIcon() {
@@ -15,6 +14,7 @@ export default function MSCustomizeDrawer(props) {
       destroyOnClose={true}
       zIndex={zIndex}
       closeIcon={closeIcon || <CustomCloseIcon />}
+      getContainer={false}
       {...rest}
       // minWidth={'100%'}
     >

@@ -379,7 +379,6 @@ function mapStateToProps(state) {
   const { type } = state.maps;
 
   return {
-    loading: state.loading.models.filterCamera,
     provincesOptions,
     tagsOptions,
     adDivisionsOptions,

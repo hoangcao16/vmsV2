@@ -119,14 +119,14 @@ const PlaybackControl = ({ dispatch, isPlay, selectedCamera }) => {
           </StyledText>
           <TimePicker onChange={onTimeChange} value={seekToTime} locale={locale} />
         </StyledSpace>
-        <StyledSpace justifyContent="center" size={25}>
+        <StyledSpace justifycontent="center" size={25}>
           <StyledControlButton
             icon={<BackwardOutlined />}
             shape="circle"
             onClick={() => handleSeek(-5)}
           />
           <StyledControlButton
-            playButton
+            playbtn="playBtn"
             icon={isPlay ? <PauseOutlined /> : <CaretRightOutlined />}
             shape="circle"
             onClick={() => handlePlay()}
@@ -152,7 +152,7 @@ const PlaybackControl = ({ dispatch, isPlay, selectedCamera }) => {
         </StyledRightControl>
       </StyledTopControl>
       <SeekControl
-        ref={seekControlRef}
+        refSeek={seekControlRef}
         isPlay={isPlay}
         onChange={setSeekTime}
         seekDateTime={seekDateTime}
@@ -175,7 +175,7 @@ const StyledTopControl = styled.div`
 
 const StyledSpace = styled(Space)`
   flex: 1;
-  justify-content: ${(prop) => prop.justifyContent || 'start'};
+  justify-content: ${(prop) => prop.justifycontent || 'start'};
 `;
 
 const StyledText = styled.p`
@@ -196,7 +196,7 @@ const StyledControlButton = styled(Button)`
   }
 
   ${(prop) =>
-    prop.playButton &&
+    prop.playbtn === 'playBtn' &&
     `
       &.ant-btn-icon-only {
       width: 48px;
