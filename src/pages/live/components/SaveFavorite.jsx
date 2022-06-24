@@ -5,43 +5,50 @@ import { Button, Card, Col, Form, Input, Row, Space } from 'antd';
 import styled from 'styled-components';
 import { useIntl } from 'umi';
 
-const EditNameFavorite = ({ visible, onClose, selectedRecord, list, dispatch, screen }) => {
+const SaveFavorite = ({ visible, onClose, list, dispatch, screen }) => {
   const intl = useIntl();
   const [form] = Form.useForm();
+  const { gridType, grids } = screen;
+
+  const getCameraUuids = (grids) => {
+    let gridUuids = [];
+    let gridEmpty = [];
+    grids.map((item) => {
+      gridUuids.push(item.uuid);
+    });
+    for (let index = grids.length; index < 16; index++) {
+      gridEmpty.push('');
+    }
+    return [...gridUuids, ...gridEmpty];
+  };
 
   const handleSubmit = () => {
-    const value = form.getFieldValue().name;
+    const value = form.getFieldValue('name');
+    const cameraUuids = getCameraUuids(grids);
+    const viewTypes = grids.map((item) => {
+      return item?.uuid === '' ? '' : 'live';
+    });
     const data = Object.assign({
-      id: selectedRecord?.uuid,
-      cameraUuids: selectedRecord?.cameraUuids,
+      cameraUuids: cameraUuids,
       name: value,
-      // defaultBookmark: selectedRecord?.defaultBookmark,
-      gridType: selectedRecord?.gridType,
-      viewTypes: selectedRecord?.viewTypes,
+      gridType: gridType,
+      viewTypes: viewTypes,
     });
 
     dispatch({
-      type: 'favorite/update',
-      payload: { id: selectedRecord?.uuid, values: data },
+      type: 'favorite/add',
+      values: data,
     });
-    if (selectedRecord?.name === screen?.name) {
-      dispatch({
-        type: 'live/saveScreen',
-        payload: {
-          ...screen,
-          name: value,
-        },
-      });
-    }
-
     onClose();
   };
 
   return (
     <StyledDrawer
       visible={visible}
-      onClose={onClose}
-      width={350}
+      onClose={() => {
+        onClose();
+      }}
+      width={450}
       zIndex={1001}
       placement="right"
       extra={
@@ -56,15 +63,19 @@ const EditNameFavorite = ({ visible, onClose, selectedRecord, list, dispatch, sc
             <SaveOutlined />
             {intl.formatMessage({ id: 'view.map.button_save' })}
           </Button>
-          <Button onClick={onClose}>
+          <Button
+            onClick={() => {
+              onClose();
+            }}
+          >
             <CloseOutlined />
             {intl.formatMessage({ id: 'view.map.cancel' })}
           </Button>
         </Space>
       }
     >
-      <Card title={intl.formatMessage({ id: 'pages.live-mode.action.edit-favorite' })}>
-        <Form layout="vertical" form={form} onFinish={handleSubmit} initialValues={selectedRecord}>
+      <Card title={intl.formatMessage({ id: 'pages.live-mode.action.add-favorite' })}>
+        <Form layout="vertical" form={form} onFinish={handleSubmit}>
           <Row gutter={24}>
             <Col span={24}>
               <MSFormItem
@@ -76,8 +87,7 @@ const EditNameFavorite = ({ visible, onClose, selectedRecord, list, dispatch, sc
                 rules={[
                   () => ({
                     validator(_, value) {
-                      const listFilter = list.filter((item) => item?.uuid !== selectedRecord?.uuid);
-                      const checkName = listFilter.some((item) => item?.name === value);
+                      const checkName = list.some((item) => item?.name === value);
 
                       if (checkName) {
                         return Promise.reject(
@@ -119,4 +129,4 @@ export const StyledDrawer = styled(MSCustomizeDrawer)`
   }
 `;
 
-export default EditNameFavorite;
+export default SaveFavorite;
