@@ -18,11 +18,7 @@ const DailyArchiveApi = {
   },
 
   playSingleFile: (baseUrl, jsonBody) => {
-    return request.post(
-      'http://10.0.0.63:18602/playback1' + `/v1/playback/playSingleFile`,
-      jsonBody,
-    );
-    // return request.post(baseUrl + `/v1/playback/playSingleFile`, jsonBody);
+    return request.post(baseUrl + `/v1/playback/playSingleFile`, jsonBody);
   },
 };
 
