@@ -1,12 +1,11 @@
 import { Card } from 'antd';
-import React from 'react';
 import styled from 'styled-components';
 import { useIntl } from 'umi';
 
 const CustomCard = styled(Card)`
   &.ant-card {
     color: white;
-    background-color: ${(prop) => prop?.backgroundColor};
+    background-color: ${(prop) => prop?.bgColor};
     border-radius: 10px;
   }
 `;
@@ -24,7 +23,7 @@ const CardInfo = styled.div`
 export default function CameraStatisticsItem(props) {
   const intl = useIntl();
   return (
-    <CustomCard backgroundColor={props?.color}>
+    <CustomCard bgColor={props?.color}>
       <CardTitle>
         {intl.formatMessage({
           id: `pages.report.cameraStatistics.${props.cameraName}`,
