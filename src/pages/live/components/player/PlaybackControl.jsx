@@ -1,4 +1,5 @@
 /* eslint-disable react/no-array-index-key */
+import { notify } from '@/components/Notify';
 import {
   BackwardOutlined,
   CaretRightOutlined,
@@ -14,7 +15,7 @@ import styled from 'styled-components';
 import { connect, FormattedMessage } from 'umi';
 import SeekControl from './SeekControl';
 
-const PlaybackControl = ({ dispatch, isPlay }) => {
+const PlaybackControl = ({ dispatch, isPlay, selectedCamera }) => {
   const [time, setTime] = useState(Date.now());
   const [seekTime, setSeekTime] = useState(moment());
   const [seekToDate, setSeekToDate] = useState(null);
@@ -86,12 +87,16 @@ const PlaybackControl = ({ dispatch, isPlay }) => {
 
   const handleChangeSpeedCamera = (value) => {
     console.log(value);
-    }
+  };
   const handlePlay = () => {
-    dispatch({
-      type: 'playMode/saveIsPlay',
-      payload: !isPlay,
-    });
+    if (selectedCamera?.data?.uuid && selectedCamera?.data?.uuid !== '') {
+      dispatch({
+        type: 'playMode/saveIsPlay',
+        payload: !isPlay,
+      });
+    } else {
+      notify('error', 'noti.ERROR', 'error.CAMERA_ID_MISSING');
+    }
   };
   return (
     <StyledPlaybackControl>
@@ -201,6 +206,7 @@ const StyledSelectSpeed = styled(Select)`
 const mapStateToProps = (state) => {
   return {
     isPlay: state?.playMode?.isPlay,
+    selectedCamera: state?.playMode?.selectedCamera,
   };
 };
 export default connect(mapStateToProps)(PlaybackControl);

@@ -1,11 +1,10 @@
 import MSCustomizeDrawer from '@/components/Drawer';
-import { CloseOutlined, RedoOutlined } from '@ant-design/icons';
-import { Button, Form, Row, Col, Input, Space } from 'antd';
-import { useIntl, FormattedMessage } from 'umi';
-import { connect } from 'dva';
-import React, { useState } from 'react';
 import { notify } from '@/components/Notify';
 import ResetPassword from '@/services/resetPassword/ResetPasswordAPI';
+import { CloseOutlined, RedoOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Space } from 'antd';
+import { connect } from 'dva';
+import { FormattedMessage, useIntl } from 'umi';
 import { CardNote, CardTitle } from './style';
 
 function ForgotPassword({ openDrawer, onClose }) {

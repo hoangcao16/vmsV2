@@ -1,8 +1,8 @@
 import { STORAGE } from '@/constants/common';
 import AuthZApi from '@/services/authz/AuthZApi';
-import { LogoutOutlined, EditOutlined } from '@ant-design/icons';
+import { EditOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { history, useIntl, useModel } from 'umi';
 import HeaderDropdown from '../Header/HeaderDropdown';
 import ChangePasswordUser from './ChangePasswordUser';

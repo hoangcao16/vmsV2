@@ -15,12 +15,11 @@ import CameraList from './components/CameraList';
 import FavoriteList from './components/FavoriteList';
 import GridPanel from './components/GridPanel';
 import PlaybackControl from './components/player/PlaybackControl';
-import { StyledButtonFullScreen, StyledLive, StyledTabs, StyledText } from './style';
+import { StyledButtonFullScreen, StyledTabs, StyledText } from './style';
 
-const Live = ({ availableList, screen, dispatch }) => {
+const Live = ({ availableList, screen, dispatch, isFullScreen }) => {
   const [visibleCameraList, setVisibleCameraList] = useState(false);
   const [visibleFavoriteList, setVisibleFavoriteList] = useState(false);
-  const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
     fetchDefaultScreen();
@@ -149,11 +148,14 @@ const Live = ({ availableList, screen, dispatch }) => {
   };
 
   const handleChangeFullScreen = () => {
-    setIsFullScreen(!isFullScreen);
+    dispatch({
+      type: 'globalstore/saveIsFullScreen',
+      payload: !isFullScreen,
+    });
   };
 
   return (
-    <StyledLive>
+    <>
       <PageContainer
         extra={[
           <Button
@@ -213,7 +215,7 @@ const Live = ({ availableList, screen, dispatch }) => {
           title={
             <FormattedMessage
               id={
-                isFullScreen
+                !isFullScreen
                   ? 'page.live-mode.action.view-fullscreen'
                   : 'page.live-mode.action.exit-view-fullscreen'
               }
@@ -221,7 +223,7 @@ const Live = ({ availableList, screen, dispatch }) => {
           }
         >
           <StyledButtonFullScreen onClick={handleChangeFullScreen}>
-            {isFullScreen ? <BsArrowsFullscreen /> : <BsFullscreenExit />}
+            {!isFullScreen ? <BsArrowsFullscreen /> : <BsFullscreenExit />}
           </StyledButtonFullScreen>
         </Tooltip>
       </PageContainer>
@@ -230,16 +232,17 @@ const Live = ({ availableList, screen, dispatch }) => {
         visible={visibleFavoriteList}
         onClose={() => setVisibleFavoriteList(false)}
       />
-    </StyledLive>
+    </>
   );
 };
 
-const mapStateToProps = ({ live }) => {
+const mapStateToProps = ({ live, globalstore }) => {
   const { availableList = [], screen = {} } = live;
-
+  const { isFullScreen } = globalstore;
   return {
     availableList,
     screen,
+    isFullScreen,
   };
 };
 
