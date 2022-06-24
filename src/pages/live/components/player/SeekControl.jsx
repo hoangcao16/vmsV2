@@ -11,7 +11,7 @@ const BAR_MINUTES = 6;
 const MARK_BAR_WIDTH = 4;
 const MINUTES_PER_PIXEL_RATIO = BAR_WIDTH / BAR_MINUTES;
 
-const SeekControl = forwardRef(({ onChange, isPlay, seekDateTime }, ref) => {
+const SeekControl = forwardRef(({ onChange, isPlay, seekDateTime }, refSeek) => {
   const dispatch = useDispatch();
   const containerRef = useRef(null);
   const contentRef = useRef(null);
@@ -30,7 +30,7 @@ const SeekControl = forwardRef(({ onChange, isPlay, seekDateTime }, ref) => {
       setCurrentSeekTime(seekDateTime);
     }
   }, [seekDateTime]);
-  useImperativeHandle(ref, () => ({
+  useImperativeHandle(refSeek, () => ({
     handleSeek: handleSeek,
   }));
 

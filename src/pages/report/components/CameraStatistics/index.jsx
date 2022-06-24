@@ -1,7 +1,7 @@
 import cameraApi from '@/services/camera/CameraApi';
 import { Col, Row } from 'antd';
 import { isEmpty } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import CameraStatisticsItem from './CameraStatisticsItem';
 
 const topColResponsiveProps = {
@@ -56,9 +56,9 @@ const CameraStatistics = () => {
 
   return (
     <Row gutter={24}>
-      {camera.map((c) => {
+      {camera.map((c, index) => {
         return (
-          <Col {...topColResponsiveProps}>
+          <Col {...topColResponsiveProps} key={index}>
             <CameraStatisticsItem
               key={c?.cameraName}
               cameraName={c?.cameraName}

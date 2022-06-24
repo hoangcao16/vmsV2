@@ -5,7 +5,7 @@ import cameraService from '@/services/controllerApi/cameraService';
 import { HeartOutlined, OrderedListOutlined, SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Space, Tooltip } from 'antd';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { BsArrowsFullscreen, BsFullscreenExit } from 'react-icons/bs';
 import { connect, FormattedMessage } from 'umi';
@@ -98,7 +98,6 @@ const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFull
 
   const onDragEnd = ({ destination, source }) => {
     if (!destination || !source) return;
-    console.log(screen);
 
     if (source.droppableId === LIVE_MODE.CAMERA_LIST_DROPPABLE_ID) {
       const draggableCam = availableList[source.index];
@@ -168,7 +167,7 @@ const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFull
     <>
       <PageContainer
         extra={[
-          <Button key="2" icon={<HeartOutlined />} onClick={() => setVisibleFavoriteList(true)}>
+          <Button key="0" icon={<HeartOutlined />} onClick={() => setVisibleFavoriteList(true)}>
             <StyledText id="pages.live-mode.list.favorite" />
           </Button>,
           <Button
@@ -185,7 +184,7 @@ const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFull
           onChange={handleChangeMode}
           tabBarExtraContent={{
             right: [
-              <>
+              <React.Fragment key="right">
                 {screen?.name !== '' && (
                   <StyledTag icon={<SaveOutlined />} color="#292929">
                     {screen?.name}
@@ -201,7 +200,7 @@ const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFull
                   </Button>
                   <ActionGrid grid={screen.gridType} onChange={changeScreen} />
                 </Space>
-              </>,
+              </React.Fragment>,
             ],
           }}
         >
