@@ -37,6 +37,18 @@ const PTZApi = {
   postSetPreset: async (data) => {
     return request.post(`/ptz-ctrl/api/v1/set-preset`, data);
   },
+
+  postSetPresetTour: async (data) => {
+    return request.post(`/ptz-ctrl/api/v1/set-preset-tour`, data);
+  },
+
+  deletePreset: async (data) => {
+    return request.post(`/ptz-ctrl/api/v1/delete-preset`, data);
+  },
+
+  deletePresetTour: async (data) => {
+    return request.post(`/ptz-ctrl/api/v1/delete-preset-tour`, data);
+  },
 };
 
 export default PTZApi;

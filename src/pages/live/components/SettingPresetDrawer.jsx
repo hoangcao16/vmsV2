@@ -1,20 +1,17 @@
 import {
-  CloseOutlined,
-  FullscreenOutlined,
-  SaveOutlined,
-  SettingOutlined,
-  SwapOutlined,
+  FullscreenOutlined, SettingOutlined,
+  SwapOutlined
 } from '@ant-design/icons';
 import TabPane from '@ant-design/pro-card/lib/components/TabPane';
-import { Button, Divider, Space, Tabs } from 'antd';
-import React, { useState } from 'react';
+import { Divider, Tabs } from 'antd';
+import { connect } from 'dva';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useIntl } from 'umi';
+import { StyledDrawer } from '../style';
+import PressetSetting from './setting-camera/PressetSetting';
 import PressetView from './setting-camera/PressetView';
 import TabsContentRender from './setting-camera/TabsContentRender';
-import { StyledDrawer } from '../style';
-import { connect } from 'dva';
-import PressetSetting from './setting-camera/PressetSetting';
 
 export const TABS = {
   SETTING: '1',
@@ -37,25 +34,6 @@ function SettingPresetDrawer({ showPresetSetting, onCloseDrawer, cameraSelected 
       width={'100%'}
       zIndex={1001}
       placement="right"
-      // extra={
-      //   <Space>
-      //     <Button
-      //       type="primary"
-      //       htmlType="submit"
-      //       onClick={() => {
-      //         // form.submit();
-      //       }}
-      //     >
-      //       <SaveOutlined />
-      //       {intl.formatMessage({ id: 'view.map.button_save' })}
-      //     </Button>
-
-      //     <Button onClick={onCloseDrawer}>
-      //       <CloseOutlined />
-      //       {intl.formatMessage({ id: 'view.map.cancel' })}
-      //     </Button>
-      //   </Space>
-      // }
     >
       <h3> {intl.formatMessage({ id: 'pages.live-mode.list.setting-camera' })}</h3>
       <h4>{cameraSelected?.name}</h4>
@@ -127,6 +105,9 @@ const StyledTabs = styled(Tabs)`
     width: 25%;
     .ant-tabs-tab {
       padding: 20px 0 0 0;
+    }
+    .ant-tabs-tab.ant-tabs-tab-active {
+      /* background-color: red; */
     }
   }
 `;

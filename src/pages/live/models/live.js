@@ -112,6 +112,18 @@ export default {
       }
     },
 
+    *addPresetTour({ payload: { body } }, { call, put, all }) {
+      yield call(PTZApi.postSetPresetTour, body);
+
+      try {
+        yield put({
+          type: 'reloadOpenDrawerSettingCamera',
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     *reloadOpenDrawerSettingCamera(action, { put, select }) {
       const camera = yield select((state) => state.live.cameraSelected || {});
       yield put({ type: 'openDrawerSettingCamera', payload: { camera } });
