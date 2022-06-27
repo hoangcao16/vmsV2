@@ -1,6 +1,6 @@
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
 import PTZApi from '@/services/ptz/PTZApi';
-import { Radio, Select } from 'antd';
+import { Form, Radio, Select } from 'antd';
 import { connect } from 'dva';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -20,8 +20,11 @@ function PressetView({
   inDrawer = false,
 }) {
   const [value, setValue] = useState(TYPE.PRESET);
+  const [form] = Form.useForm();
 
   const onChangeType = (e) => {
+    form.resetFields();
+
     setValue(e.target.value);
   };
 
@@ -50,7 +53,7 @@ function PressetView({
   return (
     <>
       <CameraContent>
-        {!isEmpty(cameraSelected) && <CameraSlot camera={cameraSelected} />}
+        {!isEmpty(cameraSelected) && <CameraSlot camera={cameraSelected} inPresetView />}
       </CameraContent>
 
       {tabActive === TABS.SETTING && (
@@ -62,27 +65,29 @@ function PressetView({
               <Radio value={TYPE.PRESET_TOUR}>Preset tour</Radio>
             </Radio.Group>
           </PaddingContent>
-          {value === TYPE.PRESET ? (
-            <SelectStyled
-              dataSource={listPreset}
-              onChange={(presetId) => onChangePreset(presetId)}
-              filterOption={filterOption}
-              options={normalizeOptions('name', 'idPreset', listPreset)}
-              allowClear
-              defaultValue=""
-              id="idPreset"
-            />
-          ) : (
-            <SelectStyled
-              defaultValue=""
-              dataSource={listPresetTour}
-              onChange={(presetTourId) => onChangePresetTour(presetTourId)}
-              filterOption={filterOption}
-              options={normalizeOptions('name', 'idPresetTour', listPresetTour)}
-              allowClear
-              id="idPresetTour"
-            />
-          )}
+          <Form layout="horizontal" form={form} initialValues={{}}>
+            {value === TYPE.PRESET ? (
+              <Form.Item name="idPreset">
+                <SelectStyled
+                  dataSource={listPreset}
+                  onChange={(presetId) => onChangePreset(presetId)}
+                  filterOption={filterOption}
+                  options={normalizeOptions('name', 'idPreset', listPreset)}
+                  allowClear
+                />
+              </Form.Item>
+            ) : (
+              <Form.Item name="idPresetTour">
+                <SelectStyled
+                  dataSource={listPresetTour}
+                  onChange={(presetTourId) => onChangePresetTour(presetTourId)}
+                  filterOption={filterOption}
+                  options={normalizeOptions('name', 'idPresetTour', listPresetTour)}
+                  allowClear
+                />
+              </Form.Item>
+            )}
+          </Form>
         </>
       )}
       {tabActive === TABS.CONTROL && (

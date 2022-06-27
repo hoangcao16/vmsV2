@@ -2,20 +2,19 @@ import { SpanCode } from '@/pages/category/camera/components/GroupCameraDrawer/s
 import { EyeOutlined } from '@ant-design/icons';
 import { Space, Table } from 'antd';
 import { connect } from 'dva';
-import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useIntl } from 'umi';
 import AddEditPresetTour from './preset-tour/AddEditPresetTour';
+import DetailsPresetTour from './preset-tour/DetailsPresetTour';
 function TablePresetTour({
   cameraSelected,
   listPreset,
   listPresetTour,
   dispatch,
   showDrawerAddEditPresetTour,
+  loading,
+  showDrawerDetailsPresetTour,
 }) {
-  const [openAdd, setOpenAdd] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
-
   const intl = useIntl();
 
   const handleShowAddEditPresetTour = () => {
@@ -69,13 +68,28 @@ function TablePresetTour({
   return (
     <div>
       <Table
+        loading={loading}
         columns={columns}
         dataSource={listPresetTour}
         pagination={{ pageSize: 10 }}
         title={() => <HeaderPresetTour />}
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: (event) => {
+              dispatch({
+                type: 'showPresetTourDrawer/handleShowDrawerDetailsPresetTour',
+                payload: { selectedPresetTour: record },
+              });
+            }, // click row
+          };
+        }}
       />
       {showDrawerAddEditPresetTour && (
         <AddEditPresetTour showDrawerAddEditPresetTour={showDrawerAddEditPresetTour} />
+      )}
+
+      {showDrawerDetailsPresetTour && (
+        <DetailsPresetTour showDrawerDetailsPresetTour={showDrawerDetailsPresetTour} />
       )}
     </div>
   );
@@ -88,14 +102,16 @@ const StyledHeader = styled.div`
 `;
 
 function mapStateToProps(state) {
-  const { listPreset, listPresetTour } = state.live;
+  const { listPreset, listPresetTour, loading } = state.live;
 
-  const { showDrawerAddEditPresetTour } = state.showPresetTourDrawer;
+  const { showDrawerAddEditPresetTour, showDrawerDetailsPresetTour } = state.showPresetTourDrawer;
 
   return {
     listPreset,
     listPresetTour,
     showDrawerAddEditPresetTour,
+    loading,
+    showDrawerDetailsPresetTour,
   };
 }
 

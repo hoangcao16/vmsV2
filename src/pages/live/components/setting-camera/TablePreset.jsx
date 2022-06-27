@@ -1,5 +1,4 @@
 import { SpanCode } from '@/pages/category/camera/components/GroupCameraDrawer/style';
-import { EyeOutlined } from '@ant-design/icons';
 import { Space, Table } from 'antd';
 import { connect } from 'dva';
 import { useState } from 'react';
@@ -13,13 +12,14 @@ function TablePreset({
   listPresetTour,
   dispatch,
   showDrawerAddEditPreset,
+  showDrawerDetailsPreset,
+  loading,
 }) {
   const [openDetailsPreset, setOpenDetailsPreset] = useState(false);
 
   const intl = useIntl();
 
   const handleShowAddEditPreset = () => {
-    console.log('showDrawerAddEditPreset');
     dispatch({ type: 'showDrawer/openDrawerAddEditPreset', payload: { selectedPreset: null } });
   };
 
@@ -66,22 +66,29 @@ function TablePreset({
 
   return (
     <div>
-      {' '}
       <Table
+        loading={loading}
         columns={columns}
         dataSource={listPreset}
         pagination={{ pageSize: 10 }}
         title={() => <HeaderPreset />}
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: (event) => {
+              dispatch({
+                type: 'showDrawer/handleShowDrawerDetailsPreset',
+                payload: { selectedPreset: record },
+              });
+            }, // click row
+          };
+        }}
       />
       {showDrawerAddEditPreset && (
         <AddEditPreset showDrawerAddEditPreset={showDrawerAddEditPreset} />
       )}
-      {/* {openDetailsPreset && (
-        <DetailsPreset
-          openDetailsPreset={openDetailsPreset}
-          onCloseDrawerDetails={handleCloseAddDetailsPreset}
-        />
-      )} */}
+      {showDrawerDetailsPreset && (
+        <DetailsPreset showDrawerDetailsPreset={showDrawerDetailsPreset} />
+      )}
     </div>
   );
 }
@@ -93,15 +100,17 @@ const StyledHeader = styled.div`
 `;
 
 function mapStateToProps(state) {
-  const { cameraSelected, listPreset, listPresetTour } = state.live;
+  const { cameraSelected, listPreset, listPresetTour, loading } = state.live;
 
-  const { showDrawerAddEditPreset } = state.showDrawer;
+  const { showDrawerAddEditPreset, showDrawerDetailsPreset } = state.showDrawer;
 
   return {
     cameraSelected,
     listPreset,
     listPresetTour,
     showDrawerAddEditPreset,
+    showDrawerDetailsPreset,
+    loading,
   };
 }
 

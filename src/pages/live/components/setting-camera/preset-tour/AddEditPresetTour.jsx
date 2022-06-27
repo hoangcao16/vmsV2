@@ -1,10 +1,10 @@
 import { StyledDrawer } from '@/components/LiveFullScreen/style';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
-import { CloseOutlined, MenuOutlined, SaveOutlined } from '@ant-design/icons';
+import { CloseOutlined, DeleteOutlined, MenuOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Popconfirm, Select, Space, Table } from 'antd';
 import { arrayMoveImmutable } from 'array-move';
 import { connect } from 'dva';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import styled from 'styled-components';
 import { useIntl } from 'umi';
@@ -31,18 +31,10 @@ const AddEditPresetTour = ({
   cameraSelected,
   dispatch,
 }) => {
-  console.log('listPreset', listPreset);
-  console.log('cameraSelected', cameraSelected);
   const intl = useIntl();
   const [form] = Form.useForm();
-  console.log('form', form.getFieldsValue());
-
-  const [dataSource, setDataSource] = useState(data);
+  const [dataSource, setDataSource] = useState(selectedPresetTour?.listPoint ?? []);
   const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    console.log('dataSource', dataSource);
-  }, [dataSource]);
 
   const columns = [
     {
@@ -61,7 +53,7 @@ const AddEditPresetTour = ({
           defaultValue={record.name}
           dataSource={listPreset}
           filterOption={filterOption}
-          options={normalizeOptions('name', 'idPreset', listPreset)}
+          options={normalizeOptions('name', 'name', listPreset)}
           onChange={(e) => handleOnChange('name', index, e)}
         />
       ),
@@ -88,15 +80,14 @@ const AddEditPresetTour = ({
       title: 'operation',
       dataIndex: 'operation',
       render: (_, record, index) => (
-        <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.index)}>
-          <a>Delete</a>
+        <Popconfirm title="Bạn chắc chắn muốn xóa?" onConfirm={() => handleDelete(record.index)}>
+          <DeleteOutlined />
         </Popconfirm>
       ),
     },
   ];
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    console.log('aaaaaa', oldIndex, newIndex);
     if (oldIndex !== newIndex) {
       const newData = arrayMoveImmutable(dataSource.slice(), oldIndex, newIndex).filter(
         (el) => !!el,
@@ -146,8 +137,17 @@ const AddEditPresetTour = ({
   };
 
   const handleOnChange = (key, index, e) => {
-    const newSource = [...dataSource];
+    let newSource = [...dataSource];
+
+    if (key === 'name') {
+      const choosePreset = listPreset.find((preset) => preset?.name === e);
+      const presetId = choosePreset?.idPreset;
+      newSource[index]['idPreset'] = presetId;
+    }
+
     newSource[index][key] = e;
+    newSource[index]['speed'] = 1;
+
     setDataSource(newSource);
   };
 
@@ -155,17 +155,29 @@ const AddEditPresetTour = ({
     <StyledDrawer
       openDrawer={showDrawerAddEditPresetTour}
       onClose={handleCloseDrawerAddEdit}
-      width={'100%'}
+      width={'80%'}
       zIndex={1001}
       placement="right"
       extra={
         <Space>
           <Button
             type="primary"
-            htmlType="submit"
             onClick={() => {
-              form.submit();
-              console.log('form', form.getFieldsValue());
+              const values = form.getFieldValue();
+
+              const body = {
+                ...values,
+                cameraUuid: cameraSelected?.uuid,
+                idPresetTour: selectedPresetTour?.idPresetTour ?? '',
+                listPoint: [...dataSource],
+              };
+
+              dispatch({
+                type: 'live/addPresetTour',
+                payload: { body },
+              });
+
+              dispatch({ type: 'showPresetTourDrawer/closeDrawerAddEditPresetTour', payload: {} });
             }}
           >
             <SaveOutlined />
@@ -181,9 +193,9 @@ const AddEditPresetTour = ({
     >
       <Wrapper>
         <span>Tên Preset tour:</span>
-        <Form form={form} initialValues={{ presetTourName: '' }}>
-          <Form.Item name="presetTourName">
-            <Input />
+        <Form form={form} initialValues={selectedPresetTour ?? {}}>
+          <Form.Item name="name">
+            <Input required />
           </Form.Item>
         </Form>
         <TableWrapper>
@@ -225,7 +237,6 @@ function mapStateToProps(state) {
   const { listPreset } = state?.live;
   const { cameraSelected } = state.live;
   const { selectedPresetTour } = state?.showPresetTourDrawer;
-  console.log('state', state);
   return { listPreset, selectedPresetTour, cameraSelected };
 }
 

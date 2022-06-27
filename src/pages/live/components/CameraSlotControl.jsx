@@ -80,16 +80,21 @@ const CameraSlotControl = ({
               {zoomIn ? <TbArrowsDiagonalMinimize /> : <TbArrowsDiagonal />}
             </StyledIcon>
           </Tooltip>
-          <Tooltip title={intl.formatMessage({ id: 'view.live.preset_setting' })} placement="left">
-            <StyledIcon
-              onClick={(e) => {
-                e.stopPropagation();
-                showPresetSetting();
-              }}
+          <Permission permissionName="setup_preset">
+            <Tooltip
+              title={intl.formatMessage({ id: 'view.live.preset_setting' })}
+              placement="left"
             >
-              <AiOutlineSetting />
-            </StyledIcon>
-          </Tooltip>
+              <StyledIcon
+                onClick={(e) => {
+                  e.stopPropagation();
+                  showPresetSetting();
+                }}
+              >
+                <AiOutlineSetting />
+              </StyledIcon>
+            </Tooltip>
+          </Permission>
           <Tooltip placement="left" title={intl.formatMessage({ id: 'view.live.close_camera' })}>
             <StyledIcon
               onClick={(e) => {

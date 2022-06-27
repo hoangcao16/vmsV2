@@ -1,4 +1,4 @@
-import { CloseOutlined, SaveOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Divider, Space } from 'antd';
 import styled from 'styled-components';
 import { useIntl } from 'umi';
@@ -14,42 +14,62 @@ export const TABS = {
   CONTROL: '3',
 };
 
-function DetailsPreset({ openDetailsPreset, onCloseDrawerDetails, cameraSelected }) {
+function DetailsPreset({ showDrawerDetailsPreset, selectedPreset, cameraSelected, dispatch }) {
   const intl = useIntl();
+
+  const handleCloseDetailsPreset = () => {
+    dispatch({ type: 'showDrawer/closeDrawerDetailsPreset' });
+  };
+  const handleDeletePreset = () => {
+    const body = {
+      cameraUuid: cameraSelected?.uuid,
+      idPreset: selectedPreset?.idPreset,
+    };
+
+    dispatch({ type: 'showDrawer/deletePreset', payload: { body } });
+  };
 
   return (
     <StyledDrawer
-      openDrawer={openDetailsPreset}
-      onClose={onCloseDrawerDetails}
-      width={'100%'}
+      openDrawer={showDrawerDetailsPreset}
+      onClose={handleCloseDetailsPreset}
+      width={'80%'}
       zIndex={1001}
       placement="right"
       extra={
         <Space>
           <Button
             type="primary"
-            htmlType="submit"
             onClick={() => {
-              // form.submit();
+              dispatch({ type: 'showDrawer/editPreset' });
             }}
           >
-            <SaveOutlined />
-            {intl.formatMessage({ id: 'view.map.button_save' })}
+            <EditOutlined />
+            {intl.formatMessage({ id: 'view.map.button_edit' })}
           </Button>
 
-          <Button onClick={onCloseDrawerDetails}>
-            <CloseOutlined />
-            {intl.formatMessage({ id: 'view.map.cancel' })}
+          <Button onClick={handleDeletePreset}>
+            <DeleteOutlined />
+            {intl.formatMessage({ id: 'view.map.delete' })}
           </Button>
         </Space>
       }
     >
-      <h3> Thêm preset</h3>
-      <h4>{cameraSelected?.name}</h4>
+      <h3> Xem chi tiết preset</h3>
+      <h4>{selectedPreset?.name}</h4>
       <StyledDivider />
 
+      <h4>Tên preset: {selectedPreset?.name}</h4>
+      <h4>Tên Camera: {selectedPreset?.cameraName}</h4>
+      <h4>Ngày tạo: {new Date(selectedPreset?.createdTime).getTime()}</h4>
+      <h4>Người tạo: {selectedPreset?.userName}</h4>
+
+      <StyledDivider />
+
+      <h3>Xem preset:</h3>
+
       <CameraContent>
-        {!isEmpty(cameraSelected) && <CameraSlot camera={cameraSelected} />}
+        {!isEmpty(cameraSelected) && <CameraSlot camera={cameraSelected} inPresetView />}
       </CameraContent>
     </StyledDrawer>
   );
@@ -72,9 +92,11 @@ const StyledDivider = styled(Divider)`
 `;
 
 function mapStateToProps(state) {
+  const { selectedPreset } = state.showDrawer;
   const { cameraSelected } = state.live;
 
   return {
+    selectedPreset,
     cameraSelected,
   };
 }
