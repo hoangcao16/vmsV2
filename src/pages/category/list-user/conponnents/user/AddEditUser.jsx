@@ -10,7 +10,19 @@ import {
   PlusOutlined,
   SaveOutlined,
 } from '@ant-design/icons';
-import { Button, Col, DatePicker, Form, Input, Radio, Row, Space, Tabs, Tooltip } from 'antd';
+import {
+  Button,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  Popconfirm,
+  Radio,
+  Row,
+  Space,
+  Tabs,
+  Tooltip,
+} from 'antd';
 import { connect } from 'dva';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
@@ -21,7 +33,7 @@ import './AddEditUser.less';
 import TableCameraPermission from './camera-table/TableCameraPermission';
 import TableGroupCameraPermission from './group-camera-table/TableGroupCameraPermission';
 import SettingPermissionUser from './SettingPermissionUser';
-import { StyledDragger, StyledPopconfirm } from './style';
+import { StyledDragger } from './style';
 const { TabPane } = Tabs;
 
 const TABS_SELECTED = {
@@ -154,8 +166,7 @@ function AddEditUser({
             </Button>
 
             {!isEmpty(selectedRecord) && permissionCheck('delete_user') && (
-              <StyledPopconfirm
-                style={{ width: '300px' }}
+              <Popconfirm
                 title={intl.formatMessage({
                   id: 'pages.setting-user.list-user.delete-confirm',
                 })}
@@ -177,7 +188,7 @@ function AddEditUser({
                     {intl.formatMessage({ id: 'pages.setting-user.list-user.delete' })}
                   </Button>
                 </Tooltip>
-              </StyledPopconfirm>
+              </Popconfirm>
             )}
           </Space>
         }
