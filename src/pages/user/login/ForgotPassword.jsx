@@ -45,7 +45,7 @@ function ForgotPassword({ openDrawer, onClose }) {
           placement="right"
           extra={
             <Space>
-              <Button type="primary" htmlType="submit" onClick={reset}>
+              <Button type="primary" onClick={reset}>
                 <RedoOutlined />
                 {intl.formatMessage({ id: 'view.pages.recover_pw' })}
               </Button>
