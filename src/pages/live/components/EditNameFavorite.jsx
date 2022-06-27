@@ -28,7 +28,6 @@ const EditNameFavorite = ({ visible, onClose, selectedRecord, list, dispatch, sc
       dispatch({
         type: 'live/saveScreen',
         payload: {
-          ...screen,
           name: value,
         },
       });

@@ -1,15 +1,15 @@
+import { GRID1X1, GRID2X2, GRID3X3, GRID4X4 } from '@/constants/grid';
+import { useEffect, useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import { connect } from 'umi';
 import CameraSlot from './CameraSlot';
 
-const GridPanel = ({ screen, dispatch, selectedCamera }) => {
+const GridPanel = ({ dispatch, selectedCamera, mode, grids, gridType }) => {
+  const [layoutGrid, setLayoutGrid] = useState([]);
   const handleSelectCamera = (index) => {
-    if (screen?.mode === 'play') {
-      if (
-        selectedCamera?.data?.uuid === screen?.grids[index]?.uuid &&
-        selectedCamera?.index === index
-      ) {
+    if (mode === 'play') {
+      if (selectedCamera?.data?.uuid === grids[index]?.uuid && selectedCamera?.index === index) {
         dispatch({
           type: 'playMode/saveSelectedCamera',
           payload: null,
@@ -19,7 +19,7 @@ const GridPanel = ({ screen, dispatch, selectedCamera }) => {
           type: 'playMode/saveSelectedCamera',
           payload: {
             index: index,
-            data: screen?.grids[index],
+            data: grids[index],
           },
         });
       }
@@ -29,13 +29,39 @@ const GridPanel = ({ screen, dispatch, selectedCamera }) => {
       });
     }
   };
+  useEffect(() => {
+    if (gridType) {
+      initEmptyGrid(getGrid(gridType));
+    }
+  }, [gridType]);
+  const getGrid = (gridType) => {
+    switch (gridType) {
+      case GRID1X1:
+        return 1;
+      case GRID2X2:
+        return 4;
+      case GRID3X3:
+        return 9;
+      case GRID4X4:
+        return 16;
+    }
+  };
+  const initEmptyGrid = (number) => {
+    return setLayoutGrid(
+      Array.from(new Array(number)).map((_, index) => ({
+        id: '',
+        uuid: '',
+        name: '',
+      })),
+    );
+  };
   return (
     <StyledGrid>
-      {screen.grids.map((camera, index) => (
+      {layoutGrid.map((camera, index) => (
         <Droppable droppableId={`droppabled-${index}`} key={index}>
           {(dropProvided, dropSnapshot) => (
             <GridItem
-              grid={screen.grids}
+              grid={grids}
               ref={dropProvided.innerRef}
               {...dropProvided.droppableProps}
               onClick={() => handleSelectCamera(index)}
@@ -51,7 +77,7 @@ const GridPanel = ({ screen, dispatch, selectedCamera }) => {
                     <GridItemContent
                       ref={provided.innerRef}
                       data-type={
-                        selectedCamera?.data?.uuid === camera?.uuid &&
+                        selectedCamera?.data?.uuid === grids[index]?.uuid &&
                         selectedCamera?.index === index
                           ? 'selected'
                           : ''
@@ -61,10 +87,10 @@ const GridPanel = ({ screen, dispatch, selectedCamera }) => {
                       style={provided.draggableProps.style}
                       isDragging={snapshot.draggingOver}
                     >
-                      {camera?.uuid && (
+                      {grids[index]?.uuid && (
                         <CameraSlot
                           isDraggingOver={dropSnapshot.isDraggingOver}
-                          camera={camera}
+                          camera={grids[index]}
                           slotIndex={index}
                         />
                       )}

@@ -1,7 +1,7 @@
+import { EVENT_AI_NAMESPACE } from '@/pages/storage/constants';
+import _ from 'lodash';
 import React, { useEffect, useRef } from 'react';
 import './thumnail-video.css';
-import _ from 'lodash';
-import { EVENT_AI_NAMESPACE } from '@/pages/storage/constants';
 
 function format(seconds) {
   if (!seconds || 0 || isNaN(seconds)) {
@@ -49,7 +49,7 @@ const ThumbnailVideo = (props) => {
 
     if (fileCurrent.thumbnailData && nameSpace !== EVENT_AI_NAMESPACE) {
       for (let i = 0; i < fileCurrent.thumbnailData.length; i++) {
-        for (let j = 0; j < numOfImg; j++) {
+        for (let j = 0; j < 7; j++) {
           fakeImages.push(fileCurrent.thumbnailData[i]);
         }
       }

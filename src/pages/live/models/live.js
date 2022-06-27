@@ -7,10 +7,10 @@ export default {
   state: {
     availableList: [],
     currentSeekTime: moment(),
+    mode: 'live',
+    grids: [],
+    gridType: GRID1X1,
     screen: {
-      mode: 'live',
-      grids: [],
-      gridType: GRID1X1,
       name: '',
     },
     showPresetSetting: false,
@@ -22,6 +22,15 @@ export default {
   reducers: {
     saveAvailableList(state, { payload }) {
       return { ...state, availableList: payload };
+    },
+    saveMode(state, { payload }) {
+      return { ...state, mode: payload };
+    },
+    saveGrids(state, { payload }) {
+      return { ...state, grids: payload };
+    },
+    saveGridType(state, { payload }) {
+      return { ...state, gridType: payload };
     },
     saveScreen(state, { payload }) {
       return { ...state, screen: payload };
@@ -35,10 +44,10 @@ export default {
     closeCamera(state, { payload }) {
       const { uuid } = payload;
 
-      const cameraIndex = state.screen.grids.findIndex((grid) => grid.uuid === uuid);
+      const cameraIndex = state.grids.findIndex((grid) => grid.uuid === uuid);
 
       if (cameraIndex !== -1) {
-        state.screen.grids[cameraIndex] = {
+        state.grids[cameraIndex] = {
           id: '',
           uuid: '',
           name: '',
@@ -46,10 +55,10 @@ export default {
       }
 
       const newScreen = {
-        ...state.screen,
+        ...state.grids,
       };
 
-      return { ...state, screen: newScreen };
+      return { ...state, grids: newScreen };
     },
 
     openDrawerSettingCamera(state, { payload: { cameraSelected, listPreset, listPresetTour } }) {

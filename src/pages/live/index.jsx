@@ -17,8 +17,17 @@ import PlaybackControl from './components/player/PlaybackControl';
 import SaveFavorite from './components/SaveFavorite';
 import SettingPresetDrawer from './components/SettingPresetDrawer';
 import { StyledButtonFullScreen, StyledTabs, StyledTag, StyledText } from './style';
-
-const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFullScreen }) => {
+const Live = ({
+  availableList,
+  screen,
+  dispatch,
+  list,
+  showPresetSetting,
+  mode,
+  grids,
+  gridType,
+  isFullScreen,
+}) => {
   const [visibleCameraList, setVisibleCameraList] = useState(false);
   const [visibleFavoriteList, setVisibleFavoriteList] = useState(false);
   const [visibleSaveFavorite, setVisibleSaveFavorite] = useState(false);
@@ -47,29 +56,49 @@ const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFull
         });
       }
 
-      const grids = cameraUuids.map((uuid, index) => ({
-        id: cameraNameWithUuids[uuid] ? cameraNameWithUuids[uuid].id : '',
-        uuid,
-        type: viewTypes[index],
-        name: cameraNameWithUuids[uuid] ? cameraNameWithUuids[uuid].name : '',
-      }));
+      const grids = cameraUuids.map((uuid, index) => {
+        return {
+          id: cameraNameWithUuids[uuid] ? cameraNameWithUuids[uuid].id : '',
+          uuid,
+          type: viewTypes[index],
+          name: cameraNameWithUuids[uuid] ? cameraNameWithUuids[uuid].name : '',
+        };
+      });
 
+      dispatch({
+        type: 'live/saveMode',
+        payload: 'live',
+      });
+      dispatch({
+        type: 'live/saveGrids',
+        payload: grids,
+      });
+      dispatch({
+        type: 'live/saveGridType',
+        payload: gridType,
+      });
       dispatch({
         type: 'live/saveScreen',
         payload: {
-          mode: 'live',
-          grids: grids,
-          gridType: gridType,
           name: name,
         },
       });
     } else {
       dispatch({
+        type: 'live/saveMode',
+        payload: 'live',
+      });
+      dispatch({
+        type: 'live/saveGrids',
+        payload: initEmptyGrid(1),
+      });
+      dispatch({
+        type: 'live/saveGridType',
+        payload: GRID1X1,
+      });
+      dispatch({
         type: 'live/saveScreen',
         payload: {
-          mode: 'live',
-          grids: initEmptyGrid(1),
-          gridType: GRID1X1,
           name: '',
         },
       });
@@ -78,11 +107,12 @@ const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFull
 
   const changeScreen = (gridType) => {
     dispatch({
+      type: 'live/saveGridType',
+      payload: gridType,
+    });
+    dispatch({
       type: 'live/saveScreen',
       payload: {
-        ...screen,
-        grids: initEmptyGrid(getGrid(gridType)),
-        gridType: gridType,
         name: '',
       },
     });
@@ -95,14 +125,13 @@ const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFull
       name: '',
     }));
   };
-
-  const onDragEnd = ({ destination, source }) => {
+  const onDragEnd = (result, type) => {
+    const { destination, source, draggableId } = result;
     if (!destination || !source) return;
-
     if (source.droppableId === LIVE_MODE.CAMERA_LIST_DROPPABLE_ID) {
       const draggableCam = availableList[source.index];
 
-      screen.grids[destination.index] = {
+      grids[destination.index] = {
         id: draggableCam.id,
         uuid: draggableCam?.uuid,
         type: 'live',
@@ -111,19 +140,19 @@ const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFull
 
       let maxCam = 99;
 
-      if (screen.gridType === GRID1X1) {
+      if (gridType === GRID1X1) {
         maxCam = 1;
-      } else if (screen.gridType === GRID2X2) {
+      } else if (gridType === GRID2X2) {
         maxCam = 4;
-      } else if (screen.gridType === GRID3X3) {
+      } else if (gridType === GRID3X3) {
         maxCam = 9;
-      } else if (screen.gridType === GRID4X4) {
+      } else if (gridType === GRID4X4) {
         maxCam = 16;
       }
 
-      if (screen.grids.length > maxCam) {
-        screen.grids.pop();
-        screen.grids[maxCam - 1] = {
+      if (grids.length > maxCam) {
+        grids.pop();
+        grids[maxCam - 1] = {
           id: draggableCam.id,
           uuid: draggableCam?.uuid,
           type: 'live',
@@ -131,40 +160,27 @@ const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFull
         };
 
         dispatch({
-          type: 'live/saveScreen',
-          payload: {
-            ...screen,
-            name: '',
-          },
+          type: 'live/saveGrids',
+          payload: grids,
         });
       } else {
         dispatch({
-          type: 'live/saveScreen',
-          payload: {
-            ...screen,
-            name: '',
-          },
+          type: 'live/saveGrids',
+          payload: grids,
         });
       }
-
       dispatch({
-        type: 'live/saveScreen',
-        payload: {
-          ...screen,
-          name: '',
-        },
+        type: 'live/saveGrids',
+        payload: grids,
       });
     } else {
-      const camObj = screen.grids[source.index];
-      screen.grids[source.index] = screen.grids[destination.index];
-      screen.grids[destination.index] = camObj;
+      const camObj = grids[source.index];
+      grids[source.index] = grids[destination.index];
+      grids[destination.index] = camObj;
 
       dispatch({
-        type: 'live/saveScreen',
-        payload: {
-          ...screen,
-          name: '',
-        },
+        type: 'live/saveGrids',
+        payload: grids,
       });
     }
   };
@@ -184,11 +200,8 @@ const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFull
 
   const handleChangeMode = (mode) => {
     dispatch({
-      type: 'live/saveScreen',
-      payload: {
-        ...screen,
-        mode,
-      },
+      type: 'live/saveMode',
+      payload: mode,
     });
   };
 
@@ -255,7 +268,7 @@ const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFull
           </StyledTabs.TabPane>
         </StyledTabs>
         <DragDropContext onDragEnd={onDragEnd}>
-          <GridPanel screen={screen} />
+          <GridPanel screen={screen} mode={mode} grids={grids} gridType={gridType} />
           <CameraList
             title={<FormattedMessage id="pages.live-mode.list.camera" />}
             cameras={availableList}
@@ -301,7 +314,8 @@ const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFull
           }}
           dispatch={dispatch}
           list={list}
-          screen={screen}
+          grids={grids}
+          gridType={gridType}
         />
       )}
     </>
@@ -309,7 +323,14 @@ const Live = ({ availableList, screen, dispatch, list, showPresetSetting, isFull
 };
 
 const mapStateToProps = ({ live, globalstore, favorite }) => {
-  const { availableList = [], screen = {}, showPresetSetting = false } = live;
+  const {
+    availableList = [],
+    screen = {},
+    mode,
+    grids,
+    gridType,
+    showPresetSetting = false,
+  } = live;
   const { isFullScreen } = globalstore;
   const { list } = favorite;
   return {
@@ -318,6 +339,9 @@ const mapStateToProps = ({ live, globalstore, favorite }) => {
     isFullScreen,
     showPresetSetting,
     list,
+    mode,
+    grids,
+    gridType,
   };
 };
 

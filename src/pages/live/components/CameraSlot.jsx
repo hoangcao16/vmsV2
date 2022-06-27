@@ -18,7 +18,6 @@ import { v4 as uuidv4 } from 'uuid';
 import CameraSlotControl, { ListControl } from './CameraSlotControl';
 
 const CameraSlot = ({
-  screen,
   camera,
   dispatch,
   isDraggingOver,
@@ -28,6 +27,7 @@ const CameraSlot = ({
   isPlay,
   slotIndex,
   speedVideo,
+  mode,
 }) => {
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -41,14 +41,14 @@ const CameraSlot = ({
   const timerRef = useRef(null);
   const requestId = useRef(uuidv4());
   useEffect(() => {
-    if (screen?.mode === 'live') {
+    if (mode === 'live') {
       if (camera.uuid) {
         startCamera(camera.uuid, camera.type, 'webrtc');
       } else {
         closeCamera();
       }
     }
-  }, [camera, screen?.mode]);
+  }, [camera.uuid, mode]);
 
   useEffect(() => {
     if (isRecording) {
@@ -60,8 +60,9 @@ const CameraSlot = ({
     return () => clearInterval(timerRef.current);
   }, [isRecording, countdown]);
   useEffect(() => {
+    console.log(mode, isPlay, selectedCamera, camera, slotIndex);
     if (
-      screen?.mode === 'play' &&
+      mode === 'play' &&
       isPlay &&
       selectedCamera?.data?.uuid === camera?.uuid &&
       selectedCamera?.index === slotIndex
@@ -72,7 +73,7 @@ const CameraSlot = ({
         playBackCamera(camera?.uuid, currentSeekTime);
       }
     } else if (
-      screen?.mode === 'play' &&
+      mode === 'play' &&
       !isPlay &&
       selectedCamera?.data?.uuid === camera?.uuid &&
       selectedCamera?.index === slotIndex
@@ -94,11 +95,9 @@ const CameraSlot = ({
           date: moment(seekTime).unix(),
           token: data.token,
         };
-        // const payload = await camProxyService.playbackCamera(data.playbackUrl, startReq);
         const payload = await camProxyService.playbackCamera(data.playbackUrl, startReq);
         console.log(payload);
         if (payload === null) return;
-        // const videoSrc = data.playbackUrl + '/play/hls/' + payload.reqUuid + '/index.m3u8';
         const videoSrc =
           data.playbackUrl + '/play/hls/' + payload?.payload?.reqUuid + '/index.m3u8';
         if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
@@ -519,7 +518,7 @@ const CameraSlot = ({
             onCapture={captureCamera}
             onRecord={recordVideo}
             onClose={closeCamera}
-            mode={screen.mode}
+            mode={mode}
             zoomIn={zoomIn}
             onZoom={zoomCamera}
             showPresetSetting={handleShowPresetSetting}
@@ -642,7 +641,7 @@ const StyledCountdown = styled.div`
 
 const mapStateToProps = (state) => {
   return {
-    screen: state.live.screen,
+    mode: state.live.mode,
     layoutCollapsed: state?.globalstore?.layoutCollapsed,
     currentSeekTime: state?.live?.currentSeekTime,
     selectedCamera: state?.playMode?.selectedCamera,
@@ -650,5 +649,4 @@ const mapStateToProps = (state) => {
     speedVideo: state?.live?.speedVideo,
   };
 };
-
 export default connect(mapStateToProps)(React.memo(CameraSlot));

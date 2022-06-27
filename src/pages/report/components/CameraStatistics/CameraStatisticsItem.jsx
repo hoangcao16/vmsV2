@@ -5,7 +5,7 @@ import { useIntl } from 'umi';
 const CustomCard = styled(Card)`
   &.ant-card {
     color: white;
-    background-color: ${(prop) => prop?.bgColor};
+    background-color: ${(prop) => prop?.bgcolor};
     border-radius: 10px;
   }
 `;
@@ -23,7 +23,7 @@ const CardInfo = styled.div`
 export default function CameraStatisticsItem(props) {
   const intl = useIntl();
   return (
-    <CustomCard bgColor={props?.color}>
+    <CustomCard bgcolor={props?.color}>
       <CardTitle>
         {intl.formatMessage({
           id: `pages.report.cameraStatistics.${props.cameraName}`,

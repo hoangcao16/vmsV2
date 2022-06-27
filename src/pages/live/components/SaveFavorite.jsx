@@ -5,10 +5,9 @@ import { Button, Card, Col, Form, Input, Row, Space } from 'antd';
 import styled from 'styled-components';
 import { useIntl } from 'umi';
 
-const SaveFavorite = ({ visible, onClose, list, dispatch, screen }) => {
+const SaveFavorite = ({ visible, onClose, list, dispatch, gridType, grids }) => {
   const intl = useIntl();
   const [form] = Form.useForm();
-  const { gridType, grids } = screen;
 
   const getCameraUuids = (grids) => {
     let gridUuids = [];

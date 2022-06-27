@@ -1,24 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
+import { CAMERASTATUS } from '@/constants/common';
 import AddressApi from '@/services/addressApi';
-import { Button, Input, Form, Select, Row, Col, Tooltip } from 'antd';
-import { useState, useEffect } from 'react';
 import {
-  RightOutlined,
-  DownOutlined,
   DownloadOutlined,
+  DownOutlined,
   PlusOutlined,
+  RightOutlined,
   ScanOutlined,
 } from '@ant-design/icons';
-import { ProTableStyle, SpanCode, ContainerFilterDailyArchive } from './style';
+import { Button, Col, Form, Input, Row, Select, Tooltip } from 'antd';
 import { connect } from 'dva';
-import { useIntl } from 'umi';
+import debounce from 'lodash/debounce';
+import { useEffect, useState } from 'react';
+import { getLocale, useIntl } from 'umi';
 import AddCamera from './components/AddCamera';
 import EditCamera from './components/EditCamera';
 import ScanCamera from './components/ScanCamera';
-import debounce from 'lodash/debounce';
-import { CAMERASTATUS } from '@/constants/common';
-import { getLocale } from 'umi';
+import { ContainerFilterDailyArchive, ProTableStyle, SpanCode } from './style';
 const formItemLayout = {
   labelCol: { span: 7 },
   wrapperCol: { span: 24 },
@@ -105,8 +104,8 @@ const CameraList = ({
 
     const dataParam = Object.assign({
       ...searchParam,
-      searchType: 'all',
-      searchValue: value,
+      searchType: value === '' ? undefined : 'all',
+      searchValue: value === '' ? undefined : value,
       page: 1,
       size: 10,
     });
