@@ -1,14 +1,17 @@
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Form, Input, Row, Select, Space } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { connect, useIntl } from 'umi';
-import { ContainerExtraFilter } from './style';
 import locale from 'antd/lib/date-picker/locale/vi_VN';
 import debounce from 'lodash/debounce';
-import moment from 'moment';
+import { useEffect, useState } from 'react';
 import { FaThLarge, FaThList } from 'react-icons/fa';
+import { connect, useIntl } from 'umi';
+import { ContainerExtraFilter } from './style';
 
+import AddressApi from '@/services/addressApi';
+import AdDivisionApi from '@/services/advisionApi';
+import cameraApi from '@/services/controllerApi/cameraService';
+import eventApi from '@/services/controllerApi/eventApi';
 import {
   CAPTURED_NAMESPACE,
   DAILY_ARCHIVE_NAMESPACE,
@@ -18,10 +21,6 @@ import {
   IMPORTANT_NAMESPACE,
   LIST_VIEW,
 } from '../../constants';
-import AddressApi from '@/services/addressApi';
-import cameraApi from '@/services/controllerApi/cameraService';
-import AdDivisionApi from '@/services/advisionApi';
-import eventApi from '@/services/controllerApi/eventApi';
 
 const layoutLong = {
   labelCol: { span: 6 },
@@ -516,7 +515,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                     onChange={(uuid) => onChangeCamera(uuid)}
                     filterOption={filterOption}
                     options={normalizeOptions('name', 'uuid', cameraList)}
-                    placeholder="Camera"
+                    placeholder={intl.formatMessage({ id: 'view.storage.choose_camera' })}
                   />
                 </Form.Item>
 
@@ -550,9 +549,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                     >
                       <DatePicker
                         onChange={onChangeStartDate}
-                        placeholder={intl.formatMessage({
-                          id: 'view.storage.from_date',
-                        })}
+                        placeholder="DD/MM/YYYY"
                         style={{ width: '100%' }}
                         locale={locale}
                         format="DD/MM/YYYY"
@@ -570,9 +567,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                     >
                       <DatePicker
                         onChange={onChangeEndDate}
-                        placeholder={intl.formatMessage({
-                          id: 'view.storage.to_date',
-                        })}
+                        placeholder="DD/MM/YYYY"
                         style={{ width: '100%' }}
                         locale={locale}
                         format="DD/MM/YYYY"
@@ -596,7 +591,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                         onChange={(cityId) => onChangeCity(cityId)}
                         filterOption={filterOption}
                         options={normalizeOptions('name', 'provinceId', provinceList)}
-                        placeholder={intl.formatMessage({ id: 'view.map.province_id' })}
+                        placeholder={intl.formatMessage({ id: 'view.storage.choose_province' })}
                       />
                     </Form.Item>
                   </Col>
@@ -613,7 +608,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                         onChange={(districtId) => onChangeDistrict(districtId)}
                         filterOption={filterOption}
                         options={normalizeOptions('name', 'districtId', districtList)}
-                        placeholder={intl.formatMessage({ id: 'view.map.district_id' })}
+                        placeholder={intl.formatMessage({ id: 'view.storage.choose_district' })}
                       />
                     </Form.Item>
                   </Col>
@@ -632,7 +627,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                         onChange={(id) => onChangeWard(id)}
                         filterOption={filterOption}
                         options={normalizeOptions('name', 'id', wardList)}
-                        placeholder={intl.formatMessage({ id: 'view.map.ward_id' })}
+                        placeholder={intl.formatMessage({ id: 'view.storage.choose_sward' })}
                       />
                     </Form.Item>
                   </Col>
@@ -651,7 +646,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                           filterOption={filterOption}
                           options={normalizeOptions('name', 'uuid', adminUnitList)}
                           placeholder={intl.formatMessage({
-                            id: 'view.map.administrative_unit',
+                            id: 'view.storage.choose_administrative',
                           })}
                         />
                       </Form.Item>
@@ -664,7 +659,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                         name="address"
                       >
                         <Input
-                          placeholder={intl.formatMessage({ id: 'view.storage.street' })}
+                          placeholder={intl.formatMessage({ id: 'view.storage.choose_street' })}
                           onChange={debounce(onChangeAddress, 1500)}
                           maxLength={255}
                           onBlur={handleAddressBlur}
@@ -694,7 +689,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                       filterOption={filterOption}
                       options={normalizeOptions('name', 'uuid', adminUnitList)}
                       placeholder={intl.formatMessage({
-                        id: 'view.map.administrative_unit',
+                        id: 'view.storage.choose_administrative',
                       })}
                     />
                   </Form.Item>
@@ -715,7 +710,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                           filterOption={filterOption}
                           options={normalizeOptions('name', 'uuid', adminUnitList)}
                           placeholder={intl.formatMessage({
-                            id: 'view.map.administrative_unit',
+                            id: 'view.storage.choose_administrative',
                           })}
                         />
                       </Form.Item>
@@ -734,7 +729,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                           filterOption={filterOption}
                           options={normalizeOptions('name', 'id', typeList)}
                           placeholder={intl.formatMessage({
-                            id: 'view.storage.file_type',
+                            id: 'view.storage.choose_file_type',
                           })}
                         />
                       </Form.Item>
@@ -756,7 +751,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                           onChange={(id) => onChangeEventType(id)}
                           filterOption={filterOption}
                           options={normalizeOptions('name', 'uuid', eventList)}
-                          placeholder={intl.formatMessage({ id: 'view.storage.event_type' })}
+                          placeholder={intl.formatMessage({ id: 'view.storage.choose_event_type' })}
                         />
                       </Form.Item>
                     </Col>
@@ -774,7 +769,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                           filterOption={filterOption}
                           options={normalizeOptions('name', 'id', typeList)}
                           placeholder={intl.formatMessage({
-                            id: 'view.storage.file_type',
+                            id: 'view.storage.choose_file_type',
                           })}
                         />
                       </Form.Item>
@@ -796,7 +791,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                           onChange={(id) => onChangeEventType(id)}
                           filterOption={filterOption}
                           options={normalizeOptions('name', 'uuid', eventList)}
-                          placeholder={intl.formatMessage({ id: 'view.storage.event_type' })}
+                          placeholder={intl.formatMessage({ id: 'view.storage.choose_event_type' })}
                         />
                       </Form.Item>
                     </Col>
@@ -814,7 +809,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                           filterOption={filterOption}
                           options={processingstatusOptions}
                           placeholder={intl.formatMessage({
-                            id: 'view.common_device.status',
+                            id: 'view.storage.choose_status',
                           })}
                         />
                       </Form.Item>
