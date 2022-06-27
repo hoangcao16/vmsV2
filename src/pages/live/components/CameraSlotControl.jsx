@@ -45,7 +45,7 @@ const CameraSlotControl = ({
                   onRecord();
                 }}
               >
-                <FiVideo size={16} />
+                <FiVideo />
               </StyledIcon>
             </Tooltip>
           </Permission>
@@ -60,7 +60,7 @@ const CameraSlotControl = ({
                   onCapture();
                 }}
               >
-                <FiCamera size={16} />
+                <FiCamera />
               </StyledIcon>
             </Tooltip>
           </Permission>
@@ -77,7 +77,7 @@ const CameraSlotControl = ({
                 onZoom();
               }}
             >
-              {zoomIn ? <TbArrowsDiagonalMinimize size={16} /> : <TbArrowsDiagonal size={16} />}
+              {zoomIn ? <TbArrowsDiagonalMinimize /> : <TbArrowsDiagonal />}
             </StyledIcon>
           </Tooltip>
           <Tooltip title={intl.formatMessage({ id: 'view.live.preset_setting' })} placement="left">
@@ -87,7 +87,7 @@ const CameraSlotControl = ({
                 showPresetSetting();
               }}
             >
-              <AiOutlineSetting size={16} />
+              <AiOutlineSetting />
             </StyledIcon>
           </Tooltip>
           <Tooltip placement="left" title={intl.formatMessage({ id: 'view.live.close_camera' })}>
@@ -127,20 +127,25 @@ const StyledCameraControl = styled.div`
   }
   align-items: center;
   justify-content: center;
+  height: calc(100% - 30px);
 `;
 
 export const ListControl = styled.div`
   display: flex;
   flex-direction: column;
   opacity: 0;
+  width: 32px;
+  height: 100%;
 `;
 
 const StyledIcon = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  max-width: 32px;
+  max-height: 32px;
+  width: 100%;
+  height: calc(20% - 10px);
   background-color: ${(prop) => (prop.isRecording ? '#1890ff' : '#fff')};
   transition: all 0.25s linear;
   border-radius: 2px;
@@ -153,6 +158,11 @@ const StyledIcon = styled.button`
 
   &:hover {
     background-color: #1890ff;
+  }
+  svg {
+    width: auto;
+    height: 70%;
+    max-height: 16px;
   }
 `;
 

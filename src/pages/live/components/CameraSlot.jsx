@@ -30,7 +30,6 @@ const CameraSlot = ({
   speedVideo,
 }) => {
   const [loading, setLoading] = useState(false);
-  const [noData, setNodata] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [zoomIn, setZoomIn] = useState(false);
@@ -159,7 +158,6 @@ const CameraSlot = ({
     });
 
     if (data == null) {
-      setNodata(true);
       notify('warning', 'noti.default_screen', 'noti.error_camera_address');
       setLoading(false);
       return;
@@ -507,7 +505,6 @@ const CameraSlot = ({
       isDraggingOver={isDraggingOver}
       zoomIn={zoomIn}
       layoutCollapsed={layoutCollapsed}
-      noData={noData}
     >
       {loading && (
         <StyledLoading>
@@ -560,6 +557,7 @@ const StyledCameraSlot = styled.div`
   width: 100%;
   height: 100%;
   transition: all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s;
+  background-color: #3f4141;
   &:hover {
     cursor: pointer !important;
 
@@ -581,8 +579,7 @@ const StyledCameraSlot = styled.div`
      width: unset;
      height: unset;
      top: 48px;
-     left: ${props.layoutCollapsed ? 48 : 208}px;
-     ${props?.noData && 'background-color: #3f4141;'}`}
+     left: ${props.layoutCollapsed ? 48 : 208}px;`}
 `;
 
 const StyledVideo = styled.video`
