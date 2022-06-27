@@ -1,16 +1,17 @@
 import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
-import { PageLoading, SettingDrawer } from '@ant-design/pro-layout';
+import { SettingDrawer } from '@ant-design/pro-layout';
 import 'react-phone-number-input/style.css';
 import { getDvaApp, history } from 'umi';
 import defaultSettings from '../config/defaultSettings';
+import CustomLoading from './components/CustomLoading';
 import { IntlGlobalProvider } from './components/IntlGlobalProvider';
 import AuthZApi from './services/authz/AuthZApi';
 
 const loginPath = '/user/login';
 
 export const initialStateConfig = {
-  loading: <PageLoading />,
+  loading: <CustomLoading />,
 };
 
 export async function getInitialState() {
