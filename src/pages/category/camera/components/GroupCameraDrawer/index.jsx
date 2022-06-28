@@ -22,6 +22,7 @@ const GroupCameraDrawer = ({
   const [cameraListInGroup, setCameraListInGroup] = useState([]);
   const [isOpenDrawerCamera, setIsOpenDrawerCamera] = useState(false);
   const [selectedCameraToAdd, setSelectedCameraToAdd] = useState([]);
+
   // fill data if isedit
   useEffect(() => {
     if (isEdit) {

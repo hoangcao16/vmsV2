@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { notify } from '@/components/Notify';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
+import AddEditAdministrativeUnit from '@/pages/category/administrative-unit/components/AddEditAdministrativeUnit';
+import AddEditZone from '@/pages/category/list-module/components/Zone/AddEditZone';
 import AddressApi from '@/services/addressApi';
 import ExportEventFileApi from '@/services/exportEventFile';
 import VietMapApi from '@/services/vietmapApi';
@@ -13,12 +15,14 @@ import {
   SaveOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Form, Input, Row, Select, Space, Upload } from 'antd';
+import { Avatar, Button, Card, Col, Form, Input, Row, Select, Space, Tooltip, Upload } from 'antd';
 import { connect } from 'dva';
 import debounce from 'lodash/debounce';
 import { useCallback, useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import { v4 as uuidV4 } from 'uuid';
+import AddEditCameraCategory from '../cameraCategory/AddEditCameraCategory';
+import GroupCameraDrawer from '../GroupCameraDrawer';
 import MapAddCamera from '../Map';
 import { SpaceAddAvatar, StyledDrawer, StyledSpace } from './style';
 const { Dragger } = Upload;
@@ -51,6 +55,15 @@ const AddCamera = ({
   const [isLoading, setLoading] = useState(false);
   const [searchMapValue, setSearchValue] = useState('');
   const [searchMapOptions, setSearchMapOptions] = useState([]);
+  const [isEdit, setIsEdit] = useState(false);
+  const [openDrawerAddCamCategory, setOpenDrawerAddCamCategory] = useState(false);
+  const [type, setType] = useState(null);
+  const [openDrawerAddZone, setOpenDrawerAddZone] = useState(false);
+  const [openDrawerAddAdministrativeUnit, setOpenDrawerAddAdministrativeUnit] = useState(false);
+
+  const resetForm = () => {
+    form.setFieldsValue({ searchValue: '' });
+  };
 
   const vietmapApiKey = REACT_APP_VIETMAP_APIKEY;
   // Check Ip scan to add
@@ -202,224 +215,60 @@ const AddCamera = ({
     setCurrentLng(lng);
   };
   return (
-    <StyledDrawer
-      openDrawer={isAddNewDrawer}
-      onClose={onClose}
-      width={'80%'}
-      zIndex={1001}
-      placement="right"
-      extra={
-        <Space>
-          <Button
-            type="primary"
-            htmlType="submit"
-            onClick={() => {
-              form.submit();
-            }}
-          >
-            <SaveOutlined />
-            {intl.formatMessage({ id: 'view.map.button_save' })}
-          </Button>
-          <Button onClick={onClose}>
-            <CloseOutlined />
-            {intl.formatMessage({ id: 'view.map.cancel' })}
-          </Button>
-        </Space>
-      }
-    >
-      <Card
-        title={intl.formatMessage({
-          id: 'view.camera.add_camera',
-        })}
+    <>
+      <StyledDrawer
+        openDrawer={isAddNewDrawer}
+        onClose={onClose}
+        width={'80%'}
+        zIndex={1001}
+        placement="right"
+        extra={
+          <Space>
+            <Button
+              type="primary"
+              htmlType="submit"
+              onClick={() => {
+                form.submit();
+              }}
+            >
+              <SaveOutlined />
+              {intl.formatMessage({ id: 'view.map.button_save' })}
+            </Button>
+            <Button onClick={onClose}>
+              <CloseOutlined />
+              {intl.formatMessage({ id: 'view.map.cancel' })}
+            </Button>
+          </Space>
+        }
       >
-        <Form
-          className="bg-grey"
-          form={form}
-          {...formItemLayout}
-          layout="horizontal"
-          onFinish={handleSubmit}
+        <Card
+          title={intl.formatMessage({
+            id: 'view.camera.add_camera',
+          })}
         >
-          <Row>
-            <Col span={11}>
-              <Row gutter={24}>
-                <Col span={24}>
-                  <Form.Item
-                    name={['code']}
-                    labelCol={{ span: 5 }}
-                    wrapperCol={{ span: 24 }}
-                    label={intl.formatMessage(
-                      { id: 'view.map.camera_id' },
-                      {
-                        cam: intl.formatMessage({
-                          id: 'camera',
-                        }),
-                      },
-                    )}
-                    rules={[
-                      {
-                        required: true,
-                        message: intl.formatMessage({
-                          id: 'view.map.required_field',
-                        }),
-                      },
-                    ]}
-                  >
-                    <Input
-                      maxLength={255}
-                      placeholder={intl.formatMessage(
-                        {
-                          id: 'view.map.please_enter_camera_id',
-                        },
-                        {
-                          plsEnter: intl.formatMessage({
-                            id: 'please_enter',
-                          }),
-                          cam: intl.formatMessage({
-                            id: 'camera',
-                          }),
-                        },
-                      )}
-                      onBlur={(e) => {
-                        form.setFieldsValue({
-                          code: e.target.value.trim(),
-                        });
-                      }}
-                      onPaste={(e) => {
-                        e.preventDefault();
-                        form.setFieldsValue({
-                          code: e.clipboardData.getData('text').trim(),
-                        });
-                      }}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={24}>
-                  <Form.Item
-                    labelCol={{ span: 5 }}
-                    wrapperCol={{ span: 24 }}
-                    name="name"
-                    label={intl.formatMessage(
-                      {
-                        id: 'view.camera.camera_name',
-                      },
-                      {
-                        cam: intl.formatMessage({
-                          id: 'camera',
-                        }),
-                      },
-                    )}
-                    rules={[
-                      {
-                        required: true,
-                        message: intl.formatMessage({
-                          id: 'view.map.required_field',
-                        }),
-                      },
-                    ]}
-                  >
-                    <Input
-                      maxLength={255}
-                      placeholder={intl.formatMessage(
-                        {
-                          id: 'view.map.please_enter_camera_name',
-                        },
-                        {
-                          plsEnter: intl.formatMessage({
-                            id: 'please_enter',
-                          }),
-                          cam: intl.formatMessage({
-                            id: 'camera',
-                          }),
-                        },
-                      )}
-                      onBlur={(e) => {
-                        form.setFieldsValue({
-                          name: e.target.value.trim(),
-                        });
-                      }}
-                      onPaste={(e) => {
-                        e.preventDefault();
-                        form.setFieldsValue({
-                          name: e.clipboardData.getData('text').trim(),
-                        });
-                      }}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={24}>
-                  <StyledSpace>
+          <Form
+            className="bg-grey"
+            form={form}
+            {...formItemLayout}
+            layout="horizontal"
+            onFinish={handleSubmit}
+          >
+            <Row>
+              <Col span={11}>
+                <Row gutter={24}>
+                  <Col span={24}>
                     <Form.Item
+                      name={['code']}
                       labelCol={{ span: 5 }}
                       wrapperCol={{ span: 24 }}
                       label={intl.formatMessage(
-                        {
-                          id: 'view.camera.group_camera',
-                        },
+                        { id: 'view.map.camera_id' },
                         {
                           cam: intl.formatMessage({
                             id: 'camera',
                           }),
                         },
                       )}
-                      name={['cameraGroupUuid']}
-                      rules={
-                        [
-                          // {
-                          //   required: true,
-                          //   message: intl.formatMessage({
-                          //     id: 'view.map.required_field',
-                          //   }),
-                          // },
-                        ]
-                      }
-                    >
-                      <Select
-                        showSearch
-                        filterOption={filterOption}
-                        options={normalizeOptions('name', 'uuid', groupCameraOptions)}
-                        placeholder={intl.formatMessage(
-                          {
-                            id: 'view.camera.please_choose_group_camera',
-                          },
-                          {
-                            cam: intl.formatMessage({
-                              id: 'camera',
-                            }),
-                          },
-                        )}
-                        getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                      />
-                    </Form.Item>
-                    <Button
-                      shape="circle"
-                      icon={<PlusOutlined />}
-                      size="small"
-                      onClick={() => console.log('click')}
-                    />
-                  </StyledSpace>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={24}>
-                  <StyledSpace>
-                    <Form.Item
-                      labelCol={{ span: 5 }}
-                      wrapperCol={{ span: 24 }}
-                      label={intl.formatMessage(
-                        {
-                          id: 'view.camera.camera_type',
-                        },
-                        {
-                          cam: intl.formatMessage({
-                            id: 'camera',
-                          }),
-                        },
-                      )}
-                      name={['cameraTypeUuid']}
                       rules={[
                         {
                           required: true,
@@ -429,42 +278,52 @@ const AddCamera = ({
                         },
                       ]}
                     >
-                      <Select
-                        showSearch
-                        filterOption={filterOption}
-                        options={normalizeOptions('name', 'uuid', cameraTypesOptions)}
+                      <Input
+                        maxLength={255}
                         placeholder={intl.formatMessage(
                           {
-                            id: 'view.map.please_choose_camera_type',
+                            id: 'view.map.please_enter_camera_id',
                           },
                           {
+                            plsEnter: intl.formatMessage({
+                              id: 'please_enter',
+                            }),
                             cam: intl.formatMessage({
                               id: 'camera',
                             }),
                           },
                         )}
-                        getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                        onBlur={(e) => {
+                          form.setFieldsValue({
+                            code: e.target.value.trim(),
+                          });
+                        }}
+                        onPaste={(e) => {
+                          e.preventDefault();
+                          form.setFieldsValue({
+                            code: e.clipboardData.getData('text').trim(),
+                          });
+                        }}
                       />
                     </Form.Item>
-                    <Button
-                      shape="circle"
-                      icon={<PlusOutlined />}
-                      size="small"
-                      onClick={() => console.log('click')}
-                    />
-                  </StyledSpace>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={24}>
-                  <StyledSpace>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={24}>
                     <Form.Item
                       labelCol={{ span: 5 }}
                       wrapperCol={{ span: 24 }}
-                      name={['vendorUuid']}
-                      label={intl.formatMessage({
-                        id: 'view.map.vendor',
-                      })}
+                      name="name"
+                      label={intl.formatMessage(
+                        {
+                          id: 'view.camera.camera_name',
+                        },
+                        {
+                          cam: intl.formatMessage({
+                            id: 'camera',
+                          }),
+                        },
+                      )}
                       rules={[
                         {
                           required: true,
@@ -474,324 +333,215 @@ const AddCamera = ({
                         },
                       ]}
                     >
-                      <Select
-                        showSearch
-                        filterOption={filterOption}
-                        options={normalizeOptions('name', 'uuid', vendorsOptions)}
-                        placeholder={intl.formatMessage({
-                          id: 'view.map.choose_vendor',
-                        })}
-                        getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                      <Input
+                        maxLength={255}
+                        placeholder={intl.formatMessage(
+                          {
+                            id: 'view.map.please_enter_camera_name',
+                          },
+                          {
+                            plsEnter: intl.formatMessage({
+                              id: 'please_enter',
+                            }),
+                            cam: intl.formatMessage({
+                              id: 'camera',
+                            }),
+                          },
+                        )}
+                        onBlur={(e) => {
+                          form.setFieldsValue({
+                            name: e.target.value.trim(),
+                          });
+                        }}
+                        onPaste={(e) => {
+                          e.preventDefault();
+                          form.setFieldsValue({
+                            name: e.clipboardData.getData('text').trim(),
+                          });
+                        }}
                       />
                     </Form.Item>
-                    <Button
-                      shape="circle"
-                      icon={<PlusOutlined />}
-                      size="small"
-                      onClick={() => console.log('click')}
-                    />
-                  </StyledSpace>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={24}>
-                  <Form.Item
-                    labelCol={{ span: 5 }}
-                    wrapperCol={{ span: 24 }}
-                    label={intl.formatMessage({
-                      id: 'view.map.port',
-                    })}
-                    name={['port']}
-                    rules={[
-                      {
-                        required: true,
-                        message: intl.formatMessage({
-                          id: 'view.map.required_field',
-                        }),
-                      },
-                      ({ getFieldValue }) => ({
-                        validator(rule, value) {
-                          const data = getFieldValue(['port']);
-                          const regex =
-                            /^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))$/;
-                          if (data) {
-                            if (isFinite(data) && regex.test(data)) {
-                              return Promise.resolve();
-                            } else {
-                              return Promise.reject(
-                                intl.formatMessage({
-                                  id: 'view.storage.invalid_format',
-                                }),
-                              );
-                            }
-                          } else {
-                            return Promise.resolve();
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={24}>
+                    <StyledSpace>
+                      <Form.Item
+                        labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 24 }}
+                        label={intl.formatMessage(
+                          {
+                            id: 'view.camera.group_camera',
+                          },
+                          {
+                            cam: intl.formatMessage({
+                              id: 'camera',
+                            }),
+                          },
+                        )}
+                        name={['cameraGroupUuid']}
+                        rules={
+                          [
+                            // {
+                            //   required: true,
+                            //   message: intl.formatMessage({
+                            //     id: 'view.map.required_field',
+                            //   }),
+                            // },
+                          ]
+                        }
+                      >
+                        <Select
+                          showSearch
+                          filterOption={filterOption}
+                          options={normalizeOptions('name', 'uuid', groupCameraOptions)}
+                          placeholder={intl.formatMessage(
+                            {
+                              id: 'view.camera.please_choose_group_camera',
+                            },
+                            {
+                              cam: intl.formatMessage({
+                                id: 'camera',
+                              }),
+                            },
+                          )}
+                          getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                        />
+                      </Form.Item>
+                      <Tooltip
+                        placement="top"
+                        title={intl.formatMessage({ id: 'view.camera.add_new' })}
+                      >
+                        <Button
+                          shape="circle"
+                          icon={<PlusOutlined />}
+                          size="small"
+                          onClick={() =>
+                            dispatch({
+                              type: 'groupcamera/saveIsOpenDrawer',
+                              payload: true,
+                            })
                           }
-                        },
-                      }),
-                    ]}
-                  >
-                    <Input
-                      placeholder={intl.formatMessage(
-                        {
-                          id: 'view.map.please_enter_port',
-                        },
-                        {
-                          plsEnter: intl.formatMessage({
-                            id: 'please_enter',
-                          }),
-                        },
-                      )}
-                      onBlur={(e) => {
-                        form.setFieldsValue({
-                          port: e.target.value.trim(),
-                        });
-                      }}
-                      onPaste={(e) => {
-                        e.preventDefault();
-                        form.setFieldsValue({
-                          port: e.clipboardData.getData('text').trim(),
-                        });
-                      }}
-                      maxLength={255}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={24}>
-                  <Form.Item
-                    labelCol={{ span: 5 }}
-                    wrapperCol={{ span: 24 }}
-                    label={intl.formatMessage({
-                      id: 'view.map.original_url',
-                    })}
-                    name={['cameraUrl']}
-                    rules={[
-                      {
-                        required: true,
-                        message: intl.formatMessage({
-                          id: 'view.map.required_field',
-                        }),
-                      },
-                    ]}
-                  >
-                    <Input
-                      placeholder={intl.formatMessage(
-                        {
-                          id: 'view.map.please_enter_original_url',
-                        },
-                        {
-                          plsEnter: intl.formatMessage({
-                            id: 'please_enter',
-                          }),
-                        },
-                      )}
-                      onBlur={(e) => {
-                        form.setFieldsValue({
-                          cameraUrl: e.target.value.trim(),
-                        });
-                      }}
-                      onPaste={(e) => {
-                        e.preventDefault();
-                        form.setFieldsValue({
-                          cameraUrl: e.clipboardData.getData('text').trim(),
-                        });
-                      }}
-                      maxLength={2000}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={24}>
-                  <Form.Item
-                    labelCol={{ span: 5 }}
-                    wrapperCol={{ span: 24 }}
-                    label={intl.formatMessage({
-                      id: 'view.map.map',
-                    })}
-                    name={['searchmap']}
-                  >
-                    <Select
-                      showSearch
-                      onSearch={handleSearch}
-                      searchValue={searchMapValue}
-                      onSelect={handleSelectSearchMap}
-                      filterOption={filterOption}
-                      options={normalizeOptions('label', 'value', searchMapOptions)}
-                      placeholder={intl.formatMessage(
-                        {
-                          id: 'view.map.please_choose_location',
-                        },
-                        {
-                          plsEnter: intl.formatMessage({
-                            id: 'please_enter',
-                          }),
-                        },
-                      )}
-                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={24}>
-                  <MapAddCamera
-                    resultSearchMap={resultSearchMap}
-                    handleSelectMap={handleSelectMap}
-                    isEdit={false}
-                  />
-                </Col>
-              </Row>
-            </Col>
-            <Col span={11} offset={2}>
-              <Row gutter={24}>
-                <Col span={12}>
-                  <Form.Item
-                    labelCol={{ span: 10 }}
-                    wrapperCol={{ span: 24 }}
-                    name={['provinceId']}
-                    label={intl.formatMessage({
-                      id: 'view.map.province_id',
-                    })}
-                    rules={[
-                      {
-                        required: true,
-                        message: intl.formatMessage({
-                          id: 'view.map.required_field',
-                        }),
-                      },
-                    ]}
-                  >
-                    <Select
-                      showSearch
-                      onChange={(cityId) => onChangeCity(cityId)}
-                      filterOption={filterOption}
-                      options={normalizeOptions('name', 'provinceId', provincesOptions)}
-                      placeholder={intl.formatMessage({
-                        id: 'view.map.province_id',
-                      })}
-                      allowClear
-                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item
-                    labelCol={{ span: 10 }}
-                    wrapperCol={{ span: 24 }}
-                    name={['districtId']}
-                    label={intl.formatMessage({
-                      id: 'view.map.district_id',
-                    })}
-                    rules={[
-                      {
-                        required: true,
-                        message: intl.formatMessage({
-                          id: 'view.map.required_field',
-                        }),
-                      },
-                    ]}
-                  >
-                    <Select
-                      showSearch
-                      onChange={(districtId) => onChangeDistrict(districtId)}
-                      filterOption={filterOption}
-                      options={normalizeOptions('name', 'districtId', districts)}
-                      placeholder={intl.formatMessage({
-                        id: 'view.map.district_id',
-                      })}
-                      allowClear
-                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={12}>
-                  <Form.Item
-                    labelCol={{ span: 10 }}
-                    wrapperCol={{ span: 24 }}
-                    name={['wardId']}
-                    label={intl.formatMessage({
-                      id: 'view.map.ward_id',
-                    })}
-                    // rules={[
-                    //   {
-                    //     required: true,
-                    //     message: `${intl.formatMessage({
-                    //       id: 'view.map.required_field',
-                    //     })}`,
-                    //   },
-                    // ]}
-                  >
-                    <Select
-                      showSearch
-                      filterOption={filterOption}
-                      options={normalizeOptions('name', 'id', wards)}
-                      placeholder={intl.formatMessage({
-                        id: 'view.map.ward_id',
-                      })}
-                      allowClear
-                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item
-                    labelCol={{ span: 10 }}
-                    wrapperCol={{ span: 24 }}
-                    name={['address']}
-                    label={intl.formatMessage({
-                      id: 'view.storage.street',
-                    })}
-                    rules={[
-                      {
-                        required: true,
-                        message: intl.formatMessage({
-                          id: 'view.map.required_field',
-                        }),
-                      },
-                    ]}
-                  >
-                    <Input
-                      maxLength={255}
-                      placeholder={intl.formatMessage(
-                        {
-                          id: 'view.map.please_enter_street',
-                        },
-                        {
-                          plsEnter: intl.formatMessage({
-                            id: 'please_enter',
-                          }),
-                        },
-                      )}
-                      onBlur={(e) => {
-                        form.setFieldsValue({
-                          address: e.target.value.trim(),
-                        });
-                      }}
-                      onPaste={(e) => {
-                        e.preventDefault();
-                        form.setFieldsValue({
-                          address: e.clipboardData.getData('text').trim(),
-                        });
-                      }}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={24}>
-                  <StyledSpace>
+                        />
+                      </Tooltip>
+                    </StyledSpace>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={24}>
+                    <StyledSpace>
+                      <Form.Item
+                        labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 24 }}
+                        label={intl.formatMessage(
+                          {
+                            id: 'view.camera.camera_type',
+                          },
+                          {
+                            cam: intl.formatMessage({
+                              id: 'camera',
+                            }),
+                          },
+                        )}
+                        name={['cameraTypeUuid']}
+                        rules={[
+                          {
+                            required: true,
+                            message: intl.formatMessage({
+                              id: 'view.map.required_field',
+                            }),
+                          },
+                        ]}
+                      >
+                        <Select
+                          showSearch
+                          filterOption={filterOption}
+                          options={normalizeOptions('name', 'uuid', cameraTypesOptions)}
+                          placeholder={intl.formatMessage(
+                            {
+                              id: 'view.map.please_choose_camera_type',
+                            },
+                            {
+                              cam: intl.formatMessage({
+                                id: 'camera',
+                              }),
+                            },
+                          )}
+                          getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                        />
+                      </Form.Item>
+                      <Tooltip
+                        placement="top"
+                        title={intl.formatMessage({ id: 'view.camera.add_new' })}
+                      >
+                        <Button
+                          shape="circle"
+                          icon={<PlusOutlined />}
+                          size="small"
+                          onClick={() => {
+                            setOpenDrawerAddCamCategory(true);
+                            setType('camera_type');
+                          }}
+                        />
+                      </Tooltip>
+                    </StyledSpace>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={24}>
+                    <StyledSpace>
+                      <Form.Item
+                        labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 24 }}
+                        name={['vendorUuid']}
+                        label={intl.formatMessage({
+                          id: 'view.map.vendor',
+                        })}
+                        rules={[
+                          {
+                            required: true,
+                            message: intl.formatMessage({
+                              id: 'view.map.required_field',
+                            }),
+                          },
+                        ]}
+                      >
+                        <Select
+                          showSearch
+                          filterOption={filterOption}
+                          options={normalizeOptions('name', 'uuid', vendorsOptions)}
+                          placeholder={intl.formatMessage({
+                            id: 'view.map.choose_vendor',
+                          })}
+                          getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                        />
+                      </Form.Item>
+                      <Tooltip
+                        placement="top"
+                        title={intl.formatMessage({ id: 'view.camera.add_new' })}
+                      >
+                        <Button
+                          shape="circle"
+                          icon={<PlusOutlined />}
+                          size="small"
+                          onClick={() => {
+                            setOpenDrawerAddCamCategory(true);
+                            setType('camera_vendor');
+                          }}
+                        />
+                      </Tooltip>
+                    </StyledSpace>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={24}>
                     <Form.Item
                       labelCol={{ span: 5 }}
                       wrapperCol={{ span: 24 }}
                       label={intl.formatMessage({
-                        id: 'view.map.zone',
+                        id: 'view.map.port',
                       })}
-                      name={['zoneUuid']}
+                      name={['port']}
                       rules={[
                         {
                           required: true,
@@ -799,15 +549,32 @@ const AddCamera = ({
                             id: 'view.map.required_field',
                           }),
                         },
+                        ({ getFieldValue }) => ({
+                          validator(rule, value) {
+                            const data = getFieldValue(['port']);
+                            const regex =
+                              /^((6553[0-5])|(655[0-2][0-9])|(65[0-4][0-9]{2})|(6[0-4][0-9]{3})|([1-5][0-9]{4})|([0-5]{0,5})|([0-9]{1,4}))$/;
+                            if (data) {
+                              if (isFinite(data) && regex.test(data)) {
+                                return Promise.resolve();
+                              } else {
+                                return Promise.reject(
+                                  intl.formatMessage({
+                                    id: 'view.storage.invalid_format',
+                                  }),
+                                );
+                              }
+                            } else {
+                              return Promise.resolve();
+                            }
+                          },
+                        }),
                       ]}
                     >
-                      <Select
-                        showSearch
-                        filterOption={filterOption}
-                        options={normalizeOptions('name', 'uuid', zonesOptions)}
+                      <Input
                         placeholder={intl.formatMessage(
                           {
-                            id: 'view.map.choose_zone',
+                            id: 'view.map.please_enter_port',
                           },
                           {
                             plsEnter: intl.formatMessage({
@@ -815,226 +582,554 @@ const AddCamera = ({
                             }),
                           },
                         )}
-                        allowClear
-                        getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                        onBlur={(e) => {
+                          form.setFieldsValue({
+                            port: e.target.value.trim(),
+                          });
+                        }}
+                        onPaste={(e) => {
+                          e.preventDefault();
+                          form.setFieldsValue({
+                            port: e.clipboardData.getData('text').trim(),
+                          });
+                        }}
+                        maxLength={255}
                       />
                     </Form.Item>
-                    <Button
-                      shape="circle"
-                      icon={<PlusOutlined />}
-                      size="small"
-                      onClick={() => console.log('click')}
-                    />
-                  </StyledSpace>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={24}>
-                  <StyledSpace>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={24}>
                     <Form.Item
                       labelCol={{ span: 5 }}
                       wrapperCol={{ span: 24 }}
                       label={intl.formatMessage({
-                        id: 'view.map.administrative_unit',
+                        id: 'view.map.original_url',
                       })}
-                      name={['administrativeUnitUuid']}
-                    >
-                      <Select
-                        allowClear
-                        showSearch
-                        filterOption={filterOption}
-                        options={normalizeOptions('name', 'uuid', adDivisionsOptions)}
-                        placeholder={intl.formatMessage({
-                          id: 'view.map.please_choose_administrative_unit',
-                        })}
-                        getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                      />
-                    </Form.Item>
-                    <Button
-                      shape="circle"
-                      icon={<PlusOutlined />}
-                      size="small"
-                      onClick={() => console.log('click')}
-                    />
-                  </StyledSpace>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={24}>
-                  <Form.Item
-                    labelCol={{ span: 5 }}
-                    wrapperCol={{ span: 24 }}
-                    label={intl.formatMessage({
-                      id: 'view.map.hls_url',
-                    })}
-                    name={['hlsUrl']}
-                  >
-                    <Input
-                      placeholder={intl.formatMessage(
+                      name={['cameraUrl']}
+                      rules={[
                         {
-                          id: 'view.map.please_enter_hls_url',
-                        },
-                        {
-                          plsEnter: intl.formatMessage({
-                            id: 'please_enter',
+                          required: true,
+                          message: intl.formatMessage({
+                            id: 'view.map.required_field',
                           }),
                         },
-                      )}
-                      onBlur={(e) => {
-                        form.setFieldsValue({
-                          hlsUrl: e.target.value.trim(),
-                        });
-                      }}
-                      onPaste={(e) => {
-                        e.preventDefault();
-                        form.setFieldsValue({
-                          hlsUrl: e.clipboardData.getData('text').trim(),
-                        });
-                      }}
-                      maxLength={2000}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={24}>
-                  <StyledSpace>
+                      ]}
+                    >
+                      <Input
+                        placeholder={intl.formatMessage(
+                          {
+                            id: 'view.map.please_enter_original_url',
+                          },
+                          {
+                            plsEnter: intl.formatMessage({
+                              id: 'please_enter',
+                            }),
+                          },
+                        )}
+                        onBlur={(e) => {
+                          form.setFieldsValue({
+                            cameraUrl: e.target.value.trim(),
+                          });
+                        }}
+                        onPaste={(e) => {
+                          e.preventDefault();
+                          form.setFieldsValue({
+                            cameraUrl: e.clipboardData.getData('text').trim(),
+                          });
+                        }}
+                        maxLength={2000}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={24}>
                     <Form.Item
                       labelCol={{ span: 5 }}
                       wrapperCol={{ span: 24 }}
-                      label={intl.formatMessage(
+                      label={intl.formatMessage({
+                        id: 'view.map.map',
+                      })}
+                      name={['searchmap']}
+                    >
+                      <Select
+                        showSearch
+                        onSearch={handleSearch}
+                        searchValue={searchMapValue}
+                        onSelect={handleSelectSearchMap}
+                        filterOption={filterOption}
+                        options={normalizeOptions('label', 'value', searchMapOptions)}
+                        placeholder={intl.formatMessage(
+                          {
+                            id: 'view.map.please_choose_location',
+                          },
+                          {
+                            plsEnter: intl.formatMessage({
+                              id: 'please_enter',
+                            }),
+                          },
+                        )}
+                        getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={24}>
+                    <MapAddCamera
+                      resultSearchMap={resultSearchMap}
+                      handleSelectMap={handleSelectMap}
+                      isEdit={false}
+                    />
+                  </Col>
+                </Row>
+              </Col>
+              <Col span={11} offset={2}>
+                <Row gutter={24}>
+                  <Col span={12}>
+                    <Form.Item
+                      labelCol={{ span: 10 }}
+                      wrapperCol={{ span: 24 }}
+                      name={['provinceId']}
+                      label={intl.formatMessage({
+                        id: 'view.map.province_id',
+                      })}
+                      rules={[
                         {
-                          id: 'view.category.tags',
+                          required: true,
+                          message: intl.formatMessage({
+                            id: 'view.map.required_field',
+                          }),
                         },
+                      ]}
+                    >
+                      <Select
+                        showSearch
+                        onChange={(cityId) => onChangeCity(cityId)}
+                        filterOption={filterOption}
+                        options={normalizeOptions('name', 'provinceId', provincesOptions)}
+                        placeholder={intl.formatMessage({
+                          id: 'view.map.province_id',
+                        })}
+                        allowClear
+                        getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      labelCol={{ span: 10 }}
+                      wrapperCol={{ span: 24 }}
+                      name={['districtId']}
+                      label={intl.formatMessage({
+                        id: 'view.map.district_id',
+                      })}
+                      rules={[
                         {
-                          cam: intl.formatMessage({ id: 'camera' }),
+                          required: true,
+                          message: intl.formatMessage({
+                            id: 'view.map.required_field',
+                          }),
                         },
-                      )}
-                      name={['tags']}
-                      rules={[]}
+                      ]}
+                    >
+                      <Select
+                        showSearch
+                        onChange={(districtId) => onChangeDistrict(districtId)}
+                        filterOption={filterOption}
+                        options={normalizeOptions('name', 'districtId', districts)}
+                        placeholder={intl.formatMessage({
+                          id: 'view.map.district_id',
+                        })}
+                        allowClear
+                        getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={12}>
+                    <Form.Item
+                      labelCol={{ span: 10 }}
+                      wrapperCol={{ span: 24 }}
+                      name={['wardId']}
+                      label={intl.formatMessage({
+                        id: 'view.map.ward_id',
+                      })}
+                      // rules={[
+                      //   {
+                      //     required: true,
+                      //     message: `${intl.formatMessage({
+                      //       id: 'view.map.required_field',
+                      //     })}`,
+                      //   },
+                      // ]}
                     >
                       <Select
                         showSearch
                         filterOption={filterOption}
-                        options={normalizeOptions('key', 'uuid', tagsOptions)}
+                        options={normalizeOptions('name', 'id', wards)}
                         placeholder={intl.formatMessage({
-                          id: 'view.map.choose_tags',
+                          id: 'view.map.ward_id',
                         })}
                         allowClear
                         getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                        mode="multiple"
                       />
                     </Form.Item>
-                    <Button
-                      shape="circle"
-                      icon={<PlusOutlined />}
-                      size="small"
-                      onClick={() => console.log('click')}
-                    />
-                  </StyledSpace>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={24}>
-                  <Form.Item
-                    labelCol={{ span: 5 }}
-                    wrapperCol={{ span: 24 }}
-                    label="IP"
-                    name={['ip']}
-                    rules={[
-                      {
-                        required: true,
-                        message: `${intl.formatMessage({
-                          id: 'view.map.required_field',
-                        })}`,
-                      },
-                      {
-                        pattern:
-                          /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
-                        message: `${intl.formatMessage({
-                          id: 'view.map.ip_error',
-                        })}`,
-                      },
-                    ]}
-                  >
-                    <Input
-                      placeholder={intl.formatMessage(
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      labelCol={{ span: 10 }}
+                      wrapperCol={{ span: 24 }}
+                      name={['address']}
+                      label={intl.formatMessage({
+                        id: 'view.storage.street',
+                      })}
+                      rules={[
                         {
-                          id: 'view.map.please_enter_ip',
-                        },
-                        {
-                          plsEnter: intl.formatMessage({
-                            id: 'please_enter',
+                          required: true,
+                          message: intl.formatMessage({
+                            id: 'view.map.required_field',
                           }),
                         },
-                      )}
-                      onBlur={(e) => {
-                        form.setFieldsValue({
-                          ip: e.target.value.trim(),
-                        });
-                      }}
-                      onPaste={(e) => {
-                        e.preventDefault();
-                        form.setFieldsValue({
-                          ip: e.clipboardData.getData('text').trim(),
-                        });
-                      }}
-                      maxLength={255}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={24}>
-                  <Form.Item
-                    labelCol={{ span: 5 }}
-                    wrapperCol={{ span: 24 }}
-                    label={intl.formatMessage({
-                      id: 'view.map.add_image',
-                    })}
-                  >
-                    <SpaceAddAvatar>
-                      {avatarUrl !== '' && (
-                        <div className=" d-flex justify-content-center">
-                          <Avatar
-                            icon={<UserOutlined />}
-                            src={avatarUrl}
-                            className="avatarUser"
-                            size={{
-                              xs: 14,
-                              sm: 22,
-                              md: 30,
-                              lg: 44,
-                              xl: 60,
-                              xxl: 100,
-                            }}
-                          />
-                        </div>
-                      )}
-                      <Dragger {...DraggerProps}>
-                        <p className="ant-upload-drag-icon">
-                          <InboxOutlined />
-                        </p>
-                        <p className="ant-upload-text">
-                          {intl.formatMessage({
-                            id: 'view.map.dragger_title',
+                      ]}
+                    >
+                      <Input
+                        maxLength={255}
+                        placeholder={intl.formatMessage(
+                          {
+                            id: 'view.map.please_enter_street',
+                          },
+                          {
+                            plsEnter: intl.formatMessage({
+                              id: 'please_enter',
+                            }),
+                          },
+                        )}
+                        onBlur={(e) => {
+                          form.setFieldsValue({
+                            address: e.target.value.trim(),
+                          });
+                        }}
+                        onPaste={(e) => {
+                          e.preventDefault();
+                          form.setFieldsValue({
+                            address: e.clipboardData.getData('text').trim(),
+                          });
+                        }}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={24}>
+                    <StyledSpace>
+                      <Form.Item
+                        labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 24 }}
+                        label={intl.formatMessage({
+                          id: 'view.map.zone',
+                        })}
+                        name={['zoneUuid']}
+                        rules={[
+                          {
+                            required: true,
+                            message: intl.formatMessage({
+                              id: 'view.map.required_field',
+                            }),
+                          },
+                        ]}
+                      >
+                        <Select
+                          showSearch
+                          filterOption={filterOption}
+                          options={normalizeOptions('name', 'uuid', zonesOptions)}
+                          placeholder={intl.formatMessage(
+                            {
+                              id: 'view.map.choose_zone',
+                            },
+                            {
+                              plsEnter: intl.formatMessage({
+                                id: 'please_enter',
+                              }),
+                            },
+                          )}
+                          allowClear
+                          getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                        />
+                      </Form.Item>
+                      <Tooltip
+                        placement="top"
+                        title={intl.formatMessage({ id: 'view.camera.add_new' })}
+                      >
+                        <Button
+                          shape="circle"
+                          icon={<PlusOutlined />}
+                          size="small"
+                          onClick={() => {
+                            setOpenDrawerAddZone(true);
+                          }}
+                        />
+                      </Tooltip>
+                    </StyledSpace>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={24}>
+                    <StyledSpace>
+                      <Form.Item
+                        labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 24 }}
+                        label={intl.formatMessage({
+                          id: 'view.map.administrative_unit',
+                        })}
+                        name={['administrativeUnitUuid']}
+                      >
+                        <Select
+                          allowClear
+                          showSearch
+                          filterOption={filterOption}
+                          options={normalizeOptions('name', 'uuid', adDivisionsOptions)}
+                          placeholder={intl.formatMessage({
+                            id: 'view.map.please_choose_administrative_unit',
                           })}
-                        </p>
-                        <p className="ant-upload-hint">
-                          {intl.formatMessage({
-                            id: 'view.map.dragger_sub_title',
+                          getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                        />
+                      </Form.Item>
+                      <Tooltip
+                        placement="top"
+                        title={intl.formatMessage({ id: 'view.camera.add_new' })}
+                      >
+                        <Button
+                          shape="circle"
+                          icon={<PlusOutlined />}
+                          size="small"
+                          onClick={() => {
+                            setOpenDrawerAddAdministrativeUnit(true);
+                          }}
+                        />
+                      </Tooltip>
+                    </StyledSpace>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={24}>
+                    <Form.Item
+                      labelCol={{ span: 5 }}
+                      wrapperCol={{ span: 24 }}
+                      label={intl.formatMessage({
+                        id: 'view.map.hls_url',
+                      })}
+                      name={['hlsUrl']}
+                    >
+                      <Input
+                        placeholder={intl.formatMessage(
+                          {
+                            id: 'view.map.please_enter_hls_url',
+                          },
+                          {
+                            plsEnter: intl.formatMessage({
+                              id: 'please_enter',
+                            }),
+                          },
+                        )}
+                        onBlur={(e) => {
+                          form.setFieldsValue({
+                            hlsUrl: e.target.value.trim(),
+                          });
+                        }}
+                        onPaste={(e) => {
+                          e.preventDefault();
+                          form.setFieldsValue({
+                            hlsUrl: e.clipboardData.getData('text').trim(),
+                          });
+                        }}
+                        maxLength={2000}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={24}>
+                    <StyledSpace>
+                      <Form.Item
+                        labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 24 }}
+                        label={intl.formatMessage(
+                          {
+                            id: 'view.category.tags',
+                          },
+                          {
+                            cam: intl.formatMessage({ id: 'camera' }),
+                          },
+                        )}
+                        name={['tags']}
+                        rules={[]}
+                      >
+                        <Select
+                          showSearch
+                          filterOption={filterOption}
+                          options={normalizeOptions('key', 'uuid', tagsOptions)}
+                          placeholder={intl.formatMessage({
+                            id: 'view.map.choose_tags',
                           })}
-                        </p>
-                      </Dragger>
-                    </SpaceAddAvatar>
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </Form>
-      </Card>
-    </StyledDrawer>
+                          allowClear
+                          getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                          mode="multiple"
+                        />
+                      </Form.Item>
+                      <Tooltip
+                        placement="top"
+                        title={intl.formatMessage({ id: 'view.camera.add_new' })}
+                      >
+                        <Button
+                          shape="circle"
+                          icon={<PlusOutlined />}
+                          size="small"
+                          onClick={() => {
+                            setOpenDrawerAddCamCategory(true);
+                            setType('camera_tags');
+                          }}
+                        />
+                      </Tooltip>
+                    </StyledSpace>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={24}>
+                    <Form.Item
+                      labelCol={{ span: 5 }}
+                      wrapperCol={{ span: 24 }}
+                      label="IP"
+                      name={['ip']}
+                      rules={[
+                        {
+                          required: true,
+                          message: `${intl.formatMessage({
+                            id: 'view.map.required_field',
+                          })}`,
+                        },
+                        {
+                          pattern:
+                            /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
+                          message: `${intl.formatMessage({
+                            id: 'view.map.ip_error',
+                          })}`,
+                        },
+                      ]}
+                    >
+                      <Input
+                        placeholder={intl.formatMessage(
+                          {
+                            id: 'view.map.please_enter_ip',
+                          },
+                          {
+                            plsEnter: intl.formatMessage({
+                              id: 'please_enter',
+                            }),
+                          },
+                        )}
+                        onBlur={(e) => {
+                          form.setFieldsValue({
+                            ip: e.target.value.trim(),
+                          });
+                        }}
+                        onPaste={(e) => {
+                          e.preventDefault();
+                          form.setFieldsValue({
+                            ip: e.clipboardData.getData('text').trim(),
+                          });
+                        }}
+                        maxLength={255}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={24}>
+                    <Form.Item
+                      labelCol={{ span: 5 }}
+                      wrapperCol={{ span: 24 }}
+                      label={intl.formatMessage({
+                        id: 'view.map.add_image',
+                      })}
+                    >
+                      <SpaceAddAvatar>
+                        {avatarUrl !== '' && (
+                          <div className=" d-flex justify-content-center">
+                            <Avatar
+                              icon={<UserOutlined />}
+                              src={avatarUrl}
+                              className="avatarUser"
+                              size={{
+                                xs: 14,
+                                sm: 22,
+                                md: 30,
+                                lg: 44,
+                                xl: 60,
+                                xxl: 100,
+                              }}
+                            />
+                          </div>
+                        )}
+                        <Dragger {...DraggerProps}>
+                          <p className="ant-upload-drag-icon">
+                            <InboxOutlined />
+                          </p>
+                          <p className="ant-upload-text">
+                            {intl.formatMessage({
+                              id: 'view.map.dragger_title',
+                            })}
+                          </p>
+                          <p className="ant-upload-hint">
+                            {intl.formatMessage({
+                              id: 'view.map.dragger_sub_title',
+                            })}
+                          </p>
+                        </Dragger>
+                      </SpaceAddAvatar>
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Form>
+        </Card>
+      </StyledDrawer>
+      <GroupCameraDrawer cameraGroupUuid={null} isEdit={isEdit} setIsEdit={setIsEdit} />
+
+      {openDrawerAddCamCategory && (
+        <AddEditCameraCategory
+          onClose={() => setOpenDrawerAddCamCategory(false)}
+          dispatch={dispatch}
+          selectedRecord={null}
+          openDrawer={openDrawerAddCamCategory}
+          type={type}
+          resetForm={resetForm}
+        />
+      )}
+
+      {openDrawerAddZone && (
+        <AddEditZone
+          onClose={() => setOpenDrawerAddZone(false)}
+          dispatch={dispatch}
+          selectedRecord={null}
+          openDrawer={openDrawerAddZone}
+          resetForm={resetForm}
+        />
+      )}
+
+      {openDrawerAddAdministrativeUnit && (
+        <AddEditAdministrativeUnit
+          onClose={() => setOpenDrawerAddAdministrativeUnit(false)}
+          dispatch={dispatch}
+          selectedRecord={null}
+          openDrawer={openDrawerAddAdministrativeUnit}
+          resetForm={resetForm}
+        />
+      )}
+    </>
   );
 };
 function mapStateToProps(state) {
