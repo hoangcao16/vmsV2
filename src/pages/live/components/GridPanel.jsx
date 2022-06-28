@@ -61,7 +61,7 @@ const GridPanel = ({ dispatch, selectedCamera, mode, grids, gridType }) => {
         <Droppable droppableId={`droppabled-${index}`} key={index}>
           {(dropProvided, dropSnapshot) => (
             <GridItem
-              grid={grids}
+              grid={getGrid(gridType)}
               ref={dropProvided.innerRef}
               {...dropProvided.droppableProps}
               onClick={() => handleSelectCamera(index)}
@@ -87,13 +87,13 @@ const GridPanel = ({ dispatch, selectedCamera, mode, grids, gridType }) => {
                       style={provided.draggableProps.style}
                       isDragging={snapshot.draggingOver}
                     >
-                      {grids[index]?.uuid && (
-                        <CameraSlot
-                          isDraggingOver={dropSnapshot.isDraggingOver}
-                          camera={grids[index]}
-                          slotIndex={index}
-                        />
-                      )}
+                      {/* {grids[index]?.uuid && ( */}
+                      <CameraSlot
+                        isDraggingOver={dropSnapshot.isDraggingOver}
+                        camera={grids[index]}
+                        slotIndex={index}
+                      />
+                      {/* )} */}
                     </GridItemContent>
                   )}
                 </Draggable>
@@ -112,7 +112,7 @@ const StyledGrid = styled.div`
 `;
 
 const GridItem = styled.div`
-  flex: 1 1 ${(props) => 100 / Math.sqrt(props.grid.length)}%;
+  flex: 1 1 ${(props) => 100 / Math.sqrt(props.grid)}%;
   border: 2px solid #1f1f1f;
 `;
 

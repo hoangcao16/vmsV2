@@ -43,13 +43,13 @@ const CameraSlot = ({
   const requestId = useRef(uuidv4());
   useEffect(() => {
     if (mode === 'live') {
-      if (camera.uuid) {
-        startCamera(camera.uuid, camera.type, 'webrtc');
+      if (camera?.uuid) {
+        startCamera(camera?.uuid, camera?.type, 'webrtc');
       } else {
         closeCamera();
       }
     }
-  }, [camera.uuid, mode]);
+  }, [camera?.uuid, mode]);
 
   useEffect(() => {
     if (isRecording) {
@@ -247,10 +247,12 @@ const CameraSlot = ({
             });
         })
         .catch((error) => {
+          setLoading(false);
           console.log('error:', error);
         })
-        .catch((e) => console.log(e))
-        .finally(() => {});
+        .finally(() => {
+          setLoading(false);
+        });
     } else {
       const API = data.camproxyApi;
       const { token } = data;
@@ -273,7 +275,6 @@ const CameraSlot = ({
         });
     }
   };
-
   const closeCamera = () => {
     stopRecording();
     const html = document.querySelector('html');
@@ -286,11 +287,12 @@ const CameraSlot = ({
       html.style.removeProperty('overflow');
     }
     peerRef.current?.close();
-
-    dispatch({
-      type: 'live/closeCamera',
-      payload: camera,
-    });
+    if (camera?.uuid) {
+      dispatch({
+        type: 'live/closeCamera',
+        payload: camera,
+      });
+    }
   };
 
   const getFileName = (type) => {
@@ -511,7 +513,7 @@ const CameraSlot = ({
           <Spin indicator={<LoadingOutlined size={48} />} />
         </StyledLoading>
       )}
-      {camera && (
+      {camera && camera?.uuid && camera?.uuid !== '' && (
         <>
           {!inPresetView && (
             <StyledCameraSlotControl
@@ -540,6 +542,7 @@ const CameraSlot = ({
         ref={videoRef}
         width="100%"
         autoPlay
+        id={'camera-slot-' + slotIndex}
         controls={false}
         preload="none"
         crossOrigin="anonymous"
