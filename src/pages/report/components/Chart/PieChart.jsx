@@ -37,6 +37,11 @@ const PieChart = (props) => {
     },
     legend: {
       position: 'bottom',
+      itemName: {
+        style: {
+          fill: '#dfdfdf',
+        },
+      },
     },
     interactions: [
       {

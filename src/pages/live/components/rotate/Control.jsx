@@ -5,9 +5,8 @@ import {
   CaretRightOutlined,
   CaretUpOutlined,
   DownOutlined,
-  UpOutlined
+  UpOutlined,
 } from '@ant-design/icons';
-import { Button } from 'antd';
 import { connect } from 'dva';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -223,81 +222,70 @@ const Control = ({ dispatch, cameraSelected }) => {
   };
 
   return (
-    <>
-      {' '}
-      <div className="pieContainer">
-        <div id="pieSlice1" className="hold">
-          <div className="pie">
-            <div className="pie--right">
-              <Button
-                className="right"
-                icon={<CaretRightOutlined />}
-                onMouseDown={onPanRightStart}
-                onMouseUp={onPanRightEnd}
-                onMouseLeave={onPanRightEnd}
-              />
-            </div>
-          </div>
+    <div className="container">
+      <nav>
+        <div
+          className="button top"
+          onMouseDown={onTiltUpStart}
+          onMouseUp={onTiltUpEnd}
+          onMouseLeave={onTiltUpEnd}
+        >
+          <i className="iIcon">
+            <CaretUpOutlined />
+          </i>
         </div>
-        <div id="pieSlice2" className="hold">
-          <div className="pie">
-            <div className="pie--bottom">
-              <Button
-                className="down"
-                icon={<CaretDownOutlined />}
-                onMouseDown={onTiltDownStart}
-                onMouseUp={onTiltDownEnd}
-                onMouseLeave={onTiltDownEnd}
-              />
-            </div>
-          </div>
+        <div
+          className="button right"
+          onMouseDown={onPanRightStart}
+          onMouseUp={onPanRightEnd}
+          onMouseLeave={onPanRightEnd}
+        >
+          <i className="iIcon">
+            <CaretRightOutlined />
+          </i>
         </div>
-        <div id="pieSlice3" className="hold">
-          <div className="pie">
-            <div className="pie--left">
-              <Button
-                className="left"
-                icon={<CaretLeftOutlined />}
-                onMouseDown={onPanLeftStart}
-                onMouseUp={onPanLeftEnd}
-                onMouseLeave={onPanLeftEnd}
-              />
-            </div>
-          </div>
+        <div
+          className="button left"
+          onMouseDown={onPanLeftStart}
+          onMouseUp={onPanLeftEnd}
+          onMouseLeave={onPanLeftEnd}
+        >
+          <i className="iIcon">
+            <CaretLeftOutlined />
+          </i>
         </div>
-        <div id="pieSlice4" className="hold">
-          <div className="pie">
-            <div className="pie--top">
-              <Button
-                className="up"
-                icon={<CaretUpOutlined />}
-                onMouseDown={onTiltUpStart}
-                onMouseUp={onTiltUpEnd}
-                onMouseLeave={onTiltUpEnd}
-              />
-            </div>
-          </div>
+        <div
+          className="button bottom"
+          onMouseDown={onTiltDownStart}
+          onMouseUp={onTiltDownEnd}
+          onMouseLeave={onTiltDownEnd}
+        >
+          <i className="iIcon">
+            <CaretDownOutlined />
+          </i>
         </div>
-        <div className="wrapper-inner-circle">
-          <div className="inner-circle">
-            <div className="inner-circle-content">
+        <div className="center-wrapper">
+          <div className="center-button">
+            <div className="center-button--content">
               <UpOutlined onClick={setUpSpeed} />
               <div className="inner-circle-content--number">{speed}</div>
               <DownOutlined onClick={setDownSpeed} />
             </div>
           </div>
         </div>
+      </nav>
+      <div className="zoom">
+        <Wrapper>
+          <ZoomButton onMouseDown={onZoomInStart} onMouseUp={onZoomInEnd}>
+            +
+          </ZoomButton>
+          Zoom
+          <ZoomButton onMouseDown={onZoomOutStart} onMouseUp={onZoomOutEnd}>
+            -
+          </ZoomButton>
+        </Wrapper>
       </div>
-      <Wrapper>
-        <ZoomButton onMouseDown={onZoomInStart} onMouseUp={onZoomInEnd}>
-          +
-        </ZoomButton>
-        Zoom
-        <ZoomButton onMouseDown={onZoomOutStart} onMouseUp={onZoomOutEnd}>
-          -
-        </ZoomButton>
-      </Wrapper>
-    </>
+    </div>
   );
 };
 
@@ -310,6 +298,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 3px;
+  margin-left: 100px;
 `;
 
 const ZoomButton = styled.div`
@@ -320,6 +309,7 @@ const ZoomButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `;
 
 function mapStateToProps(state) {

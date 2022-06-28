@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
 import { Column } from '@ant-design/plots';
 import { connect } from 'dva';
+import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
-
 import { TimeoutChart } from '../../style';
 
 const BarChart = (props) => {
@@ -21,6 +20,11 @@ const BarChart = (props) => {
     seriesField: 'type',
     legend: {
       position: 'bottom',
+      itemName: {
+        style: {
+          fill: '#dfdfdf',
+        },
+      },
     },
     label: {
       position: 'middle',

@@ -31,8 +31,29 @@ const LineChart = (props) => {
     },
     legend: {
       position: 'bottom',
+      itemName: {
+        style: {
+          fill: '#dfdfdf',
+        },
+      },
+      marker: {
+        symbol: (x, y, r) => {
+          return [
+            ['M', x - r * 2, y],
+            ['L', x + r * 2, y],
+          ];
+        },
+        style: (oldStyle) => {
+          return {
+            ...oldStyle,
+            r: 4,
+            lineWidth: 2,
+            stroke: oldStyle.stroke || oldStyle.fill,
+          };
+        },
+      },
     },
-    color: ['#1979C9', '#D62A0D', '#FAA219'],
+    smooth: true,
   };
 
   return (
