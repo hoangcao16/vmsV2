@@ -779,110 +779,111 @@ function VideoPlayer({
         <canvas ref={refCanvas} className="snapshotCanvas" />
       </Row>
 
-      <Row className="playControl">
-        <Col span={7} />
-        <Col className="actionControl" span={10}>
-          <div
-            className={`disable-select ${
-              checkDisabled() ? 'playIconContainer__disabled' : 'playIconContainer'
-            }`}
-          >
-            <FiRewind
-              className="playIcon"
+      {!checkDisabled() && (
+        <Row className="playControl">
+          <Col span={7} />
+          <Col className="actionControl" span={10}>
+            <div
+              className={`disable-select ${
+                checkDisabled() ? 'playIconContainer__disabled' : 'playIconContainer'
+              }`}
+            >
+              <FiRewind
+                className="playIcon"
+                onClick={() => {
+                  if (checkDisabled()) return;
+                  playHandler('decrease_rate');
+                }}
+              />
+            </div>
+
+            <div
+              className={`disable-select ${
+                checkDisabled() ? 'playIcon2Container__disabled' : 'playIcon2Container'
+              }`}
               onClick={() => {
                 if (checkDisabled()) return;
-                playHandler('decrease_rate');
+                const playEle = document.getElementById('video-control-play');
+                if (playEle.style.display === 'none') {
+                  playHandler('pause');
+                } else {
+                  playHandler('play');
+                }
               }}
-            />
-          </div>
+            >
+              <FiPause
+                id="video-control-pause"
+                className="playIcon2"
+                style={{ display: 'none' }}
+                // onClick={() => {
+                //   if (checkDisabled()) return;
+                //   playHandler("pause");
+                // }}
+              />
+              <FiPlay
+                id="video-control-play"
+                className="playIcon2"
+                // onClick={() => {
+                //   if (checkDisabled()) return;
+                //   playHandler("play");
+                // }}
+              />
+            </div>
 
-          <div
-            className={`disable-select ${
-              checkDisabled() ? 'playIcon2Container__disabled' : 'playIcon2Container'
-            }`}
-            onClick={() => {
-              if (checkDisabled()) return;
-              const playEle = document.getElementById('video-control-play');
-              if (playEle.style.display === 'none') {
-                playHandler('pause');
-              } else {
-                playHandler('play');
-              }
-            }}
-          >
-            <FiPause
-              id="video-control-pause"
-              className="playIcon2"
-              style={{ display: 'none' }}
-              // onClick={() => {
-              //   if (checkDisabled()) return;
-              //   playHandler("pause");
-              // }}
-            />
-            <FiPlay
-              id="video-control-play"
-              className="playIcon2"
-              // onClick={() => {
-              //   if (checkDisabled()) return;
-              //   playHandler("play");
-              // }}
-            />
-          </div>
+            <div
+              className={`disable-select ${
+                checkDisabled() ? 'playIconContainer__disabled' : 'playIconContainer'
+              }`}
+            >
+              <FiFastForward
+                className="playIcon"
+                onClick={() => {
+                  if (checkDisabled()) return;
+                  playHandler('increase_rate');
+                }}
+              />
+            </div>
+          </Col>
 
-          <div
-            className={`disable-select ${
-              checkDisabled() ? 'playIconContainer__disabled' : 'playIconContainer'
-            }`}
-          >
-            <FiFastForward
-              className="playIcon"
-              onClick={() => {
-                if (checkDisabled()) return;
-                playHandler('increase_rate');
-              }}
-            />
-          </div>
-        </Col>
+          <Col span={7} className="captureContainer">
+            {checkDisabled() &&
+              nameSpace === DAILY_ARCHIVE_NAMESPACE &&
+              eventFileCurrent.type !== -1 && (
+                <Tooltip
+                  placement="bottomLeft"
+                  title={intl.formatMessage({
+                    id: 'view.storage.org',
+                  })}
+                >
+                  <span className="ogLabel" onClick={originalHandler}>
+                    ORG
+                  </span>
+                </Tooltip>
+              )}
 
-        <Col span={7} className="captureContainer">
-          {checkDisabled() &&
-            nameSpace === DAILY_ARCHIVE_NAMESPACE &&
-            eventFileCurrent.type !== -1 && (
+            {checkBtnEditRootFileDisabled() && (
               <Tooltip
                 placement="bottomLeft"
                 title={intl.formatMessage({
                   id: 'view.storage.org',
                 })}
               >
-                <span className="ogLabel" onClick={originalHandler}>
+                <span
+                  className="ogLabel"
+                  // onClick={() => {
+                  //   if (fileCurrent.tableName === 'file') {
+                  //     editRootFileHandler(fileCurrent.uuid).then();
+                  //   } else {
+                  //     editRootFileHandler(fileCurrent.rootFileUuid).then();
+                  //   }
+                  // }}
+                >
                   ORG
                 </span>
               </Tooltip>
             )}
 
-          {checkBtnEditRootFileDisabled() && (
-            <Tooltip
-              placement="bottomLeft"
-              title={intl.formatMessage({
-                id: 'view.storage.org',
-              })}
-            >
-              <span
-                className="ogLabel"
-                // onClick={() => {
-                //   if (fileCurrent.tableName === 'file') {
-                //     editRootFileHandler(fileCurrent.uuid).then();
-                //   } else {
-                //     editRootFileHandler(fileCurrent.rootFileUuid).then();
-                //   }
-                // }}
-              >
-                ORG
-              </span>
-            </Tooltip>
-          )}
-
-          {/* <Tooltip placement="bottomLeft" title={`t('view.storage.view_information')`}>
+            {/* <Tooltip placement="bottomLeft" title={`t('view.storage.view_information')`}>
 				<Popover
 					overlayClassName={`${
 						checkBtnInfoDisabled() ? 'fileInfoPopoverHidden' : 'fileInfoPopover'
@@ -902,7 +903,7 @@ function VideoPlayer({
 				</Popover>
 			</Tooltip> */}
 
-          {/* <Tooltip placement="bottomLeft" title={`t('view.storage.download_file')`}>
+            {/* <Tooltip placement="bottomLeft" title={`t('view.storage.download_file')`}>
 				<FiDownload
 					className={`${checkBtnDownloadDisabled() ? 'action__disabled' : 'action'}`}
 					// onClick={() => {
@@ -912,49 +913,49 @@ function VideoPlayer({
 				/>
 			</Tooltip> */}
 
-          {checkBtnCaptureDisabled() && (
-            <Tooltip
-              placement="bottomLeft"
-              title={intl.formatMessage({
-                id: 'view.storage.cut_file',
-              })}
-            >
-              <Button
-                className="btn-action"
-                type="link"
-                icon={<FiScissors className="action" />}
-                onClick={() => {
-                  captureVideoHandler();
-                }}
-              >
-                {intl.formatMessage({
+            {checkBtnCaptureDisabled() && (
+              <Tooltip
+                placement="bottomLeft"
+                title={intl.formatMessage({
                   id: 'view.storage.cut_file',
                 })}
-              </Button>
-            </Tooltip>
-          )}
-
-          {checkBtnCaptureDisabled() && (
-            <Tooltip
-              placement="bottomLeft"
-              title={intl.formatMessage({
-                id: 'view.storage.capture_snapshot',
-              })}
-            >
-              <Button
-                className="btn-action"
-                type="link"
-                icon={<FiCamera className="action" />}
-                onClick={debounce(captureSnapshotHandler, 500)}
               >
-                {intl.formatMessage({
+                <Button
+                  className="btn-action"
+                  type="link"
+                  icon={<FiScissors className="action" />}
+                  onClick={() => {
+                    captureVideoHandler();
+                  }}
+                >
+                  {intl.formatMessage({
+                    id: 'view.storage.cut_file',
+                  })}
+                </Button>
+              </Tooltip>
+            )}
+
+            {checkBtnCaptureDisabled() && (
+              <Tooltip
+                placement="bottomLeft"
+                title={intl.formatMessage({
                   id: 'view.storage.capture_snapshot',
                 })}
-              </Button>
-            </Tooltip>
-          )}
+              >
+                <Button
+                  className="btn-action"
+                  type="link"
+                  icon={<FiCamera className="action" />}
+                  onClick={debounce(captureSnapshotHandler, 500)}
+                >
+                  {intl.formatMessage({
+                    id: 'view.storage.capture_snapshot',
+                  })}
+                </Button>
+              </Tooltip>
+            )}
 
-          {/* <Tooltip placement="bottomLeft" title={`t('view.storage.delete')`}>
+            {/* <Tooltip placement="bottomLeft" title={`t('view.storage.delete')`}>
 				<Popconfirm
 					title={`t('noti.delete_file', { this: t('this') })`}
 					cancelText={`t('view.user.detail_list.cancel')`}
@@ -969,8 +970,9 @@ function VideoPlayer({
 					/>
 				</Popconfirm>
 			</Tooltip> */}
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      )}
 
       {nameSpace === DAILY_ARCHIVE_NAMESPACE && (
         <ContainerCapture>
