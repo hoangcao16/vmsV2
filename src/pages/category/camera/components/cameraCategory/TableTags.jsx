@@ -61,7 +61,7 @@ const TableTags = ({ dispatch, listTags, metadataTags, type, loading }) => {
 
   const handleSearch = (e) => {
     const value = e.target.value.trim();
-    const dataParam = Object.assign({ ...searchParam, page: 1, name: value });
+    const dataParam = Object.assign({ ...searchParam, page: 1, key: value });
     setSearchParam(dataParam);
     handleGetListTags(dataParam);
   };
