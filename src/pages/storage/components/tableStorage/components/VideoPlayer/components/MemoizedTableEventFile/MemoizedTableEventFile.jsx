@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { findIndex } from 'lodash-es';
 import moment from 'moment';
 import React, { useState } from 'react';
-import { BsThreeDotsVertical } from 'react-icons/all';
+import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useIntl } from 'umi';
 import { ProTableStyled } from '../../../../style';
 import { ContainerTableEventFile } from './style';
