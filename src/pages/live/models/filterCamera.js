@@ -62,7 +62,7 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        if (pathname === '/map') {
+        if (pathname === '/map' || pathname === '/live') {
           dispatch({ type: 'fetchInitData' });
         }
       });

@@ -28,6 +28,7 @@ const CameraSlot = ({
   slotIndex,
   speedVideo,
   mode,
+  inPresetView = false,
 }) => {
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -512,17 +513,19 @@ const CameraSlot = ({
       )}
       {camera && (
         <>
-          <StyledCameraSlotControl
-            camera={camera}
-            isRecording={isRecording}
-            onCapture={captureCamera}
-            onRecord={recordVideo}
-            onClose={closeCamera}
-            mode={mode}
-            zoomIn={zoomIn}
-            onZoom={zoomCamera}
-            showPresetSetting={handleShowPresetSetting}
-          />
+          {!inPresetView && (
+            <StyledCameraSlotControl
+              camera={camera}
+              isRecording={isRecording}
+              onCapture={captureCamera}
+              onRecord={recordVideo}
+              onClose={closeCamera}
+              mode={screen.mode}
+              zoomIn={zoomIn}
+              onZoom={zoomCamera}
+              showPresetSetting={handleShowPresetSetting}
+            />
+          )}
           <StyledCameraBottom>
             <StyledCameraName>{camera.name}</StyledCameraName>
             {isRecording && (

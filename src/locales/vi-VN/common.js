@@ -394,7 +394,7 @@ export default {
   'view.storage.len': 'Độ dài',
   'view.storage.time_start_record': 'Thời gian bắt đầu ghi hình',
   'view.storage.time_end_record': 'Thời gian kết thúc ghi hình',
-  'view.storage.save_note': 'Lưu ghi chú',
+  'view.storage.save_note': 'Lưu',
   'view.storage.tick': 'Đánh dấu tệp quan trọng',
   'view.storage.untick': 'Bỏ đánh dấu tệp quan trọng',
   'view.storage.org': 'Xem tệp gốc',

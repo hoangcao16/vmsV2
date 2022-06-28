@@ -1,12 +1,13 @@
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
-import ProTable from '@ant-design/pro-table';
-import { Select, Tooltip } from 'antd';
+import { Button, Select, Tooltip } from 'antd';
 import _ from 'lodash';
 import { findIndex } from 'lodash-es';
 import moment from 'moment';
 import React, { useState } from 'react';
-import { ContainerTableEventFile } from './style';
+import { BsThreeDotsVertical } from 'react-icons/all';
 import { useIntl } from 'umi';
+import { ProTableStyled } from '../../../../style';
+import { ContainerTableEventFile } from './style';
 
 const TableEventFile = (props) => {
   const intl = useIntl();
@@ -80,6 +81,27 @@ const TableEventFile = (props) => {
     }
   };
 
+  const onSetEventFileHandler = (eventUuid, uuid) => {
+    console.log('❗TuanHQ🐞 💻 onSetEventFileHandler 💻 eventUuid, uuid', eventUuid, uuid);
+  };
+
+  const renderSelectContent = (name, fieldName) => {
+    return (
+      <div className="event-select">
+        <span className="event-name">{name}</span>&nbsp;
+        <span className="field-name">{fieldName}</span>
+      </div>
+    );
+  };
+
+  const renderSetEventAction = (row) => {
+    return (
+      <div className="actionEventFileInActive">
+        <Button type="text" icon={<BsThreeDotsVertical />} />
+      </div>
+    );
+  };
+
   const eventFileColumns = [
     {
       title: intl.formatMessage({
@@ -143,12 +165,19 @@ const TableEventFile = (props) => {
 
   return (
     <ContainerTableEventFile>
-      <ProTable
+      <ProTableStyled
         rowKey={'uuid'}
         search={false}
         options={false}
         dataSource={dataList}
         columns={eventFileColumns}
+        onRow={(record) => {
+          return {
+            onClick: (event) => {
+              props.onSetEventFileHandler(record);
+            },
+          };
+        }}
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,

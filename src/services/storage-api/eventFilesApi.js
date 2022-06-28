@@ -1,6 +1,10 @@
 import request from '@/utils/request';
 
 const eventFilesApi = {
+  getEventList: (params) => {
+    return request.get(`/cctv-controller-svc/api/v1/events`, { params: params });
+  },
+
   getAllEventFiles: (params) => {
     return request.get(`/cctv-controller-svc/api/v1/event-files`, { params: params });
   },

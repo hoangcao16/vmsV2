@@ -394,7 +394,7 @@ export default {
   'view.storage.time_end_record': 'Time ending record',
   'view.storage.tick': 'Tick important file',
   'view.storage.untick': 'Untick important file',
-  'view.storage.save_note': 'Save note',
+  'view.storage.save_note': 'Save',
   'view.storage.org': 'View original file',
   'view.storage.view_information': 'View file information',
   'view.storage.detail_information': 'Detail file information',

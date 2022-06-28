@@ -1,3 +1,5 @@
+import PTZApi from '@/services/ptz/PTZApi';
+
 export default {
   namespace: 'showDrawer',
   state: {
@@ -19,6 +21,14 @@ export default {
     },
     handleCloseDrawerDetailsPreset(state) {
       return { ...state, showDrawerDetailsPreset: false, selectedPreset: null };
+    },
+
+    handleEditPreset(state) {
+      return {
+        ...state,
+        showDrawerDetailsPreset: false,
+        showDrawerAddEditPreset: true,
+      };
     },
   },
   effects: {
@@ -46,12 +56,39 @@ export default {
         });
       } catch (error) {}
     },
+
     *closeDrawerDetailsPreset({ payload }, { put }) {
       try {
         yield put({
           type: 'handleCloseDrawerDetailsPreset',
         });
       } catch (error) {}
+    },
+
+    *editPreset({ payload }, { put }) {
+      try {
+        yield put({
+          type: 'handleEditPreset',
+        });
+      } catch (error) {}
+    },
+
+    *deletePreset({ payload: { body } }, { put, call }) {
+      try {
+        yield call(PTZApi.deletePreset, body);
+
+        const camera = yield select((state) => state.live.cameraSelected || {});
+
+        yield put({ type: 'live/openDrawerSettingCamera', payload: { camera } });
+
+        yield put({
+          type: 'handleCloseDrawerDetailsPresetTour',
+        });
+      } catch (error) {
+        yield put({
+          type: 'handleCloseDrawerDetailsPresetTour',
+        });
+      }
     },
   },
 };
