@@ -14,7 +14,7 @@ export default function MSCustomizeDrawer(props) {
       destroyOnClose={true}
       zIndex={zIndex}
       closeIcon={closeIcon || <CustomCloseIcon />}
-      getContainer={false}
+      // getContainer={false}
       {...rest}
       // minWidth={'100%'}
     >

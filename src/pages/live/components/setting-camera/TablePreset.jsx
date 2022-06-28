@@ -1,5 +1,5 @@
 import { SpanCode } from '@/pages/category/camera/components/GroupCameraDrawer/style';
-import { Space, Table } from 'antd';
+import { Table } from 'antd';
 import { connect } from 'dva';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -38,28 +38,19 @@ function TablePreset({
     },
     {
       title: intl.formatMessage({
-        id: 'pages.setting-user.list-user.camera',
+        id: 'pages.setting-user.list-user.name',
       }),
       dataIndex: 'name',
-    },
-
-    {
-      title: intl.formatMessage({
-        id: 'pages.setting-user.list-user.option',
-      }),
-      fixed: 'right',
-      width: '15%',
-      render: (text, record) => {
-        return <Space>{/* <EyeOutlined onClick={handleShowDetailsPreset} /> */}</Space>;
-      },
     },
   ];
 
   const HeaderPreset = () => {
     return (
       <StyledHeader>
-        <h3>Danh sách preset</h3>
-        <SpanCode onClick={handleShowAddEditPreset}>+ Thêm preset</SpanCode>
+        <h3>{intl.formatMessage({ id: 'view.live.menu_preset' })}</h3>
+        <SpanCode onClick={handleShowAddEditPreset}>+ {intl.formatMessage({ id: 'pages.live-mode.noti.add-preset' })}</SpanCode>
+
+       
       </StyledHeader>
     );
   };

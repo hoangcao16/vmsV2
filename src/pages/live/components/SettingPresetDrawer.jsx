@@ -1,7 +1,4 @@
-import {
-  FullscreenOutlined, SettingOutlined,
-  SwapOutlined
-} from '@ant-design/icons';
+import { FullscreenOutlined, SettingOutlined, SwapOutlined } from '@ant-design/icons';
 import TabPane from '@ant-design/pro-card/lib/components/TabPane';
 import { Divider, Tabs } from 'antd';
 import { connect } from 'dva';
@@ -44,8 +41,10 @@ function SettingPresetDrawer({ showPresetSetting, onCloseDrawer, cameraSelected 
             <>
               <TabsContentRender
                 icon={<SettingOutlined style={{ fontSize: '25px' }} />}
-                title="Cài đặt preset"
-                description="Chọn và cài đặt Preset để xem Camera"
+                title={intl.formatMessage({ id: 'view.live.preset_setting' })}
+                description={intl.formatMessage({
+                  id: 'pages.live-mode.noti.choose-camera-to-preset',
+                })}
               />
             </>
           }
@@ -58,9 +57,12 @@ function SettingPresetDrawer({ showPresetSetting, onCloseDrawer, cameraSelected 
             <>
               <TabsContentRender
                 icon={<SwapOutlined style={{ fontSize: '25px' }} />}
-                title="Quản lí preset, preset tour"
-                description="Chuyển từ Preset qua Preset tour"
+                title={intl.formatMessage({ id: 'pages.live-mode.noti.manage-preset-presetour' })}
+
+               
+                description={intl.formatMessage({ id: 'pages.live-mode.noti.manage-preset-presetour-description' })}
               />
+             
             </>
           }
           key={TABS.CHANGE_PRESET}
@@ -72,8 +74,12 @@ function SettingPresetDrawer({ showPresetSetting, onCloseDrawer, cameraSelected 
             <>
               <TabsContentRender
                 icon={<FullscreenOutlined style={{ fontSize: '25px' }} />}
-                title="Bảng điểu khiển"
-                description="Điều chỉnh góc quay Camera"
+                title={intl.formatMessage({ id: 'pages.live-mode.noti.control-panel' })}
+
+                
+                description={intl.formatMessage({ id: 'pages.live-mode.noti.control-panel-description' })}
+
+                
               />
             </>
           }
