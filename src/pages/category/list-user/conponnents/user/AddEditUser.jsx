@@ -1,5 +1,6 @@
 import MSCustomizeDrawer from '@/components/Drawer';
 import MSFormItem from '@/components/Form/Item';
+import { notify } from '@/components/Notify';
 import ExportEventFileApi from '@/services/exportEventFile';
 import getBase64 from '@/utils/getBase64';
 import permissionCheck from '@/utils/PermissionCheck';
@@ -89,7 +90,7 @@ function AddEditUser({
   const uploadImage = async (options) => {
     const { file } = options;
     await ExportEventFileApi.uploadAvatar(uuidV4(), file).then((result) => {
-      if (result.data && result.data.payload && result.data.payload.fileUploadInfoList.length > 0) {
+      if (result && result.payload && result.payload.fileUploadInfoList.length > 0) {
         getBase64(file, (imageUrl) => {
           setAvatarFileName(imageUrl);
           //   let fileName = result.data.payload.fileUploadInfoList[0].name;
@@ -236,12 +237,7 @@ function AddEditUser({
                         onChange={handleChange}
                       >
                         {avatarFileName && avatarFileName !== '' ? (
-                          <img
-                            className="avatar__image"
-                            src={avatarFileName}
-                            alt="avatar"
-                            style={{ width: '100%' }}
-                          />
+                          <img className="avatar__image" src={avatarFileName} alt="avatar" />
                         ) : (
                           uploadButton
                         )}
@@ -253,7 +249,7 @@ function AddEditUser({
                     <MSFormItem
                       {...layoutLong}
                       label={intl.formatMessage({
-                        id: 'pages.setting-user.list-user.name',
+                        id: 'view.ai_humans.name',
                       })}
                       type="input"
                       name="name"
@@ -378,10 +374,10 @@ function AddEditUser({
                       ]}
                     >
                       <DatePicker
-                        inputReadOnly={true}
                         format={dateFormat}
                         style={{ width: '100%' }}
                         disabledDate={disabledDate}
+                        placeholder="DD/MM/YYYY"
                       />
                     </Form.Item>
                   </Col>

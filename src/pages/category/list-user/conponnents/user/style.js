@@ -3,8 +3,12 @@ import styled from 'styled-components';
 const { Dragger } = Upload;
 
 export const StyledDragger = styled(Dragger)`
+  height: 100px !important;
   img.avatar__image {
-    height: 100px;
+    max-height: 100px;
     object-fit: cover;
+  }
+  .ant-upload.ant-upload-btn {
+    padding: 0 !important;
   }
 `;
