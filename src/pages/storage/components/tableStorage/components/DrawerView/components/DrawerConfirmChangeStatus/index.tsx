@@ -10,6 +10,7 @@ function DrawerConfirmChangeStatus({ isOpenView, handleCancel, handleOk }) {
     <MSCustomizeDrawerStyled
       openDrawer={isOpenView}
       onClose={handleCancel}
+      getContainer={<body />}
       zIndex={1004}
       extra={
         <Space>
