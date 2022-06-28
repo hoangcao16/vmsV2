@@ -1005,12 +1005,17 @@ function VideoPlayer({
         </ContainerEventsAI>
       )}
 
-      <DrawerSetEventFile
-        isOpenView={openSetEvent}
-        handleCancel={handleCloseSetEvent}
-        handleSetEventFile={handleSetEventFile}
-        loadingSetEvent={loadingSetEvent}
-      />
+      {fileSetEvent !== null ? (
+        <DrawerSetEventFile
+          isOpenView={openSetEvent}
+          handleCancel={handleCloseSetEvent}
+          handleSetEventFile={handleSetEventFile}
+          loadingSetEvent={loadingSetEvent}
+          fileSetEvent={fileSetEvent}
+        />
+      ) : (
+        <></>
+      )}
     </ViewFileContainer>
   );
 }
