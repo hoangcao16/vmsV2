@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-import ProTable from '@ant-design/pro-table';
-import { Tabs, Tree, Row } from 'antd';
 import MSCustomizeDrawer from '@/components/Drawer';
+import ProTable from '@ant-design/pro-table';
+import { Col, Row, Tabs, Tree } from 'antd';
+import styled from 'styled-components';
 const { TabPane } = Tabs;
 
 export const ProTableStyle = styled(ProTable)`
@@ -122,5 +122,12 @@ export const StyledDrawer = styled(MSCustomizeDrawer)`
   }
   .ant-card-bordered {
     border: 0;
+  }
+`;
+export const StyledColFilter = styled(Col)`
+  text-align: right;
+
+  .ant-btn {
+    margin-left: 10px;
   }
 `;

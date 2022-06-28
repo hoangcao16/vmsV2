@@ -1,3 +1,4 @@
+import { Col } from 'antd';
 import styled from 'styled-components';
 
 export const ContainerExtraFilter = styled.div`
@@ -31,5 +32,13 @@ export const ContainerExtraFilter = styled.div`
 
   .btn-viewType {
     border: none;
+  }
+`;
+
+export const StyledColFilter = styled(Col)`
+  text-align: right;
+
+  .ant-btn {
+    margin-left: 10px;
   }
 `;

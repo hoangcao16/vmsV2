@@ -235,6 +235,7 @@ const UserList = ({
                         id: 'pages.setting-user.list-user.user-search',
                       })}
                       onSearch={debounce(handleSearch, 1000)}
+                      disabled={!collapse}
                     />
                   </MSFormItem>
 
@@ -255,8 +256,10 @@ const UserList = ({
                   {collapse === false && (
                     <Button
                       type="link"
-                      onClick={() => {
+                      onClick={(e) => {
                         setCollapse(true);
+                        form.resetFields();
+                        onChangeData(e);
                       }}
                     >
                       {intl.formatMessage({
