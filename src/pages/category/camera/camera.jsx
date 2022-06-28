@@ -290,7 +290,6 @@ const CameraList = ({
       provinceId: '',
       districtId: '',
       wardId: '',
-      administrativeUnitUuid: '',
       recordingStatus: '',
       vendorUuid: '',
       address: '',
