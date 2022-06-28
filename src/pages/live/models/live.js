@@ -84,27 +84,29 @@ export default {
   effects: {
     *openDrawerSettingCamera({ payload: { camera } }, { call, put, all }) {
       try {
-        const [dataListPreset, dataListPresetTour] = yield all([
-          call(PTZApi.getAllPreset, {
-            cameraUuid: camera?.uuid,
-            sortType: 'asc',
-            sortField: 'name',
-          }),
-          call(PTZApi.getAllPresetTour, {
-            cameraUuid: camera?.uuid,
-            sortType: 'asc',
-            sortField: 'name',
-          }),
-        ]);
+        if (camera) {
+          const [dataListPreset, dataListPresetTour] = yield all([
+            call(PTZApi.getAllPreset, {
+              cameraUuid: camera?.uuid,
+              sortType: 'asc',
+              sortField: 'name',
+            }),
+            call(PTZApi.getAllPresetTour, {
+              cameraUuid: camera?.uuid,
+              sortType: 'asc',
+              sortField: 'name',
+            }),
+          ]);
 
-        yield put({
-          type: 'openDrawerSettingCamera',
-          payload: {
-            cameraSelected: camera,
-            listPreset: dataListPreset?.payload?.data,
-            listPresetTour: dataListPresetTour?.payload?.data,
-          },
-        });
+          yield put({
+            type: 'openDrawerSettingCamera',
+            payload: {
+              cameraSelected: camera,
+              listPreset: dataListPreset?.payload?.data,
+              listPresetTour: dataListPresetTour?.payload?.data,
+            },
+          });
+        }
       } catch (error) {
         console.log(error);
       }

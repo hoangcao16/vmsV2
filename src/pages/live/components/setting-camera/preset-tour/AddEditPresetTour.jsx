@@ -155,8 +155,8 @@ const AddEditPresetTour = ({
     <StyledDrawer
       openDrawer={showDrawerAddEditPresetTour}
       onClose={handleCloseDrawerAddEdit}
-      width={'80%'}
-      zIndex={1001}
+      width={'100%'}
+      zIndex={1100}
       placement="right"
       extra={
         <Space>

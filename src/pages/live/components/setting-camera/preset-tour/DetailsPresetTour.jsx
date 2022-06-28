@@ -44,19 +44,19 @@ function DetailsPresetTour({
       render: (text, record, index) => index + 1,
     },
     {
-      title: 'Tên preset',
+      title: 'Preset',
       dataIndex: 'name',
       key: 'name',
       ellipsis: true,
     },
     {
-      title: 'Người tạo',
+      title: intl.formatMessage({ id: 'pages.live-mode.noti.user-create' }),
       dataIndex: 'userName',
       key: 'userName',
       width: '30%',
     },
     {
-      title: 'Ngày tạo',
+      title: intl.formatMessage({ id: 'view.storage.created_time' }),
       dataIndex: 'createdTime',
       key: 'createdTime',
       width: '30%',
@@ -79,33 +79,39 @@ function DetailsPresetTour({
             }}
           >
             <EditOutlined />
-            {intl.formatMessage({ id: 'view.map.button_edit' })}
+            {intl.formatMessage({ id: 'pages.live-mode.noti.button-edit' })}
           </Button>
 
           <Button onClick={handleDeletePresetTour}>
             <DeleteOutlined />
-            {intl.formatMessage({ id: 'view.map.delete' })}
+            {intl.formatMessage({ id: 'pages.live-mode.noti.button-devele' })}
           </Button>
         </Space>
       }
     >
-      <h3> Xem chi tiết preset tour</h3>
+      <h3>{intl.formatMessage({ id: 'pages.live-mode.noti.details-preset-tour' })}</h3>
       <h4>{selectedPresetTour?.name}</h4>
       <StyledDivider />
-      <h4>Tên preset: {selectedPresetTour?.name}</h4>
-      <h4>Tên Camera: {selectedPresetTour?.cameraName}</h4>
-      <h4>Thời lượng: {selectedPresetTour?.cameraName}</h4>
-      <h4>Ngày tạo: {new Date(selectedPresetTour?.createdTime).getTime()}</h4>
-      <h4>Người tạo: {selectedPresetTour?.userName}</h4>
+      <h4>Preset tour: {selectedPresetTour?.name}</h4>
+      <h4>Camera: {selectedPresetTour?.cameraName}</h4>
+      <h4>Time: {selectedPresetTour?.cameraName}</h4>
+      <h4>
+        {intl.formatMessage({ id: 'view.storage.created_time' })}:{' '}
+        {new Date(selectedPresetTour?.createdTime).getTime()}
+      </h4>
+      <h4>
+        {intl.formatMessage({ id: 'pages.live-mode.noti.user-create' })}:{' '}
+        {selectedPresetTour?.userName}
+      </h4>
       <StyledDivider />
-      <h3>Danh sách Preset:</h3>
+      <h3>{intl.formatMessage({ id: 'view.live.menu_preset' })}:</h3>
       <Table
         loading={loading}
         columns={columns}
         dataSource={selectedPresetTour?.listPoint}
         pagination={{ pageSize: 10 }}
       />
-      <h3>Xem preset tour:</h3>
+      <h3>Preset tour:</h3>
       <CameraContent>
         {!isEmpty(cameraSelected) && <CameraSlot camera={cameraSelected} inPresetView />}
       </CameraContent>

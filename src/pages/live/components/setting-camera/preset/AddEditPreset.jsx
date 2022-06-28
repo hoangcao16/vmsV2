@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import { useIntl } from 'umi';
 
 import MSFormItem from '@/components/Form/Item';
-import { StyledDrawer } from '@/pages/live/style';
+
+import MSCustomizeDrawer from '@/components/Drawer';
 import { connect } from 'dva';
 import { isEmpty } from 'lodash';
 import CameraSlot from '../../CameraSlot';
@@ -17,7 +18,6 @@ export const TABS = {
 };
 
 function AddEditPreset({ showDrawerAddEditPreset, cameraSelected, selectedPreset = {}, dispatch }) {
-
   const intl = useIntl();
 
   const [form] = Form.useForm();
@@ -46,8 +46,8 @@ function AddEditPreset({ showDrawerAddEditPreset, cameraSelected, selectedPreset
       <StyledDrawer
         openDrawer={showDrawerAddEditPreset}
         onClose={handleCloseDrawerAddEdit}
-        width={'80%'}
-        zIndex={1003}
+        width={'100%'}
+        zIndex={1100}
         placement="right"
         extra={
           <Space>
@@ -69,7 +69,12 @@ function AddEditPreset({ showDrawerAddEditPreset, cameraSelected, selectedPreset
           </Space>
         }
       >
-        <h3> {isEmpty(selectedPreset) ? 'Thêm preset' : 'Sửa preset'}</h3>
+        <h3>
+          {' '}
+          {isEmpty(selectedPreset)
+            ? `${intl.formatMessage({ id: 'pages.live-mode.noti.add-preset' })}`
+            : `${intl.formatMessage({ id: 'pages.live-mode.noti.edit-preset' })}`}
+        </h3>
         <h4>{cameraSelected?.name}</h4>
         <StyledDivider />
 
@@ -88,7 +93,11 @@ function AddEditPreset({ showDrawerAddEditPreset, cameraSelected, selectedPreset
             <Row gutter={16}>
               <Col span={24}>
                 <MSFormItem
-                  label={isEmpty(selectedPreset) ? 'Thêm preset' : 'Sửa preset'}
+                  label={
+                    isEmpty(selectedPreset)
+                      ? `${intl.formatMessage({ id: 'pages.live-mode.noti.add-preset' })}`
+                      : `${intl.formatMessage({ id: 'pages.live-mode.noti.edit-preset' })}`
+                  }
                   type="input"
                   name="name"
                   minLength={5}
@@ -107,6 +116,16 @@ function AddEditPreset({ showDrawerAddEditPreset, cameraSelected, selectedPreset
     </>
   );
 }
+
+const StyledDrawer = styled(MSCustomizeDrawer)`
+  .ant-drawer-header {
+    flex-direction: row-reverse;
+  }
+
+  .ant-drawer-header-title {
+    flex: none;
+  }
+`;
 
 const CameraContent = styled.div`
   position: relative;

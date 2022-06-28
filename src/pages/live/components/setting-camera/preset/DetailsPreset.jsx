@@ -45,28 +45,33 @@ function DetailsPreset({ showDrawerDetailsPreset, selectedPreset, cameraSelected
             }}
           >
             <EditOutlined />
-            {intl.formatMessage({ id: 'view.map.button_edit' })}
+            {intl.formatMessage({ id: 'pages.live-mode.noti.button-edit' })}
           </Button>
 
           <Button onClick={handleDeletePreset}>
             <DeleteOutlined />
-            {intl.formatMessage({ id: 'view.map.delete' })}
+            {intl.formatMessage({ id: 'pages.live-mode.noti.button-delete' })}
           </Button>
         </Space>
       }
     >
-      <h3> Xem chi tiết preset</h3>
+      <h3> {intl.formatMessage({ id: 'pages.live-mode.noti.details-preset' })}</h3>
       <h4>{selectedPreset?.name}</h4>
       <StyledDivider />
 
-      <h4>Tên preset: {selectedPreset?.name}</h4>
-      <h4>Tên Camera: {selectedPreset?.cameraName}</h4>
-      <h4>Ngày tạo: {new Date(selectedPreset?.createdTime).getTime()}</h4>
-      <h4>Người tạo: {selectedPreset?.userName}</h4>
+      <h4>Preset: {selectedPreset?.name}</h4>
+      <h4>Camera: {selectedPreset?.cameraName}</h4>
+      <h4>
+        {intl.formatMessage({ id: 'view.storage.created_time' })}:{' '}
+        {new Date(selectedPreset?.createdTime).getTime()}
+      </h4>
+      <h4>
+        {intl.formatMessage({ id: 'pages.live-mode.noti.user-create' })}: {selectedPreset?.userName}
+      </h4>
 
       <StyledDivider />
 
-      <h3>Xem preset:</h3>
+      <h3> Preset:</h3>
 
       <CameraContent>
         {!isEmpty(cameraSelected) && <CameraSlot camera={cameraSelected} inPresetView />}

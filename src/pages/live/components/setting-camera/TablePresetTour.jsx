@@ -35,32 +35,26 @@ function TablePresetTour({
     },
     {
       title: intl.formatMessage({
-        id: 'pages.setting-user.list-user.camera',
+        id: 'pages.setting-user.list-user.name',
       }),
       dataIndex: 'name',
-    },
-
-    {
-      title: intl.formatMessage({
-        id: 'pages.setting-user.list-user.option',
-      }),
-      fixed: 'right',
-      width: '15%',
-      render: (text, record) => {
-        return (
-          <Space>
-            <EyeOutlined />
-          </Space>
-        );
-      },
     },
   ];
 
   const HeaderPresetTour = () => {
     return (
       <StyledHeader>
-        <h3>Danh sách preset tour</h3>
-        <SpanCode onClick={handleShowAddEditPresetTour}>+ Thêm preset tour</SpanCode>
+        <h3>
+          {intl.formatMessage({
+            id: 'pages.live-mode.noti.list-of-tour-presets',
+          })}
+        </h3>
+        <SpanCode onClick={handleShowAddEditPresetTour}>
+          +{' '}
+          {intl.formatMessage({
+            id: 'pages.live-mode.noti.add-preset-tour',
+          })}
+        </SpanCode>
       </StyledHeader>
     );
   };
