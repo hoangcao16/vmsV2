@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import AddEditAdministrativeUnit from '@/pages/category/administrative-unit/components/AddEditAdministrativeUnit';
 import AddCamera from '@/pages/category/camera/components/AddCamera';
 import { FilterFilled, PauseCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
@@ -31,7 +32,12 @@ const CameraListDrawer = ({
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [isAddNewDrawer, setIsAddNewDrawer] = useState(false);
   const [form] = Form.useForm();
+  const [openDrawerAddAdministrativeUnit, setOpenDrawerAddAdministrativeUnit] = useState(false);
   const currentSize = 16;
+
+  const resetForm = () => {
+    form.setFieldsValue({ searchValue: '' });
+  };
   useEffect(() => {
     setCurrentPage(metadata?.page);
   }, [list]);
@@ -148,6 +154,8 @@ const CameraListDrawer = ({
   const handleAdd = () => {
     if (type === 'camera') {
       setIsAddNewDrawer(true);
+    } else if (type === 'adminisUnit') {
+      setOpenDrawerAddAdministrativeUnit(true);
     }
   };
   const handleSearch = (dataForm) => {
@@ -258,6 +266,15 @@ const CameraListDrawer = ({
         />
       </StyledDrawer>
       <AddCamera isAddNewDrawer={isAddNewDrawer} setIsAddNewDrawer={setIsAddNewDrawer} />
+      {openDrawerAddAdministrativeUnit && (
+        <AddEditAdministrativeUnit
+          onClose={() => setOpenDrawerAddAdministrativeUnit(false)}
+          dispatch={dispatch}
+          selectedRecord={null}
+          openDrawer={openDrawerAddAdministrativeUnit}
+          resetForm={resetForm}
+        />
+      )}
     </>
   );
 };
