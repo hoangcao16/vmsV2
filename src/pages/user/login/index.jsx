@@ -2,7 +2,7 @@ import Footer from '@/components/Footer';
 import AuthZApi from '@/services/authz/AuthZApi';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
-import { message, Tabs } from 'antd';
+import { Form, Input, message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { FormattedMessage, history, SelectLang, useIntl, useModel } from 'umi';
 import styles from './index.less';
@@ -14,6 +14,7 @@ const Login = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
   const [openDrawer, setOpenDrawer] = useState(false);
   const intl = useIntl();
+  const [form] = Form.useForm();
 
   const showDrawer = () => {
     setOpenDrawer(true);
@@ -30,8 +31,9 @@ const Login = () => {
   };
 
   const handleSubmit = async (values) => {
+    const data = form.getFieldValue();
     try {
-      const msg = await AuthZApi.login({ ...values, type });
+      const msg = await AuthZApi.login({ ...values, ...data, type });
 
       if (msg.code === 600) {
         const defaultLoginSuccessMessage = intl.formatMessage({
@@ -93,40 +95,69 @@ const Login = () => {
           </Tabs>
 
           {type === 'account' && (
-            <>
-              <ProFormText
-                name="email"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <UserOutlined className={styles.prefixIcon} />,
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.email.placeholder',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: <FormattedMessage id="pages.login.email.required" />,
-                  },
-                ]}
-              />
-              <ProFormText.Password
-                name="password"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined className={styles.prefixIcon} />,
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.password.placeholder',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: <FormattedMessage id="pages.login.password.required" />,
-                  },
-                ]}
-              />
-            </>
+            <Form className="bg-grey" form={form} layout="vertical">
+              <Form.Item name={['email']}>
+                <Input
+                  maxLength={255}
+                  name="email"
+                  fieldProps={{
+                    size: 'large',
+                    prefix: <UserOutlined className={styles.prefixIcon} />,
+                  }}
+                  placeholder={intl.formatMessage({
+                    id: 'pages.login.email.placeholder',
+                  })}
+                  rules={[
+                    {
+                      required: true,
+                      message: <FormattedMessage id="pages.login.email.required" />,
+                    },
+                  ]}
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      email: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      email: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
+                />
+              </Form.Item>
+              <Form.Item name={['password']}>
+                <Input
+                  type="password"
+                  maxLength={255}
+                  name="password"
+                  fieldProps={{
+                    size: 'large',
+                    prefix: <LockOutlined className={styles.prefixIcon} />,
+                  }}
+                  placeholder={intl.formatMessage({
+                    id: 'pages.login.password.placeholder',
+                  })}
+                  rules={[
+                    {
+                      required: true,
+                      message: <FormattedMessage id="pages.login.password.required" />,
+                    },
+                  ]}
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      password: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      password: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
+                />
+              </Form.Item>
+            </Form>
           )}
 
           <BottomForm>
@@ -142,6 +173,7 @@ const Login = () => {
           </BottomForm>
         </LoginForm>
       </div>
+
       <Footer />
     </div>
   );
