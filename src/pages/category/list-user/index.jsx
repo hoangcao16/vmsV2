@@ -195,6 +195,23 @@ const UserList = ({
     }
   };
 
+  const handleShowFilter = () => {
+    form.resetFields();
+    const filters = form.getFieldValue();
+
+    setCollapse(false);
+    setSearch('');
+    dispatch({
+      type: 'user/fetchAllUser',
+      payload: {
+        ...filters,
+        searchValue: '',
+        page: 1,
+        size: 10,
+      },
+    });
+  };
+
   return (
     <PageContainer>
       <ProTable
@@ -240,12 +257,7 @@ const UserList = ({
                   </MSFormItem>
 
                   {collapse === true && (
-                    <Button
-                      type="link"
-                      onClick={() => {
-                        setCollapse(false);
-                      }}
-                    >
+                    <Button type="link" onClick={handleShowFilter}>
                       {intl.formatMessage({
                         id: 'view.storage.filter',
                       })}{' '}

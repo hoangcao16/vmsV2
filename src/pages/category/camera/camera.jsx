@@ -282,6 +282,19 @@ const CameraList = ({
     handleGetListCamera(dataParam);
   };
 
+  const handleShowFilter = () => {
+    setCollapse(true);
+    const dataParam = Object.assign({
+      ...searchParam,
+      searchType: undefined,
+      searchValue: undefined,
+      page: 1,
+      size: 10,
+    });
+    console.log(dataParam);
+    setSearchParam(dataParam);
+  };
+
   const handleClearFilter = () => {
     form.resetFields();
     const dataParam = Object.assign({
@@ -392,12 +405,7 @@ const CameraList = ({
                       <DownOutlined />
                     </Button>
                   ) : (
-                    <Button
-                      type="link"
-                      onClick={() => {
-                        setCollapse(true);
-                      }}
-                    >
+                    <Button type="link" onClick={handleShowFilter}>
                       {intl.formatMessage({
                         id: 'view.storage.filter',
                       })}

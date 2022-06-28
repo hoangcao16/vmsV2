@@ -158,9 +158,9 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
     });
   };
 
-  const onChangeStartDate = (moment) => {
-    if (moment) {
-      if (endDate && moment.startOf('day').isAfter(endDate)) {
+  const onChangeStartDate = (momentValue) => {
+    if (momentValue) {
+      if (endDate && momentValue.startOf('day').isAfter(endDate)) {
         form.setFieldsValue({
           startDate: null,
         });
@@ -176,13 +176,13 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
       } else {
         const dataParam = Object.assign({
           ...metadata,
-          startRecordTime: +moment.unix(),
+          startRecordTime: +momentValue.startOf('day').unix(),
         });
         dispatch({
           type: `${nameSpace}/saveSearchParam`,
           payload: dataParam,
         });
-        setStartDate(moment);
+        setStartDate(momentValue);
       }
     } else {
       const dataParam = Object.assign({ ...metadata, startRecordTime: -1 });
@@ -212,7 +212,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
       } else {
         const dataParam = Object.assign({
           ...metadata,
-          endRecordTime: +moment.unix(),
+          endRecordTime: +moment.endOf('day').unix(),
         });
         dispatch({
           type: `${nameSpace}/saveSearchParam`,
@@ -330,6 +330,21 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
     const dataParam = Object.assign({
       ...metadata,
       status: status ? status : '',
+    });
+
+    dispatch({
+      type: `${nameSpace}/saveSearchParam`,
+      payload: dataParam,
+    });
+  };
+
+  const handleShowFilter = () => {
+    setCollapse(false);
+    const dataParam = Object.assign({
+      ...metadata,
+      searchValue: '',
+      page: 1,
+      size: 10,
     });
 
     dispatch({
@@ -476,12 +491,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
             </Form.Item>
 
             {collapse === true && (
-              <Button
-                type="link"
-                onClick={() => {
-                  setCollapse(false);
-                }}
-              >
+              <Button type="link" onClick={handleShowFilter}>
                 {intl.formatMessage({
                   id: 'view.storage.filter',
                 })}{' '}
