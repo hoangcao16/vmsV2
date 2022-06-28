@@ -10,6 +10,7 @@ import {
 import ExportEventFileApi from '@/services/exportEventFile';
 import CheetahSvcApi from '@/services/storage-api/cheetahSvcApi';
 import DailyArchiveApi from '@/services/storage-api/dailyArchiveApi';
+import eventFilesApi from '@/services/storage-api/eventFilesApi';
 import { captureVideoFrame } from '@/utils/captureVideoFrame';
 import getBase64 from '@/utils/getBase64';
 import { Button, Col, Row, Space, Spin, Tooltip } from 'antd';
@@ -20,6 +21,7 @@ import { FiCamera, FiFastForward, FiPause, FiPlay, FiRewind, FiScissors } from '
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { useIntl } from 'umi';
 import { v4 as uuidV4 } from 'uuid';
+import DrawerSetEventFile from './components/DrawerSetEventFile';
 import { MemoizedHlsPlayer } from './components/MemoizedHlsPlayer/MemoizedHlsPlayer';
 import { MemoizedTableEventFile } from './components/MemoizedTableEventFile/MemoizedTableEventFile';
 import { MemoizedThumbnailVideo } from './components/MemoizedThumbnailVideo/MemoizedThumbnailVideo';
@@ -84,6 +86,47 @@ function VideoPlayer({
   const [currNode, setCurrNode] = useState('');
   const [downloadFileName, setDownloadFileName] = useState('');
   const [eventList, setEventList] = useState([]);
+
+  const [openSetEvent, setOpenSetEvent] = useState(false);
+  const [fileSetEvent, setFileSetEvent] = useState(null);
+  const [loadingSetEvent, setLoadingSetEvent] = useState(false);
+
+  const handleOpenSetEvent = (record) => {
+    setFileSetEvent(record);
+    setOpenSetEvent(true);
+  };
+
+  const handleCloseSetEvent = () => {
+    setOpenSetEvent(false);
+  };
+
+  const handleSetEventFile = (event) => {
+    if (fileSetEvent === null) {
+      return;
+    }
+
+    setLoadingSetEvent(true);
+    const params = {
+      ...fileSetEvent,
+      tableName: 'event_file',
+      eventUuid: event.uuid,
+      eventName: event.name,
+    };
+
+    eventFilesApi
+      .updateEventFile(params, params.uuid)
+      .then((res) => {
+        onClickTableFileHandler(data);
+        handleCloseSetEvent();
+        notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
+      })
+      .catch((err) => {
+        notify('error', 'noti.archived_file', 'noti.ERROR');
+      })
+      .finally(() => {
+        setLoadingSetEvent(false);
+      });
+  };
 
   let addDataToEvent = (row, nameSpace) => {
     if (nameSpace === DAILY_ARCHIVE_NAMESPACE) {
@@ -946,6 +989,7 @@ function VideoPlayer({
             onEditEventFile={editEventFileHandler}
             onSaveEventFile={saveEventFileHandler}
             onChangeEditModeHandler={changeEditModeHandler}
+            onSetEventFileHandler={handleOpenSetEvent}
           />
         </ContainerCapture>
       )}
@@ -960,6 +1004,13 @@ function VideoPlayer({
           <TableDetailEventAI tracingList={tracingList} />
         </ContainerEventsAI>
       )}
+
+      <DrawerSetEventFile
+        isOpenView={openSetEvent}
+        handleCancel={handleCloseSetEvent}
+        handleSetEventFile={handleSetEventFile}
+        loadingSetEvent={loadingSetEvent}
+      />
     </ViewFileContainer>
   );
 }

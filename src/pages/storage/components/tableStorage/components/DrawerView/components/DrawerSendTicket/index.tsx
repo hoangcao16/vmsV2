@@ -47,6 +47,7 @@ function DrawerSendTicket({ isOpenView, handleCancel, handleOk, loadingSendEmail
       onClose={handleCancel}
       zIndex={1003}
       width={496}
+      getContainer={<body />}
       extra={
         <Space>
           <Button

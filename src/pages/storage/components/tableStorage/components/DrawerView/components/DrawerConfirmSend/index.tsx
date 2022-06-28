@@ -11,6 +11,7 @@ function DrawerConfirmSend({ isOpenView, handleCancel, handleOk, loadingSendEmai
       openDrawer={isOpenView}
       onClose={handleCancel}
       zIndex={1003}
+      getContainer={<body />}
       extra={
         <Space>
           <Button

@@ -147,16 +147,6 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
   };
 
   const renderTitle = () => {
-    if (nameSpace === DAILY_ARCHIVE_NAMESPACE) {
-      return (
-        <>
-          {intl.formatMessage({
-            id: 'view.storage.detail_file',
-          })}
-        </>
-      );
-    }
-
     if (nameSpace === EVENT_AI_NAMESPACE) {
       return (
         <>
@@ -167,7 +157,13 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
       );
     }
 
-    return <></>;
+    return (
+      <>
+        {intl.formatMessage({
+          id: 'view.storage.detail_file',
+        })}
+      </>
+    );
   };
 
   const handleDeleteFile = () => {
@@ -302,7 +298,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
         tableName: 'event_file',
       });
 
-      eventFilesApi
+      updateEventFile
         .updateEventFile(params, params.uuid)
         .then((res) => {
           handleRefresh(res.payload);
@@ -1085,10 +1081,10 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
       </div> */}
 
       <CollapseStyled
-        expandIconPosition={'right'}
+        expandIconPosition="right"
         ghost={true}
         bordered={false}
-        defaultActiveKey={['1', '2']}
+        defaultActiveKey={['1']}
       >
         <Panel header={<HeaderPanelStyled>{renderTitleDetail()}</HeaderPanelStyled>} key="1">
           {/* {nameSpace === DAILY_ARCHIVE_NAMESPACE && renderDailyArchiveNameSpace()} */}

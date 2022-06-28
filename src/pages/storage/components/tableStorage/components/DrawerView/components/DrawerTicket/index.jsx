@@ -165,6 +165,7 @@ function DrawerTicket({
       width={'700px'}
       openDrawer={isOpenView}
       onClose={onClose}
+      getContainer={<body />}
     >
       <WrapperPrint ref={componentRef}>
         <div className="displayOnPrint">
