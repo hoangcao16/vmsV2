@@ -6,7 +6,13 @@ import styled from 'styled-components';
 import { useIntl } from 'umi';
 import { MSCustomizeDrawerStyled } from './style';
 
-function DrawerSetEventFile({ isOpenView, handleCancel, handleSetEventFile, loadingSetEvent }) {
+function DrawerSetEventFile({
+  isOpenView,
+  handleCancel,
+  handleSetEventFile,
+  loadingSetEvent,
+  fileSetEvent,
+}) {
   const intl = useIntl();
   const [form] = Form.useForm();
 
@@ -32,13 +38,24 @@ function DrawerSetEventFile({ isOpenView, handleCancel, handleSetEventFile, load
   useEffect(() => {
     if (isOpenView) {
       getEventList();
+      form.resetFields();
+
+      const select = fileSetEvent.eventUuid;
+      if (select && select.length > 0) {
+        form.setFieldsValue({
+          eventType: select,
+        });
+      }
     }
   }, [isOpenView]);
 
   return (
     <MSCustomizeDrawerStyled
       openDrawer={isOpenView}
-      onClose={handleCancel}
+      onClose={() => {
+        form.resetFields();
+        handleCancel();
+      }}
       zIndex={1005}
       width={496}
       getContainer={<body />}
@@ -48,7 +65,6 @@ function DrawerSetEventFile({ isOpenView, handleCancel, handleSetEventFile, load
             type="primary"
             htmlType="submit"
             icon={<SaveOutlined />}
-            loading={false}
             onClick={handleSave}
             loading={loadingSetEvent}
           >
@@ -57,7 +73,13 @@ function DrawerSetEventFile({ isOpenView, handleCancel, handleSetEventFile, load
             })}
           </Button>
 
-          <Button onClick={handleCancel} icon={<CloseOutlined />}>
+          <Button
+            onClick={() => {
+              form.resetFields();
+              handleCancel();
+            }}
+            icon={<CloseOutlined />}
+          >
             {intl.formatMessage({
               id: 'view.user.detail_list.cancel',
             })}
