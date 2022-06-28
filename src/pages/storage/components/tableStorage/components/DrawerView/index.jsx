@@ -71,6 +71,8 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
   const [data, setData] = useState(dataSelected);
   const [note, setNote] = useState(dataSelected.note ? dataSelected.note : '');
 
+  console.log(data);
+
   const [detailAI, setDetailAI] = useState(defaultEventFile);
 
   const [listLongLat, setListLongLat] = useState([]);
@@ -579,7 +581,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
               :
             </div>
             <div className="detailInfo-content">
-              {moment(data?.createdTime * 1000).format('DD/MM/YYYY')}
+              {moment(data?.createdTime).format('DD/MM/YYYY')}
             </div>
           </div>
 
