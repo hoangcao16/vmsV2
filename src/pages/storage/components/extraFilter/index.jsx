@@ -6,7 +6,7 @@ import debounce from 'lodash/debounce';
 import { useEffect, useState } from 'react';
 import { FaThLarge, FaThList } from 'react-icons/fa';
 import { connect, useIntl } from 'umi';
-import { ContainerExtraFilter } from './style';
+import { ContainerExtraFilter, StyledColFilter } from './style';
 
 import AddressApi from '@/services/addressApi';
 import AdDivisionApi from '@/services/advisionApi';
@@ -63,13 +63,11 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
   };
 
   const onFinish = (values) => {
-    console.log(nameSpace);
     const dataParam = Object.assign({
       ...metadata,
       page: 1,
       size: 10,
     });
-
     dispatch({
       type: `${nameSpace}/saveSearchParam`,
       payload: dataParam,
@@ -206,7 +204,8 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
           endRecordTime: -1,
         });
         dispatch({
-          type: 'captured/saveSearchParam',
+          type: `${nameSpace}/saveSearchParam`,
+
           payload: dataParam,
         });
         setEndDate(null);
@@ -216,7 +215,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
           endRecordTime: +moment.unix(),
         });
         dispatch({
-          type: 'captured/saveSearchParam',
+          type: `${nameSpace}/saveSearchParam`,
           payload: dataParam,
         });
         setEndDate(moment);
@@ -224,7 +223,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
     } else {
       const dataParam = Object.assign({ ...metadata, endRecordTime: -1 });
       dispatch({
-        type: 'captured/saveSearchParam',
+        type: `${nameSpace}/saveSearchParam`,
         payload: dataParam,
       });
     }
@@ -333,6 +332,28 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
       status: status ? status : '',
     });
 
+    dispatch({
+      type: `${nameSpace}/saveSearchParam`,
+      payload: dataParam,
+    });
+  };
+
+  const handleClearFilter = () => {
+    form.resetFields();
+    const dataParam = Object.assign({
+      ...metadata,
+      provinceId: '',
+      districtId: '',
+      wardId: '',
+      startRecordTime: -1,
+      endRecordTime: -1,
+      administrativeUnitUuid: '',
+      cameraUuid: '',
+      cameraGroupUuid: '',
+      eventUuid: 'notnull',
+      type: '',
+      status: '',
+    });
     dispatch({
       type: `${nameSpace}/saveSearchParam`,
       payload: dataParam,
@@ -450,6 +471,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                 onSearch={() => {
                   form.submit();
                 }}
+                disabled={!collapse}
               />
             </Form.Item>
 
@@ -472,6 +494,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                 type="link"
                 onClick={() => {
                   setCollapse(true);
+                  handleClearFilter();
                 }}
               >
                 {intl.formatMessage({
@@ -817,6 +840,14 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                   </Row>
                 )}
               </Col>
+              <StyledColFilter span={24}>
+                <Button htmlType="submit" type="primary">
+                  {intl.formatMessage({ id: 'view.map.btn_apply' })}
+                </Button>
+                <Button onClick={handleClearFilter}>
+                  {intl.formatMessage({ id: 'view.map.btn_remove_filter' })}
+                </Button>
+              </StyledColFilter>
             </Row>
           </div>
         )}

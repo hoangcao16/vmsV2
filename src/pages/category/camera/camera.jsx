@@ -17,7 +17,7 @@ import { getLocale, useIntl } from 'umi';
 import AddCamera from './components/AddCamera';
 import EditCamera from './components/EditCamera';
 import ScanCamera from './components/ScanCamera';
-import { ContainerFilterDailyArchive, ProTableStyle, SpanCode } from './style';
+import { ContainerFilterDailyArchive, ProTableStyle, SpanCode, StyledColFilter } from './style';
 const formItemLayout = {
   labelCol: { span: 7 },
   wrapperCol: { span: 24 },
@@ -281,6 +281,22 @@ const CameraList = ({
     setSearchParam(dataParam);
     handleGetListCamera(dataParam);
   };
+
+  const handleClearFilter = () => {
+    form.resetFields();
+    const dataParam = Object.assign({
+      ...searchParam,
+      administrativeUnitUuid: '',
+      provinceId: '',
+      districtId: '',
+      wardId: '',
+      administrativeUnitUuid: '',
+      recordingStatus: '',
+      vendorUuid: '',
+      address: '',
+    });
+    setSearchParam(dataParam);
+  };
   useEffect(() => {
     dispatch({
       type: 'camera/fetchAllCamera',
@@ -359,6 +375,7 @@ const CameraList = ({
                       onSearch={() => {
                         form.submit();
                       }}
+                      disabled={collapse}
                     />
                   </Form.Item>
 
@@ -367,6 +384,7 @@ const CameraList = ({
                       type="link"
                       onClick={() => {
                         setCollapse(false);
+                        handleClearFilter();
                       }}
                     >
                       {intl.formatMessage({
@@ -511,6 +529,14 @@ const CameraList = ({
                         </Form.Item>
                       </Col>
                     </Row>
+                    <StyledColFilter span={24}>
+                      <Button htmlType="submit" type="primary">
+                        {intl.formatMessage({ id: 'view.map.btn_apply' })}
+                      </Button>
+                      <Button onClick={handleClearFilter}>
+                        {intl.formatMessage({ id: 'view.map.btn_remove_filter' })}
+                      </Button>
+                    </StyledColFilter>
                   </div>
                 )}
               </Form>
