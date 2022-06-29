@@ -24,6 +24,11 @@ export default [
     name: 'home',
     component: './home',
   },
+  // {
+  //   path: '/account/changepassword',
+  //   name: 'changepassword',
+  //   component: './user/changepassword',
+  // },
   {
     path: '/map',
     icon: 'environment',

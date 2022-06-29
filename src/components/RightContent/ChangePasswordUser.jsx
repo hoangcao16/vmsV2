@@ -1,6 +1,6 @@
 import MSCustomizeDrawer from '@/components/Drawer';
 import { notify } from '@/components/Notify';
-import ChangePass from '@/services/changepassword/ChangePasswordAPI';
+import ChangePass from '@/services/changePassword/ChangePasswordAPI';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Row, Space } from 'antd';
 import { connect } from 'dva';
@@ -22,21 +22,43 @@ function ChangePassword({ openDrawer, onClose }) {
       confirm_new_password: form.getFieldValue('confirmpassword'),
     };
 
-    ChangePass.changePass(user?.user_uuid, params)
-      .then((rs) => {
-        if (rs.code === 600) {
-          notify('success', 'noti.success', 'noti.change_password');
-        }
-        if (rs.code === 601 && params.new_password !== undefined) {
-          notify('error', 'noti.faid', 'noti.fail.change_password');
-        }
-        if ((rs.code === 601 && params.new_password === undefined) || params.new_password === '') {
-          notify('error', 'noti.faid', 'noti.fail.change_pass');
-        }
-      })
-      .catch((error) => {
-        console.log('error:', error);
-      });
+    console.log('first', params.password);
+
+    if (params.password === undefined) {
+      notify('error', 'noti.faid', 'noti.change_password_fail');
+    }
+    if (params.new_password != '' && params.confirm_new_password != '') {
+      ChangePass.changePass(user?.user_uuid, params)
+        .then((rs) => {
+          if (
+            rs.code === 600 &&
+            params.password !== undefined &&
+            params.password != '' &&
+            params.new_password != ''
+          ) {
+            notify('success', 'noti.success', 'noti.change_password');
+          }
+
+          if (
+            rs.code === 601 &&
+            params.password != params.new_password &&
+            params.new_password != params.confirm_new_password
+          ) {
+            notify('error', 'noti.faid', 'noti.fail.change_pass');
+          }
+          if (rs.code === 601 && params.new_password == params.confirm_new_password) {
+            notify('error', 'noti.faid', 'noti.change_password_not_correct');
+          }
+          if (rs.code === 601 && params.password == params.new_password && params.password != '') {
+            notify('error', 'noti.faid', 'noti.fail.change_password');
+          }
+        })
+        .catch((error) => {
+          notify('error', 'noti.faid', 'noti.change_password_fail');
+        });
+    } else {
+      notify('error', 'noti.faid', 'noti.change_password_fail');
+    }
   };
   return (
     <>
@@ -47,6 +69,7 @@ function ChangePassword({ openDrawer, onClose }) {
           width={'30%'}
           zIndex={1001}
           placement="right"
+          maskClosable={false}
           title={intl.formatMessage({
             id: 'view.user.change_password',
           })}

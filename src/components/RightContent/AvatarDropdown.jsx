@@ -1,23 +1,30 @@
 import { STORAGE } from '@/constants/common';
+import ChangePassword from '@/components/RightContent/ChangePasswordUser';
 import AuthZApi from '@/services/authz/AuthZApi';
-import { EditOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Avatar, Menu, Spin } from 'antd';
-import { useCallback, useState } from 'react';
+
+import { LogoutOutlined, EditOutlined } from '@ant-design/icons';
+
+import { Avatar, Menu, Popconfirm, Spin, Form } from 'antd';
+import React, { useCallback, useState } from 'react';
 import { history, useIntl, useModel } from 'umi';
 import HeaderDropdown from '../Header/HeaderDropdown';
-import ChangePasswordUser from './ChangePasswordUser';
 import styles from './index.less';
 
 const AvatarDropdown = ({ menu }) => {
   const intl = useIntl();
   const { initialState, setInitialState } = useModel('@@initialState');
   const [openDrawer, setOpenDrawer] = useState(false);
+
+  const [form] = Form.useForm();
   const showDrawer = () => {
     setOpenDrawer(true);
+    console.log('openDrawer:', openDrawer);
   };
   const onClose = () => {
     setOpenDrawer(false);
+    console.log('openDrawer:', openDrawer);
   };
+
   const onMenuClick = useCallback(
     async (event) => {
       const { key } = event;
@@ -35,10 +42,19 @@ const AvatarDropdown = ({ menu }) => {
         return;
       }
 
+      if (key === 'changepassword') {
+        // history.push('account/changepassword');
+        return (
+          <>
+            <Popconfirm>AA</Popconfirm>
+          </>
+        );
+      }
       history.push(`/account/${key}`);
     },
     [setInitialState],
   );
+
   const loading = (
     <span className={`${styles.action} ${styles.account}`}>
       <Spin
@@ -60,6 +76,10 @@ const AvatarDropdown = ({ menu }) => {
   if (!currentUser) {
     return loading;
   }
+  const formItemLayout = {
+    wrapperCol: { span: 24 },
+    labelCol: { span: 10 },
+  };
 
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
@@ -76,7 +96,8 @@ const AvatarDropdown = ({ menu }) => {
             id: 'view.user.change_password',
           })}
         </div>
-        {openDrawer && <ChangePasswordUser openDrawer={openDrawer} onClose={onClose} />}
+
+        {openDrawer && <ChangePassword onClose={onClose} openDrawer={openDrawer} />}
       </Menu.Item>
     </Menu>
   );
