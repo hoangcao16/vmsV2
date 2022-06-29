@@ -1,5 +1,6 @@
 import { Column } from '@ant-design/plots';
 import { connect } from 'dva';
+import { isEmpty } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import { TimeoutChart } from '../../style';
@@ -9,8 +10,13 @@ const BarChart = (props) => {
   const intl = useIntl();
 
   useEffect(() => {
-    setData(props?.data);
-  }, [props?.data]);
+    if (!isEmpty(props.data)) {
+      props.data.forEach((item) => {
+        item.value = parseInt(item.value);
+      });
+      setData(props.data);
+    }
+  }, [props.data]);
 
   const config = {
     data,

@@ -1,6 +1,6 @@
 import { Divider, Tabs } from 'antd';
 import { connect } from 'dva';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useIntl } from 'umi';
 import { ChartBackground, TimeoutChart } from '../../style';
@@ -42,6 +42,17 @@ const ExportCursonPointer = styled.div`
 `;
 
 const Chart = (props) => {
+  useEffect(() => {
+    if (location.pathname !== '/report' || location.pathname !== '/report/') {
+      props.dispatch({ type: 'chartDisable/isDisablePieChart', boolean: false });
+      props.dispatch({ type: 'chartDisable/isDisableBarChart', boolean: true });
+      props.dispatch({
+        type: 'chartDisable/changeCurrentTab',
+        payload: '1',
+      });
+    }
+  }, [location.pathname]);
+
   const intl = useIntl();
   return (
     <div className="chart">
