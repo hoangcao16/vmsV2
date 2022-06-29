@@ -28,29 +28,29 @@ const CameraSlot = ({
   slotIndex,
   speedVideo,
   mode,
+  uuid,
   inPresetView = false,
 }) => {
   const [loading, setLoading] = useState(false);
+  const [currentCamera, setCurrentCamera] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [zoomIn, setZoomIn] = useState(false);
   const [prevTime, setPrevTime] = useState(currentSeekTime);
   const [currentPlaybackTime, setCurrentPlaybackTime] = useState(moment().subtract(1, 'h').unix());
-
   const videoRef = useRef(null);
   const peerRef = useRef(null);
   const timerRef = useRef(null);
   const requestId = useRef(uuidv4());
   useEffect(() => {
     if (mode === 'live') {
-      if (camera?.uuid) {
-        startCamera(camera?.uuid, camera?.type, 'webrtc');
+      if (uuid) {
+        startCamera(uuid, camera?.type, 'webrtc');
       } else {
         closeCamera();
       }
     }
-  }, [camera?.uuid, mode]);
-
+  }, [uuid, mode]);
   useEffect(() => {
     if (isRecording) {
       timerRef.current = setInterval(() => {
@@ -61,7 +61,6 @@ const CameraSlot = ({
     return () => clearInterval(timerRef.current);
   }, [isRecording, countdown]);
   useEffect(() => {
-    console.log(mode, isPlay, selectedCamera, camera, slotIndex);
     if (
       mode === 'play' &&
       isPlay &&
@@ -507,6 +506,7 @@ const CameraSlot = ({
       isDraggingOver={isDraggingOver}
       zoomIn={zoomIn}
       layoutCollapsed={layoutCollapsed}
+      id={'wrapper-slot-' + slotIndex}
     >
       {loading && (
         <StyledLoading>

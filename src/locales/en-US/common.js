@@ -418,8 +418,6 @@ export default {
   'view.user.log_out': 'Log out',
   'view.user.user_group': '{U} {G}',
   'view.user.new_password': 'New password',
-  'view.user.old_password': 'Old password',
-  'view.user.confirm_password': 'Confirm password',
   'view.user.detail_list.edit_mode': 'Edit Mode',
   'view.user.detail_list.search_mode': 'Search',
   'view.user.detail_list.dark_mode': 'Dark mode',
@@ -898,7 +896,6 @@ export default {
   'noti.fail.change_pass': 'New password and confirm new password do not match',
   'noti.change_password_fail': "Password field can't be empty",
   'noti.change_password_not_correct': 'Old password is not correct',
-  'noti.fail.change_pass': 'Old password is not correct',
   'noti.fail.email': "Email field can't be empty",
   'noti.fail.email_data': "Email does't exist in the system database",
   // breadcrumd

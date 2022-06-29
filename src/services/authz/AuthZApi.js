@@ -45,7 +45,7 @@ const AuthZApi = {
 
   refreshToken: async (oldToken) => {
     try {
-      const data = await await request.post('/authz/refresh', oldToken);
+      const data = await request.post('/authz/refresh', oldToken);
       localStorage.setItem(STORAGE.TOKEN, data.accessToken);
       localStorage.setItem(STORAGE.REFRESH_TOKEN, data.refreshToken);
       return data;

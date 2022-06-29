@@ -2,6 +2,7 @@ import { LIVE_MODE } from '@/constants/common';
 import { GRID1X1, GRID2X2, GRID3X3, GRID4X4 } from '@/constants/grid';
 import bookmarkService from '@/services/bookmark';
 import cameraService from '@/services/controllerApi/cameraService';
+import { doSwap } from '@/utils/swapElement';
 import { HeartOutlined, OrderedListOutlined, SaveOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Space, Tooltip } from 'antd';
@@ -17,6 +18,13 @@ import PlaybackControl from './components/player/PlaybackControl';
 import SaveFavorite from './components/SaveFavorite';
 import SettingPresetDrawer from './components/SettingPresetDrawer';
 import { StyledButtonFullScreen, StyledTabs, StyledTag, StyledText } from './style';
+const initialDataGrid = [...Array(16).keys()].map((key) => ({
+  slot: key,
+  id: null,
+  uuid: null,
+  name: '',
+  type: 'live',
+}));
 const Live = ({
   availableList,
   screen,
@@ -31,6 +39,7 @@ const Live = ({
   const [visibleCameraList, setVisibleCameraList] = useState(false);
   const [visibleFavoriteList, setVisibleFavoriteList] = useState(false);
   const [visibleSaveFavorite, setVisibleSaveFavorite] = useState(false);
+  const [layoutGrid, setLayoutGrid] = useState(initialDataGrid);
 
   useEffect(() => {
     fetchDefaultScreen();
@@ -51,8 +60,13 @@ const Live = ({
       });
 
       if (payload && payload.length) {
-        payload.forEach((camera) => {
+        payload.forEach((camera, index) => {
           cameraNameWithUuids[camera.uuid] = camera;
+          layoutGrid[index].id = camera ? camera.id : '';
+          layoutGrid[index].uuid = camera?.uuid;
+          layoutGrid[index].type = viewTypes[index];
+          layoutGrid[index].name = camera ? camera.name : '';
+          setLayoutGrid([...layoutGrid]);
         });
       }
 
@@ -125,19 +139,26 @@ const Live = ({
       name: '',
     }));
   };
-  const onDragEnd = (result, type) => {
+  const onDragEnd = async (result, type) => {
     const { destination, source, draggableId } = result;
     if (!destination || !source) return;
     if (source.droppableId === LIVE_MODE.CAMERA_LIST_DROPPABLE_ID) {
-      const draggableCam = availableList[source.index];
+      console.log('onDragEnd', destination, source, draggableId);
 
+      const draggableCam = availableList[source.index];
+      const gridID = destination.index;
       grids[destination.index] = {
         id: draggableCam.id,
         uuid: draggableCam?.uuid,
         type: 'live',
         name: draggableCam?.name,
       };
+      layoutGrid[gridID].id = draggableCam.id;
+      layoutGrid[gridID].uuid = draggableCam?.uuid;
+      layoutGrid[gridID].type = 'live';
+      layoutGrid[gridID].name = draggableCam?.name;
 
+      setLayoutGrid([...layoutGrid]);
       let maxCam = 99;
 
       if (gridType === GRID1X1) {
@@ -177,14 +198,32 @@ const Live = ({
       const camObj = grids[source.index];
       grids[source.index] = grids[destination.index];
       grids[destination.index] = camObj;
-
+      const result = await move(source, destination, draggableId);
+      setLayoutGrid(result);
       dispatch({
         type: 'live/saveGrids',
         payload: grids,
       });
     }
   };
-
+  const move = async (source, destination, draggableId) => {
+    const sourceIndex = draggableId.replace('draggable-', '');
+    const destinationIndex = destination.index;
+    const divSrc = document.querySelector(`[data-rbd-draggable-id='draggable-${sourceIndex}']`)
+      .childNodes[0];
+    const divDes = document.querySelector(`[data-rbd-draggable-id='draggable-${destinationIndex}']`)
+      .childNodes[0];
+    const SrcId = divSrc.id;
+    const DesId = divDes.id;
+    console.log(divSrc, divDes);
+    doSwap(divSrc, divDes);
+    console.log(SrcId, DesId);
+    // const sourceVideo = layoutGrid[sourceIndex];
+    // const destinationVideo = layoutGrid[destinationIndex];
+    // layoutGrid[destinationIndex] = sourceVideo;
+    // layoutGrid[sourceIndex] = destinationVideo;
+    return layoutGrid;
+  };
   const getGrid = (gridType) => {
     switch (gridType) {
       case GRID1X1:
@@ -268,7 +307,13 @@ const Live = ({
           </StyledTabs.TabPane>
         </StyledTabs>
         <DragDropContext onDragEnd={onDragEnd}>
-          <GridPanel screen={screen} mode={mode} grids={grids} gridType={gridType} />
+          <GridPanel
+            screen={screen}
+            mode={mode}
+            grids={grids}
+            gridType={gridType}
+            layoutGrid={layoutGrid}
+          />
           <CameraList
             title={<FormattedMessage id="pages.live-mode.list.camera" />}
             cameras={availableList}
