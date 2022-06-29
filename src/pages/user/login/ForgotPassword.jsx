@@ -16,22 +16,26 @@ function ForgotPassword({ openDrawer, onClose }) {
       email: form.getFieldValue('emailresetpass'),
     };
 
-    ResetPassword.resetPassword(params)
-      .then((rs) => {
-        if (rs.code === 600) {
-          form.resetFields(['emailresetpass']);
-          notify('success', 'noti.success', 'noti.have_sent_email');
-        }
-        if (rs.code === 608) {
-          notify('error', 'noti.faid', 'pages.setting-user.list-user.608');
-        }
-        if (rs.code === 601) {
-          notify('error', 'noti.faid', 'view.user.detail_list.email_address_required');
-        }
-      })
-      .catch((error) => {
-        console.log('error:', error);
-      });
+    if ((params.email != '') & (params.email != undefined)) {
+      ResetPassword.resetPassword(params)
+        .then((rs) => {
+          if (rs.code === 600) {
+            form.resetFields(['emailresetpass']);
+            notify('success', 'noti.success', 'noti.have_sent_email');
+          }
+          if (rs.code === 608) {
+            notify('error', 'noti.faid', 'noti.fail.email_data');
+          }
+          if (rs.code === 601) {
+            notify('error', 'noti.faid', 'view.user.detail_list.email_address_required');
+          }
+        })
+        .catch((error) => {
+          console.log('error:', error);
+        });
+    } else {
+      notify('error', 'noti.faid', 'noti.fail.email');
+    }
   };
 
   return (
@@ -43,6 +47,7 @@ function ForgotPassword({ openDrawer, onClose }) {
           width={'25%'}
           zIndex={1001}
           placement="right"
+          maskClosable={false}
           extra={
             <Space>
               <Button type="primary" onClick={reset}>
