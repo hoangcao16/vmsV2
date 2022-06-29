@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useIntl } from 'umi';
 import { ProTableStyled } from '../../../../style';
-import { ContainerTableEventFile } from './style';
+import { ContainerTableEventFile, StyledSpanPlaceholder } from './style';
 
 const TableEventFile = (props) => {
   const intl = useIntl();
@@ -52,12 +52,31 @@ const TableEventFile = (props) => {
 
   const renderEvent = (row) => {
     const defaultVal = row.eventUuid === '' ? null : row.eventUuid;
-    if (row.isSaved && !row.editMode)
+    if (row.isSaved && !row.editMode) {
       return (
-        <Tooltip title={row.eventName}>
-          <span>{row.eventName}</span>
+        <Tooltip
+          title={
+            row.eventName ? (
+              row.eventName
+            ) : (
+              <StyledSpanPlaceholder className="spanChooseEventType">
+                {intl.formatMessage({ id: 'view.storage.choose_event_type' })}
+              </StyledSpanPlaceholder>
+            )
+          }
+        >
+          <span>
+            {row.eventName ? (
+              row.eventName
+            ) : (
+              <StyledSpanPlaceholder className="spanChooseEventType">
+                {intl.formatMessage({ id: 'view.storage.choose_event_type' })}
+              </StyledSpanPlaceholder>
+            )}
+          </span>
         </Tooltip>
       );
+    }
     return (
       <Select
         allowClear
