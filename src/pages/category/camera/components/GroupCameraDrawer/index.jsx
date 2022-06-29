@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { StyledDrawer, SpanCode } from './style';
+import { CloseOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
+import ProTable, { EditableProTable } from '@ant-design/pro-table';
+import { Button, Card, Col, Form, Input, Row, Space } from 'antd';
 import { connect } from 'dva';
-import { useIntl } from 'umi';
-import { Space, Button, Form, Input, Row, Col, Card } from 'antd';
-import { SaveOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect, useState } from 'react';
-import ProTable, { EditableProTable } from '@ant-design/pro-table';
+import { useIntl } from 'umi';
+import { SpanCode, StyledDrawer } from './style';
 const GroupCameraDrawer = ({
   dispatch,
   isOpenDrawer,
@@ -83,11 +83,16 @@ const GroupCameraDrawer = ({
       if (isEmpty(payload?.parent)) {
         delete payload.parent;
       }
-      dispatch({
+      await dispatch({
         type: 'groupcamera/createNewGroupCamera',
         payload,
       });
     }
+
+    dispatch({
+      type: 'globalstore/fetchAllGroupCamera',
+      payload: { size: 1000 },
+    });
   };
   const handleDeleteCameraFromGroup = async (camera) => {
     const index = cameraListInGroup.findIndex((item) => item.uuid === camera.uuid);

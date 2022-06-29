@@ -16,67 +16,91 @@ const AddEditCameraCategory = ({
   const intl = useIntl();
   const [form] = Form.useForm();
 
-  const handleSubmit = (value) => {
+  const handleSubmit = async (value) => {
     const payload = {
       ...value,
     };
 
     if (type === 'camera_vendor') {
       if (isEmpty(selectedRecord)) {
-        dispatch({
+        await dispatch({
           type: 'cameraCategory/addVendor',
           payload: payload,
         });
       } else {
-        dispatch({
+        await dispatch({
           type: 'cameraCategory/editVendor',
           payload: { id: selectedRecord?.uuid, values: { ...payload } },
         });
       }
+      dispatch({
+        type: 'globalstore/fetchAllVendors',
+        payload: { size: 1000 },
+      });
     } else if (type === 'camera_type') {
       if (isEmpty(selectedRecord)) {
-        dispatch({
+        await dispatch({
           type: 'cameraCategory/addType',
           payload: payload,
         });
       } else {
-        dispatch({
+        await dispatch({
           type: 'cameraCategory/editType',
           payload: { id: selectedRecord?.uuid, values: { ...payload } },
         });
       }
+      dispatch({
+        type: 'globalstore/fetchAllCameraTypes',
+        payload: { size: 1000 },
+      });
     } else if (type === 'camera_tags') {
       if (isEmpty(selectedRecord)) {
-        dispatch({
+        await dispatch({
           type: 'cameraCategory/addTags',
           payload: payload,
         });
       } else {
-        dispatch({
+        await dispatch({
           type: 'cameraCategory/editTags',
           payload: { id: selectedRecord?.uuid, values: { ...payload } },
         });
       }
+      dispatch({
+        type: 'globalstore/fetchAllTags',
+        payload: { size: 1000 },
+      });
     }
     resetForm();
     onClose();
   };
 
-  const onDeleteRecord = () => {
+  const onDeleteRecord = async () => {
     if (type === 'camera_vendor') {
-      dispatch({
+      await dispatch({
         type: 'cameraCategory/deleteVendor',
         id: selectedRecord?.uuid,
       });
-    } else if (type === 'camera_type') {
       dispatch({
+        type: 'globalstore/fetchAllVendors',
+        payload: { size: 1000 },
+      });
+    } else if (type === 'camera_type') {
+      await dispatch({
         type: 'cameraCategory/deleteType',
         id: selectedRecord?.uuid,
       });
-    } else if (type === 'camera_tags') {
       dispatch({
+        type: 'globalstore/fetchAllCameraTypes',
+        payload: { size: 1000 },
+      });
+    } else if (type === 'camera_tags') {
+      await dispatch({
         type: 'cameraCategory/deleteTags',
         id: selectedRecord?.uuid,
+      });
+      dispatch({
+        type: 'globalstore/fetchAllTags',
+        payload: { size: 1000 },
       });
     }
     resetForm();
