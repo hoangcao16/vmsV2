@@ -102,7 +102,7 @@ function ChangePassword({ openDrawer, onClose }) {
                   })}
                   rules={[
                     {
-                      min: 4,
+                      min: 8,
                       message: `${intl.formatMessage({
                         id: 'view.user.detail_list.password_length',
                       })}`,
@@ -135,7 +135,7 @@ function ChangePassword({ openDrawer, onClose }) {
                   })}
                   rules={[
                     {
-                      min: 4,
+                      min: 8,
                       message: `${intl.formatMessage({
                         id: 'view.user.detail_list.password_length',
                       })}`,
@@ -168,7 +168,7 @@ function ChangePassword({ openDrawer, onClose }) {
                   })}
                   rules={[
                     {
-                      min: 4,
+                      min: 8,
                       message: `${intl.formatMessage({
                         id: 'view.user.detail_list.password_length',
                       })}`,
