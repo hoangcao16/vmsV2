@@ -913,7 +913,7 @@ function VideoPlayer({
 				/>
 			</Tooltip> */}
 
-            {checkBtnCaptureDisabled() && (
+            {checkBtnCaptureDisabled() && nameSpace === DAILY_ARCHIVE_NAMESPACE && (
               <Tooltip
                 placement="bottomLeft"
                 title={intl.formatMessage({
@@ -935,7 +935,7 @@ function VideoPlayer({
               </Tooltip>
             )}
 
-            {checkBtnCaptureDisabled() && (
+            {checkBtnCaptureDisabled() && nameSpace === DAILY_ARCHIVE_NAMESPACE && (
               <Tooltip
                 placement="bottomLeft"
                 title={intl.formatMessage({

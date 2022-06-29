@@ -13,3 +13,7 @@ export const ContainerTableEventFile = styled.div`
     padding: 0px;
   }
 `;
+
+export const StyledSpanPlaceholder = styled.span`
+  opacity: 0.7;
+`;
