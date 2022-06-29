@@ -63,6 +63,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
   };
 
   const onFinish = (values) => {
+    console.log(values);
     const dataParam = Object.assign({
       ...metadata,
       page: 1,
@@ -306,7 +307,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
   const onChangeFileType = (value) => {
     const dataParam = Object.assign({
       ...metadata,
-      type: value ? value : '',
+      type: value,
     });
     dispatch({
       type: `${nameSpace}/saveSearchParam`,

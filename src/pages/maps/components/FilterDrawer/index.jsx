@@ -100,6 +100,7 @@ function FilterDrawer({
                   onChange={(cityId) => onChangeCity(cityId)}
                   filterOption={filterOption}
                   options={normalizeOptions('name', 'provinceId', provincesOptions)}
+                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
                   allowClear
                 />
               </MSFormItem>
@@ -118,6 +119,7 @@ function FilterDrawer({
                   })}
                   showSearch
                   allowClear
+                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
                   dataSource={districts}
                   onChange={(districtId) => onChangeDistrict(districtId)}
                   filterOption={filterOption}
@@ -142,6 +144,7 @@ function FilterDrawer({
                   dataSource={wards}
                   filterOption={filterOption}
                   options={normalizeOptions('name', 'id', wards)}
+                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
                 />
               </MSFormItem>
             </Col>
@@ -172,6 +175,7 @@ function FilterDrawer({
                   filterSort={(optionA, optionB) =>
                     optionA.key.toLowerCase().localeCompare(optionB.key.toLowerCase())
                   }
+                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
                 >
                   {adDivisionsOptions?.map((item) => (
                     <Select.Option key={item.uuid} value={item.uuid}>
@@ -206,6 +210,8 @@ function FilterDrawer({
                   filterSort={(optionA, optionB) =>
                     optionA.key.toLowerCase().localeCompare(optionB.key.toLowerCase())
                   }
+                  placeholder={intl.formatMessage({ id: 'view.storage.choose_group_camera' })}
+                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
                 >
                   {groupCameraOptions?.map((item) => (
                     <Select.Option key={item.uuid} value={item.uuid}>
@@ -232,6 +238,7 @@ function FilterDrawer({
                   filterOption={filterOption}
                   options={normalizeOptions('name', 'provinceId', provincesOptions)}
                   allowClear
+                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
                 />
               </MSFormItem>
             </Col>
@@ -254,6 +261,7 @@ function FilterDrawer({
                   onChange={(districtId) => onChangeDistrict(districtId)}
                   filterOption={filterOption}
                   options={normalizeOptions('name', 'districtId', districts)}
+                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
                 />
               </MSFormItem>
             </Col>
@@ -275,6 +283,7 @@ function FilterDrawer({
                   dataSource={wards}
                   filterOption={filterOption}
                   options={normalizeOptions('name', 'id', wards)}
+                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
                 />
               </MSFormItem>
             </Col>
@@ -305,6 +314,7 @@ function FilterDrawer({
                   filterSort={(optionA, optionB) =>
                     optionA.key.toLowerCase().localeCompare(optionB.key.toLowerCase())
                   }
+                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
                 >
                   {adDivisionsOptions?.map((item) => (
                     <Select.Option key={item.uuid} value={item.uuid}>
@@ -330,6 +340,7 @@ function FilterDrawer({
                   filterSort={(optionA, optionB) =>
                     optionA.key.toLowerCase().localeCompare(optionB.key.toLowerCase())
                   }
+                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
                 >
                   {points?.map((item) => (
                     <Select.Option key={item.id} value={item.id}>
@@ -352,6 +363,7 @@ function FilterDrawer({
                   filterSort={(optionA, optionB) =>
                     optionA.key.toLowerCase().localeCompare(optionB.key.toLowerCase())
                   }
+                  getPopupContainer={(triggerNode) => triggerNode.parentNode}
                 >
                   {tagsOptions?.map((item) => (
                     <Select.Option key={item.uuid} value={item.uuid}>

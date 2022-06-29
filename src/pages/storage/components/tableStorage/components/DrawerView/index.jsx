@@ -91,6 +91,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
   const [videoErrorURL, setVideoErrorURL] = useState(null);
 
   const [loading, setLoading] = useState(false);
+  const [loadingDrawer, setLoadingDrawer] = useState(false);
 
   const [openDrawerTicket, setOpenDrawerTicket] = useState(false);
 
@@ -277,7 +278,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
       return;
     }
 
-    let params = Object.assign({ ...data });
+    let params = Object.assign({ ...data, length: Number(data.length) });
 
     if (isImportant !== null) params = Object.assign({ ...params, isImportant: isImportant });
     if (noteValue !== null) params = Object.assign({ ...params, note: noteValue });
@@ -285,6 +286,23 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
     if (event !== null) {
       const event = eventList.find((e) => e.uuid === eventSelected);
       params = Object.assign({ ...params, eventUuid: event.uuid, eventName: event.name });
+    }
+
+    if (!data.hasOwnProperty('tableName') || data.tableName === 'file') {
+      // file
+      params = Object.assign({ ...params, tableName: 'file' });
+
+      eventFilesApi
+        .updateFile(params, params.uuid)
+        .then((res) => {
+          notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
+          handleRefresh(res.payload);
+        })
+        .catch((err) => {
+          notify('error', 'noti.archived_file', 'noti.ERROR');
+        });
+
+      return;
     }
 
     if (nameSpace === DAILY_ARCHIVE_NAMESPACE) {
@@ -365,15 +383,19 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
   };
 
   const handleDownloadFile = () => {
+    setLoadingDrawer(true);
     const per = getPermissionCheckDownload();
     if (!per) {
       notify('error', 'noti.archived_file', 'noti.do_not_have_permission_to_action');
+      setLoadingDrawer(false);
       return;
     }
 
     if (data.type === 1) {
       //image
       saveAs(urlSnapshot, downloadFileName);
+      setLoadingDrawer(false);
+
       return;
     }
 
@@ -384,9 +406,12 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
           const blob = new Blob([result], { type: 'octet/stream' });
           const url = window.URL.createObjectURL(blob);
           saveAs(url, downloadFileName);
+          setLoadingDrawer(false);
         })
         .catch((e) => {
           console.log(e);
+          setLoadingDrawer(false);
+
           notify('warning', 'noti.archived_file', 'noti.error_download_file');
         });
 
@@ -402,9 +427,12 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
             });
             const url = window.URL.createObjectURL(blob);
             saveAs(url, imageAICurrent.fileName);
+            setLoadingDrawer(false);
           })
           .catch((e) => {
             console.log(e);
+            setLoadingDrawer(false);
+
             notify('warning', 'noti.archived_file', 'noti.error_download_file');
           });
       } else {
@@ -421,10 +449,12 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
             });
             const url = window.URL.createObjectURL(blob);
             saveAs(url, downloadFileName);
+            setLoadingDrawer(false);
           })
           .catch((e) => {
             console.log(e);
             notify('warning', 'noti.archived_file', 'noti.error_download_file');
+            setLoadingDrawer(false);
           });
       }
 
@@ -438,10 +468,12 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
         });
         const url = window.URL.createObjectURL(blob);
         saveAs(url, downloadFileName);
+        setLoadingDrawer(false);
       })
       .catch((e) => {
         console.log(e);
         notify('warning', 'noti.archived_file', 'noti.error_download_file');
+        setLoadingDrawer(false);
       });
     return;
   };
@@ -623,7 +655,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
             <div className="detailInfo">
               <div className="detailInfo-title">
                 {intl.formatMessage({
-                  id: 'view.storage.note',
+                  id: 'view.storage.set_event',
                 })}
                 :
               </div>
@@ -1064,7 +1096,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
               id: 'view.storage.save',
             })}
           </Button>
-          <Button icon={<DownloadOutlined />} onClick={handleDownloadFile}>
+          <Button icon={<DownloadOutlined />} onClick={handleDownloadFile} loading={loadingDrawer}>
             {intl.formatMessage({
               id: 'view.storage.download_file',
             })}
@@ -1127,56 +1159,58 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
         })}
       </div> */}
 
-      <CollapseStyled
-        expandIconPosition="right"
-        ghost={true}
-        bordered={false}
-        defaultActiveKey={['1']}
-      >
-        <Panel header={<HeaderPanelStyled>{renderTitleDetail()}</HeaderPanelStyled>} key="1">
-          {/* {nameSpace === DAILY_ARCHIVE_NAMESPACE && renderDailyArchiveNameSpace()} */}
-          {nameSpace !== EVENT_AI_NAMESPACE && renderDailyArchiveNameSpace()}
-          {nameSpace === EVENT_AI_NAMESPACE && renderEventAiNameSpace()}
-        </Panel>
-
-        <Panel
-          header={
-            <HeaderPanelStyled>
-              {intl.formatMessage({
-                id: 'view.map.map',
-              })}
-            </HeaderPanelStyled>
-          }
-          key="2"
+      <Spin spinning={loadingDrawer}>
+        <CollapseStyled
+          expandIconPosition="right"
+          ghost={true}
+          bordered={false}
+          defaultActiveKey={['1']}
         >
-          <Row>
-            <Col span={24}>
-              <PreviewMap data={detailAI} listLongLat={listLongLat} />
-            </Col>
-          </Row>
-        </Panel>
-      </CollapseStyled>
+          <Panel header={<HeaderPanelStyled>{renderTitleDetail()}</HeaderPanelStyled>} key="1">
+            {/* {nameSpace === DAILY_ARCHIVE_NAMESPACE && renderDailyArchiveNameSpace()} */}
+            {nameSpace !== EVENT_AI_NAMESPACE && renderDailyArchiveNameSpace()}
+            {nameSpace === EVENT_AI_NAMESPACE && renderEventAiNameSpace()}
+          </Panel>
 
-      <VideoPlayer
-        data={data}
-        nameSpace={nameSpace}
-        tracingList={tracingList}
-        saveUrlSnapshot={saveUrlSnapshot}
-        saveFileDownloadFileName={saveFileDownloadFileName}
-        handleRefresh={handleRefresh}
-      />
+          <Panel
+            header={
+              <HeaderPanelStyled>
+                {intl.formatMessage({
+                  id: 'view.map.map',
+                })}
+              </HeaderPanelStyled>
+            }
+            key="2"
+          >
+            <Row>
+              <Col span={24}>
+                <PreviewMap data={detailAI} listLongLat={listLongLat} />
+              </Col>
+            </Row>
+          </Panel>
+        </CollapseStyled>
 
-      {nameSpace === EVENT_AI_NAMESPACE && (
-        <DrawerTicket
-          imageViolate={imageViolate}
-          plateNumber={plateNumber}
-          imageVehicle={imageVehicle}
+        <VideoPlayer
           data={data}
-          isOpenView={openDrawerTicket}
-          onClose={handleCloseDrawerTicket}
-          onRefresh={handleRefresh}
+          nameSpace={nameSpace}
+          tracingList={tracingList}
+          saveUrlSnapshot={saveUrlSnapshot}
+          saveFileDownloadFileName={saveFileDownloadFileName}
+          handleRefresh={handleRefresh}
         />
-      )}
+
+        {nameSpace === EVENT_AI_NAMESPACE && (
+          <DrawerTicket
+            imageViolate={imageViolate}
+            plateNumber={plateNumber}
+            imageVehicle={imageVehicle}
+            data={data}
+            isOpenView={openDrawerTicket}
+            onClose={handleCloseDrawerTicket}
+            onRefresh={handleRefresh}
+          />
+        )}
+      </Spin>
     </MSCustomizeDrawerStyled>
   );
 }
