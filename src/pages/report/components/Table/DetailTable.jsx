@@ -3,7 +3,6 @@ import { SpanCode } from '@/pages/category/camera/components/GroupCameraDrawer/s
 import ReportApi from '@/services/report/ReportApi';
 import { Col, Row } from 'antd';
 import { connect } from 'dva';
-import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
@@ -13,13 +12,13 @@ const DetailTable = (props) => {
   const [size, setSize] = useState(10);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(1);
+  const [payload, setPayload] = useState({});
   const intl = useIntl();
 
   const getData = async () => {
-    const params = { page: page, size: size };
-    const payload = { ...params, ...props.filterParams };
+    console.log('payload', payload);
     try {
-      if (!isEmpty(props.filterParams)) {
+      if (payload?.typeTime) {
         const result = await ReportApi.getDataDetailChart(payload);
         setTotal(result?.payload?.metadata?.total);
         setData(result?.payload?.events);
@@ -30,8 +29,14 @@ const DetailTable = (props) => {
   };
 
   useEffect(() => {
-    getData();
+    const dataParams = props?.filterParams;
+    const params = { size: size, page: page };
+    setPayload({ ...params, ...dataParams });
   }, [props?.filterParams, page, size]);
+
+  useEffect(() => {
+    getData();
+  }, [payload]);
 
   const dateForm = (date) => {
     return moment(date).format('DD/MM/YYYY | hh:mm:ss');
