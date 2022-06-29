@@ -904,6 +904,11 @@ export default {
   'AI.zac_human': 'Vượt rào ảo và xâm nhập (Phát hiện người)',
   'AI.zac_vehicle': 'Vượt rào ảo và xâm nhập (Phát hiện phương tiện)',
   'AI.attendance': 'Điểm danh',
-
+  // Update password
+  'noti.change_password_fail': 'Trường mật khẩu không được bỏ trống',
+  'noti.change_password_not_correct': 'Mật khẩu cũ không đúng',
+  'noti.fail.change_pass': 'Mật khẩu mới và xác nhận mật khẩu mới không khớp',
+  'noti.fail.change_password': 'Mật khẩu mới phải khác với mật khẩu cũ',
+  'noti.fail.email': 'Trường email không được bỏ trống',
   //Ver2================================================================================================================================
 };

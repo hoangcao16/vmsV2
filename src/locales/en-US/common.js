@@ -899,6 +899,13 @@ export default {
   'AI.zac_human': 'Hurdles and intrusion (Human detection)',
   'AI.zac_vehicle': 'Hurdles and intrusion (Vehicle detection)',
   'AI.attendance': 'Attendance',
-
+  // Update password
+  'view.user.old_password': 'Old password',
+  'view.user.confirm_password': 'Confirm password',
+  'noti.change_password_fail': "Password field can't be empty",
+  'noti.change_password_not_correct': 'Old password is not correct',
+  'noti.fail.change_pass': 'New password and confirm new password do not match',
+  'noti.fail.change_password': 'New password must be difference with old password',
+  'noti.fail.email': "Email field can't be empty",
   //Ver2================================================================================================================================
 };

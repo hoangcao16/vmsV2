@@ -46,7 +46,11 @@ function ChangePassword({ openDrawer, onClose }) {
           ) {
             notify('error', 'noti.faid', 'noti.fail.change_pass');
           }
-          if (rs.code === 601 && params.new_password == params.confirm_new_password) {
+          if (
+            rs.code === 601 &&
+            params.new_password == params.confirm_new_password &&
+            params.password != params.new_password
+          ) {
             notify('error', 'noti.faid', 'noti.change_password_not_correct');
           }
           if (rs.code === 601 && params.password == params.new_password && params.password != '') {
@@ -70,7 +74,6 @@ function ChangePassword({ openDrawer, onClose }) {
           width={'30%'}
           zIndex={1001}
           placement="right"
-          maskClosable={false}
           title={intl.formatMessage({
             id: 'view.user.change_password',
           })}
@@ -101,7 +104,7 @@ function ChangePassword({ openDrawer, onClose }) {
                     {
                       min: 4,
                       message: `${intl.formatMessage({
-                        id: 'view.user.detail_list.pass_length',
+                        id: 'view.user.detail_list.password_length',
                       })}`,
                     },
                   ]}
@@ -134,7 +137,7 @@ function ChangePassword({ openDrawer, onClose }) {
                     {
                       min: 4,
                       message: `${intl.formatMessage({
-                        id: 'view.user.detail_list.pass_length',
+                        id: 'view.user.detail_list.password_length',
                       })}`,
                     },
                   ]}
@@ -167,7 +170,7 @@ function ChangePassword({ openDrawer, onClose }) {
                     {
                       min: 4,
                       message: `${intl.formatMessage({
-                        id: 'view.user.detail_list.pass_length',
+                        id: 'view.user.detail_list.password_length',
                       })}`,
                     },
                   ]}
