@@ -66,6 +66,7 @@ function ChangePassword({ openDrawer, onClose }) {
         <MSCustomizeDrawer
           openDrawer={openDrawer}
           onClose={onClose}
+          maskClosable={false}
           width={'30%'}
           zIndex={1001}
           placement="right"
@@ -79,7 +80,7 @@ function ChangePassword({ openDrawer, onClose }) {
                 <CloseOutlined />
                 {intl.formatMessage({ id: 'view.map.cancel' })}
               </Button>
-              <Button type="primary" htmlType="submit" onClick={changePass}>
+              <Button type="primary" onClick={changePass}>
                 <CheckOutlined />
                 {intl.formatMessage({ id: 'pages.report.export.confirm' })}
               </Button>
