@@ -1,13 +1,13 @@
 import Footer from '@/components/Footer';
 import AuthZApi from '@/services/authz/AuthZApi';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
+import { GlobalOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LoginForm, ProFormCheckbox } from '@ant-design/pro-form';
 import { Form, Input, message, Tabs } from 'antd';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FormattedMessage, history, SelectLang, useIntl, useModel } from 'umi';
-import styles from './index.less';
-import { BottomForm } from './style';
 import ForgotPassword from './ForgotPassword';
+import styles from './index.less';
+import { BottomForm, StyledImg } from './style';
 const Login = () => {
   const [userLoginState, setUserLoginState] = useState({});
   const [type, setType] = useState('account');
@@ -67,17 +67,13 @@ const Login = () => {
   return (
     <div className={styles.container}>
       <div className={styles.lang} data-lang>
-        {SelectLang && <SelectLang />}
+        {SelectLang && <SelectLang icon={<GlobalOutlined />} />}
       </div>
       <div className={styles.content}>
+        <StyledImg>
+          <img alt="logo" src="/logo.svg" />
+        </StyledImg>
         <LoginForm
-          logo={<img alt="logo" src="/logo.svg" />}
-          title={intl.formatMessage({
-            id: 'pages.layouts.userLayout.header',
-          })}
-          subTitle={intl.formatMessage({
-            id: 'pages.layouts.userLayout.title',
-          })}
           initialValues={{
             autoLogin: true,
           }}

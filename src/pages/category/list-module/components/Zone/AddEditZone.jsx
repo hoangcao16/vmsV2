@@ -28,21 +28,25 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch, openDrawer, resetForm 
   const [districtId, setDistrictId] = useState(selectedRecord?.districtId || null);
   const [wards, setWard] = useState([]);
 
-  const handleSubmit = (value) => {
+  const handleSubmit = async (value) => {
     const payload = {
       ...value,
     };
     if (isEmpty(selectedRecord)) {
-      dispatch({
+      await dispatch({
         type: 'zone/addZone',
         payload: payload,
       });
     } else {
-      dispatch({
+      await dispatch({
         type: 'zone/editZone',
         payload: { id: selectedRecord?.uuid, values: { ...payload } },
       });
     }
+    dispatch({
+      type: 'globalstore/fetchAllZones',
+      payload: { size: 1000 },
+    });
     onClose();
     resetForm();
   };
@@ -104,10 +108,14 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch, openDrawer, resetForm 
     form.setFieldsValue({ wardId: null });
   }
 
-  const onDeleteRecord = () => {
-    dispatch({
+  const onDeleteRecord = async () => {
+    await dispatch({
       type: 'zone/deleteZone',
       payload: { id: selectedRecord?.uuid },
+    });
+    dispatch({
+      type: 'globalstore/fetchAllZones',
+      payload: { size: 1000 },
     });
     onClose();
     resetForm();

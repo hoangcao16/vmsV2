@@ -13,7 +13,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Card, Col, Form, Input, Popconfirm, Row, Select, Space, Upload } from 'antd';
 import { isEmpty } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PhoneInput from 'react-phone-number-input';
 import { useIntl } from 'umi';
 import { v4 as uuidV4 } from 'uuid';
@@ -124,32 +124,40 @@ const AddEditAdministrativeUnit = ({
     }
   };
 
-  const handleSubmit = (value) => {
+  const handleSubmit = async (value) => {
     const payload = {
       ...value,
       avatarFileName: avatarFileName,
     };
 
     if (isEmpty(selectedRecord)) {
-      dispatch({
+      await dispatch({
         type: 'advision/add',
         payload: payload,
       });
     } else {
-      dispatch({
+      await dispatch({
         type: 'advision/edit',
         payload: { id: selectedRecord?.uuid, values: { ...payload } },
       });
     }
+    dispatch({
+      type: 'globalstore/fetchAllAdDivisions',
+      payload: { size: 1000 },
+    });
 
     onClose();
     resetForm();
   };
 
-  const onDeleteRecord = () => {
-    dispatch({
+  const onDeleteRecord = async () => {
+    await dispatch({
       type: 'advision/delete',
       id: selectedRecord?.uuid,
+    });
+    dispatch({
+      type: 'globalstore/fetchAllAdDivisions',
+      payload: { size: 1000 },
     });
     onClose();
     resetForm();

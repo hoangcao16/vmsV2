@@ -1,22 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-param-reassign */
-import { connect } from 'dva';
-import { Input, Tooltip, Button, Col, Popconfirm } from 'antd';
-import { useState, useEffect } from 'react';
+import CircleIcon from '@/assets/img/iconCircle';
 import {
-  PlusOutlined,
+  DeleteOutlined,
   DownOutlined,
   EditOutlined,
-  DeleteOutlined,
   ExclamationCircleOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
-import { useIntl } from 'umi';
-import { TreeNodeStyle, CameraGroupSearch, TreeStyle, GroupCameraContainer } from './style';
-import isEmpty from 'lodash/isEmpty';
-import CircleIcon from '@/assets/img/iconCircle';
-import debounce from 'lodash/debounce';
-import GroupCameraDrawer from './components/GroupCameraDrawer';
+import { Button, Col, Input, Popconfirm, Tooltip } from 'antd';
+import { connect } from 'dva';
 import _ from 'lodash';
+import debounce from 'lodash/debounce';
+import isEmpty from 'lodash/isEmpty';
+import { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
+import GroupCameraDrawer from './components/GroupCameraDrawer';
+import { CameraGroupSearch, GroupCameraContainer, TreeNodeStyle, TreeStyle } from './style';
 const { Search } = Input;
 
 const unflatten = (array, parent, tree) => {
@@ -186,10 +186,14 @@ const GroupCamera = ({ dispatch, groupCameraParentOptions }) => {
     setCamGroupUuid(e[0]);
   };
   //delete group camera
-  const handleDelete = (id) => {
-    dispatch({
+  const handleDelete = async (id) => {
+    await dispatch({
       type: 'groupcamera/deleteGroupCamera',
       payload: id,
+    });
+    dispatch({
+      type: 'globalstore/fetchAllGroupCamera',
+      payload: { size: 1000 },
     });
   };
   // search camera group

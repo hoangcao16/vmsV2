@@ -1,5 +1,5 @@
+import { GlobalOutlined } from '@ant-design/icons';
 import { Space } from 'antd';
-import React from 'react';
 import { SelectLang, useModel } from 'umi';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
@@ -21,7 +21,7 @@ const GlobalHeaderRight = () => {
   return (
     <Space className={className}>
       <Avatar menu />
-      <SelectLang className={styles.action} />
+      <SelectLang className={styles.action} icon={<GlobalOutlined />} />
     </Space>
   );
 };
