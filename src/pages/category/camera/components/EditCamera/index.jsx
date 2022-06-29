@@ -870,7 +870,7 @@ const EditCamera = ({
                       onPaste={(e) => {
                         e.preventDefault();
                         form.setFieldsValue({
-                          address: e.clipboardData.getData('text').trim(),
+                          address: e.clipboardData.getData('text').trim().slice(0, 255),
                         });
                       }}
                     />

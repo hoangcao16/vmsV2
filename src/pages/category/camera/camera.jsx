@@ -13,11 +13,18 @@ import { Button, Col, Form, Input, Row, Select, Tooltip } from 'antd';
 import { connect } from 'dva';
 import debounce from 'lodash/debounce';
 import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { getLocale, useIntl } from 'umi';
 import AddCamera from './components/AddCamera';
 import EditCamera from './components/EditCamera';
 import ScanCamera from './components/ScanCamera';
 import { ContainerFilterDailyArchive, ProTableStyle, SpanCode, StyledColFilter } from './style';
+
+const CustomRow = styled.div`
+  word-wrap: break-word;
+  width: 120px;
+`;
+
 const formItemLayout = {
   labelCol: { span: 7 },
   wrapperCol: { span: 24 },
@@ -238,6 +245,9 @@ const CameraList = ({
       }),
       dataIndex: 'address',
       key: 'address',
+      render: (text) => {
+        return <CustomRow>{text}</CustomRow>;
+      },
     },
     {
       title: intl.formatMessage({
