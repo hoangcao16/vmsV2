@@ -16,7 +16,7 @@ function ForgotPassword({ openDrawer, onClose }) {
       email: form.getFieldValue('emailresetpass'),
     };
 
-    if ((params.email != '') & (params.email != undefined)) {
+    if (params.email != '' && params.email != undefined) {
       ResetPassword.resetPassword(params)
         .then((rs) => {
           if (rs.code === 600) {

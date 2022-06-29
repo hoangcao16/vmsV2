@@ -1,12 +1,10 @@
 import { GRID1X1, GRID2X2, GRID3X3, GRID4X4 } from '@/constants/grid';
-import { useEffect, useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import { connect } from 'umi';
 import CameraSlot from './CameraSlot';
 
-const GridPanel = ({ dispatch, selectedCamera, mode, grids, gridType }) => {
-  const [layoutGrid, setLayoutGrid] = useState([]);
+const GridPanel = ({ layoutGrid, dispatch, selectedCamera, mode, grids, gridType }) => {
   const handleSelectCamera = (index) => {
     if (mode === 'play') {
       if (selectedCamera?.data?.uuid === grids[index]?.uuid && selectedCamera?.index === index) {
@@ -29,11 +27,6 @@ const GridPanel = ({ dispatch, selectedCamera, mode, grids, gridType }) => {
       });
     }
   };
-  useEffect(() => {
-    if (gridType) {
-      initEmptyGrid(getGrid(gridType));
-    }
-  }, [gridType]);
   const getGrid = (gridType) => {
     switch (gridType) {
       case GRID1X1:
@@ -46,62 +39,57 @@ const GridPanel = ({ dispatch, selectedCamera, mode, grids, gridType }) => {
         return 16;
     }
   };
-  const initEmptyGrid = (number) => {
-    return setLayoutGrid(
-      Array.from(new Array(number)).map((_, index) => ({
-        id: '',
-        uuid: '',
-        name: '',
-      })),
-    );
-  };
   return (
     <StyledGrid>
-      {layoutGrid.map((camera, index) => (
-        <Droppable droppableId={`droppabled-${index}`} key={index}>
-          {(dropProvided, dropSnapshot) => (
-            <GridItem
-              grid={getGrid(gridType)}
-              ref={dropProvided.innerRef}
-              {...dropProvided.droppableProps}
-              onClick={() => handleSelectCamera(index)}
-            >
-              <GridItemWrapper isDraggingOver={dropSnapshot.isDraggingOver}>
-                <Draggable
-                  key={`draggable-${index}`}
-                  draggableId={`draggable-${index}`}
-                  index={index}
-                  disableInteractiveElementBlocking
-                >
-                  {(provided, snapshot) => (
-                    <GridItemContent
-                      ref={provided.innerRef}
-                      data-type={
-                        selectedCamera?.data?.uuid === grids[index]?.uuid &&
-                        selectedCamera?.index === index
-                          ? 'selected'
-                          : ''
-                      }
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={provided.draggableProps.style}
-                      isDragging={snapshot.draggingOver}
-                    >
-                      {/* {grids[index]?.uuid && ( */}
-                      <CameraSlot
-                        isDraggingOver={dropSnapshot.isDraggingOver}
-                        camera={grids[index]}
-                        slotIndex={index}
-                      />
-                      {/* )} */}
-                    </GridItemContent>
-                  )}
-                </Draggable>
-              </GridItemWrapper>
-            </GridItem>
-          )}
-        </Droppable>
-      ))}
+      {layoutGrid.map((camera, index) => {
+        return (
+          <Droppable droppableId={`droppabled-${index}`} key={index}>
+            {(dropProvided, dropSnapshot) => (
+              <GridItem
+                grid={getGrid(gridType)}
+                ref={dropProvided.innerRef}
+                {...dropProvided.droppableProps}
+                onClick={() => handleSelectCamera(index)}
+              >
+                <GridItemWrapper isDraggingOver={dropSnapshot.isDraggingOver}>
+                  <Draggable
+                    key={`draggable-${index}`}
+                    id={`draggable-map-${index}`}
+                    draggableId={`draggable-${index}`}
+                    index={index}
+                    disableInteractiveElementBlocking
+                  >
+                    {(provided, snapshot) => (
+                      <GridItemContent
+                        ref={provided.innerRef}
+                        data-type={
+                          selectedCamera?.data?.uuid === camera?.uuid &&
+                          selectedCamera?.index === index
+                            ? 'selected'
+                            : ''
+                        }
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={provided.draggableProps.style}
+                        isDragging={snapshot.draggingOver}
+                      >
+                        {/* {grids[index]?.uuid && ( */}
+                        <CameraSlot
+                          isDraggingOver={dropSnapshot.isDraggingOver}
+                          camera={camera}
+                          slotIndex={camera?.slot}
+                          uuid={camera?.uuid}
+                        />
+                        {/* )} */}
+                      </GridItemContent>
+                    )}
+                  </Draggable>
+                </GridItemWrapper>
+              </GridItem>
+            )}
+          </Droppable>
+        );
+      })}
     </StyledGrid>
   );
 };
@@ -109,6 +97,8 @@ const GridPanel = ({ dispatch, selectedCamera, mode, grids, gridType }) => {
 const StyledGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
+  overflow: hidden;
+  height: 100vh;
 `;
 
 const GridItem = styled.div`
