@@ -1,6 +1,7 @@
+import eventFilesApi from '@/services/storage-api/eventFilesApi';
 import { Badge, Tooltip } from 'antd';
 import moment from 'moment';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect, useIntl } from 'umi';
 import {
   CAPTURED_NAMESPACE,
@@ -24,6 +25,8 @@ function TableStorage({ dispatch, state, nameSpace }) {
   const [isOpenView, setIsOpenView] = useState(false);
   const [captureSelected, setCaptureSelected] = useState(null);
 
+  const [eventList, setEventList] = useState([]);
+
   const handleOpenDrawerView = (value) => {
     if (!value) {
       return;
@@ -44,6 +47,14 @@ function TableStorage({ dispatch, state, nameSpace }) {
       type: `${nameSpace}/fetchAll`,
       payload: dataParam,
     });
+  };
+
+  const getEventList = () => {
+    eventFilesApi
+      .getEventList({ page: 0, size: 1000000, sort_by: 'name', order_by: 'asc' })
+      .then((res) => {
+        setEventList(res.payload);
+      });
   };
 
   const renderName = (value) => {
@@ -360,6 +371,10 @@ function TableStorage({ dispatch, state, nameSpace }) {
     return columns;
   };
 
+  useEffect(() => {
+    getEventList();
+  }, []);
+
   return (
     <div>
       {viewType === GRID_VIEW && (
@@ -404,6 +419,7 @@ function TableStorage({ dispatch, state, nameSpace }) {
           dataSelected={captureSelected}
           onClose={handleCloseDrawerView}
           nameSpace={nameSpace}
+          eventList={eventList}
         />
       )}
     </div>

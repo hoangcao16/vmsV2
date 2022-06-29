@@ -51,6 +51,9 @@ function DrawerSetEventFile({
 
   return (
     <MSCustomizeDrawerStyled
+      title={intl.formatMessage({
+        id: 'view.storage.set_event',
+      })}
       openDrawer={isOpenView}
       onClose={() => {
         form.resetFields();
@@ -69,7 +72,7 @@ function DrawerSetEventFile({
             loading={loadingSetEvent}
           >
             {intl.formatMessage({
-              id: 'view.storage.save_note',
+              id: 'view.storage.save',
             })}
           </Button>
 
