@@ -23,6 +23,7 @@ export default {
   'pages.home.unknownName': 'Không rõ tên',
   'pages.home.unknown': 'không rõ',
   'pages.home.errorLoadingNoti': 'Có lỗi khi tải thông báo',
+  'pages.home.from_smaller_to': '"Từ" phải nhỏ hơn "Đến"',
   'pages.home.hardDriveWarning':
     'Ổ cứng {name} đã được sử dụng {percentUsed}%. Thời gian dự kiến còn lại: {estimatedTime}.',
 

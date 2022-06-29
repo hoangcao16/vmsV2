@@ -23,6 +23,7 @@ export default {
   'pages.home.unknownName': 'Unknown Name',
   'pages.home.unknown': 'unknown',
   'pages.home.errorLoadingNoti': 'Error loading notification',
+  'pages.home.from_smaller_to': '"From" must smaller than "To"',
   'pages.home.hardDriveWarning':
     'Hard drive {name} has been used {percentUsed}%. Estimated remaining usable time: {estimatedTime}.',
 

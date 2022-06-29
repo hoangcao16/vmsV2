@@ -1,3 +1,4 @@
+import { notify } from '@/components/Notify';
 import { ConfigProvider, DatePicker, Form, Select, Space } from 'antd';
 import locale from 'antd/es/locale/en_GB';
 import { connect } from 'dva';
@@ -102,6 +103,7 @@ const DatePickerForm = (props) => {
   }, [props?.allFields]);
 
   const handleFilter = ({ typeDate, startDate, endDate }) => {
+    console.log(startDate, endDate);
     if (
       (typeDate == typeTime.DAY && moment(endDate).diff(moment(startDate), 'days') >= 12) ||
       (typeDate == typeTime.WEEK &&
@@ -121,6 +123,21 @@ const DatePickerForm = (props) => {
           type: 'home/timeoutDataLineChart',
           boolean: true,
         });
+      }
+    } else if (moment(startDate).diff(moment(endDate), 'days') >= 0) {
+      if (props.typeChart == typeChart.PIE) {
+        props.dispatch({
+          type: 'home/timeoutDataPieChart',
+          boolean: true,
+        });
+        notify('error', 'noti.faid', 'pages.home.from_smaller_to');
+      }
+      if (props.typeChart == typeChart.LINE) {
+        props.dispatch({
+          type: 'home/timeoutDataLineChart',
+          boolean: true,
+        });
+        notify('error', 'noti.faid', 'pages.home.from_smaller_to');
       }
     } else {
       let params = {
