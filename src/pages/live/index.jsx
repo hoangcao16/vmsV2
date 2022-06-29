@@ -8,7 +8,6 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Space, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
-import { BsArrowsFullscreen, BsFullscreenExit } from 'react-icons/bs';
 import { connect, FormattedMessage } from 'umi';
 import ActionGrid from './components/ActionGrid';
 import CameraList from './components/CameraList';
@@ -17,7 +16,7 @@ import GridPanel from './components/GridPanel';
 import PlaybackControl from './components/player/PlaybackControl';
 import SaveFavorite from './components/SaveFavorite';
 import SettingPresetDrawer from './components/SettingPresetDrawer';
-import { StyledButtonFullScreen, StyledTabs, StyledTag, StyledText } from './style';
+import { StyledTabs, StyledTag, StyledText } from './style';
 
 const Live = ({
   availableList,
@@ -28,7 +27,6 @@ const Live = ({
   mode,
   grids,
   gridType,
-  isFullScreen,
 }) => {
   const initialDataGrid = [...Array(16).keys()].map((key) => ({
     slot: key,
@@ -243,12 +241,6 @@ const Live = ({
   const handleCloseDrawer = () => {
     dispatch({ type: 'live/closeDrawerSettingCamera' });
   };
-  const handleChangeFullScreen = () => {
-    dispatch({
-      type: 'globalstore/saveIsFullScreen',
-      payload: !isFullScreen,
-    });
-  };
 
   return (
     <>
@@ -323,22 +315,6 @@ const Live = ({
             onCloseDrawer={handleCloseDrawer}
           />
         )}
-        <Tooltip
-          placement="topLeft"
-          title={
-            <FormattedMessage
-              id={
-                !isFullScreen
-                  ? 'page.live-mode.action.view-fullscreen'
-                  : 'page.live-mode.action.exit-view-fullscreen'
-              }
-            />
-          }
-        >
-          <StyledButtonFullScreen onClick={handleChangeFullScreen}>
-            {!isFullScreen ? <BsArrowsFullscreen /> : <BsFullscreenExit />}
-          </StyledButtonFullScreen>
-        </Tooltip>
       </PageContainer>
       <FavoriteList
         title={<FormattedMessage id="pages.live-mode.list.favorite" />}
@@ -372,12 +348,10 @@ const mapStateToProps = ({ live, globalstore, favorite }) => {
     gridType,
     showPresetSetting = false,
   } = live;
-  const { isFullScreen } = globalstore;
   const { list } = favorite;
   return {
     availableList,
     screen,
-    isFullScreen,
     showPresetSetting,
     list,
     mode,
