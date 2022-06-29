@@ -47,12 +47,6 @@ export const StyledTabs = styled(Tabs)`
     justify-content: end;
   }
 `;
-export const StyledButtonFullScreen = styled(Button)`
-  position: fixed;
-  bottom: 0;
-  margin-bottom: 20px;
-  padding: 5px 10px;
-`;
 
 export const StyledTag = styled(Tag)`
   box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.043);

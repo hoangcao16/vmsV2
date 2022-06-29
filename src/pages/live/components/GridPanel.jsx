@@ -1,10 +1,12 @@
 import { GRID1X1, GRID2X2, GRID3X3, GRID4X4 } from '@/constants/grid';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
-import { connect } from 'umi';
+import { connect, FormattedMessage } from 'umi';
 import CameraSlot from './CameraSlot';
 import { useEffect, useState } from 'react';
 import { BsArrowsFullscreen, BsFullscreenExit } from 'react-icons/bs';
+import { Button, Tooltip } from 'antd';
+
 const GridPanel = ({
   layoutGrid,
   dispatch,
@@ -51,17 +53,27 @@ const GridPanel = ({
   useEffect(() => {
     if (isFullScreen === true) {
       const zoom = document.getElementById('ZoomCam');
-      document.body.appendChild(zoom);
-      zoom.style.width = '100%';
-      zoom.style.position = 'fixed';
-      zoom.style.top = '0';
-      zoom.style.left = '0';
-      zoom.style.bottom = '0';
-      zoom.style.right = '0';
-      zoom.style.zIndex = '9999';
+      const fSBtn = document.getElementById('fullScreenBtn');
+      if (zoom) {
+        document.body.appendChild(zoom);
+        zoom.style.width = '100%';
+        zoom.style.position = 'fixed';
+        zoom.style.top = '0';
+        zoom.style.left = '0';
+        zoom.style.bottom = '0';
+        zoom.style.right = '0';
+        zoom.style.zIndex = '999';
+        fSBtn.style.left = '20px';
+      }
     } else {
       const closeZoom = document.getElementById('closeZoomCam');
-      closeZoom && closeZoom.appendChild(document.getElementById('ZoomCam'));
+      const zoom = document.getElementById('ZoomCam');
+      const fSBtn = document.getElementById('fullScreenBtn');
+      if (zoom && closeZoom) {
+        closeZoom.appendChild(zoom);
+        zoom.style.position = 'initial';
+        fSBtn.style.removeProperty('left');
+      }
     }
   }, [isFullScreen]);
   const handleChangeFullScreen = () => {
@@ -71,8 +83,8 @@ const GridPanel = ({
     });
   };
   return (
-    <>
-      <StyledGrid>
+    <div id="closeZoomCam">
+      <StyledGrid id="ZoomCam">
         {layoutGrid.map((camera, index) => {
           return (
             <Droppable droppableId={`droppabled-${index}`} key={index}>
@@ -86,7 +98,7 @@ const GridPanel = ({
                   <GridItemWrapper isDraggingOver={dropSnapshot.isDraggingOver}>
                     <Draggable
                       key={`draggable-${index}`}
-                      id={`draggable-map-${index}`}
+                      className={`draggable-map`}
                       draggableId={`draggable-${index}`}
                       index={index}
                       disableInteractiveElementBlocking
@@ -124,10 +136,23 @@ const GridPanel = ({
         })}
       </StyledGrid>
 
-      {/* <StyledButtonFullScreen onClick={handleChangeFullScreen}>
+      <Tooltip
+        placement="topLeft"
+        title={
+          <FormattedMessage
+            id={
+              !isFullScreen
+                ? 'page.live-mode.action.view-fullscreen'
+                : 'page.live-mode.action.exit-view-fullscreen'
+            }
+          />
+        }
+      >
+        <StyledButtonFullScreen onClick={handleChangeFullScreen} id="fullScreenBtn">
           {!isFullScreen ? <BsArrowsFullscreen /> : <BsFullscreenExit />}
-        </StyledButtonFullScreen> */}
-    </>
+        </StyledButtonFullScreen>
+      </Tooltip>
+    </div>
   );
 };
 
@@ -141,12 +166,14 @@ const StyledGrid = styled.div`
 const GridItem = styled.div`
   flex: 1 1 ${(props) => 100 / Math.sqrt(props.grid)}%;
   border: 2px solid #1f1f1f;
+  height: ${(props) => 100 / Math.sqrt(props.grid)}%;
 `;
 
 const GridItemWrapper = styled.div`
   position: relative;
   width: 100%;
-  padding-top: 56.25%;
+  /* padding-top: 56.25%; */
+  height: 100%;
   background-color: ${(prop) => (prop.isDraggingOver ? '#222' : '#ccc')};
 `;
 
@@ -161,14 +188,14 @@ const GridItemContent = styled.div`
     border: 2px solid #bee71c;
   }
 `;
-// export const StyledButtonFullScreen = styled(Button)`
-//   position: fixed;
-//   bottom: 0;
-//   margin-bottom: 20px;
-//   padding: 5px 10px;
-//   z-index: 1500;
-//   margin-left: 20px;
-// `;
+export const StyledButtonFullScreen = styled(Button)`
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 20px;
+  padding: 5px 10px;
+  z-index: 1500;
+  margin-left: 20px;
+`;
 const mapStateToProps = (state) => {
   return {
     selectedCamera: state?.playMode?.selectedCamera,
