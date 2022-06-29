@@ -282,8 +282,6 @@ export default {
   'view.pages.save_account': 'Ghi nhớ tài khoản',
   'view.pages.forgot_password': 'Quên mật khẩu?',
   'view.pages.recover_password': 'Khôi phục mật khẩu của bạn',
-  'view.user.old_password': 'Mật khẩu cũ',
-  'view.user.confirm_password': 'Xác thực mật khẩu',
   'view.pages.enter_email':
     'Vui lòng nhập địa chỉ email, chúng tôi sẽ gửi cho bạn thông tin hướng dẫn đặt lại mật khẩu',
   'view.pages.recover_pw': 'Khôi phục mật khẩu',
@@ -530,7 +528,6 @@ export default {
   'view.user.detail_list.scan': 'Quét',
   'view.user.detail_list.search_to_select': 'Tìm kiếm để chọn',
   'view.user.detail_list.report_camera_info': 'Thông tin Camera_',
-  'view.user.detail_list.pass_length': 'Mật khẩu phải có từ 4 kí tự',
   //view ai humans
   'view.ai_humans.details': 'Thông tin chi tiết',
   'view.ai_humans.face': 'Quản lý khuôn mặt',
