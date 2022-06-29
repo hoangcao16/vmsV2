@@ -1,4 +1,3 @@
-import AdDivisionApi from '@/services/advisionApi';
 import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Button, Form, Input } from 'antd';
@@ -6,10 +5,10 @@ import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
-import AddEditAdministrativeUnit from './components/AddEditAdministrativeUnit';
+import AddEditEventType from './components/AddEditEventType';
 import { ProTableStyle } from './style';
 
-const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
+const EventType = ({ dispatch, list, metadata, loading, listField }) => {
   const intl = useIntl();
   const [form] = Form.useForm();
   const [openDrawerAddEdit, setOpenDrawerAddEdit] = useState(false);
@@ -19,18 +18,35 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
     size: metadata?.size,
   });
 
-  const columns = [
+  useEffect(() => {
+    dispatch({
+      type: 'eventType/fetchAllEventType',
+      payload: {
+        page: metadata?.page,
+        size: metadata?.size,
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    dispatch({
+      type: 'field/fetchAllField',
+    });
+  }, []);
+
+  const categoryColumns = [
     {
       title: intl.formatMessage({
-        id: 'view.category.no',
+        id: 'view.storage.NO',
       }),
       key: 'index',
       width: '15%',
       render: (text, record, index) => index + 1,
     },
+
     {
       title: intl.formatMessage({
-        id: 'view.category.administrative_unit',
+        id: 'view.category.category_name',
       }),
       dataIndex: 'name',
       key: 'name',
@@ -38,30 +54,26 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
     },
     {
       title: intl.formatMessage({
-        id: 'view.map.address',
+        id: 'view.category.field',
       }),
-      dataIndex: 'address',
-      key: 'address',
-      width: '30%',
+      dataIndex: 'fieldName',
+      key: 'fieldName',
+      width: '40%',
     },
   ];
 
-  const handleGetListAdvision = (searchParam) => {
+  const handleGetListField = (searchParam) => {
     dispatch({
-      type: 'advision/fetchAll',
+      type: 'eventType/fetchAllEventType',
       payload: searchParam,
     });
   };
 
   const handleSearch = (e) => {
     const value = e.target.value.trim();
-    const dataParam = Object.assign({
-      ...searchParam,
-      name: value,
-      page: 1,
-    });
+    const dataParam = Object.assign({ ...searchParam, page: 1, name: value });
     setSearchParam(dataParam);
-    handleGetListAdvision(dataParam);
+    handleGetListField(dataParam);
   };
 
   const handleQuickSearchBlur = (event) => {
@@ -78,24 +90,14 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
     });
   };
 
-  const onPaginationChange = (page, size) => {
-    const dataParam = Object.assign({ ...searchParam, page, size });
-    setSearchParam(dataParam);
-    handleGetListAdvision(dataParam);
-  };
-
-  useEffect(() => {
-    dispatch({
-      type: 'advision/fetchAll',
-      payload: {
-        page: metadata?.page,
-        size: metadata?.size,
-      },
-    });
-  }, []);
-
   const resetForm = () => {
     form.setFieldsValue({ searchValue: '' });
+  };
+
+  const onPaginationChange = (page, pageSize) => {
+    const dataParam = Object.assign({ ...searchParam, page: page, size: pageSize });
+    setSearchParam(dataParam);
+    handleGetListField(dataParam);
   };
 
   return (
@@ -103,21 +105,19 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
       <PageContainer>
         <ProTableStyle
           headerTitle={`${intl.formatMessage({
-            id: 'view.category.administrative_unit',
+            id: `view.category.event_type`,
           })}`}
-          rowKey="uuid"
+          rowKey="id"
           search={false}
           dataSource={list}
           loading={loading}
-          columns={columns}
+          columns={categoryColumns}
           options={false}
           onRow={(record) => {
             return {
-              onClick: async () => {
-                await AdDivisionApi.getAdDivisionByUuid(record.uuid).then((data) => {
-                  setSelectedRecord(data?.payload);
-                });
+              onClick: () => {
                 setOpenDrawerAddEdit(true);
+                setSelectedRecord(record);
               },
             };
           }}
@@ -127,9 +127,12 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
               <Form className="bg-grey" form={form} layout="horizontal" autoComplete="off">
                 <Form.Item name="searchValue">
                   <Input.Search
+                    className="search-camera-category"
                     maxLength={255}
                     placeholder={intl.formatMessage(
-                      { id: 'view.category.plsEnter_administrative_unit_name' },
+                      {
+                        id: `view.category.plsEnter_event_type`,
+                      },
                       {
                         plsEnter: intl.formatMessage({
                           id: 'please_enter',
@@ -153,7 +156,7 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
                 }}
               >
                 <PlusOutlined />
-                {intl.formatMessage({ id: 'view.camera.add_new' })}
+                {intl.formatMessage({ id: 'add' })}
               </Button>,
             ],
           }}
@@ -164,22 +167,23 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
               `${intl.formatMessage({
                 id: 'view.camera.total',
               })} ${total} ${intl.formatMessage({
-                id: `view.category.administrative_unit`,
+                id: `view.category.event_type`,
               })}`,
-            total: metadata?.total,
             onChange: onPaginationChange,
+            total: metadata?.total,
             pageSize: metadata?.size,
             current: metadata?.page,
           }}
         />
       </PageContainer>
       {openDrawerAddEdit && (
-        <AddEditAdministrativeUnit
+        <AddEditEventType
           onClose={() => setOpenDrawerAddEdit(false)}
           dispatch={dispatch}
           selectedRecord={selectedRecord}
           openDrawer={openDrawerAddEdit}
           resetForm={resetForm}
+          listField={listField}
         />
       )}
     </>
@@ -187,12 +191,14 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
 };
 
 function mapStateToProps(state) {
-  const { list, metadata } = state.advision;
+  const { metadata, list } = state.eventType;
+  const { list: listField } = state.field;
   return {
-    loading: state.loading.models.advision,
-    list,
+    loading: state.loading.models.eventType,
     metadata,
+    list,
+    listField,
   };
 }
 
-export default connect(mapStateToProps)(AdministrativeUnit);
+export default connect(mapStateToProps)(EventType);
