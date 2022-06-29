@@ -271,7 +271,6 @@ function mapStateToProps(state) {
   const { provincesOptions } = state.globalstore;
 
   return {
-    loading: state.loading.models.filterCamera,
     provincesOptions,
     tagsOptions: listTags,
     adDivisionsOptions: listAdministrativeUnits,

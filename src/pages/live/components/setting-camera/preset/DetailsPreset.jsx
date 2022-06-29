@@ -74,7 +74,9 @@ function DetailsPreset({ showDrawerDetailsPreset, selectedPreset, cameraSelected
       <h3> Preset:</h3>
 
       <CameraContent>
-        {!isEmpty(cameraSelected) && <CameraSlot camera={cameraSelected} inPresetView />}
+        {!isEmpty(cameraSelected) && (
+          <CameraSlot camera={cameraSelected} uuid={cameraSelected.uuid} inPresetView />
+        )}
       </CameraContent>
     </StyledDrawer>
   );

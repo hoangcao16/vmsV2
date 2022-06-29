@@ -225,7 +225,6 @@ function mapStateToProps(state) {
   const { filters } = state.filterCamera;
 
   return {
-    loading: state.loading.models.filterCamera,
     filters,
   };
 }
