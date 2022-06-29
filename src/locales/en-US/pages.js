@@ -46,7 +46,7 @@ export default {
   'pages.report.chart.pieChart': 'Pie chart',
   'pages.report.chart.barChart': 'Bar chart',
   'pages.report.chart.emptyField': 'There are no field in the system',
-  'pages.report.chart.emptyEvent': 'There are no event in the field',
+  'pages.report.chart.emptyEvent': 'No event was choosen. Please choose event',
   'pages.report.chart.filter': 'Filter',
   'pages.report.chart.dateRange': 'Date Range',
   'pages.report.chart.area': 'Area',
@@ -75,6 +75,7 @@ export default {
   'pages.report.export.confirm': 'Confirm',
   'pages.report.export.contentMessage': 'Are you sure to send this report to this Email?',
   'pages.report.export.cancel': 'Cancel',
+  'pages.report.export.sentReport': 'Send report file',
 
   //User
 
@@ -175,7 +176,9 @@ export default {
   'pages.setting-user.list-user.information': 'Information',
 
   'report.export.success': 'Report file export success',
+  'report.export.successSent': 'Send report file success',
   'report.export.failed': 'Report file export failed',
+  'report.export.failedSent': 'Send report file failed',
 
   // Code AUTH
   'pages.setting-user.list-user.601': 'BadRequest',
@@ -226,5 +229,4 @@ export default {
   'pages.live-mode.noti.details-preset': 'Xem chi tiết Preset',
   'pages.live-mode.noti.details-preset-tour': 'Xem chi tiết Preset tour',
   'pages.live-mode.noti.user-create': 'Người tạo',
-  
 };

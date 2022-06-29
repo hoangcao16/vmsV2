@@ -63,7 +63,6 @@ const ChartControl = (props) => {
   const [formValue, setFormValue] = useState({});
   const [allDistricts, setAllDistricts] = useState([]);
   const [allWards, setAllWards] = useState([]);
-  console.log('allWards', allWards);
   const [allAiCamera, setAllAiCamera] = useState([]);
   const [indeterminate, setIndeterminate] = useState(true);
   const [checkAll, setCheckAll] = useState(false);
