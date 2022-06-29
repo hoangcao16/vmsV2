@@ -5,7 +5,14 @@ import { Col, Row } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { useIntl } from 'umi';
+
+const Wrapper = styled.div`
+  .ant-pro-card-body {
+    padding: 0;
+  }
+`;
 
 const DetailTable = (props) => {
   const [data, setData] = useState([]);
@@ -16,7 +23,6 @@ const DetailTable = (props) => {
   const intl = useIntl();
 
   const getData = async () => {
-    console.log('payload', payload);
     try {
       if (payload?.typeTime) {
         const result = await ReportApi.getDataDetailChart(payload);
@@ -119,30 +125,32 @@ const DetailTable = (props) => {
   return (
     <Row gutter={24}>
       <Col span={24}>
-        <ProTableStyle
-          headerTitle={intl.formatMessage({
-            id: 'pages.report.chart.detailReport',
-          })}
-          rowKey="uuid"
-          search={false}
-          dataSource={data}
-          columns={columns}
-          options={false}
-          pagination={{
-            showQuickJumper: true,
-            showSizeChanger: true,
-            showTotal: (total) =>
-              `${intl.formatMessage({
-                id: 'view.camera.total',
-              })} ${total} ${intl.formatMessage({
-                id: 'pages.report.chart.event',
-              })}`,
-            total: total,
-            onChange: onPaginationChange,
-            pageSize: size,
-            current: page,
-          }}
-        />
+        <Wrapper>
+          <ProTableStyle
+            headerTitle={intl.formatMessage({
+              id: 'pages.report.chart.detailReport',
+            })}
+            rowKey="uuid"
+            search={false}
+            dataSource={data}
+            columns={columns}
+            options={false}
+            pagination={{
+              showQuickJumper: true,
+              showSizeChanger: true,
+              showTotal: (total) =>
+                `${intl.formatMessage({
+                  id: 'view.camera.total',
+                })} ${total} ${intl.formatMessage({
+                  id: 'pages.report.chart.event',
+                })}`,
+              total: total,
+              onChange: onPaginationChange,
+              pageSize: size,
+              current: page,
+            }}
+          />
+        </Wrapper>
       </Col>
     </Row>
   );

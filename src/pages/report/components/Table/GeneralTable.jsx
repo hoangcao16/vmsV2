@@ -4,7 +4,15 @@ import { connect } from 'dva';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { useIntl } from 'umi';
+
+const ChartTitle = styled.div`
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  padding: 10px 0;
+`;
 
 const GeneralTable = (props) => {
   const [dataSource, setDataSource] = useState([]);
@@ -186,17 +194,17 @@ const GeneralTable = (props) => {
   var columns = [
     {
       title: intl.formatMessage({
-        id: 'pages.report.chart.eventType',
+        id: 'pages.report.chart.violationType',
       }),
       dataIndex: 'type',
       key: 'type',
       fixed: 'left',
-      width: 100,
+      width: 120,
       onCell: (_, index) => mergeColumn(_, index),
     },
     {
       title: intl.formatMessage({
-        id: 'pages.report.chart.cameraName',
+        id: 'pages.report.chart.recordCamera',
       }),
       dataIndex: 'nameCamera',
       key: 'nameCamera',
@@ -222,25 +230,28 @@ const GeneralTable = (props) => {
   };
 
   return (
-    <Table
-      dataSource={parseData}
-      columns={columns}
-      scroll={{ x: 1000, y: 500 }}
-      pagination={{
-        showQuickJumper: true,
-        showSizeChanger: true,
-        showTotal: (total) =>
-          `${intl.formatMessage({
-            id: 'view.camera.total',
-          })} ${total} ${intl.formatMessage({
-            id: 'pages.report.chart.event',
-          })}`,
-        total: total,
-        onChange: onPaginationChange,
-        pageSize: size,
-        current: page,
-      }}
-    />
+    <>
+      <ChartTitle>{intl.formatMessage({ id: 'pages.report.chart.generalReport' })}</ChartTitle>
+      <Table
+        dataSource={parseData}
+        columns={columns}
+        scroll={{ x: 1000, y: 500 }}
+        pagination={{
+          showQuickJumper: true,
+          showSizeChanger: true,
+          showTotal: (total) =>
+            `${intl.formatMessage({
+              id: 'view.camera.total',
+            })} ${total} ${intl.formatMessage({
+              id: 'pages.report.chart.event',
+            })}`,
+          total: total,
+          onChange: onPaginationChange,
+          pageSize: size,
+          current: page,
+        }}
+      />
+    </>
   );
 };
 
