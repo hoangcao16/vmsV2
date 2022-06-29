@@ -3,8 +3,17 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import { connect } from 'umi';
 import CameraSlot from './CameraSlot';
-
-const GridPanel = ({ layoutGrid, dispatch, selectedCamera, mode, grids, gridType }) => {
+import { useEffect, useState } from 'react';
+import { BsArrowsFullscreen, BsFullscreenExit } from 'react-icons/bs';
+const GridPanel = ({
+  layoutGrid,
+  dispatch,
+  selectedCamera,
+  mode,
+  grids,
+  gridType,
+  isFullScreen,
+}) => {
   const handleSelectCamera = (index) => {
     if (mode === 'play') {
       if (selectedCamera?.data?.uuid === grids[index]?.uuid && selectedCamera?.index === index) {
@@ -39,58 +48,86 @@ const GridPanel = ({ layoutGrid, dispatch, selectedCamera, mode, grids, gridType
         return 16;
     }
   };
+  useEffect(() => {
+    if (isFullScreen === true) {
+      const zoom = document.getElementById('ZoomCam');
+      document.body.appendChild(zoom);
+      zoom.style.width = '100%';
+      zoom.style.position = 'fixed';
+      zoom.style.top = '0';
+      zoom.style.left = '0';
+      zoom.style.bottom = '0';
+      zoom.style.right = '0';
+      zoom.style.zIndex = '9999';
+    } else {
+      const closeZoom = document.getElementById('closeZoomCam');
+      closeZoom && closeZoom.appendChild(document.getElementById('ZoomCam'));
+    }
+  }, [isFullScreen]);
+  const handleChangeFullScreen = () => {
+    dispatch({
+      type: 'globalstore/saveIsFullScreen',
+      payload: !isFullScreen,
+    });
+  };
   return (
-    <StyledGrid>
-      {layoutGrid.map((camera, index) => {
-        return (
-          <Droppable droppableId={`droppabled-${index}`} key={index}>
-            {(dropProvided, dropSnapshot) => (
-              <GridItem
-                grid={getGrid(gridType)}
-                ref={dropProvided.innerRef}
-                {...dropProvided.droppableProps}
-                onClick={() => handleSelectCamera(index)}
-              >
-                <GridItemWrapper isDraggingOver={dropSnapshot.isDraggingOver}>
-                  <Draggable
-                    key={`draggable-${index}`}
-                    id={`draggable-map-${index}`}
-                    draggableId={`draggable-${index}`}
-                    index={index}
-                    disableInteractiveElementBlocking
-                  >
-                    {(provided, snapshot) => (
-                      <GridItemContent
-                        ref={provided.innerRef}
-                        data-type={
-                          selectedCamera?.data?.uuid === camera?.uuid &&
-                          selectedCamera?.index === index
-                            ? 'selected'
-                            : ''
-                        }
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={provided.draggableProps.style}
-                        isDragging={snapshot.draggingOver}
-                      >
-                        {/* {grids[index]?.uuid && ( */}
-                        <CameraSlot
-                          isDraggingOver={dropSnapshot.isDraggingOver}
-                          camera={camera}
-                          slotIndex={camera?.slot}
-                          uuid={camera?.uuid}
-                        />
-                        {/* )} */}
-                      </GridItemContent>
-                    )}
-                  </Draggable>
-                </GridItemWrapper>
-              </GridItem>
-            )}
-          </Droppable>
-        );
-      })}
-    </StyledGrid>
+    <>
+      <StyledGrid>
+        {layoutGrid.map((camera, index) => {
+          return (
+            <Droppable droppableId={`droppabled-${index}`} key={index}>
+              {(dropProvided, dropSnapshot) => (
+                <GridItem
+                  grid={getGrid(gridType)}
+                  ref={dropProvided.innerRef}
+                  {...dropProvided.droppableProps}
+                  onClick={() => handleSelectCamera(index)}
+                >
+                  <GridItemWrapper isDraggingOver={dropSnapshot.isDraggingOver}>
+                    <Draggable
+                      key={`draggable-${index}`}
+                      id={`draggable-map-${index}`}
+                      draggableId={`draggable-${index}`}
+                      index={index}
+                      disableInteractiveElementBlocking
+                    >
+                      {(provided, snapshot) => (
+                        <GridItemContent
+                          ref={provided.innerRef}
+                          data-type={
+                            selectedCamera?.data?.uuid === camera?.uuid &&
+                            selectedCamera?.index === index
+                              ? 'selected'
+                              : ''
+                          }
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={provided.draggableProps.style}
+                          isDragging={snapshot.draggingOver}
+                        >
+                          {/* {grids[index]?.uuid && ( */}
+                          <CameraSlot
+                            isDraggingOver={dropSnapshot.isDraggingOver}
+                            camera={camera}
+                            slotIndex={camera?.slot}
+                            uuid={camera?.uuid}
+                          />
+                          {/* )} */}
+                        </GridItemContent>
+                      )}
+                    </Draggable>
+                  </GridItemWrapper>
+                </GridItem>
+              )}
+            </Droppable>
+          );
+        })}
+      </StyledGrid>
+
+      {/* <StyledButtonFullScreen onClick={handleChangeFullScreen}>
+          {!isFullScreen ? <BsArrowsFullscreen /> : <BsFullscreenExit />}
+        </StyledButtonFullScreen> */}
+    </>
   );
 };
 
@@ -124,9 +161,18 @@ const GridItemContent = styled.div`
     border: 2px solid #bee71c;
   }
 `;
+// export const StyledButtonFullScreen = styled(Button)`
+//   position: fixed;
+//   bottom: 0;
+//   margin-bottom: 20px;
+//   padding: 5px 10px;
+//   z-index: 1500;
+//   margin-left: 20px;
+// `;
 const mapStateToProps = (state) => {
   return {
     selectedCamera: state?.playMode?.selectedCamera,
+    isFullScreen: state?.globalstore?.isFullScreen,
   };
 };
 export default connect(mapStateToProps)(GridPanel);

@@ -32,7 +32,7 @@ const CameraSlot = ({
   inPresetView = false,
 }) => {
   const [loading, setLoading] = useState(false);
-  const [currentCamera, setCurrentCamera] = useState(null);
+  const [isPlayCamera, setIsPlayCamera] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [zoomIn, setZoomIn] = useState(false);
@@ -102,6 +102,7 @@ const CameraSlot = ({
           data.playbackUrl + '/play/hls/' + payload?.payload?.reqUuid + '/index.m3u8';
         if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
           videoRef.current.src = videoSrc;
+          videoRef.current.style.display = 'block';
         } else if (Hls.isSupported()) {
           console.log('hehe');
           if (camera.hls) {
@@ -135,8 +136,8 @@ const CameraSlot = ({
             }
           });
           videoRef.current.autoplay = true;
+          setIsPlayCamera(true);
           videoRef.current.controls = false;
-          videoRef.current.style = 'display:block;';
           videoRef.current.style.display = 'block';
           return;
         }
@@ -180,7 +181,8 @@ const CameraSlot = ({
         if (videoRef.current) {
           videoRef.current.srcObject = event.streams[0];
           videoRef.current.style = 'display:block;';
-          videoRef.current.play();
+          // videoRef.current.play();
+          setIsPlayCamera(true);
         }
       };
 
@@ -268,7 +270,7 @@ const CameraSlot = ({
               videoRef.current.type = 'application/x-mpegURL';
               videoRef.current.innerHTML = `<source src='${API}/camproxy/v1/play/hls/${camUuid}/index.m3u8' type='application/x-mpegURL'>`;
               videoRef.current.style = 'display:block;';
-              videoRef.current.play();
+              // videoRef.current.play();
             }
           }
         });
@@ -284,9 +286,10 @@ const CameraSlot = ({
       videoRef.current.innerHTML = null;
       videoRef.current.style = 'display:none;';
       html.style.removeProperty('overflow');
+      setIsPlayCamera(false);
     }
     peerRef.current?.close();
-    if (camera?.uuid) {
+    if (camera?.uuid && !inPresetView) {
       dispatch({
         type: 'live/closeCamera',
         payload: camera,
@@ -513,7 +516,7 @@ const CameraSlot = ({
           <Spin indicator={<LoadingOutlined size={48} />} />
         </StyledLoading>
       )}
-      {camera && camera?.uuid && camera?.uuid !== '' && (
+      {camera && camera?.uuid && camera?.uuid !== '' && isPlayCamera && (
         <>
           {!inPresetView && (
             <StyledCameraSlotControl

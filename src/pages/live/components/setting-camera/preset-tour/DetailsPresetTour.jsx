@@ -113,7 +113,9 @@ function DetailsPresetTour({
       />
       <h3>Preset tour:</h3>
       <CameraContent>
-        {!isEmpty(cameraSelected) && <CameraSlot camera={cameraSelected} inPresetView />}
+        {!isEmpty(cameraSelected) && (
+          <CameraSlot camera={cameraSelected} uuid={cameraSelected.uuid} inPresetView />
+        )}
       </CameraContent>
     </StyledDrawer>
   );

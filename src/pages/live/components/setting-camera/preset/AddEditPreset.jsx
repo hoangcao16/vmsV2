@@ -79,7 +79,9 @@ function AddEditPreset({ showDrawerAddEditPreset, cameraSelected, selectedPreset
         <StyledDivider />
 
         <CameraContent>
-          {!isEmpty(cameraSelected) && <CameraSlot camera={cameraSelected} inPresetView />}
+          {!isEmpty(cameraSelected) && (
+            <CameraSlot camera={cameraSelected} uuid={cameraSelected.uuid} inPresetView />
+          )}
         </CameraContent>
 
         <FormControlStyled>

@@ -18,13 +18,7 @@ import PlaybackControl from './components/player/PlaybackControl';
 import SaveFavorite from './components/SaveFavorite';
 import SettingPresetDrawer from './components/SettingPresetDrawer';
 import { StyledButtonFullScreen, StyledTabs, StyledTag, StyledText } from './style';
-const initialDataGrid = [...Array(16).keys()].map((key) => ({
-  slot: key,
-  id: null,
-  uuid: null,
-  name: '',
-  type: 'live',
-}));
+
 const Live = ({
   availableList,
   screen,
@@ -36,6 +30,13 @@ const Live = ({
   gridType,
   isFullScreen,
 }) => {
+  const initialDataGrid = [...Array(16).keys()].map((key) => ({
+    slot: key,
+    id: null,
+    uuid: null,
+    name: '',
+    type: 'live',
+  }));
   const [visibleCameraList, setVisibleCameraList] = useState(false);
   const [visibleFavoriteList, setVisibleFavoriteList] = useState(false);
   const [visibleSaveFavorite, setVisibleSaveFavorite] = useState(false);
@@ -44,7 +45,6 @@ const Live = ({
   useEffect(() => {
     fetchDefaultScreen();
   }, []);
-
   const fetchDefaultScreen = async () => {
     const { payload } = await bookmarkService.getDefault();
     initScreen(payload[0] || undefined);
@@ -62,12 +62,24 @@ const Live = ({
       if (payload && payload.length) {
         payload.forEach((camera, index) => {
           cameraNameWithUuids[camera.uuid] = camera;
-          layoutGrid[index].id = camera ? camera.id : '';
-          layoutGrid[index].uuid = camera?.uuid;
-          layoutGrid[index].type = viewTypes[index];
-          layoutGrid[index].name = camera ? camera.name : '';
-          setLayoutGrid([...layoutGrid]);
+          // layoutGrid[index].id = camera ? camera.id : '';
+          // layoutGrid[index].uuid = camera?.uuid;
+          // layoutGrid[index].type = viewTypes[index];
+          // layoutGrid[index].name = camera ? camera.name : '';
+          // setLayoutGrid([...layoutGrid]);
         });
+        const copy = cameraUuids.map((uuid, index) => {
+          initialDataGrid.forEach((item, i) => {
+            if (item.slot === index) {
+              item.id = cameraNameWithUuids[uuid] ? cameraNameWithUuids[uuid].id : '';
+              item.uuid = cameraNameWithUuids[uuid] ? cameraNameWithUuids[uuid].uuid : '';
+              item.type = viewTypes[index];
+              item.name = cameraNameWithUuids[uuid] ? cameraNameWithUuids[uuid].name : '';
+            }
+          });
+          return initialDataGrid;
+        });
+        setLayoutGrid(...copy);
       }
 
       const grids = cameraUuids.map((uuid, index) => {
@@ -143,11 +155,11 @@ const Live = ({
     const { destination, source, draggableId } = result;
     if (!destination || !source) return;
     if (source.droppableId === LIVE_MODE.CAMERA_LIST_DROPPABLE_ID) {
-      console.log('onDragEnd', destination, source, draggableId);
+      console.log('onDragEnd', destination, draggableId);
 
       const draggableCam = availableList[source.index];
-      const gridID = destination.index;
-      grids[destination.index] = {
+      const gridID = destination.droppableId.replace('droppabled-', '');
+      grids[gridID] = {
         id: draggableCam.id,
         uuid: draggableCam?.uuid,
         type: 'live',
@@ -213,28 +225,12 @@ const Live = ({
       .childNodes[0];
     const divDes = document.querySelector(`[data-rbd-draggable-id='draggable-${destinationIndex}']`)
       .childNodes[0];
-    const SrcId = divSrc.id;
-    const DesId = divDes.id;
-    console.log(divSrc, divDes);
     doSwap(divSrc, divDes);
-    console.log(SrcId, DesId);
-    // const sourceVideo = layoutGrid[sourceIndex];
-    // const destinationVideo = layoutGrid[destinationIndex];
-    // layoutGrid[destinationIndex] = sourceVideo;
-    // layoutGrid[sourceIndex] = destinationVideo;
+    const sourceVideo = layoutGrid[sourceIndex];
+    const destinationVideo = layoutGrid[destinationIndex];
+    layoutGrid[destinationIndex] = sourceVideo;
+    layoutGrid[sourceIndex] = destinationVideo;
     return layoutGrid;
-  };
-  const getGrid = (gridType) => {
-    switch (gridType) {
-      case GRID1X1:
-        return 1;
-      case GRID2X2:
-        return 4;
-      case GRID3X3:
-        return 9;
-      case GRID4X4:
-        return 16;
-    }
   };
 
   const handleChangeMode = (mode) => {

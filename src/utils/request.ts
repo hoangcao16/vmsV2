@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 // import { store } from "store";
 import HandleErrorCode from '@/components/HandleErrorCode';
 import { API_FILE_URL, API_URL, STATUS_CODE, STORAGE } from '../constants/common';
+import AuthZApi from '@/services/authz/AuthZApi';
 export class BaseService {
   private baseUrl;
   private withToken;
@@ -56,7 +57,7 @@ export class BaseService {
         if (originalRequest && error?.toJSON()?.status === 401 && !originalRequest._retry) {
           const oldToken = localStorage.getItem(STORAGE.TOKEN);
 
-          // await AuthZApi.refreshToken(oldToken);
+          await AuthZApi.refreshToken(oldToken);
 
           originalRequest._retry = true;
 

@@ -10,7 +10,7 @@ import {
 import { connect } from 'dva';
 import { useState } from 'react';
 import styled from 'styled-components';
-import './control.less';
+import { StyleContainer } from './style';
 
 const Control = ({ dispatch, cameraSelected }) => {
   const [speed, setSpeed] = useState(1);
@@ -222,7 +222,7 @@ const Control = ({ dispatch, cameraSelected }) => {
   };
 
   return (
-    <div className="container">
+    <StyleContainer>
       <nav>
         <div
           className="button top"
@@ -285,7 +285,7 @@ const Control = ({ dispatch, cameraSelected }) => {
           </ZoomButton>
         </Wrapper>
       </div>
-    </div>
+    </StyleContainer>
   );
 };
 
