@@ -76,6 +76,11 @@ const CameraList = ({ dispatch, filters, cameras: listCameras = [], ...props }) 
       name,
       total: 0,
     });
+    const filters = form.getFieldsValue();
+    dispatch({
+      type: 'filterCamera/setFilter',
+      payload: { filters },
+    });
   };
 
   return (
@@ -90,15 +95,19 @@ const CameraList = ({ dispatch, filters, cameras: listCameras = [], ...props }) 
       </div>
       <StyledDrawerContent>
         {loading && <StyledSpin indicator={<LoadingOutlined style={{ fontSize: 32 }} />} />}
-        <Form form={form} onFinish={handleSearch}>
+        <Form form={form} layout="vertical" onFinish={handleSearch}>
           <StyledSearch size={8}>
             <Form.Item name="name" noStyle>
               <Input.Search placeholder="Nhãn camera" onSearch={form.submit} />
             </Form.Item>
-            <Button type="primary" icon={<FilterFilled />} onClick={() => setVisibleFilter(true)} />
+            <Button
+              type="primary"
+              icon={<FilterFilled />}
+              onClick={() => setVisibleFilter(!visibleFilter)}
+            />
           </StyledSearch>
+          {visibleFilter && <FilterDrawer form={form} />}
         </Form>
-        <FilterDrawer visible={visibleFilter} onClose={() => setVisibleFilter(false)} />
         <StyledWrapper autoHide>
           <Droppable droppableId={LIVE_MODE.CAMERA_LIST_DROPPABLE_ID}>
             {(provided) => (

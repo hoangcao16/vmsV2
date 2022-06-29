@@ -16,7 +16,7 @@ import {
   StarOutlined,
   SwapOutlined,
 } from '@ant-design/icons';
-import { Button, Col, Collapse, Input, Row, Space, Spin } from 'antd';
+import { Button, Col, Collapse, Input, Row, Select, Space, Spin } from 'antd';
 import Popconfirm from 'antd/es/popconfirm';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -66,12 +66,10 @@ let defaultEventFile = {
   tBlob: null,
 };
 
-function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispatch }) {
+function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispatch, eventList }) {
   const intl = useIntl();
   const [data, setData] = useState(dataSelected);
   const [note, setNote] = useState(dataSelected.note ? dataSelected.note : '');
-
-  console.log(data);
 
   const [detailAI, setDetailAI] = useState(defaultEventFile);
 
@@ -100,6 +98,10 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
 
   const [urlSnapshot, setUrlSnapshot] = useState('');
   const [downloadFileName, setDownloadFileName] = useState('');
+
+  const [eventSelected, setEventSelected] = useState(
+    dataSelected.eventUuid ? dataSelected.eventUuid : null,
+  );
 
   const saveUrlSnapshot = (url) => {
     setUrlSnapshot(url);
@@ -251,11 +253,15 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
     setNote(e.target.value);
   };
 
-  const handleSaveNote = () => {
-    handleUpdateFile(null, note);
+  const handleChangeEventType = (value) => {
+    setEventSelected(value);
   };
 
-  const handleUpdateFile = (isImportant = null, noteValue = null) => {
+  const handleSaveNote = () => {
+    handleUpdateFile(null, note, eventSelected);
+  };
+
+  const handleUpdateFile = (isImportant = null, noteValue = null, event = null) => {
     let perStr = '';
     if (isImportant !== null) perStr = 'mark_important_file';
     if (noteValue !== null) perStr = 'edit_file_note';
@@ -275,6 +281,11 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
 
     if (isImportant !== null) params = Object.assign({ ...params, isImportant: isImportant });
     if (noteValue !== null) params = Object.assign({ ...params, note: noteValue });
+
+    if (event !== null) {
+      const event = eventList.find((e) => e.uuid === eventSelected);
+      params = Object.assign({ ...params, eventUuid: event.uuid, eventName: event.name });
+    }
 
     if (nameSpace === DAILY_ARCHIVE_NAMESPACE) {
       // file
@@ -300,10 +311,12 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
         tableName: 'event_file',
       });
 
-      updateEventFile
+      eventFilesApi
         .updateEventFile(params, params.uuid)
         .then((res) => {
-          handleRefresh(res.payload);
+          // handleRefresh(res.payload);
+          // not found any playback when call api accept request,
+          handleRefresh({ ...res.payload, diskId: 2 });
           notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
         })
         .catch((err) => {
@@ -316,7 +329,10 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
       eventFilesApi
         .updateEventFile(params, params.uuid)
         .then((res) => {
-          handleRefresh(res.payload);
+          // handleRefresh(res.payload);
+          // not found any playback when call api accept request,
+
+          handleRefresh({ ...res.payload, diskId: 2 });
           notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
         })
         .catch((err) => {
@@ -600,6 +616,35 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
               />
             </div>
           </div>
+
+          {(nameSpace === CAPTURED_NAMESPACE ||
+            nameSpace === EVENT_FILES_NAMESPACE ||
+            nameSpace === IMPORTANT_NAMESPACE) && (
+            <div className="detailInfo">
+              <div className="detailInfo-title">
+                {intl.formatMessage({
+                  id: 'view.storage.note',
+                })}
+                :
+              </div>
+              <div className="detailInfo-content">
+                <Select
+                  placeholder={intl.formatMessage({
+                    id: 'view.category.event_type',
+                  })}
+                  style={{ maxWidth: '395px', width: '100%' }}
+                  onChange={handleChangeEventType}
+                  value={eventSelected}
+                >
+                  {eventList.map((event) => (
+                    <Select.Option key={event.id} value={event.uuid}>
+                      {event.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </div>
+            </div>
+          )}
         </Col>
       </Row>
     );
@@ -1016,7 +1061,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
         <Space>
           <Button icon={<SaveOutlined />} type="primary" onClick={handleSaveNote}>
             {intl.formatMessage({
-              id: 'view.storage.save_note',
+              id: 'view.storage.save',
             })}
           </Button>
           <Button icon={<DownloadOutlined />} onClick={handleDownloadFile}>

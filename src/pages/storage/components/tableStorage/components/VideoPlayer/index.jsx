@@ -680,6 +680,7 @@ function VideoPlayer({
 
         ExportEventFileApi.createNewEventFile(requestObject).then((res) => {
           notify('success', 'noti.archived_file', 'noti.successfully_add_file');
+          onClickTableFileHandler(data);
         });
       })
       .catch((err) => {
@@ -989,7 +990,7 @@ function VideoPlayer({
             onClickRow={clickTableEventFileHandler}
             onDeleteEventFile={deleteEventFileHandler}
             onEditEventFile={editEventFileHandler}
-            onSaveEventFile={saveEventFileHandler}
+            onSaveEventFile={openFile}
             onChangeEditModeHandler={changeEditModeHandler}
             onSetEventFileHandler={handleOpenSetEvent}
           />
