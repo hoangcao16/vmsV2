@@ -56,7 +56,9 @@ export default {
           type: 'saveFilter',
           payload: { filters },
         });
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
   subscriptions: {

@@ -299,7 +299,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
           handleRefresh(res.payload);
         })
         .catch((err) => {
-          notify('error', 'noti.archived_file', 'noti.ERROR');
+          console.log(err);
         });
 
       return;
@@ -316,7 +316,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
           handleRefresh(res.payload);
         })
         .catch((err) => {
-          notify('error', 'noti.archived_file', 'noti.ERROR');
+          console.log(err);
         });
 
       return;
@@ -338,7 +338,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
           notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
         })
         .catch((err) => {
-          notify('error', 'noti.archived_file', 'noti.ERROR');
+          console.log(err);
         });
       return;
     }
@@ -354,7 +354,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
           notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
         })
         .catch((err) => {
-          notify('error', 'noti.archived_file', 'noti.ERROR');
+          console.log(err);
         });
 
       return;

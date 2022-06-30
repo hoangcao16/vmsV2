@@ -70,7 +70,7 @@ export default {
         yield put({ type: 'reloadDataGroupOfUser' });
       } catch (error) {
         console.error(error);
-        notify('error', 'noti.faid', 'noti.list-user.updateUserFailed');
+        // notify('error', 'noti.faid', 'noti.list-user.updateUserFailed');
       }
     },
 
@@ -102,7 +102,7 @@ export default {
         yield put({ type: 'reloadDataRoleOfUser' });
       } catch (error) {
         console.error(error);
-        notify('error', 'noti.faid', 'noti.list-user.updateUserFailed');
+        // notify('error', 'noti.faid', 'noti.list-user.updateUserFailed');
       }
     },
 

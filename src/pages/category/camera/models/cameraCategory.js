@@ -75,11 +75,7 @@ export default {
         notify('success', 'pages.setting-user.list-user.titleSuccess', 'noti.successfully_add');
         yield put({ type: 'reloadVendor' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
+        console.log(error);
       }
     },
     *editVendor({ payload: { id, values } }, { call, put }) {
@@ -92,11 +88,7 @@ export default {
         );
         yield put({ type: 'reloadVendor' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
+        console.log('error', error);
       }
     },
     *deleteVendor({ id }, { call, put }) {
@@ -106,12 +98,6 @@ export default {
         yield put({ type: 'reloadVendor' });
       } catch (error) {
         console.log('error', error);
-
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
       }
     },
     *reloadVendor(action, { put, select }) {
@@ -128,11 +114,7 @@ export default {
         notify('success', 'pages.setting-user.list-user.titleSuccess', 'noti.successfully_add');
         yield put({ type: 'reloadType' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
+        console.log('error', error);
       }
     },
     *editType({ payload: { id, values } }, { call, put }) {
@@ -145,11 +127,7 @@ export default {
         );
         yield put({ type: 'reloadType' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
+        console.log('error', error);
       }
     },
 
@@ -160,12 +138,6 @@ export default {
         yield put({ type: 'reloadType' });
       } catch (error) {
         console.log('error', error);
-
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
       }
     },
 
@@ -183,11 +155,7 @@ export default {
         notify('success', 'pages.setting-user.list-user.titleSuccess', 'noti.successfully_add');
         yield put({ type: 'reloadTags' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
+        console.log('error', error);
       }
     },
 
@@ -201,11 +169,7 @@ export default {
         );
         yield put({ type: 'reloadTags' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
+        console.log('error', error);
       }
     },
 
@@ -216,12 +180,6 @@ export default {
         yield put({ type: 'reloadTags' });
       } catch (error) {
         console.log('error', error);
-
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
       }
     },
 

@@ -86,7 +86,7 @@ export default {
         yield call(settingApi.postRecordingVideo, payload);
         notify('success', 'noti.success', 'noti.successful_setting');
       } catch (error) {
-        notify('error', 'noti.faid', `pages.setting-user.list-user.${error?.code}`);
+        console.log(error);
       }
     },
     *postCleanSetting({ payload }, { call, put }) {
@@ -94,7 +94,7 @@ export default {
         yield call(settingApi.postDataCleanFile, payload);
         notify('success', 'noti.success', 'noti.successful_setting');
       } catch (error) {
-        notify('error', 'noti.faid', `pages.setting-user.list-user.${error?.code}`);
+        console.log(error);
       }
     },
     *postDataWarningDisk({ payload }, { call, put }) {
@@ -103,7 +103,7 @@ export default {
         notify('success', 'noti.success', 'noti.successful_setting');
         yield put({ type: 'fetchWarningStoreSetting' });
       } catch (error) {
-        notify('error', 'noti.faid', `pages.setting-user.list-user.${error?.code}`);
+        console.log(error);
       }
     },
     *updateEmail({ payload }, { call, put }) {
@@ -112,7 +112,7 @@ export default {
         notify('success', 'noti.success', 'noti.successful_setting');
         yield put({ type: 'fetchEmailConfig' });
       } catch (error) {
-        notify('error', 'noti.faid', `pages.setting-user.list-user.${error?.code}`);
+        console.log(error);
       }
     },
   },
