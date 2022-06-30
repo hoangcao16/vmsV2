@@ -567,13 +567,11 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
               :
             </div>
 
-            {nameSpace === DAILY_ARCHIVE_NAMESPACE && (
+            {nameSpace === DAILY_ARCHIVE_NAMESPACE || nameSpace === IMPORTANT_NAMESPACE ? (
               <div className="detailInfo-content">
                 {moment(data?.createdTime * 1000).format('DD/MM/YYYY HH:mm')}
               </div>
-            )}
-
-            {nameSpace !== DAILY_ARCHIVE_NAMESPACE && (
+            ) : (
               <div className="detailInfo-content">
                 {moment(data?.createdTime).format('DD/MM/YYYY HH:mm')}
               </div>
@@ -612,11 +610,9 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
               :
             </div>
 
-            {nameSpace === DAILY_ARCHIVE_NAMESPACE && (
+            {nameSpace === DAILY_ARCHIVE_NAMESPACE || nameSpace === IMPORTANT_NAMESPACE ? (
               <div className="detailInfo-content">{data?.path}</div>
-            )}
-
-            {nameSpace !== DAILY_ARCHIVE_NAMESPACE && (
+            ) : (
               <div className="detailInfo-content">{data?.pathFile}</div>
             )}
           </div>
@@ -628,9 +624,15 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
               })}
               :
             </div>
-            <div className="detailInfo-content">
-              {moment(data?.createdTime).format('DD/MM/YYYY')}
-            </div>
+            {nameSpace === DAILY_ARCHIVE_NAMESPACE || nameSpace === IMPORTANT_NAMESPACE ? (
+              <div className="detailInfo-content">
+                {moment(data?.createdTime * 1000).format('DD/MM/YYYY')}
+              </div>
+            ) : (
+              <div className="detailInfo-content">
+                {moment(data?.createdTime).format('DD/MM/YYYY')}
+              </div>
+            )}
           </div>
 
           <div className="detailInfo">
