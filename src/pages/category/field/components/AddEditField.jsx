@@ -5,7 +5,15 @@ import { isEmpty } from 'lodash';
 import { useIntl } from 'umi';
 import { StyledDrawer } from '../style';
 
-const AddEditField = ({ onClose, selectedRecord, dispatch, openDrawer, type, resetForm }) => {
+const AddEditField = ({
+  onClose,
+  selectedRecord,
+  dispatch,
+  openDrawer,
+  resetForm,
+  searchParam,
+  setSearchParam,
+}) => {
   const intl = useIntl();
   const [form] = Form.useForm();
 
@@ -25,13 +33,14 @@ const AddEditField = ({ onClose, selectedRecord, dispatch, openDrawer, type, res
         payload: { id: selectedRecord?.uuid, values: { ...payload } },
       });
     }
-
+    setSearchParam({ ...searchParam, name: '' });
     resetForm();
     onClose();
   };
 
   const onDeleteRecord = () => {
     dispatch({ type: 'field/delete', id: selectedRecord?.uuid });
+    setSearchParam({ ...searchParam, name: '' });
     resetForm();
     onClose();
   };

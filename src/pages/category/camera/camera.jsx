@@ -331,6 +331,7 @@ const CameraList = ({
       payload: {
         page: metadata?.page,
         size: metadata?.size,
+        name: '',
       },
     });
   }, []);

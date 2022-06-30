@@ -29,6 +29,8 @@ const AddEditAdministrativeUnit = ({
   dispatch,
   openDrawer,
   resetForm,
+  searchParam,
+  setSearchParam,
 }) => {
   const intl = useIntl();
   const [form] = Form.useForm();
@@ -146,6 +148,7 @@ const AddEditAdministrativeUnit = ({
       payload: { size: 1000 },
     });
 
+    setSearchParam({ ...searchParam, name: '' });
     onClose();
     resetForm();
   };
@@ -159,6 +162,7 @@ const AddEditAdministrativeUnit = ({
       type: 'globalstore/fetchAllAdDivisions',
       payload: { size: 1000 },
     });
+    setSearchParam({ ...searchParam, name: '' });
     onClose();
     resetForm();
   };

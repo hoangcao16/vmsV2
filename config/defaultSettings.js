@@ -8,7 +8,7 @@ const Settings = {
     colorWeak: false,
     title: 'VMS',
     pwa: false,
-    logo: '/logo_icon.svg',
+    logo: '/logo_white.svg',
     iconfontUrl: '',
 };
 export default Settings;

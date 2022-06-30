@@ -184,6 +184,8 @@ const EventType = ({ dispatch, list, metadata, loading, listField }) => {
           openDrawer={openDrawerAddEdit}
           resetForm={resetForm}
           listField={listField}
+          searchParam={searchParam}
+          setSearchParam={setSearchParam}
         />
       )}
     </>

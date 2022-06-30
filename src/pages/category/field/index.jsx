@@ -169,6 +169,8 @@ const Field = ({ dispatch, list, metadata, loading }) => {
           selectedRecord={selectedRecord}
           openDrawer={openDrawerAddEdit}
           resetForm={resetForm}
+          searchParam={searchParam}
+          setSearchParam={setSearchParam}
         />
       )}
     </>

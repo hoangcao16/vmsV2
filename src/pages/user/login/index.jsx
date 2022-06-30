@@ -71,7 +71,7 @@ const Login = () => {
       </div>
       <div className={styles.content}>
         <StyledImg>
-          <img alt="logo" src="/logo.svg" />
+          <img alt="logo" src="/logo_white.svg" />
         </StyledImg>
         <LoginForm
           initialValues={{

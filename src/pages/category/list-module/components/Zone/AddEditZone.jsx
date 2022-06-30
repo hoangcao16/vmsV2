@@ -18,7 +18,15 @@ export const DATA_FAKE_ZONE = {
   playback: [{ name: '', uuid: '' }],
 };
 
-const AddEditZone = ({ onClose, selectedRecord, dispatch, openDrawer, resetForm }) => {
+const AddEditZone = ({
+  onClose,
+  selectedRecord,
+  dispatch,
+  openDrawer,
+  resetForm,
+  searchParam,
+  setSearchParam,
+}) => {
   const intl = useIntl();
   const [form] = Form.useForm();
   const [filterOptions, setFilterOptions] = useState(DATA_FAKE_ZONE);
@@ -47,6 +55,7 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch, openDrawer, resetForm 
       type: 'globalstore/fetchAllZones',
       payload: { size: 1000 },
     });
+    setSearchParam({ ...searchParam, name: '' });
     onClose();
     resetForm();
   };
@@ -117,6 +126,8 @@ const AddEditZone = ({ onClose, selectedRecord, dispatch, openDrawer, resetForm 
       type: 'globalstore/fetchAllZones',
       payload: { size: 1000 },
     });
+
+    setSearchParam({ ...searchParam, name: '' });
     onClose();
     resetForm();
   };
