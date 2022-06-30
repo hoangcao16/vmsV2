@@ -25,6 +25,7 @@ const CameraListDrawer = ({
   type,
   listStreaming,
   closeDrawerState,
+  tagsOptions,
 }) => {
   const intl = useIntl();
   const [currentPage, setCurrentPage] = useState(metadata?.page);
@@ -159,22 +160,34 @@ const CameraListDrawer = ({
     }
   };
   const handleSearch = (dataForm) => {
-    const data = {
-      page: 1,
-      size: 10000,
-      ...dataForm,
-    };
     if (type === 'camera') {
+      const data = {
+        page: 1,
+        size: 10000,
+        ...dataForm,
+        tags: dataForm.tags?.toString(),
+      };
       dispatch({
         type: 'maps/fetchCameraList',
         payload: data,
       });
     } else if (type === 'adminisUnit') {
+      const data = {
+        page: 1,
+        size: 10000,
+        ...dataForm,
+      };
       dispatch({
         type: 'maps/fetchAllAdDivisions',
         payload: data,
       });
     } else {
+      const data = {
+        page: 1,
+        size: 10000,
+        ...dataForm,
+        tags: dataForm.tags?.toString(),
+      };
       dispatch({
         type: 'maps/fetchAllCameraAI',
         payload: data,
@@ -282,6 +295,7 @@ function mapStateToProps(state) {
   const { list, metadata, isOpenCameraListDrawer, type } = state.maps;
   const { listStreaming } = state.viewLiveCameras;
   const { closeDrawerState } = state.camera;
+  const { tagsOptions } = state.globalstore;
   return {
     list,
     metadata,
@@ -289,6 +303,7 @@ function mapStateToProps(state) {
     type,
     listStreaming,
     closeDrawerState,
+    tagsOptions,
   };
 }
 export default connect(mapStateToProps)(CameraListDrawer);

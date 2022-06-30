@@ -352,9 +352,10 @@ function FilterDrawer({
             </Col>
 
             <Col span={12}>
-              <Form.Item label="Tag" name="tag">
+              <Form.Item label="Tag" name="tags">
                 <Select
                   allowClear
+                  mode="multiple"
                   showSearch
                   optionFilterProp="children"
                   filterOption={(input, option) =>

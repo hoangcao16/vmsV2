@@ -219,6 +219,13 @@ const CameraList = ({
       ),
       dataIndex: 'name',
       key: 'name',
+      render: (text) => {
+        return (
+          <Tooltip title={text}>
+            <CustomRow>{text}</CustomRow>
+          </Tooltip>
+        );
+      },
     },
     {
       title: intl.formatMessage({
