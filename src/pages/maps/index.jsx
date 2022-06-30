@@ -82,7 +82,6 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
         if (cell) {
           cell.srcObject = event.streams[0];
           cell.style = 'display:block;';
-          cell.play();
         }
       };
 

@@ -41,3 +41,11 @@ export const Header = styled.div`
     margin-left: 1rem;
   }
 `;
+export const StyledCountdown = styled.div`
+  background-color: #f00;
+  padding: 2px 8px;
+  border-radius: 2px;
+  position: absolute;
+  bottom: 20px;
+  right: 100px;
+`;
