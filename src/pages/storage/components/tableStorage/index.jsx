@@ -111,9 +111,11 @@ function TableStorage({ dispatch, state, nameSpace }) {
         render: (text) => {
           return (
             <CellCreateTime>
-              {moment(nameSpace === DAILY_ARCHIVE_NAMESPACE ? text * 1000 : text).format(
-                'DD/MM/YYYY HH:mm',
-              )}
+              {moment(
+                nameSpace === DAILY_ARCHIVE_NAMESPACE || nameSpace === IMPORTANT_NAMESPACE
+                  ? text * 1000
+                  : text,
+              ).format('DD/MM/YYYY HH:mm')}
             </CellCreateTime>
           );
         },
