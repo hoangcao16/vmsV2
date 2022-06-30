@@ -264,7 +264,7 @@ function TableStorage({ dispatch, state, nameSpace }) {
             title: intl.formatMessage({
               id: 'view.storage.type',
             }),
-            dataIndex: 'type',
+            dataIndex: 'fileType',
             render: (text) => {
               if (text === 0)
                 return intl.formatMessage({

@@ -373,8 +373,13 @@ function FilterDrawer({
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={24}>
-              <StyledButtonClearFilter type="link" onClick={handelClearFilter}>
+            <Col span={12}>
+              <StyledButtonClearFilter type="primary" htmlType="submit">
+                {intl.formatMessage({ id: 'view.map.btn_apply' })}
+              </StyledButtonClearFilter>
+            </Col>
+            <Col span={12}>
+              <StyledButtonClearFilter onClick={handelClearFilter}>
                 {intl.formatMessage({ id: 'view.map.btn_remove_filter' })}
               </StyledButtonClearFilter>
             </Col>

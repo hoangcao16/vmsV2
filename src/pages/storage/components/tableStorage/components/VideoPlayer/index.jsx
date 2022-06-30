@@ -16,7 +16,7 @@ import getBase64 from '@/utils/getBase64';
 import { Button, Col, Row, Space, Spin, Tooltip } from 'antd';
 import { debounce } from 'lodash';
 import moment from 'moment';
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { FiCamera, FiFastForward, FiPause, FiPlay, FiRewind, FiScissors } from 'react-icons/fi';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { useIntl } from 'umi';
@@ -248,7 +248,7 @@ function VideoPlayer({
     addDataToEvent(file, CAPTURED_NAMESPACE);
 
     // IMAGE
-    if (file.type === 1) {
+    if (file.fileType === 1 || file.type === 1) {
       setFileCurrent({ ...file, tableName: 'event_file' });
 
       //setUrlSnapshot("data:image/jpeg;base64," + file.thumbnailData[0]);
@@ -1023,4 +1023,4 @@ function VideoPlayer({
   );
 }
 
-export default VideoPlayer;
+export default memo(VideoPlayer);
