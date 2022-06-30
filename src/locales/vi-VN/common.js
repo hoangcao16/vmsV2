@@ -911,4 +911,5 @@ export default {
   'noti.fail.change_password': 'Mật khẩu mới phải khác với mật khẩu cũ',
   'noti.fail.email': 'Trường email không được bỏ trống',
   //Ver2================================================================================================================================
+  'noti.WARNING': 'CẢNH BÁO',
 };

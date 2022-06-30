@@ -128,7 +128,6 @@ const Live = ({
       });
     }
   };
-
   const changeScreen = (gridType) => {
     dispatch({
       type: 'live/saveGridType',
@@ -153,8 +152,6 @@ const Live = ({
     const { destination, source, draggableId } = result;
     if (!destination || !source) return;
     if (source.droppableId === LIVE_MODE.CAMERA_LIST_DROPPABLE_ID) {
-      console.log('onDragEnd', destination, draggableId);
-
       const draggableCam = availableList[source.index];
       const gridID = destination.droppableId.replace('droppabled-', '');
       grids[gridID] = {
@@ -163,12 +160,12 @@ const Live = ({
         type: 'live',
         name: draggableCam?.name,
       };
-      layoutGrid[gridID].id = draggableCam.id;
-      layoutGrid[gridID].uuid = draggableCam?.uuid;
-      layoutGrid[gridID].type = 'live';
-      layoutGrid[gridID].name = draggableCam?.name;
-
-      setLayoutGrid([...layoutGrid]);
+      if (layoutGrid[gridID]) {
+        layoutGrid[gridID].id = draggableCam.id;
+        layoutGrid[gridID].uuid = draggableCam?.uuid;
+        layoutGrid[gridID].type = 'live';
+        layoutGrid[gridID].name = draggableCam?.name;
+      }
       let maxCam = 99;
 
       if (gridType === GRID1X1) {
@@ -209,7 +206,6 @@ const Live = ({
       grids[source.index] = grids[destination.index];
       grids[destination.index] = camObj;
       const result = await move(source, destination, draggableId);
-      setLayoutGrid(result);
       dispatch({
         type: 'live/saveGrids',
         payload: grids,

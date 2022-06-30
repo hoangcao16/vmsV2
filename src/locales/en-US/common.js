@@ -908,4 +908,5 @@ export default {
   'noti.fail.change_password': 'New password must be difference with old password',
   'noti.fail.email': "Email field can't be empty",
   //Ver2================================================================================================================================
+  'noti.WARNING': 'WARNING',
 };
