@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import {
   disableOptions,
   filterOptionForChart,
@@ -236,6 +237,7 @@ const ChartControl = (props) => {
         type: 'chartControl/emptyFieldId',
         boolean: true,
       });
+      console.log('emptyFieldId');
       return;
     } else {
       props.dispatch({
@@ -281,6 +283,7 @@ const ChartControl = (props) => {
         eventUuids: form.getFieldValue('eventIds').toString(),
         cameraUuids: form.getFieldValue('aiCamera').toString(),
       };
+
       props.dispatch({
         type: 'chart/saveFilterPayLoad',
         payload: params,
@@ -442,8 +445,9 @@ const ChartControl = (props) => {
             provinceId: defaultProvinceId,
             districtId: [],
             wardId: [],
-            fieldId: [],
+            fieldId: ['f1d46d9a-5419-4f68-9b75-f672263f2504'],
             aiCamera: [],
+            eventIds: ['vuotdendo', 'daudo'],
           }}
         >
           <div className="chartControl-filter-items">
@@ -597,14 +601,17 @@ const ChartControl = (props) => {
                   id: `pages.report.chart.field`,
                 })}
               >
-                {normalizeOptions('name', 'uuid', props?.allFiedls).map(({ label, value }) => (
-                  <Select.Option
-                    disabled={disableOptions(form.getFieldValue('fieldId'), value, 100000)}
-                    value={value}
-                  >
-                    {label}
-                  </Select.Option>
-                ))}
+                {normalizeOptions('name', 'uuid', props?.allFiedls).map(
+                  ({ label, value }, index) => (
+                    <Select.Option
+                      disabled={disableOptions(form.getFieldValue('fieldId'), value, 100000)}
+                      value={value}
+                      key={index}
+                    >
+                      {label}
+                    </Select.Option>
+                  ),
+                )}
               </Select>
             </Form.Item>
             <span>
@@ -628,13 +635,15 @@ const ChartControl = (props) => {
             <TypeWapper>
               <Form.Item name="eventIds">
                 <CheckboxGroup onChange={onChange}>
-                  {normalizeOptions('name', 'uuid', events, false).map(({ label, value }) => (
-                    <Row>
-                      <Col span={24}>
-                        <Checkbox value={value}>{label}</Checkbox>
-                      </Col>
-                    </Row>
-                  ))}
+                  {normalizeOptions('name', 'uuid', events, false).map(
+                    ({ label, value }, index) => (
+                      <Row key={index}>
+                        <Col span={24}>
+                          <Checkbox value={value}>{label}</Checkbox>
+                        </Col>
+                      </Row>
+                    ),
+                  )}
                 </CheckboxGroup>
               </Form.Item>
             </TypeWapper>

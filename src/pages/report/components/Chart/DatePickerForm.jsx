@@ -48,7 +48,7 @@ const DatePickerForm = (props) => {
   const [format, setFormat] = useState('DD/MM/YYYY');
   const [formatParams, setFormatParams] = useState('DDMMYYYY');
   const [form] = Form.useForm();
-  const [eventsUuid, setEventsUuid] = useState([]);
+  const [eventsUuid, setEventsUuid] = useState(['vuotdendo', 'daudo']);
   const intl = useIntl();
 
   useEffect(() => {
@@ -103,7 +103,6 @@ const DatePickerForm = (props) => {
   }, [props?.allFields]);
 
   const handleFilter = ({ typeDate, startDate, endDate }) => {
-    console.log(startDate, endDate);
     if (
       (typeDate == typeTime.DAY && moment(endDate).diff(moment(startDate), 'days') >= 12) ||
       (typeDate == typeTime.WEEK &&
