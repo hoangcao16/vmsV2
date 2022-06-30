@@ -1,4 +1,5 @@
 import { GRID1X1, GRID2X2, GRID3X3, GRID4X4 } from '@/constants/grid';
+import { Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as Grid1 } from '../../../assets/img/grid1.svg';
@@ -21,16 +22,24 @@ const ActionGrid = ({ grid, onChange }) => {
   return (
     <StyledGrid>
       <StyledGridItem active={current === GRID1X1} onClick={() => handleChange(GRID1X1)} first>
-        <Grid1 />
+        <Tooltip placement="top" title="1x1">
+          <Grid1 />
+        </Tooltip>
       </StyledGridItem>
       <StyledGridItem active={current === GRID2X2} onClick={() => handleChange(GRID2X2)}>
-        <Grid2 />
+        <Tooltip placement="top" title="2x2">
+          <Grid2 />
+        </Tooltip>
       </StyledGridItem>
       <StyledGridItem active={current === GRID3X3} onClick={() => handleChange(GRID3X3)}>
-        <Grid3 />
+        <Tooltip placement="top" title="3x3">
+          <Grid3 />
+        </Tooltip>
       </StyledGridItem>
       <StyledGridItem active={current === GRID4X4} onClick={() => handleChange(GRID4X4)}>
-        <Grid4 />
+        <Tooltip placement="top" title="4x4">
+          <Grid4 />
+        </Tooltip>
       </StyledGridItem>
     </StyledGrid>
   );
