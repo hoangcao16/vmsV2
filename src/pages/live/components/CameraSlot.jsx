@@ -303,7 +303,7 @@ const CameraSlot = ({
   };
   const reconnectCamera = (camUuid, type, mode) => {
     setTimeout(() => {
-      liveCamera(camUuid, type, mode);
+      startCamera(camUuid, type, mode);
     }, 10000);
   };
   const getFileName = (type) => {

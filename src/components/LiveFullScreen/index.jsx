@@ -2,18 +2,36 @@
 import { notify } from '@/components/Notify';
 import CameraApi from '@/services/camera/CameraApi';
 import camProxyService from '@/services/camProxy';
+import exportEventFileApi from '@/services/exportEventFile';
 import { ArrowLeftOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Select, Spin } from 'antd';
 import { connect } from 'dva';
 import { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'umi';
-import { Header, StyledDrawer } from './style';
-const LiveFullScreen = ({ dispatch, isOpenDrawer, selectedCamera, cameraList }) => {
+import { Header, StyledDrawer, StyledCountdown } from './style';
+import CameraSlotControl from './components/CameraSlotControl';
+import { captureVideoFrame } from '@/utils/captureVideoFrame';
+import { v4 as uuidv4 } from 'uuid';
+import cheetahService from '@/services/cheetah';
+import moment from 'moment';
+import getBase64 from '@/utils/getBase64';
+import SettingPresetDrawer from '@/pages/live/components/SettingPresetDrawer';
+const LiveFullScreen = ({
+  dispatch,
+  isOpenDrawer,
+  selectedCamera,
+  cameraList,
+  showPresetSetting,
+}) => {
   const intl = useIntl();
   const pcRef = useRef(null);
   const videoRef = useRef(null);
   const [loading, setLoading] = useState(true);
+  const [isRecording, setIsRecording] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [countdown, setCountdown] = useState(0);
+  const timerRef = useRef(null);
+  const requestId = useRef(uuidv4());
   const onClose = () => {
     closeRTCPeerConnection();
 
@@ -31,6 +49,15 @@ const LiveFullScreen = ({ dispatch, isOpenDrawer, selectedCamera, cameraList }) 
       pcLstTmp?.pc?.close();
     }
   };
+  useEffect(() => {
+    if (isRecording) {
+      timerRef.current = setInterval(() => {
+        setCountdown(countdown + 1);
+      }, 1000);
+    }
+
+    return () => clearInterval(timerRef.current);
+  }, [isRecording, countdown]);
   useEffect(() => {
     if (selectedCamera?.uuid) {
       startCamera(selectedCamera?.uuid, 'webrtc');
@@ -67,7 +94,6 @@ const LiveFullScreen = ({ dispatch, isOpenDrawer, selectedCamera, cameraList }) 
         if (videoRef.current) {
           videoRef.current.srcObject = event.streams[0];
           videoRef.current.style = 'display:block;';
-          videoRef.current.play();
         }
       };
 
@@ -114,6 +140,7 @@ const LiveFullScreen = ({ dispatch, isOpenDrawer, selectedCamera, cameraList }) 
         iceRestart: true,
       })
         .then((offer) => {
+          console.log(offer);
           pc.setLocalDescription(offer);
 
           camProxyService
@@ -164,53 +191,220 @@ const LiveFullScreen = ({ dispatch, isOpenDrawer, selectedCamera, cameraList }) 
       });
     }
   };
+  const getFileName = (type) => {
+    if (type === 0) {
+      return 'Cut.' + moment().format('DDMMYYYY.hhmmss') + '.mp4';
+    }
+    return 'Cap.' + moment().format('DDMMYYYY.hhmmss') + '.jpg';
+  };
+  const captureCamera = async () => {
+    try {
+      const { blob, tBlob } = captureVideoFrame(videoRef.current, null, 'jpeg');
+      console.log(blob, tBlob);
+      if (blob) {
+        const fileName = getFileName(1);
+        const uuid = uuidv4();
+        const createdDate = new Date();
+        const createdTime = createdDate.getTime();
+        const violationTime = Math.floor(createdDate.setMilliseconds(0) / 1000);
 
+        const eventFile = {
+          id: '',
+          uuid: uuid,
+          eventUuid: '',
+          eventName: '',
+          name: fileName,
+          violationTime: violationTime,
+          createdTime: createdTime,
+          note: '',
+          cameraUuid: selectedCamera?.uuid,
+          cameraName: selectedCamera.name,
+          type: 1,
+          length: 0,
+          address: '',
+          rootFileUuid: '',
+          pathFile: '',
+          isImportant: false,
+          thumbnailData: [''],
+          nginx_host: '',
+          blob: blob,
+          tBlob: tBlob,
+        };
+
+        const { payload } = await exportEventFileApi.uploadFile(eventFile.uuid, blob);
+        if (payload && payload.fileUploadInfoList.length > 0) {
+          let path = payload.fileUploadInfoList[0].path;
+          let { blob, tBlob, ...rest } = eventFile;
+
+          getBase64(tBlob, async (thumbnailData) => {
+            rest = {
+              ...rest,
+              pathFile: path,
+              thumbnailData: [thumbnailData.replace('data:image/jpeg;base64,', '')],
+            };
+
+            const response = await exportEventFileApi.createNewEventFile(rest);
+            if (response) {
+              notify('success', 'Save file', 'noti.successfully_take_photo_and_save');
+            }
+          });
+        } else {
+          throw new Error();
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      notify('error', 'Save file', 'noti.error_save_file');
+    }
+  };
+  const recordVideo = async () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  };
+  const startRecording = async () => {
+    clearInterval(timerRef.current);
+    try {
+      const fileName = getFileName(0);
+
+      const params = {
+        cameraId: selectedCamera.id,
+        cameraName: selectedCamera.name,
+        startCaptureTime: Date.now(),
+        fileName: fileName,
+        requestId: requestId.current,
+      };
+
+      await cheetahService.startCaptureStream(params);
+
+      notify('success', 'playback', {
+        id: 'noti.start_record_for_camera',
+        params: {
+          name: selectedCamera.name,
+        },
+      });
+      setIsRecording(true);
+    } catch (e) {
+      console.log('Error recording: ', e);
+      notify('error', 'playback', {
+        id: 'noti.start_record_for_camera_failed',
+        params: {
+          name: selectedCamera.name,
+        },
+      });
+    }
+  };
+
+  const stopRecording = async () => {
+    if (!isRecording) return;
+    clearInterval(timerRef.current);
+    try {
+      const params = {
+        cameraId: selectedCamera.id,
+        cameraName: selectedCamera.name,
+        stopCaptureTime: Date.now(),
+        requestId: requestId.current,
+      };
+
+      await cheetahService.stopCaptureStream(params);
+
+      notify('success', 'playback', {
+        id: 'noti.stop_record_for_camera',
+        params: {
+          name: selectedCamera.name,
+        },
+      });
+      setCountdown(0);
+      setIsRecording(false);
+    } catch (error) {
+      console.log('Error recording: ', error);
+      notify('error', 'playback', {
+        id: 'noti.stop_record_for_camera_failed',
+        params: {
+          name: selectedCamera.name,
+        },
+      });
+    }
+  };
+  const handleCloseDrawer = () => {
+    dispatch({ type: 'live/closeDrawerSettingCamera' });
+  };
+  const handleShowPresetSetting = () => {
+    dispatch({
+      type: 'live/openDrawerSettingCamera',
+      payload: { selectedCamera },
+    });
+  };
   return (
-    <StyledDrawer
-      openDrawer={isOpenDrawer}
-      onClose={onClose}
-      width={'100%'}
-      zIndex={1000}
-      placement="right"
-      closable={false}
-    >
-      <Header>
-        <div className="title">
-          <ArrowLeftOutlined className="close-icon" onClick={onClose} />
-          {intl.formatMessage({ id: 'view.live.view_fullscreen' })}
-        </div>
-        <div className="select">
-          {intl.formatMessage({ id: 'camera' })}:{' '}
-          <Select
-            className="select-ant"
-            onChange={handleChange}
-            value={selected}
-            options={formatOptions(cameraList)}
+    <>
+      <StyledDrawer
+        openDrawer={isOpenDrawer}
+        onClose={onClose}
+        width={'100%'}
+        zIndex={1000}
+        placement="right"
+        closable={false}
+      >
+        <Header>
+          <div className="title">
+            <ArrowLeftOutlined className="close-icon" onClick={onClose} />
+            {intl.formatMessage({ id: 'view.live.view_fullscreen' })}
+          </div>
+          <div className="select">
+            {intl.formatMessage({ id: 'camera' })}:{' '}
+            <Select
+              className="select-ant"
+              onChange={handleChange}
+              value={selected}
+              options={formatOptions(cameraList)}
+            />
+          </div>
+        </Header>
+
+        <Spin indicator={<LoadingOutlined size={48} />} spinning={loading}>
+          <CameraSlotControl
+            isRecording={isRecording}
+            onCapture={captureCamera}
+            onRecord={recordVideo}
+            showPresetSetting={handleShowPresetSetting}
           />
-        </div>
-      </Header>
-      <Spin indicator={<LoadingOutlined size={48} />} spinning={loading}>
-        <video
-          ref={videoRef}
-          className="video-stream"
-          id={'video-slot-' + selectedCamera?.uuid}
-          preload="auto"
-          width="100%"
-          height="100%"
-          autoPlay
-          muted="muted"
-          onPlay={() => setLoading(false)}
+          <video
+            ref={videoRef}
+            className="video-stream"
+            id={'video-slot-' + selectedCamera?.uuid}
+            preload="auto"
+            width="100%"
+            height="100%"
+            autoPlay
+            muted="muted"
+            onPlay={() => setLoading(false)}
+          />
+          {isRecording && (
+            <StyledCountdown>
+              REC {moment('00:00:00', 'HH:mm:ss').add(countdown, 'second').format('HH:mm:ss')}
+            </StyledCountdown>
+          )}
+        </Spin>
+      </StyledDrawer>
+      {showPresetSetting && (
+        <SettingPresetDrawer
+          showPresetSetting={showPresetSetting}
+          onCloseDrawer={handleCloseDrawer}
         />
-      </Spin>
-    </StyledDrawer>
+      )}
+    </>
   );
 };
 function mapStateToProps(state) {
   const { isOpenDrawer, selectedCamera, cameraList } = state.liveFullScreen;
+  const { showPresetSetting } = state.live;
   return {
     isOpenDrawer,
     selectedCamera,
     cameraList,
+    showPresetSetting,
   };
 }
 export default connect(mapStateToProps)(LiveFullScreen);
