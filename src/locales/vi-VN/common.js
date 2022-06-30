@@ -910,5 +910,7 @@ export default {
   'noti.fail.change_pass': 'Mật khẩu mới và xác nhận mật khẩu mới không khớp',
   'noti.fail.change_password': 'Mật khẩu mới phải khác với mật khẩu cũ',
   'noti.fail.email': 'Trường email không được bỏ trống',
+  'noti.list-user.updateUserSuccess': 'Cập nhật người dùng thành công',
+  'noti.list-user.updateUserFailed': 'Cập nhật người dùng thất bại',
   //Ver2================================================================================================================================
 };
