@@ -54,8 +54,9 @@ const GridPanel = ({
     if (isFullScreen === true) {
       const zoom = document.getElementById('ZoomCam');
       const fSBtn = document.getElementById('fullScreenBtn');
+      const root = document.getElementById('root');
       if (zoom) {
-        document.body.appendChild(zoom);
+        root.appendChild(zoom);
         zoom.style.width = '100%';
         zoom.style.position = 'fixed';
         zoom.style.top = '0';
@@ -116,6 +117,7 @@ const GridPanel = ({
                           {...provided.dragHandleProps}
                           style={provided.draggableProps.style}
                           isDragging={snapshot.draggingOver}
+                          isDraggingOver={dropSnapshot.isDraggingOver}
                         >
                           {/* {grids[index]?.uuid && ( */}
                           <CameraSlot
@@ -183,9 +185,12 @@ const GridItemContent = styled.div`
   height: 100%;
   top: 0;
   left: 0;
-  background-color: ${(prop) => (prop.isDragging ? '#ffff64' : '')};
+  /* background-color: ${(prop) => (prop.isDragging ? '#ffff64' : '')}; */
   &[data-type='selected'] {
     border: 2px solid #bee71c;
+  }
+  div {
+    display: ${(prop) => prop.isDraggingOver && 'none'};
   }
 `;
 export const StyledButtonFullScreen = styled(Button)`

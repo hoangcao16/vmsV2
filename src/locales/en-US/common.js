@@ -910,4 +910,5 @@ export default {
   'noti.list-user.updateUserSuccess': 'User update successful',
   'noti.list-user.updateUserFailed': 'User update failed',
   //Ver2================================================================================================================================
+  'noti.WARNING': 'WARNING',
 };

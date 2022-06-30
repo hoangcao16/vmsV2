@@ -14,7 +14,8 @@ function removeAccents(str) {
 export function filterOption(input, option) {
   return (
     option.label.match(new RegExp(input, 'i')) ||
-    removeAccents(option.label).match(new RegExp(input, 'i'))
+    removeAccents(option.label).match(new RegExp(input, 'i')) ||
+    removeAccents(option.label).match(new RegExp(removeAccents(input), 'i'))
   );
 }
 

@@ -216,8 +216,10 @@ const CameraSlot = ({
           case 'connected':
             break;
           case 'disconnected':
+            reconnectCamera(camUuid, type, mode);
             break;
           case 'failed':
+            reconnectCamera(camUuid, type, mode);
             break;
           case 'closed':
             break;
@@ -241,7 +243,9 @@ const CameraSlot = ({
             })
             .then((res) => {
               if (res) {
-                peerRef.current?.setRemoteDescription(res.payload);
+                if (peerRef.current?.signalingState !== 'closed') {
+                  peerRef.current?.setRemoteDescription(res.payload);
+                }
               } else {
                 console.log('Failed');
               }
@@ -288,6 +292,7 @@ const CameraSlot = ({
       html.style.removeProperty('overflow');
       setIsPlayCamera(false);
     }
+    zoomIn && setZoomIn(false);
     peerRef.current?.close();
     if (camera?.uuid && !inPresetView) {
       dispatch({
@@ -296,7 +301,11 @@ const CameraSlot = ({
       });
     }
   };
-
+  const reconnectCamera = (camUuid, type, mode) => {
+    setTimeout(() => {
+      liveCamera(camUuid, type, mode);
+    }, 10000);
+  };
   const getFileName = (type) => {
     if (type === 0) {
       return 'Cut.' + moment().format('DDMMYYYY.hhmmss') + '.mp4';
@@ -509,52 +518,53 @@ const CameraSlot = ({
       isDraggingOver={isDraggingOver}
       zoomIn={zoomIn}
       layoutCollapsed={layoutCollapsed}
-      id={'wrapper-slot-' + slotIndex}
     >
-      {loading && (
-        <StyledLoading>
-          <Spin indicator={<LoadingOutlined size={48} />} />
-        </StyledLoading>
-      )}
-      {camera && camera?.uuid && camera?.uuid !== '' && isPlayCamera && (
-        <>
-          {!inPresetView && (
-            <StyledCameraSlotControl
-              camera={camera}
-              isRecording={isRecording}
-              onCapture={captureCamera}
-              onRecord={recordVideo}
-              onClose={closeCamera}
-              mode={screen.mode}
-              zoomIn={zoomIn}
-              onZoom={zoomCamera}
-              showPresetSetting={handleShowPresetSetting}
-            />
-          )}
-          <StyledCameraBottom>
-            <StyledCameraName>{camera.name}</StyledCameraName>
-            {isRecording && (
-              <StyledCountdown>
-                REC {moment('00:00:00', 'HH:mm:ss').add(countdown, 'second').format('HH:mm:ss')}
-              </StyledCountdown>
+      <div id={'wrapper-slot-' + slotIndex}>
+        {loading && (
+          <StyledLoading>
+            <Spin indicator={<LoadingOutlined size={48} />} />
+          </StyledLoading>
+        )}
+        {camera && camera?.uuid && camera?.uuid !== '' && isPlayCamera && (
+          <>
+            {!inPresetView && (
+              <StyledCameraSlotControl
+                camera={camera}
+                isRecording={isRecording}
+                onCapture={captureCamera}
+                onRecord={recordVideo}
+                onClose={closeCamera}
+                mode={screen.mode}
+                zoomIn={zoomIn}
+                onZoom={zoomCamera}
+                showPresetSetting={handleShowPresetSetting}
+              />
             )}
-          </StyledCameraBottom>
-        </>
-      )}
-      <StyledVideo
-        ref={videoRef}
-        width="100%"
-        autoPlay
-        id={'camera-slot-' + slotIndex}
-        controls={false}
-        preload="none"
-        crossOrigin="anonymous"
-        muted="muted"
-        style={{ display: 'none' }}
-        onPlay={() => setLoading(false)}
-      >
-        <FormattedMessage id="noti.browser_not_support_video" />
-      </StyledVideo>
+            <StyledCameraBottom>
+              <StyledCameraName>{camera.name}</StyledCameraName>
+              {isRecording && (
+                <StyledCountdown>
+                  REC {moment('00:00:00', 'HH:mm:ss').add(countdown, 'second').format('HH:mm:ss')}
+                </StyledCountdown>
+              )}
+            </StyledCameraBottom>
+          </>
+        )}
+        <StyledVideo
+          ref={videoRef}
+          width="100%"
+          autoPlay
+          id={'camera-slot-' + slotIndex}
+          controls={false}
+          preload="none"
+          crossOrigin="anonymous"
+          muted="muted"
+          style={{ display: 'none' }}
+          onPlay={() => setLoading(false)}
+        >
+          <FormattedMessage id="noti.browser_not_support_video" />
+        </StyledVideo>
+      </div>
     </StyledCameraSlot>
   );
 };
@@ -577,7 +587,7 @@ const StyledCameraSlot = styled.div`
     }
   }
 
-  ${(props) => props.isDraggingOver && 'display: none;'}
+  /* ${(props) => props.isDraggingOver && 'display: none;'} */
   ${(props) =>
     props.zoomIn &&
     `position: fixed;

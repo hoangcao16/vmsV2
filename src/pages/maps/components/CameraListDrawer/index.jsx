@@ -152,10 +152,10 @@ const CameraListDrawer = ({
     });
   };
   const handleAdd = () => {
-    if (type === 'camera') {
-      setIsAddNewDrawer(true);
-    } else if (type === 'adminisUnit') {
+    if (type === 'adminisUnit') {
       setOpenDrawerAddAdministrativeUnit(true);
+    } else {
+      setIsAddNewDrawer(true);
     }
   };
   const handleSearch = (dataForm) => {

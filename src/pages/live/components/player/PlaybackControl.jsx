@@ -98,7 +98,7 @@ const PlaybackControl = ({ dispatch, isPlay, selectedCamera }) => {
         payload: !isPlay,
       });
     } else {
-      notify('error', 'noti.ERROR', 'error.CAMERA_ID_MISSING');
+      notify('warning', 'noti.WARNING', 'error.CAMERA_ID_MISSING');
     }
   };
   return (

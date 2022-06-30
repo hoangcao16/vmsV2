@@ -125,7 +125,9 @@ const LiveFullScreen = ({ dispatch, isOpenDrawer, selectedCamera, cameraList }) 
             })
             .then((res) => {
               if (res && pc) {
-                pc.setRemoteDescription(res.payload);
+                if (pc.signalingState !== 'closed') {
+                  pc.setRemoteDescription(res.payload);
+                }
               } else {
                 console.log('Failed');
               }

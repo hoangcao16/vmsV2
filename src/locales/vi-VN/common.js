@@ -913,4 +913,5 @@ export default {
   'noti.list-user.updateUserSuccess': 'Cập nhật người dùng thành công',
   'noti.list-user.updateUserFailed': 'Cập nhật người dùng thất bại',
   //Ver2================================================================================================================================
+  'noti.WARNING': 'CẢNH BÁO',
 };
