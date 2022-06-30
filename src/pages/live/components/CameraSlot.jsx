@@ -42,6 +42,7 @@ const CameraSlot = ({
   const peerRef = useRef(null);
   const timerRef = useRef(null);
   const requestId = useRef(uuidv4());
+  const [dchanel, setDchanel] = useState(null);
   useEffect(() => {
     if (mode === 'live') {
       if (uuid) {
@@ -193,6 +194,9 @@ const CameraSlot = ({
       peerRef.current.ondatachannel = (event) => {
         dc = event.channel;
         let dcTimeout = null;
+        dc.onopen = () => {
+          console.log('>>>>> ondatachannel -> onopen, data: ', token);
+        };
         dc.onmessage = (evt) => {
           dcTimeout = setTimeout(function () {
             if (dc == null && dcTimeout != null) {
@@ -216,9 +220,11 @@ const CameraSlot = ({
           case 'connected':
             break;
           case 'disconnected':
+            console.log('>>>>> connection state: disconnected, data: ', token);
             reconnectCamera(camUuid, type, mode);
             break;
           case 'failed':
+            console.log('>>>>> connection state: failed, data: ', token);
             reconnectCamera(camUuid, type, mode);
             break;
           case 'closed':
@@ -232,6 +238,7 @@ const CameraSlot = ({
           iceRestart: true,
         })
         .then((offer) => {
+          console.log(offer);
           peerRef.current?.setLocalDescription(offer);
 
           camProxyService
@@ -258,6 +265,7 @@ const CameraSlot = ({
         .finally(() => {
           setLoading(false);
         });
+      setDchanel(dc);
     } else {
       const API = data.camproxyApi;
       const { token } = data;
@@ -303,6 +311,8 @@ const CameraSlot = ({
   };
   const reconnectCamera = (camUuid, type, mode) => {
     setTimeout(() => {
+      dchanel?.close();
+      peerRef.current?.close();
       startCamera(camUuid, type, mode);
     }, 10000);
   };

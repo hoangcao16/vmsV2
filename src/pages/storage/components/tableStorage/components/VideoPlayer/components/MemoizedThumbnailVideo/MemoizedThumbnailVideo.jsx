@@ -49,8 +49,18 @@ const ThumbnailVideo = (props) => {
 
     if (fileCurrent.thumbnailData && nameSpace !== EVENT_AI_NAMESPACE) {
       for (let i = 0; i < fileCurrent.thumbnailData.length; i++) {
-        for (let j = 0; j < 7; j++) {
-          fakeImages.push(fileCurrent.thumbnailData[i]);
+        if (fileCurrent.thumbnailData.length === 1) {
+          for (let j = 0; j < 21; j++) {
+            fakeImages.push(fileCurrent.thumbnailData[i]);
+          }
+        } else if (fileCurrent.thumbnailData.length === 2) {
+          for (let j = 0; j < 14; j++) {
+            fakeImages.push(fileCurrent.thumbnailData[i]);
+          }
+        } else {
+          for (let j = 0; j < 7; j++) {
+            fakeImages.push(fileCurrent.thumbnailData[i]);
+          }
         }
       }
     }

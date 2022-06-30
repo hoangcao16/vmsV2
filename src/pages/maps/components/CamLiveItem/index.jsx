@@ -15,6 +15,7 @@ const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
   const pcRef = useRef(null);
   const intl = useIntl();
   const cameraStreaming = listStreaming[cameraIndex];
+  const [dchanel, setDchanel] = useState(null);
 
   const closeRTCPeerConnection = (slotIdx) => {
     // CLOSE STREAM
@@ -22,6 +23,13 @@ const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
     if (pcLstTmp?.pc) {
       pcLstTmp?.pc?.close();
     }
+  };
+  const reconnectCamera = (camUuid, mode) => {
+    setTimeout(() => {
+      dchanel?.close();
+      pcRef.current?.pc?.close();
+      startCamera(camUuid, mode);
+    }, 10000);
   };
   const maxMinCamera = () => {
     dispatch({
@@ -102,8 +110,12 @@ const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
           case 'connected':
             break;
           case 'disconnected':
+            console.log('>>>>> connection state: disconnected, data: ', token);
+            reconnectCamera(camUuid, mode);
             break;
           case 'failed':
+            console.log('>>>>> connection state: failed, data: ', token);
+            reconnectCamera(camUuid, mode);
             break;
           case 'closed':
             break;
@@ -139,6 +151,7 @@ const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
         })
         .catch((e) => console.log(e))
         .finally(() => {});
+      setDchanel(dc);
     }
   };
   const closeCamera = (e) => {

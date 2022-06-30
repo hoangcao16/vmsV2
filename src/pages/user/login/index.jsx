@@ -2,12 +2,13 @@ import Footer from '@/components/Footer';
 import AuthZApi from '@/services/authz/AuthZApi';
 import { GlobalOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCheckbox } from '@ant-design/pro-form';
-import { Form, Input, message, Tabs } from 'antd';
+import { Form, Input, message, Tabs, Button } from 'antd';
 import { useState } from 'react';
 import { FormattedMessage, history, SelectLang, useIntl, useModel } from 'umi';
 import ForgotPassword from './ForgotPassword';
 import styles from './index.less';
 import { BottomForm, StyledImg } from './style';
+import styled from 'styled-components';
 const Login = () => {
   const [userLoginState, setUserLoginState] = useState({});
   const [type, setType] = useState('account');
@@ -22,14 +23,12 @@ const Login = () => {
   const onClose = () => {
     setOpenDrawer(false);
   };
-
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
       await setInitialState((s) => ({ ...s, currentUser: userInfo }));
     }
   };
-
   const handleSubmit = async (values) => {
     const data = form.getFieldValue();
     try {
@@ -73,14 +72,7 @@ const Login = () => {
         <StyledImg>
           <img alt="logo" src="/logo_white.svg" />
         </StyledImg>
-        <LoginForm
-          initialValues={{
-            autoLogin: true,
-          }}
-          onFinish={async (values) => {
-            await handleSubmit(values);
-          }}
-        >
+        <StyleContainer>
           <Tabs activeKey={type} onChange={setType}>
             <Tabs.TabPane
               key="account"
@@ -91,15 +83,12 @@ const Login = () => {
           </Tabs>
 
           {type === 'account' && (
-            <Form className="bg-grey" form={form} layout="vertical">
+            <Form className="bg-grey" form={form} layout="vertical" onFinish={handleSubmit}>
               <Form.Item name={['email']}>
                 <Input
                   maxLength={255}
                   name="email"
-                  fieldProps={{
-                    size: 'large',
-                    prefix: <UserOutlined className={styles.prefixIcon} />,
-                  }}
+                  prefix={<UserOutlined className={styles.prefixIcon} />}
                   placeholder={intl.formatMessage({
                     id: 'pages.login.email.placeholder',
                   })}
@@ -127,10 +116,7 @@ const Login = () => {
                   type="password"
                   maxLength={255}
                   name="password"
-                  fieldProps={{
-                    size: 'large',
-                    prefix: <LockOutlined className={styles.prefixIcon} />,
-                  }}
+                  prefix={<LockOutlined className={styles.prefixIcon} />}
                   placeholder={intl.formatMessage({
                     id: 'pages.login.password.placeholder',
                   })}
@@ -153,26 +139,45 @@ const Login = () => {
                   }}
                 />
               </Form.Item>
+              <BottomForm>
+                <ProFormCheckbox noStyle name="autoLogin">
+                  <FormattedMessage id="pages.login.rememberMe" />
+                </ProFormCheckbox>
+
+                <a className="forgot-password" onClick={showDrawer}>
+                  <FormattedMessage id="pages.login.forgotPassword" />
+                </a>
+
+                {openDrawer && <ForgotPassword onClose={onClose} openDrawer={openDrawer} />}
+              </BottomForm>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">
+                  {intl.formatMessage({ id: 'view.pages.login' })}
+                </Button>
+              </Form.Item>
             </Form>
           )}
-
-          <BottomForm>
-            <ProFormCheckbox noStyle name="autoLogin">
-              <FormattedMessage id="pages.login.rememberMe" />
-            </ProFormCheckbox>
-
-            <a className="forgot-password" onClick={showDrawer}>
-              <FormattedMessage id="pages.login.forgotPassword" />
-            </a>
-
-            {openDrawer && <ForgotPassword onClose={onClose} openDrawer={openDrawer} />}
-          </BottomForm>
-        </LoginForm>
+        </StyleContainer>
       </div>
 
       <Footer />
     </div>
   );
 };
-
+const StyleContainer = styled.div`
+  padding: 32px 0;
+  max-width: 500px;
+  min-width: 328px;
+  width: 328px;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* align-items: center; */
+  margin: 0 auto;
+  .ant-tabs-nav-wrap {
+    justify-content: center;
+  }
+  .ant-btn {
+    width: 100%;
+  }
+`;
 export default Login;

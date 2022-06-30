@@ -44,6 +44,7 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
   const [isEditDrawer, setIsEditDrawer] = useState(false);
   const [cameraOnMap, setCameraOnMap] = useState([]);
   const streamingPopupRef = useRef(null);
+  const [dchanel, setDchanel] = useState(null);
   const zoom = 13;
   const closeRTCPeerConnection = (slotIdx) => {
     // CLOSE STREAM
@@ -51,6 +52,13 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
     if (pcLstTmp?.pc) {
       pcLstTmp?.pc?.close();
     }
+  };
+  const reconnectCamera = (camUuid, mode) => {
+    setTimeout(() => {
+      dchanel?.close();
+      streamingPopupRef.current?.pc?.close();
+      startCamera(camUuid, mode);
+    }, 10000);
   };
   const startCamera = async (camera, mode) => {
     const data = await CameraApi.checkPermissionForViewOnline({
@@ -115,8 +123,12 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
           case 'connected':
             break;
           case 'disconnected':
+            console.log('>>>>> connection state: disconnected, data: ', token);
+            reconnectCamera(camUuid, mode);
             break;
           case 'failed':
+            console.log('>>>>> connection state: failed, data: ', token);
+            reconnectCamera(camUuid, mode);
             break;
           case 'closed':
             break;
@@ -152,6 +164,7 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
         })
         .catch((e) => console.log(e))
         .finally(() => {});
+      setDchanel(dc);
     }
   };
   const closeCamera = (cameraUuid) => {

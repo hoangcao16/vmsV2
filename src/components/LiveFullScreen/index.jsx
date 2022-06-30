@@ -32,6 +32,8 @@ const LiveFullScreen = ({
   const [countdown, setCountdown] = useState(0);
   const timerRef = useRef(null);
   const requestId = useRef(uuidv4());
+  const [dchanel, setDchanel] = useState(null);
+
   const onClose = () => {
     closeRTCPeerConnection();
 
@@ -64,6 +66,13 @@ const LiveFullScreen = ({
       setSelected(formatOptions(cameraList).find((item) => item.value === selectedCamera?.uuid));
     }
   }, [selectedCamera]);
+  const reconnectCamera = (camUuid, mode) => {
+    setTimeout(() => {
+      dchanel?.close();
+      pcRef.current?.pc?.close();
+      startCamera(camUuid, mode);
+    }, 10000);
+  };
   const startCamera = async (camUuid, mode) => {
     setLoading(true);
     const data = await CameraApi.checkPermissionForViewOnline({
@@ -127,8 +136,12 @@ const LiveFullScreen = ({
           case 'connected':
             break;
           case 'disconnected':
+            console.log('>>>>> connection state: disconnected, data: ', token);
+            reconnectCamera(camUuid, mode);
             break;
           case 'failed':
+            console.log('>>>>> connection state: failed, data: ', token);
+            reconnectCamera(camUuid, mode);
             break;
           case 'closed':
             break;
@@ -165,6 +178,7 @@ const LiveFullScreen = ({
         })
         .catch((e) => console.log(e))
         .finally(() => {});
+      setDchanel(dc);
     }
   };
   const formatOptions = (options) => {
