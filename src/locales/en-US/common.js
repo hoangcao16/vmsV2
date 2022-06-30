@@ -907,5 +907,7 @@ export default {
   'noti.fail.change_pass': 'New password and confirm new password do not match',
   'noti.fail.change_password': 'New password must be difference with old password',
   'noti.fail.email': "Email field can't be empty",
+  'noti.list-user.updateUserSuccess': 'User update successful',
+  'noti.list-user.updateUserFailed': 'User update failed',
   //Ver2================================================================================================================================
 };

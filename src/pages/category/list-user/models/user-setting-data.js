@@ -65,20 +65,12 @@ export default {
       try {
         yield call(UserApi.setGroupForUser, data);
 
-        notify(
-          'success',
-          'pages.setting-user.list-user.titleSuccess',
-          'pages.setting-user.list-user.setGroupForUserSuccess',
-        );
+        notify('success', 'noti.success', 'noti.list-user.updateUserSuccess');
 
         yield put({ type: 'reloadDataGroupOfUser' });
       } catch (error) {
         console.error(error);
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
+        notify('error', 'noti.faid', 'noti.list-user.updateUserFailed');
       }
     },
 
@@ -105,20 +97,12 @@ export default {
       try {
         yield call(UserApi.setRoleForUser, data);
 
-        notify(
-          'success',
-          'pages.setting-user.list-user.titleSuccess',
-          'pages.setting-user.list-user.setRoleForUserSuccess',
-        );
+        notify('success', 'noti.success', 'noti.list-user.updateUserSuccess');
 
         yield put({ type: 'reloadDataRoleOfUser' });
       } catch (error) {
         console.error(error);
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
+        notify('error', 'noti.faid', 'noti.list-user.updateUserFailed');
       }
     },
 
