@@ -79,11 +79,7 @@ export default {
         );
         yield put({ type: 'reload' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
+        console.log(error);
       }
     },
     // ================================================================
@@ -101,11 +97,6 @@ export default {
         yield put({ type: 'reloadFetchAllPermission' });
       } catch (error) {
         console.log(error);
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
       }
     },
     //set quyen le cho camera
@@ -122,11 +113,6 @@ export default {
         yield put({ type: 'reloadFetchAllPermission' });
       } catch (error) {
         console.log(error);
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
       }
     },
     // ==================================================================

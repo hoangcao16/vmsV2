@@ -103,11 +103,6 @@ export default {
         yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
       } catch (error) {
         console.log(error);
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
       }
     },
 
@@ -123,11 +118,6 @@ export default {
         yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
       } catch (error) {
         console.log(error);
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
       }
     },
 
@@ -142,11 +132,7 @@ export default {
         );
         yield put({ type: 'reloadFetchAllPermissionCameraGroups' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
+        console.log(error);
       }
     },
     // ==================================================================

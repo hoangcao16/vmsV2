@@ -34,11 +34,7 @@ export default {
         notify('success', 'pages.setting-user.list-user.titleSuccess', 'noti.successfully_add');
         yield put({ type: 'reload' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
+        console.log(error);
       }
     },
 
@@ -52,11 +48,7 @@ export default {
         );
         yield put({ type: 'reload' });
       } catch (error) {
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
+        console.log(error);
       }
     },
 
@@ -67,12 +59,6 @@ export default {
         yield put({ type: 'reload' });
       } catch (error) {
         console.log('error', error);
-
-        notify(
-          'error',
-          'pages.setting-user.list-user.titleErrors',
-          `pages.setting-user.list-user.${error?.code}`,
-        );
       }
     },
 
