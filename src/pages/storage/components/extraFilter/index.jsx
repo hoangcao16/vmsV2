@@ -63,7 +63,6 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
   };
 
   const onFinish = (values) => {
-    console.log(values);
     const dataParam = Object.assign({
       ...metadata,
       page: 1,
@@ -305,14 +304,25 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
   };
 
   const onChangeFileType = (value) => {
-    const dataParam = Object.assign({
-      ...metadata,
-      type: value,
-    });
-    dispatch({
-      type: `${nameSpace}/saveSearchParam`,
-      payload: dataParam,
-    });
+    if (nameSpace === IMPORTANT_NAMESPACE) {
+      const dataParam = Object.assign({
+        ...metadata,
+        fileType: value,
+      });
+      dispatch({
+        type: `${nameSpace}/saveSearchParam`,
+        payload: dataParam,
+      });
+    } else {
+      const dataParam = Object.assign({
+        ...metadata,
+        type: value,
+      });
+      dispatch({
+        type: `${nameSpace}/saveSearchParam`,
+        payload: dataParam,
+      });
+    }
   };
 
   const onChangeEventType = (eventUuid) => {
@@ -368,6 +378,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
       cameraGroupUuid: '',
       eventUuid: 'notnull',
       type: '',
+      fileType: '',
       status: '',
     });
     dispatch({

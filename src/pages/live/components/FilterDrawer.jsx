@@ -251,9 +251,13 @@ function FilterDrawer({
           </Select>
         </Form.Item>
       </Col>
-      <Col span={24} className="colClearFilter">
+      <Col span={12} className="colClearFilter">
+        <Button type="primary" htmlType="submit">
+          {intl.formatMessage({ id: 'view.map.btn_apply' })}
+        </Button>
+      </Col>
+      <Col span={12} className="colClearFilter">
         <Button
-          type="link"
           onClick={() => {
             form.resetFields();
           }}
@@ -268,8 +272,8 @@ function FilterDrawer({
 const StyledRow = styled(Row)`
   margin-top: 16px;
 
-  .colClearFilter {
-    text-align: center;
+  .ant-btn {
+    width: 100%;
   }
 `;
 

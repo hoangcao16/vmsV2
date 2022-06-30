@@ -288,22 +288,22 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
       params = Object.assign({ ...params, eventUuid: event.uuid, eventName: event.name });
     }
 
-    if (!data.hasOwnProperty('tableName') || data.tableName === 'file') {
-      // file
-      params = Object.assign({ ...params, tableName: 'file' });
+    // if (!data.hasOwnProperty('tableName') || data.tableName === 'file') {
+    //   // file
+    //   params = Object.assign({ ...params, tableName: 'file' });
 
-      eventFilesApi
-        .updateFile(params, params.uuid)
-        .then((res) => {
-          notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
-          handleRefresh(res.payload);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    //   eventFilesApi
+    //     .updateFile(params, params.uuid)
+    //     .then((res) => {
+    //       notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
+    //       handleRefresh(res.payload);
+    //     })
+    //     .catch((err) => {
+    //       notify('error', 'noti.archived_file', 'noti.ERROR');
+    //     });
 
-      return;
-    }
+    //   return;
+    // }
 
     if (nameSpace === DAILY_ARCHIVE_NAMESPACE) {
       // file
@@ -345,7 +345,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
 
     if (nameSpace === IMPORTANT_NAMESPACE) {
       eventFilesApi
-        .updateEventFile(params, params.uuid)
+        .updateFile(params, params.uuid)
         .then((res) => {
           // handleRefresh(res.payload);
           // not found any playback when call api accept request,
