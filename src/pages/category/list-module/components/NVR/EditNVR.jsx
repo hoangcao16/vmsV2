@@ -6,7 +6,14 @@ import { StyledDrawer } from '../../style';
 
 const { TextArea } = Input;
 
-const EditNVR = ({ selectedNVREdit, onClose, dispatch, openDrawer }) => {
+const EditNVR = ({
+  selectedNVREdit,
+  onClose,
+  dispatch,
+  openDrawer,
+  searchParam,
+  setSearchParam,
+}) => {
   const intl = useIntl();
   const [form] = Form.useForm();
   const handleSubmit = (value) => {
@@ -14,6 +21,8 @@ const EditNVR = ({ selectedNVREdit, onClose, dispatch, openDrawer }) => {
       type: 'nvr/editNVR',
       payload: { id: selectedNVREdit.uuid, values: { ...value } },
     });
+
+    setSearchParam({ ...searchParam, name: '' });
     onClose();
   };
 

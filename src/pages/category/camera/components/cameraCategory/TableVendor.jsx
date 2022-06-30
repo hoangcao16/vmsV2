@@ -182,6 +182,8 @@ const TableVendor = ({ dispatch, listVendor, metadataVendor, type, loading }) =>
           openDrawer={openDrawerAddEdit}
           type={type}
           resetForm={resetForm}
+          searchParam={searchParam}
+          setSearchParam={setSearchParam}
         />
       )}
     </>

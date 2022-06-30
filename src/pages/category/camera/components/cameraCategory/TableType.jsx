@@ -144,6 +144,7 @@ const TableType = ({ dispatch, listType, metadataType, type, loading }) => {
               onClick={() => {
                 setOpenDrawerAddEdit(true);
                 setSelectedRecord(null);
+                
               }}
             >
               <PlusOutlined />
@@ -182,6 +183,8 @@ const TableType = ({ dispatch, listType, metadataType, type, loading }) => {
           openDrawer={openDrawerAddEdit}
           type={type}
           resetForm={resetForm}
+          searchParam={searchParam}
+          setSearchParam={setSearchParam}
         />
       )}
     </>

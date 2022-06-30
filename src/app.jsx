@@ -47,6 +47,11 @@ export const layout = ({ initialState, setInitialState }) => {
   // console.log(window.g_app);
   // const isFullScreen = state?.globalstore?.isFullScreen;
   // console.log(isFullScreen);
+  const titleLogo = document.querySelector('.ant-pro-global-header-logo h1');
+  if (titleLogo) {
+    titleLogo.textContent = '';
+  }
+
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,

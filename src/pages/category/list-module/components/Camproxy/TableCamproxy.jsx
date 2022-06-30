@@ -184,6 +184,8 @@ const TableCamproxy = ({ dispatch, list, metadata, loading }) => {
           onClose={onClose}
           dispatch={dispatch}
           openDrawer={openDrawer}
+          searchParam={searchParam}
+          setSearchParam={setSearchParam}
         />
       )}
     </>

@@ -12,6 +12,8 @@ const AddEditCameraCategory = ({
   openDrawer,
   type,
   resetForm,
+  searchParam,
+  setSearchParam,
 }) => {
   const intl = useIntl();
   const [form] = Form.useForm();
@@ -70,6 +72,13 @@ const AddEditCameraCategory = ({
         payload: { size: 1000 },
       });
     }
+
+    if (type === 'camera_tags') {
+      setSearchParam({ ...searchParam, key: '' });
+    } else {
+      setSearchParam({ ...searchParam, name: '' });
+    }
+
     resetForm();
     onClose();
   };
@@ -102,6 +111,12 @@ const AddEditCameraCategory = ({
         type: 'globalstore/fetchAllTags',
         payload: { size: 1000 },
       });
+    }
+
+    if (type === 'camera_tags') {
+      setSearchParam({ ...searchParam, key: '' });
+    } else {
+      setSearchParam({ ...searchParam, name: '' });
     }
     resetForm();
     onClose();

@@ -181,6 +181,8 @@ const TableTags = ({ dispatch, listTags, metadataTags, type, loading }) => {
           openDrawer={openDrawerAddEdit}
           type={type}
           resetForm={resetForm}
+          searchParam={searchParam}
+          setSearchParam={setSearchParam}
         />
       )}
     </>

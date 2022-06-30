@@ -12,6 +12,8 @@ const AddEditEventType = ({
   openDrawer,
   resetForm,
   listField,
+  searchParam,
+  setSearchParam,
 }) => {
   const intl = useIntl();
   const [form] = Form.useForm();
@@ -33,12 +35,14 @@ const AddEditEventType = ({
       });
     }
 
+    setSearchParam({ ...searchParam, name: '' });
     resetForm();
     onClose();
   };
 
   const onDeleteRecord = () => {
     dispatch({ type: 'eventType/delete', id: selectedRecord?.uuid });
+    setSearchParam({ ...searchParam, name: '' });
     resetForm();
     onClose();
   };

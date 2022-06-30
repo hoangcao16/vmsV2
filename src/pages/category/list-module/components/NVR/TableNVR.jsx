@@ -1,6 +1,4 @@
-import { SearchOutlined } from '@ant-design/icons';
-import ProTable from '@ant-design/pro-table';
-import { AutoComplete, Form, Input, Tag } from 'antd';
+import { Form, Input, Tag } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -124,6 +122,7 @@ const TableNVR = ({ dispatch, list, metadata, loading }) => {
       render: renderTag,
     },
   ];
+
   return (
     <>
       <ProTableStyle
@@ -186,6 +185,8 @@ const TableNVR = ({ dispatch, list, metadata, loading }) => {
           openDrawer={openDrawer}
           onClose={onClose}
           dispatch={dispatch}
+          searchParam={searchParam}
+          setSearchParam={setSearchParam}
         />
       )}
     </>

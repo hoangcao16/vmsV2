@@ -6,7 +6,14 @@ import { StyledDrawer } from '../../style';
 
 const { TextArea } = Input;
 
-const EditPlayback = ({ selectedPlaybackEdit, onClose, dispatch, openDrawer }) => {
+const EditPlayback = ({
+  selectedPlaybackEdit,
+  onClose,
+  dispatch,
+  openDrawer,
+  searchParam,
+  setSearchParam,
+}) => {
   const intl = useIntl();
   const [form] = Form.useForm();
   const handleSubmit = (value) => {
@@ -14,6 +21,7 @@ const EditPlayback = ({ selectedPlaybackEdit, onClose, dispatch, openDrawer }) =
       type: 'playback/editPlayback',
       payload: { id: selectedPlaybackEdit.uuid, values: { ...value } },
     });
+    setSearchParam({ ...searchParam, name: '' });
     onClose();
   };
 
