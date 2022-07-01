@@ -13,7 +13,9 @@ const AuthZApi = {
     } catch (error) {
       console.log(error);
       history.push(loginPath);
-      localStorage.clear();
+      localStorage.removeItem(STORAGE.TOKEN);
+      localStorage.removeItem(STORAGE.USER_PERMISSIONS);
+      localStorage.removeItem(STORAGE.REFRESH_TOKEN);
       return {};
     }
   },
@@ -26,7 +28,9 @@ const AuthZApi = {
     } catch (error) {
       console.log(error);
       history.push(loginPath);
-      localStorage.clear();
+      localStorage.removeItem(STORAGE.TOKEN);
+      localStorage.removeItem(STORAGE.USER_PERMISSIONS);
+      localStorage.removeItem(STORAGE.REFRESH_TOKEN);
       return {};
     }
   },
@@ -35,10 +39,14 @@ const AuthZApi = {
     try {
       await request.post(`/authz/logout`);
       history.push(loginPath);
-      localStorage.clear();
+      localStorage.removeItem(STORAGE.TOKEN);
+      localStorage.removeItem(STORAGE.USER_PERMISSIONS);
+      localStorage.removeItem(STORAGE.REFRESH_TOKEN);
     } catch (error) {
       history.push(loginPath);
-      localStorage.clear();
+      localStorage.removeItem(STORAGE.TOKEN);
+      localStorage.removeItem(STORAGE.USER_PERMISSIONS);
+      localStorage.removeItem(STORAGE.REFRESH_TOKEN);
       return {};
     }
   },
@@ -51,7 +59,9 @@ const AuthZApi = {
       return data;
     } catch (error) {
       history.push(loginPath);
-      localStorage.clear();
+      localStorage.removeItem(STORAGE.TOKEN);
+      localStorage.removeItem(STORAGE.USER_PERMISSIONS);
+      localStorage.removeItem(STORAGE.REFRESH_TOKEN);
       return {};
     }
   },
