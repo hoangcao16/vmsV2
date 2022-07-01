@@ -522,7 +522,9 @@ const CameraSlot = ({
     if (zoomIn) {
       html.style.removeProperty('overflow');
     } else {
+      const tooltipLeft = document.querySelector('.ant-tooltip-placement-left');
       html.style.overflow = 'hidden';
+      tooltipLeft && tooltipLeft.classList.add('ant-tooltip-hidden');
     }
 
     setZoomIn(!zoomIn);

@@ -21,7 +21,6 @@ const CameraSlotControl = ({
   ...props
 }) => {
   const intl = useIntl();
-  const [show, setShow] = useState(false);
 
   const Type = () => {
     switch (mode) {
@@ -67,15 +66,12 @@ const CameraSlotControl = ({
             </Tooltip>
           </Permission>
           <StyledTooltip
-            overlayStyle={!show && { display: 'none' }}
             placement="left"
             title={intl.formatMessage({
               id: zoomIn ? 'view.live.view_zoom_out' : 'view.live.view_fullscreen',
             })}
           >
             <StyledIcon
-              onMouseEnter={() => setShow(true)}
-              onMouseLeave={() => setShow(false)}
               onClick={(e) => {
                 e.stopPropagation();
                 onZoom();
