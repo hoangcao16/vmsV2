@@ -241,6 +241,12 @@ const ExportReportToMail = (props) => {
                         email: e.target.value.trim(),
                       });
                     }}
+                    onPaste={(e) => {
+                      e.preventDefault();
+                      form.setFieldsValue({
+                        email: e.clipboardData.getData('text').trim(),
+                      });
+                    }}
                   />
                 </Form.Item>
               </FormCustom>

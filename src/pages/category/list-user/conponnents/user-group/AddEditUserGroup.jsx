@@ -123,7 +123,20 @@ function AddEditUserGroup({
                 maxLength={255}
                 required={true}
               >
-                <Input autoComplete="new-password" />
+                <Input
+                  autoComplete="new-password"
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      name: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      name: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
+                />
               </MSFormItem>
             </Col>
             <Col span={isEmpty(selectedRecord) ? 24 : 12}>
@@ -137,7 +150,20 @@ function AddEditUserGroup({
                 maxLength={255}
                 required={true}
               >
-                <Input autoComplete="new-password" />
+                <Input
+                  autoComplete="new-password"
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      description: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      description: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
+                />
               </MSFormItem>
             </Col>
           </Row>

@@ -174,7 +174,20 @@ function FilterDrawer({
           name="address"
           maxLength={255}
         >
-          <Input placeholder={intl.formatMessage({ id: 'view.map.please_choose_location' })} />
+          <Input
+            placeholder={intl.formatMessage({ id: 'view.map.please_choose_location' })}
+            onBlur={(e) => {
+              form.setFieldsValue({
+                address: e.target.value.trim(),
+              });
+            }}
+            onPaste={(e) => {
+              e.preventDefault();
+              form.setFieldsValue({
+                address: e.clipboardData.getData('text').trim(),
+              });
+            }}
+          />
         </MSFormItem>
       </Col>
       <Col span={12}>

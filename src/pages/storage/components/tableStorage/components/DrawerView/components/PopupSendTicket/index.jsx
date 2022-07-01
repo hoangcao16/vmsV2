@@ -144,7 +144,19 @@ function PopupSendTicket({ isModalVisible, handleOk, handleCancel, loadingSendEm
                 },
               ]}
             >
-              <Input />
+              <Input
+                onBlur={(e) => {
+                  form.setFieldsValue({
+                    receiver: e.target.value.trim(),
+                  });
+                }}
+                onPaste={(e) => {
+                  e.preventDefault();
+                  form.setFieldsValue({
+                    receiver: e.clipboardData.getData('text').trim(),
+                  });
+                }}
+              />
             </Form.Item>
           )}
 

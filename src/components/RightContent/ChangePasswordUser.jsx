@@ -36,7 +36,7 @@ function ChangePassword({ openDrawer, onClose }) {
             params.password != '' &&
             params.new_password != ''
           ) {
-            notify('success', 'noti.success', 'noti.change_password');
+            notify('success', 'noti.success', 'noti.successfully_update_password');
           }
 
           if (

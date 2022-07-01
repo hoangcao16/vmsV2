@@ -157,6 +157,17 @@ function FilterDrawer({
               >
                 <Input
                   placeholder={intl.formatMessage({ id: 'view.map.please_choose_location' })}
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      address: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      address: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
                 />
               </MSFormItem>
             </Col>
@@ -301,6 +312,17 @@ function FilterDrawer({
               >
                 <Input
                   placeholder={intl.formatMessage({ id: 'view.map.please_choose_location' })}
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      address: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      address: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
                 />
               </MSFormItem>
             </Col>

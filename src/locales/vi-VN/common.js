@@ -912,6 +912,8 @@ export default {
   'noti.fail.email': 'Trường email không được bỏ trống',
   'noti.list-user.updateUserSuccess': 'Cập nhật người dùng thành công',
   'noti.list-user.updateUserFailed': 'Cập nhật người dùng thất bại',
+  'placeholder-camera': 'Nhãn camera',
+  'content.live-mode.action.edit-favorite': 'Chỉnh sửa tên màn hình yêu thích',
   //Ver2================================================================================================================================
   'noti.WARNING': 'CẢNH BÁO',
 };

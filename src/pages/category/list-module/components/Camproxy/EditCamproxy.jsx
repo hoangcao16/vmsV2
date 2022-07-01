@@ -77,7 +77,19 @@ const EditCamproxy = ({
                 maxLength={255}
                 required={true}
               >
-                <Input />
+                <Input
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      name: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      name: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
+                />
               </MSFormItem>
             </Col>
             <Col span={24}>
@@ -91,7 +103,20 @@ const EditCamproxy = ({
                 maxLength={255}
                 required={true}
               >
-                <TextArea rows={2} />
+                <TextArea
+                  rows={2}
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      note: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      note: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
+                />
               </MSFormItem>
             </Col>
             <Col span={24}>
@@ -105,7 +130,20 @@ const EditCamproxy = ({
                 maxLength={255}
                 required={true}
               >
-                <TextArea rows={2} />
+                <TextArea
+                  rows={2}
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      description: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      description: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
+                />
               </MSFormItem>
             </Col>
           </Row>

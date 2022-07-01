@@ -133,12 +133,23 @@ function UserRole({ dispatch, list, metadata, loading }) {
                   <ContainerFilter>
                     <Form className="" name="basic" autoComplete="off" form={form}>
                       <div className="collapse-filter">
-                        <MSFormItem type="input" minLength={5} maxLength={255}>
+                        <MSFormItem type="input" minLength={5} maxLength={255} name="searchValue">
                           <AutoComplete
                             placeholder={intl.formatMessage({
                               id: 'pages.setting-user.list-user.search-by-name',
                             })}
                             onSearch={debounce(handleSearch, 1000)}
+                            onBlur={(e) => {
+                              form.setFieldsValue({
+                                searchValue: e.target.value.trim(),
+                              });
+                            }}
+                            onPaste={(e) => {
+                              e.preventDefault();
+                              form.setFieldsValue({
+                                searchValue: e.clipboardData.getData('text').trim(),
+                              });
+                            }}
                           />
                         </MSFormItem>
                       </div>

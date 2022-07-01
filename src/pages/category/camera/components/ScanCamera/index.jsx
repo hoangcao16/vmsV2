@@ -151,6 +151,17 @@ const ScanCamera = ({
                   <Input
                     placeholder={intl.formatMessage({ id: 'view.camera.IP1_range' })}
                     maxLength={255}
+                    onBlur={(e) => {
+                      form.setFieldsValue({
+                        ['p1']: e.target.value.trim(),
+                      });
+                    }}
+                    onPaste={(e) => {
+                      e.preventDefault();
+                      form.setFieldsValue({
+                        ['p1']: e.clipboardData.getData('text').trim(),
+                      });
+                    }}
                   />
                 </Form.Item>
               </Col>
@@ -218,6 +229,17 @@ const ScanCamera = ({
               <Input
                 placeholder={intl.formatMessage({ id: 'view.camera.IP2_range' })}
                 maxLength={255}
+                onBlur={(e) => {
+                  form.setFieldsValue({
+                    ['p2']: e.target.value.trim(),
+                  });
+                }}
+                onPaste={(e) => {
+                  e.preventDefault();
+                  form.setFieldsValue({
+                    ['p2']: e.clipboardData.getData('text').trim(),
+                  });
+                }}
               />
             </Form.Item>
           </Col>

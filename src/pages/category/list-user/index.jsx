@@ -253,6 +253,17 @@ const UserList = ({
                       })}
                       onSearch={debounce(handleSearch, 1000)}
                       disabled={!collapse}
+                      onBlur={(e) => {
+                        form.setFieldsValue({
+                          searchValue: e.target.value.trim(),
+                        });
+                      }}
+                      onPaste={(e) => {
+                        e.preventDefault();
+                        form.setFieldsValue({
+                          searchValue: e.clipboardData.getData('text').trim(),
+                        });
+                      }}
                     />
                   </MSFormItem>
 
