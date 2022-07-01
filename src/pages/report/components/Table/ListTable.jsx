@@ -82,7 +82,7 @@ const ListTable = ({ dataWebSocketAiEventList, dispatch, loading }) => {
       <Col span={24}>
         <ProTable
           headerTitle={intl.formatMessage({
-            id: 'pages.report.chart.detailReport',
+            id: 'pages.report.chart.trafficViolationsList',
           })}
           loading={loading}
           rowKey="uuid"

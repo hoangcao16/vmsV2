@@ -179,6 +179,20 @@ const UserList = ({
     const a = form.getFieldsValue(true);
   };
 
+  // const handleQuickSearchPaste = (event) => {
+  //   const value = event.target.value.trimStart();
+  //   form.setFieldsValue({
+  //     searchValue: value,
+  //   });
+  // };
+
+  // const handleQuickSearchBlur = (event) => {
+  //   const value = event.target.value.trim();
+  //   form.setFieldsValue({
+  //     searchValue: value,
+  //   });
+  // };
+
   const handleSearch = async (value) => {
     const filters = form.getFieldValue();
     setSearch(value);
