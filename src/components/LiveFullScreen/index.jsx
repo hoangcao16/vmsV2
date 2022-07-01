@@ -33,6 +33,7 @@ const LiveFullScreen = ({
   const timerRef = useRef(null);
   const requestId = useRef(uuidv4());
   const [dchanel, setDchanel] = useState(null);
+  const [pconnect, setPconnect] = useState(null);
 
   const onClose = () => {
     closeRTCPeerConnection();
@@ -48,6 +49,7 @@ const LiveFullScreen = ({
       pcLstTmp?.pc?.close();
     }
     dchanel && dchanel?.close();
+    pconnect && pconnect?.close();
     if (selected?.hls) {
       selected?.hls?.destroy();
     }
@@ -181,6 +183,7 @@ const LiveFullScreen = ({
         .catch((e) => console.log(e))
         .finally(() => {});
       setDchanel(dc);
+      setPconnect(pc);
     }
   };
   const formatOptions = (options) => {

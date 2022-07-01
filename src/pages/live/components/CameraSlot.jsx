@@ -29,6 +29,7 @@ const CameraSlot = ({
   speedVideo,
   mode,
   uuid,
+  layoutIndex,
   inPresetView = false,
 }) => {
   const [loading, setLoading] = useState(false);
@@ -305,10 +306,10 @@ const CameraSlot = ({
     zoomIn && setZoomIn(false);
     peerRef.current?.close();
     dchanel && dchanel?.close();
-    if (camera?.uuid && !inPresetView) {
+    if (camera?.uuid && !inPresetView && layoutIndex) {
       dispatch({
         type: 'live/closeCamera',
-        payload: camera,
+        payload: layoutIndex,
       });
     }
   };
