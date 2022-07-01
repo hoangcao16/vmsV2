@@ -1,4 +1,9 @@
+import { ReactComponent as Grid1 } from '@/assets/img/grid1.svg';
+import { ReactComponent as Grid2 } from '@/assets/img/grid2.svg';
+import { ReactComponent as Grid3 } from '@/assets/img/grid3.svg';
+import { ReactComponent as Grid4 } from '@/assets/img/grid4.svg';
 import MSCustomizeDrawer from '@/components/Drawer';
+import { GRID1X1, GRID2X2, GRID3X3, GRID4X4 } from '@/constants/grid';
 import { DeleteOutlined, EditOutlined, HeartFilled, HeartOutlined } from '@ant-design/icons';
 import { Col, Form, Input, Pagination, Row, Tooltip } from 'antd';
 import { connect } from 'dva';
@@ -62,6 +67,19 @@ const FavoriteList = ({ dispatch, list, metadata, loading, ...props }) => {
     });
   };
 
+  const getGrid = (gridType) => {
+    switch (gridType) {
+      case GRID1X1:
+        return <Grid1 />;
+      case GRID2X2:
+        return <Grid2 />;
+      case GRID3X3:
+        return <Grid3 />;
+      case GRID4X4:
+        return <Grid4 />;
+    }
+  };
+
   return (
     <StyledDrawer
       openDrawer={visible}
@@ -89,7 +107,10 @@ const FavoriteList = ({ dispatch, list, metadata, loading, ...props }) => {
           {list &&
             list.map((item, index) => (
               <StyledFavoriteItem justify="space-between" key={index}>
-                <Col span={18}>
+                <Col span={2} className="grid-icon">
+                  {getGrid(item?.gridType)}
+                </Col>
+                <Col span={16}>
                   <p
                     className="favorite-name"
                     onClick={() => {
@@ -197,10 +218,11 @@ const StyledWrapper = styled.div`
 `;
 
 const StyledFavoriteItem = styled(Row)`
-  margin-top: 16px;
+  margin-top: 18px;
   margin-left: 16px;
   margin-right: 16px;
   flex-wrap: nowrap !important;
+  align-items: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -213,6 +235,15 @@ const StyledFavoriteItem = styled(Row)`
 
     .favorite-name {
       margin-bottom: 0;
+    }
+  }
+
+  .grid-icon {
+    display: flex;
+    align-items: center;
+    svg {
+      width: 16px;
+      height: 16px;
     }
   }
 `;
