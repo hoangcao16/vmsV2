@@ -313,6 +313,8 @@ export default {
   'view.storage.choose_sward': 'Chọn Phường/xã',
   'view.storage.choose_street': 'Chọn đường phố',
   'view.storage.choose_status': 'Chọn trạng thái',
+  'view.storage.choose_location': 'Chọn định vị',
+  'view.storage.choose_tag': 'Chọn tag',
   'view.storage.choose_administrative': 'Chọn đơn vị hành chính',
   'view.storage.choose_group_camera': 'Chọn nhóm camera',
   'view.storage.street': 'Đường phố',

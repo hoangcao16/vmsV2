@@ -187,6 +187,7 @@ function FilterDrawer({
                     optionA.key.toLowerCase().localeCompare(optionB.key.toLowerCase())
                   }
                   getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                  placeholder={intl.formatMessage({ id: 'view.storage.choose_administrative' })}
                 >
                   {adDivisionsOptions?.map((item) => (
                     <Select.Option key={item.uuid} value={item.uuid}>
@@ -342,6 +343,7 @@ function FilterDrawer({
                     optionA.key.toLowerCase().localeCompare(optionB.key.toLowerCase())
                   }
                   getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                  placeholder={intl.formatMessage({ id: 'view.storage.choose_administrative' })}
                 >
                   {adDivisionsOptions?.map((item) => (
                     <Select.Option key={item.uuid} value={item.uuid}>
@@ -368,6 +370,7 @@ function FilterDrawer({
                     optionA.key.toLowerCase().localeCompare(optionB.key.toLowerCase())
                   }
                   getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                  placeholder={intl.formatMessage({ id: 'view.storage.choose_location' })}
                 >
                   {points?.map((item) => (
                     <Select.Option key={item.id} value={item.id}>
@@ -392,6 +395,7 @@ function FilterDrawer({
                     optionA.key.toLowerCase().localeCompare(optionB.key.toLowerCase())
                   }
                   getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                  placeholder={intl.formatMessage({ id: 'view.storage.choose_tag' })}
                 >
                   {tagsOptions?.map((item) => (
                     <Select.Option key={item.uuid} value={item.uuid}>
