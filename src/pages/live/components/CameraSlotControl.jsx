@@ -1,5 +1,6 @@
 import { Permission } from '@/utils/PermissionCheck';
 import { Button, Tooltip } from 'antd';
+import { useState } from 'react';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { FiCamera, FiVideo, FiX } from 'react-icons/fi';
 import { TbArrowsDiagonal, TbArrowsDiagonalMinimize } from 'react-icons/tb';
@@ -20,6 +21,7 @@ const CameraSlotControl = ({
   ...props
 }) => {
   const intl = useIntl();
+  const [show, setShow] = useState(false);
 
   const Type = () => {
     switch (mode) {
@@ -64,14 +66,16 @@ const CameraSlotControl = ({
               </StyledIcon>
             </Tooltip>
           </Permission>
-          <Tooltip
-            trigger="hover"
+          <StyledTooltip
+            overlayStyle={!show && { display: 'none' }}
             placement="left"
             title={intl.formatMessage({
               id: zoomIn ? 'view.live.view_zoom_out' : 'view.live.view_fullscreen',
             })}
           >
             <StyledIcon
+              onMouseEnter={() => setShow(true)}
+              onMouseLeave={() => setShow(false)}
               onClick={(e) => {
                 e.stopPropagation();
                 onZoom();
@@ -79,7 +83,7 @@ const CameraSlotControl = ({
             >
               {zoomIn ? <TbArrowsDiagonalMinimize /> : <TbArrowsDiagonal />}
             </StyledIcon>
-          </Tooltip>
+          </StyledTooltip>
           <Permission permissionName="setup_preset">
             <Tooltip
               title={intl.formatMessage({ id: 'view.live.preset_setting' })}
@@ -168,6 +172,13 @@ const StyledIcon = styled.button`
     width: auto;
     height: 70%;
     max-height: 16px;
+  }
+`;
+
+const StyledTooltip = styled(Tooltip)`
+  .ant-tooltip-content {
+    width: 3000px;
+    height: 200px !important;
   }
 `;
 
