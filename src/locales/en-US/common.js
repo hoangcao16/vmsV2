@@ -309,6 +309,8 @@ export default {
   'view.storage.choose_sward': 'Choose sward',
   'view.storage.choose_street': 'Choose street',
   'view.storage.choose_status': 'Choose status',
+  'view.storage.choose_location': 'Choose location',
+  'view.storage.choose_tag': 'Choose tag',
   'view.storage.choose_administrative': 'Choose administrative unit',
   'view.storage.choose_group_camera': 'Choose camera group',
   'view.storage.street': 'Street',
