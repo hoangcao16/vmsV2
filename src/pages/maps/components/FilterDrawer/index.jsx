@@ -372,6 +372,7 @@ function FilterDrawer({
                     optionA.key.toLowerCase().localeCompare(optionB.key.toLowerCase())
                   }
                   getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                  defaultValue={points[0].id}
                   placeholder={intl.formatMessage({ id: 'view.storage.choose_location' })}
                 >
                   {points?.map((item) => (
@@ -384,7 +385,7 @@ function FilterDrawer({
             </Col>
 
             <Col span={12}>
-              <Form.Item label="Tag" name="tags">
+              <Form.Item label={intl.formatMessage({ id: 'placeholder-camera' })} name="tags">
                 <Select
                   allowClear
                   mode="multiple"
@@ -397,7 +398,7 @@ function FilterDrawer({
                     optionA.key.toLowerCase().localeCompare(optionB.key.toLowerCase())
                   }
                   getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                  placeholder={intl.formatMessage({ id: 'view.storage.choose_tag' })}
+                  placeholder={intl.formatMessage({ id: 'placeholder-camera' })}
                 >
                   {tagsOptions?.map((item) => (
                     <Select.Option key={item.uuid} value={item.uuid}>
