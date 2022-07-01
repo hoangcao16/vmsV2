@@ -3,9 +3,9 @@ import UserApi from '@/services/user/UserApi';
 import permissionCheck from '@/utils/PermissionCheck';
 import { CloseOutlined } from '@ant-design/icons';
 import { EditableProTable } from '@ant-design/pro-table';
-import { Popconfirm, Space, Tooltip } from 'antd';
+import { Popconfirm, Space, Tooltip, Empty } from 'antd';
 import { connect } from 'dva';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import AddPermissionIntoGroup from './SettingPermissionRole';
 
@@ -111,6 +111,9 @@ function TablePermissionInRole({ id, dispatch, list, loading }) {
         })}
         rowKey="uuid"
         search={false}
+        locale={{
+          emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+        }}
         value={list}
         columns={columns}
         // rowSelection={{}}

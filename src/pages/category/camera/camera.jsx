@@ -9,7 +9,7 @@ import {
   RightOutlined,
   ScanOutlined,
 } from '@ant-design/icons';
-import { Button, Col, Form, Input, Row, Select, Tooltip } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Tooltip, Empty } from 'antd';
 import { connect } from 'dva';
 import debounce from 'lodash/debounce';
 import { useEffect, useState } from 'react';
@@ -371,6 +371,9 @@ const CameraList = ({
         search={false}
         dataSource={list}
         columns={columns}
+        locale={{
+          emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+        }}
         onRow={(record) => {
           return {
             onClick: (event) => {

@@ -1,7 +1,7 @@
 import { StyledDrawer } from '@/components/LiveFullScreen/style';
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
 import { CloseOutlined, DeleteOutlined, MenuOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Popconfirm, Select, Space, Table } from 'antd';
+import { Button, Form, Input, Popconfirm, Select, Space, Table, Empty } from 'antd';
 import { arrayMoveImmutable } from 'array-move';
 import { connect } from 'dva';
 import { useState } from 'react';
@@ -215,6 +215,11 @@ const AddEditPresetTour = ({
           <Table
             pagination={false}
             dataSource={dataSource}
+            locale={{
+              emptyText: (
+                <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />
+              ),
+            }}
             columns={columns}
             rowKey="index"
             scroll={{ y: 500 }}

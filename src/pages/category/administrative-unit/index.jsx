@@ -1,7 +1,7 @@
 import AdDivisionApi from '@/services/advisionApi';
 import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Button, Form, Input } from 'antd';
+import { Button, Empty, Form, Input } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -109,6 +109,9 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
           search={false}
           dataSource={list}
           loading={loading}
+          locale={{
+            emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+          }}
           columns={columns}
           options={false}
           onRow={(record) => {

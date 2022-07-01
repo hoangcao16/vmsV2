@@ -1,7 +1,7 @@
 import { ProTableStyle } from '@/pages/category/administrative-unit/style';
 import { SpanCode } from '@/pages/category/camera/components/GroupCameraDrawer/style';
 import ReportApi from '@/services/report/ReportApi';
-import { Col, Row } from 'antd';
+import { Col, Row, Empty } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -132,6 +132,11 @@ const DetailTable = (props) => {
             })}
             rowKey="uuid"
             search={false}
+            locale={{
+              emptyText: (
+                <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />
+              ),
+            }}
             dataSource={data}
             columns={columns}
             options={false}

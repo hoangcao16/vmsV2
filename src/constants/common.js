@@ -44,3 +44,6 @@ export const AI_SOURCE = {
   PHILONG: 'philong',
   EDSO: 'edso',
 };
+export const NO_DATA = {
+  NO_DATA: 'No data',
+};

@@ -1,5 +1,5 @@
 import eventFilesApi from '@/services/storage-api/eventFilesApi';
-import { Badge, Tooltip } from 'antd';
+import { Badge, Tooltip, Empty } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { connect, useIntl } from 'umi';
@@ -390,7 +390,6 @@ function TableStorage({ dispatch, state, nameSpace }) {
   useEffect(() => {
     getEventList();
   }, []);
-
   return (
     <div>
       {viewType === GRID_VIEW && (
@@ -402,6 +401,9 @@ function TableStorage({ dispatch, state, nameSpace }) {
           loading={loading}
           rowKey={'id'}
           search={false}
+          locale={{
+            emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+          }}
           options={false}
           dataSource={list}
           columns={renderColumns()}

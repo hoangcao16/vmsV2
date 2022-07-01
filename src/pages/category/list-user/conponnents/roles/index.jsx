@@ -5,7 +5,7 @@ import permissionCheck from '@/utils/PermissionCheck';
 import TableUtils from '@/utils/TableHelper';
 import { ClusterOutlined } from '@ant-design/icons';
 import { EditableProTable } from '@ant-design/pro-table';
-import { AutoComplete, Button, Form, Space } from 'antd';
+import { AutoComplete, Button, Form, Space, Empty } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import React, { useEffect, useState } from 'react';
@@ -127,6 +127,11 @@ function UserRole({ dispatch, list, metadata, loading }) {
                 id: 'pages.setting-user.list-user.list-role',
               })}
               rowKey="uuid"
+              locale={{
+                emptyText: (
+                  <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />
+                ),
+              }}
               toolbar={{
                 multipleLine: true,
                 filter: (

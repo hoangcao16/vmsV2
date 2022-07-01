@@ -2,7 +2,7 @@
 import AddEditAdministrativeUnit from '@/pages/category/administrative-unit/components/AddEditAdministrativeUnit';
 import AddCamera from '@/pages/category/camera/components/AddCamera';
 import { FilterFilled, PauseCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Empty } from 'antd';
 import { connect } from 'dva';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
@@ -261,6 +261,9 @@ const CameraListDrawer = ({
           rowKey="uuid"
           showHeader={false}
           search={false}
+          locale={{
+            emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+          }}
           options={false}
           value={dataSource}
           columns={columns()}

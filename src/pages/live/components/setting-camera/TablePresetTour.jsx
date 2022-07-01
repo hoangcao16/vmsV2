@@ -1,6 +1,5 @@
 import { SpanCode } from '@/pages/category/camera/components/GroupCameraDrawer/style';
-import { EyeOutlined } from '@ant-design/icons';
-import { Space, Table } from 'antd';
+import { Space, Table, Empty } from 'antd';
 import { connect } from 'dva';
 import styled from 'styled-components';
 import { useIntl } from 'umi';
@@ -64,6 +63,9 @@ function TablePresetTour({
       <Table
         loading={loading}
         columns={columns}
+        locale={{
+          emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+        }}
         dataSource={listPresetTour}
         pagination={{ pageSize: 10 }}
         title={() => <HeaderPresetTour />}

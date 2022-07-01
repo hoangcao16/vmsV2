@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { connect } from 'dva';
 import { useIntl } from 'umi';
 import { ProTableStyle } from '../../style';
-import { Progress } from 'antd';
+import { Progress, Empty } from 'antd';
 
 const TableHardDrive = ({ dispatch, list, metadata, loading }) => {
   const intl = useIntl();
@@ -89,6 +89,9 @@ const TableHardDrive = ({ dispatch, list, metadata, loading }) => {
         })}`}
         rowKey="id"
         search={false}
+        locale={{
+          emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+        }}
         dataSource={list?.diskInfoList}
         columns={hardDriveColumns}
         options={false}

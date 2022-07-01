@@ -1,5 +1,5 @@
 import { SpanCode } from '@/pages/category/camera/components/GroupCameraDrawer/style';
-import { Table } from 'antd';
+import { Table, Empty } from 'antd';
 import { connect } from 'dva';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -48,9 +48,9 @@ function TablePreset({
     return (
       <StyledHeader>
         <h3>{intl.formatMessage({ id: 'view.live.menu_preset' })}</h3>
-        <SpanCode onClick={handleShowAddEditPreset}>+ {intl.formatMessage({ id: 'pages.live-mode.noti.add-preset' })}</SpanCode>
-
-       
+        <SpanCode onClick={handleShowAddEditPreset}>
+          + {intl.formatMessage({ id: 'pages.live-mode.noti.add-preset' })}
+        </SpanCode>
       </StyledHeader>
     );
   };
@@ -60,6 +60,9 @@ function TablePreset({
       <Table
         loading={loading}
         columns={columns}
+        locale={{
+          emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+        }}
         dataSource={listPreset}
         pagination={{ pageSize: 10 }}
         title={() => <HeaderPreset />}

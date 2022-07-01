@@ -2,9 +2,8 @@ import MSCustomizeDrawer from '@/components/Drawer';
 import { STORAGE } from '@/constants/common';
 import TableUtils from '@/utils/TableHelper';
 import ProTable from '@ant-design/pro-table';
-import { Button, Space } from 'antd';
+import { Button, Space, Empty } from 'antd';
 import { connect } from 'dva';
-import React from 'react';
 import { useIntl } from 'umi';
 function AddCameraGroupPermission({ dispatch, listCameraGroupNotPermission, onClose, openDrawer }) {
   const intl = useIntl();
@@ -67,6 +66,11 @@ function AddCameraGroupPermission({ dispatch, listCameraGroupNotPermission, onCl
                 id: 'pages.setting-user.list-user.cameraGroup',
               })}
               rowKey="uuid"
+              locale={{
+                emptyText: (
+                  <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />
+                ),
+              }}
               search={false}
               dataSource={listCameraGroupNotPermission}
               columns={columns}

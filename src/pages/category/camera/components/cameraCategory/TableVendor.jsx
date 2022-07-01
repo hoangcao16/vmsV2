@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Empty } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -99,6 +99,9 @@ const TableVendor = ({ dispatch, listVendor, metadataVendor, type, loading }) =>
           },
         )}`}
         rowKey="id"
+        locale={{
+          emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+        }}
         search={false}
         dataSource={listVendor}
         loading={loading}
