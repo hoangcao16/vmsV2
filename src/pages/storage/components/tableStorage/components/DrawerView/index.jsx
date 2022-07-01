@@ -1031,127 +1031,127 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
     setNote(data.note);
     if (nameSpace === EVENT_AI_NAMESPACE && data != null) {
       let imageOther = [];
-      if (REACT_APP_AI_SOURCE === AI_SOURCE.PHILONG) {
-        setDetailAI({
-          ...data,
-        });
-        // setProcessState(PROCESSING_STATUS_OPTIONS.find((e) => e.value === data?.status));
-        const getViolateUrl = ExportEventFileApi.downloadAIIntegrationFile(
-          data.uuid,
-          'ImageViolate.jpg',
-        );
-        const getPlateNumUrl = ExportEventFileApi.downloadAIIntegrationFile(
-          data.uuid,
-          'ImagePlate.jpg',
-        );
-        const getVehicleUrl = ExportEventFileApi.downloadAIIntegrationFile(
-          data.uuid,
-          'ImageVehicle.jpg',
-        );
+      setDetailAI({
+        ...data,
+      });
+      // setProcessState(PROCESSING_STATUS_OPTIONS.find((e) => e.value === data?.status));
+      const getViolateUrl = ExportEventFileApi.downloadAIIntegrationFile(
+        data.uuid,
+        'ImageViolate.jpg',
+      );
+      const getPlateNumUrl = ExportEventFileApi.downloadAIIntegrationFile(
+        data.uuid,
+        'ImagePlate.jpg',
+      );
+      const getVehicleUrl = ExportEventFileApi.downloadAIIntegrationFile(
+        data.uuid,
+        'ImageVehicle.jpg',
+      );
 
-        Promise.all([getViolateUrl, getPlateNumUrl, getVehicleUrl])
-          .then(async (value) => {
-            if (value[0] instanceof Blob) {
-              const blob = new Blob([value[0]], { type: 'octet/stream' });
-              imageOther.push({
-                id: 'violate',
-                fileName: 'ImageViolate.jpg',
-                uuid: data.uuid,
-                image: URL.createObjectURL(blob),
-              });
-              setImageViolate(URL.createObjectURL(blob));
-            }
-
-            if (value[1] instanceof Blob) {
-              const blob = new Blob([value[1]], { type: 'octet/stream' });
-              imageOther.push({
-                id: 'plate',
-                fileName: 'ImagePlate.jpg',
-                uuid: data.uuid,
-                image: URL.createObjectURL(blob),
-              });
-              setPlateNumber(URL.createObjectURL(blob));
-            }
-
-            if (value[2] instanceof Blob) {
-              const blob = new Blob([value[2]], { type: 'octet/stream' });
-              imageOther.push({
-                id: 'vehicle',
-                fileName: 'ImageVehicle.jpg',
-                uuid: data.uuid,
-                image: URL.createObjectURL(blob),
-              });
-              setImageVehicle(URL.createObjectURL(blob));
-            }
-            // if (!isEmpty(value[3])) {
-            //   const blob = new Blob([value[3].data], { type: 'octet/stream' });
-            //   imageOther.push({
-            //     id: 'video',
-            //     type: 'mp4',
-            //     fileName: 'Video.mp4',
-            //     uuid: data.uuid,
-            //     url: URL.createObjectURL(blob),
-            //   });
-            // }
-          })
-          .then(() => {
-            setImageOther(imageOther);
-          });
-        setImageAICurrent({
-          uuid: data.uuid,
-          fileName: 'ImageViolate.jpg',
-        });
-      } else {
-        setDetailAI({});
-        if (data && data.uuid != null) {
-          console.log('data', data);
-          EventAiAPI.getEventsByTrackingId(data.trackingId).then((data) => {
-            data.payload.map((ef) => {
-              if (ef.thumbnailData != null) {
-                imageOther.push({
-                  image: ef.thumbnailData,
-                  uuid: ef.uuid,
-                  cameraUuid: ef.cameraUuid,
-                  trackingId: ef.trackingId,
-                  fileName: ef.fileName,
-                });
-              }
+      Promise.all([getViolateUrl, getPlateNumUrl, getVehicleUrl])
+        .then(async (value) => {
+          if (value[0] instanceof Blob) {
+            const blob = new Blob([value[0]], { type: 'octet/stream' });
+            imageOther.push({
+              id: 'violate',
+              fileName: 'ImageViolate.jpg',
+              uuid: data.uuid,
+              image: URL.createObjectURL(blob),
             });
-          });
-          setImageOther(imageOther);
+            setImageViolate(URL.createObjectURL(blob));
+          }
 
-          EventAiAPI.getDetailEvent(data.uuid).then((data) => {
-            if (data && data.payload) {
-              setDetailAI({
-                ...data,
-                code: data.payload.code,
-                name: data.payload.name,
-                position: data.payload.position,
-                note: data.payload.note,
-                plateNumber: data.payload.plateNumber,
-                departmentUuid: data.payload.departmentUuid,
-                departmentName: data.payload.departmentName,
-                typeObject: data.payload.useCase === 'zac_vehicle' ? 'vehicle' : 'human',
-              });
-              setCurrNode(data?.payload?.note);
-              // setProcessState(
-              //   PROCESSING_STATUS_OPTIONS.find((e) => e.value === data?.payload?.status),
-              // );
-              setObjectType(
-                typeObjects.find(
-                  (e) => e.value === (data.payload.useCase === 'zac_vehicle' ? 'vehicle' : 'human'),
-                ),
-              );
-              setImageAICurrent({
-                cameraUuid: data.cameraUuid,
-                trackingId: data.trackingId,
-                uuid: data.uuid,
-                fileName: data.fileName,
-              });
-            }
-          });
-        }
-      }
+          if (value[1] instanceof Blob) {
+            const blob = new Blob([value[1]], { type: 'octet/stream' });
+            imageOther.push({
+              id: 'plate',
+              fileName: 'ImagePlate.jpg',
+              uuid: data.uuid,
+              image: URL.createObjectURL(blob),
+            });
+            setPlateNumber(URL.createObjectURL(blob));
+          }
+
+          if (value[2] instanceof Blob) {
+            const blob = new Blob([value[2]], { type: 'octet/stream' });
+            imageOther.push({
+              id: 'vehicle',
+              fileName: 'ImageVehicle.jpg',
+              uuid: data.uuid,
+              image: URL.createObjectURL(blob),
+            });
+            setImageVehicle(URL.createObjectURL(blob));
+          }
+          // if (!isEmpty(value[3])) {
+          //   const blob = new Blob([value[3].data], { type: 'octet/stream' });
+          //   imageOther.push({
+          //     id: 'video',
+          //     type: 'mp4',
+          //     fileName: 'Video.mp4',
+          //     uuid: data.uuid,
+          //     url: URL.createObjectURL(blob),
+          //   });
+          // }
+        })
+        .then(() => {
+          setImageOther(imageOther);
+        });
+      setImageAICurrent({
+        uuid: data.uuid,
+        fileName: 'ImageViolate.jpg',
+      });
+
+      // else {
+      //   setDetailAI({});
+      //   if (data && data.uuid != null) {
+      //     console.log('data', data);
+      //     EventAiAPI.getEventsByTrackingId(data.trackingId).then((data) => {
+      //       data.payload.map((ef) => {
+      //         if (ef.thumbnailData != null) {
+      //           imageOther.push({
+      //             image: ef.thumbnailData,
+      //             uuid: ef.uuid,
+      //             cameraUuid: ef.cameraUuid,
+      //             trackingId: ef.trackingId,
+      //             fileName: ef.fileName,
+      //           });
+      //         }
+      //       });
+      //     });
+      //     setImageOther(imageOther);
+
+      //     EventAiAPI.getDetailEvent(data.uuid).then((data) => {
+      //       if (data && data.payload) {
+      //         setDetailAI({
+      //           ...data,
+      //           code: data.payload.code,
+      //           name: data.payload.name,
+      //           position: data.payload.position,
+      //           note: data.payload.note,
+      //           plateNumber: data.payload.plateNumber,
+      //           departmentUuid: data.payload.departmentUuid,
+      //           departmentName: data.payload.departmentName,
+      //           typeObject: data.payload.useCase === 'zac_vehicle' ? 'vehicle' : 'human',
+      //         });
+      //         setCurrNode(data?.payload?.note);
+      //         // setProcessState(
+      //         //   PROCESSING_STATUS_OPTIONS.find((e) => e.value === data?.payload?.status),
+      //         // );
+      //         setObjectType(
+      //           typeObjects.find(
+      //             (e) => e.value === (data.payload.useCase === 'zac_vehicle' ? 'vehicle' : 'human'),
+      //           ),
+      //         );
+      //         setImageAICurrent({
+      //           cameraUuid: data.cameraUuid,
+      //           trackingId: data.trackingId,
+      //           uuid: data.uuid,
+      //           fileName: data.fileName,
+      //         });
+      //       }
+      //     });
+      //   }
+      // }
     }
 
     if (
