@@ -119,7 +119,6 @@ function AddEditUserGroup({
                 })}
                 type="input"
                 name="name"
-                minLength={5}
                 maxLength={255}
                 required={true}
               >
@@ -146,7 +145,6 @@ function AddEditUserGroup({
                 })}
                 type="input"
                 name="description"
-                minLength={5}
                 maxLength={255}
                 required={true}
               >
