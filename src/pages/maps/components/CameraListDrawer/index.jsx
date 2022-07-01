@@ -2,7 +2,7 @@
 import AddEditAdministrativeUnit from '@/pages/category/administrative-unit/components/AddEditAdministrativeUnit';
 import AddCamera from '@/pages/category/camera/components/AddCamera';
 import { FilterFilled, PauseCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Empty } from 'antd';
+import { Button, Empty, Form, Input } from 'antd';
 import { connect } from 'dva';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
@@ -216,6 +216,7 @@ const CameraListDrawer = ({
           <StyledSearch size={8}>
             <Form.Item name="name" noStyle>
               <Input.Search
+                allowClear
                 placeholder={intl.formatMessage(
                   {
                     id: 'view.maps.please_text_placeholder',

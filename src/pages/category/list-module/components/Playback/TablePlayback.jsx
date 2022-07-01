@@ -1,4 +1,4 @@
-import { Form, Input, Tag, Empty } from 'antd';
+import { Empty, Form, Input, Tag } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -151,6 +151,7 @@ const TablePlayback = ({ dispatch, list, metadata, loading }) => {
             <Form className="bg-grey" form={form} layout="horizontal" autoComplete="off">
               <Form.Item name="searchValue">
                 <Input.Search
+                  allowClear
                   maxLength={255}
                   placeholder={intl.formatMessage(
                     { id: 'view.common_device.please_enter_playback_name' },

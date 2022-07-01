@@ -488,6 +488,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
           <div className="collapse-filter__left">
             <Form.Item name="quickSearch">
               <Input.Search
+                allowClear
                 placeholder={intl.formatMessage({
                   id: 'view.storage.search_daily_archive',
                 })}
@@ -704,6 +705,7 @@ function ExtraFilter({ state, nameSpace, dispatch }) {
                         name="address"
                       >
                         <Input
+                          allowClear
                           placeholder={intl.formatMessage({ id: 'view.storage.choose_street' })}
                           onChange={debounce(onChangeAddress, 1500)}
                           maxLength={255}

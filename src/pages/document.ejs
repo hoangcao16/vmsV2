@@ -10,9 +10,7 @@
     <title>Dự án VMS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <link rel="icon" href="<%= context.config.publicPath +'favicon.ico'%>" type="image/x-icon" />
     <script src='https://vietmaps.vn/vietmap-gl-js/v1.0.0/vietmap-gl.js'></script>
     <!-- <link href='https://vietmaps.vn/vietmap-gl-js/v1.0.0/vietmap-gl.css' rel='stylesheet' /> -->
@@ -39,12 +37,12 @@
                 margin: 0;
                 padding: 0;
             }
-
+            
             #root {
                 background-repeat: no-repeat;
                 background-size: 100% auto;
             }
-
+            
             .noscript-container {
                 display: flex;
                 align-content: center;
@@ -53,19 +51,19 @@
                 font-size: 20px;
                 font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             }
-
+            
             .noscript-enableJS {
                 padding-right: 3px;
                 padding-left: 3px;
             }
-
+            
             .page-loading-warp {
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 padding: 98px;
             }
-
+            
             .ant-spin {
                 position: absolute;
                 display: none;
@@ -88,13 +86,13 @@
                 -webkit-font-feature-settings: 'tnum';
                 font-feature-settings: 'tnum';
             }
-
+            
             .ant-spin-spinning {
                 position: static;
                 display: inline-block;
                 opacity: 1;
             }
-
+            
             .ant-spin-dot {
                 position: relative;
                 display: inline-block;
@@ -102,7 +100,7 @@
                 height: 20px;
                 font-size: 20px;
             }
-
+            
             .ant-spin-dot-item {
                 position: absolute;
                 display: block;
@@ -120,33 +118,33 @@
                 -webkit-animation: antspinmove 1s infinite linear alternate;
                 animation: antSpinMove 1s infinite linear alternate;
             }
-
+            
             .ant-spin-dot-item:nth-child(1) {
                 top: 0;
                 left: 0;
             }
-
+            
             .ant-spin-dot-item:nth-child(2) {
                 top: 0;
                 right: 0;
                 -webkit-animation-delay: 0.4s;
                 animation-delay: 0.4s;
             }
-
+            
             .ant-spin-dot-item:nth-child(3) {
                 right: 0;
                 bottom: 0;
                 -webkit-animation-delay: 0.8s;
                 animation-delay: 0.8s;
             }
-
+            
             .ant-spin-dot-item:nth-child(4) {
                 bottom: 0;
                 left: 0;
                 -webkit-animation-delay: 1.2s;
                 animation-delay: 1.2s;
             }
-
+            
             .ant-spin-dot-spin {
                 -webkit-transform: rotate(45deg);
                 -ms-transform: rotate(45deg);
@@ -154,18 +152,18 @@
                 -webkit-animation: antrotate 1.2s infinite linear;
                 animation: antRotate 1.2s infinite linear;
             }
-
+            
             .ant-spin-lg .ant-spin-dot {
                 width: 32px;
                 height: 32px;
                 font-size: 32px;
             }
-
+            
             .ant-spin-lg .ant-spin-dot i {
                 width: 14px;
                 height: 14px;
             }
-
+            
             @media all and (-ms-high-contrast: none),
             (-ms-high-contrast: active) {
                 .ant-spin-blur {
@@ -173,26 +171,26 @@
                     opacity: 0.5;
                 }
             }
-
+            
             @-webkit-keyframes antSpinMove {
                 to {
                     opacity: 1;
                 }
             }
-
+            
             @keyframes antSpinMove {
                 to {
                     opacity: 1;
                 }
             }
-
+            
             @-webkit-keyframes antRotate {
                 to {
                     -webkit-transform: rotate(405deg);
                     transform: rotate(405deg);
                 }
             }
-
+            
             @keyframes antRotate {
                 to {
                     -webkit-transform: rotate(405deg);
@@ -208,7 +206,7 @@
           height: 100%;
           min-height: 420px;
         ">
-            <img src="<%= context.config.publicPath +'logo.svg'%>" alt="logo" width="256" />
+            <img src="<%= context.config.publicPath +'logo_white.svg'%>" alt="logo" width="256" />
             <div class="page-loading-warp">
                 <div class="ant-spin ant-spin-lg ant-spin-spinning">
                     <span class="ant-spin-dot ant-spin-dot-spin"><i class="ant-spin-dot-item"></i><i
@@ -216,7 +214,7 @@
                             class="ant-spin-dot-item"></i></span>
                 </div>
             </div>
-            <h2 style="display: flex; align-items: center; justify-content: center; font-weight: bold;">
+            <h2 style="display: flex; align-items: center; justify-content: center; font-weight: bold; color: #fff;">
                 Dự án quốc tế VMS
             </h2>
         </div>

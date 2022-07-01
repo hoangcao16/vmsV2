@@ -48,7 +48,7 @@ const FavoriteList = ({ dispatch, list, metadata, loading, ...props }) => {
       ...searchParam,
       name: value,
       page: 1,
-      size: 10,
+      size: 15,
     });
     getListFavorites(dataParam);
   };
@@ -93,6 +93,7 @@ const FavoriteList = ({ dispatch, list, metadata, loading, ...props }) => {
         <Form form={form}>
           <Form.Item name="name" noStyle>
             <Input.Search
+              allowClear
               placeholder={intl.formatMessage({
                 id: 'view.map.search',
               })}

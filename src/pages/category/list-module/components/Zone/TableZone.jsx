@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Empty } from 'antd';
+import { Button, Empty, Form, Input } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -131,6 +131,7 @@ const TableZone = ({ dispatch, list, metadata, loading }) => {
             <Form className="bg-grey" form={form} layout="horizontal" autoComplete="off">
               <Form.Item name="searchValue">
                 <Input.Search
+                  allowClear
                   maxLength={255}
                   placeholder={intl.formatMessage(
                     { id: 'view.common_device.please_enter_zone_name' },

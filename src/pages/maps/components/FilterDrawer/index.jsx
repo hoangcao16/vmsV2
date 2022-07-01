@@ -156,6 +156,7 @@ function FilterDrawer({
                 maxLength={255}
               >
                 <Input
+                  allowClear
                   placeholder={intl.formatMessage({ id: 'view.map.please_choose_location' })}
                   onBlur={(e) => {
                     form.setFieldsValue({
@@ -312,6 +313,7 @@ function FilterDrawer({
                 maxLength={255}
               >
                 <Input
+                  allowClear
                   placeholder={intl.formatMessage({ id: 'view.map.please_choose_location' })}
                   onBlur={(e) => {
                     form.setFieldsValue({
