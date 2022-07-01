@@ -74,19 +74,19 @@ export default {
     },
   },
   subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen(({ pathname }) => {
-        if (pathname === '/map') {
-          dispatch({
-            type: 'fetchLiveCameraList',
-            payload: {
-              page: 1,
-              size: 10,
-              type: '4x1',
-            },
-          });
-        }
-      });
-    },
+    // setup({ dispatch, history }) {
+    //   return history.listen(({ pathname }) => {
+    //     if (pathname === '/map') {
+    //       dispatch({
+    //         type: 'fetchLiveCameraList',
+    //         payload: {
+    //           page: 1,
+    //           size: 10,
+    //           type: '4x1',
+    //         },
+    //       });
+    //     }
+    //   });
+    // },
   },
 };

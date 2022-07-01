@@ -36,19 +36,20 @@ const LiveFullScreen = ({
 
   const onClose = () => {
     closeRTCPeerConnection();
-
-    if (selected?.hls) {
-      selected?.hls?.destroy();
-    }
     dispatch({
       type: 'liveFullScreen/closeDrawer',
     });
   };
   const closeRTCPeerConnection = (slotIdx) => {
+    console.log('closeRTCPeerConnection');
     // CLOSE STREAM
     let pcLstTmp = pcRef.current;
     if (pcLstTmp?.pc) {
       pcLstTmp?.pc?.close();
+    }
+    dchanel && dchanel?.close();
+    if (selected?.hls) {
+      selected?.hls?.destroy();
     }
   };
   useEffect(() => {
@@ -65,6 +66,7 @@ const LiveFullScreen = ({
       startCamera(selectedCamera?.uuid, 'webrtc');
       setSelected(formatOptions(cameraList).find((item) => item.value === selectedCamera?.uuid));
     }
+    return () => closeRTCPeerConnection();
   }, [selectedCamera]);
   const reconnectCamera = (camUuid, mode) => {
     setTimeout(() => {

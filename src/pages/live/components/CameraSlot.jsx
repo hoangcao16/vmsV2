@@ -51,6 +51,7 @@ const CameraSlot = ({
         closeCamera();
       }
     }
+    return () => closeCamera();
   }, [uuid, mode]);
   useEffect(() => {
     if (isRecording) {
@@ -289,6 +290,7 @@ const CameraSlot = ({
     }
   };
   const closeCamera = () => {
+    console.log('Close camera');
     stopRecording();
     const html = document.querySelector('html');
 
@@ -302,6 +304,7 @@ const CameraSlot = ({
     }
     zoomIn && setZoomIn(false);
     peerRef.current?.close();
+    dchanel && dchanel?.close();
     if (camera?.uuid && !inPresetView) {
       dispatch({
         type: 'live/closeCamera',

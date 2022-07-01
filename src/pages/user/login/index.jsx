@@ -179,5 +179,15 @@ const StyleContainer = styled.div`
   .ant-btn {
     width: 100%;
   }
+  .ant-checkbox-wrapper {
+    color: rgba(229, 224, 216, 0.85);
+  }
+  .ant-tabs-top {
+    .ant-tabs-nav {
+      &::before {
+        border-bottom-color: rgb(62, 65, 65);
+      }
+    }
+  }
 `;
 export default Login;

@@ -25,7 +25,6 @@ const CameraListDrawer = ({
   type,
   listStreaming,
   closeDrawerState,
-  tagsOptions,
 }) => {
   const intl = useIntl();
   const [currentPage, setCurrentPage] = useState(metadata?.page);
@@ -55,6 +54,9 @@ const CameraListDrawer = ({
   useEffect(() => {
     setIsAddNewDrawer(false);
   }, [closeDrawerState]);
+  useEffect(() => {
+    form.resetFields();
+  }, [type]);
   const handleClickPlay = (item, event) => {
     event.stopPropagation();
     if (item?.isPlay) {
@@ -295,7 +297,6 @@ function mapStateToProps(state) {
   const { list, metadata, isOpenCameraListDrawer, type } = state.maps;
   const { listStreaming } = state.viewLiveCameras;
   const { closeDrawerState } = state.camera;
-  const { tagsOptions } = state.globalstore;
   return {
     list,
     metadata,
@@ -303,7 +304,6 @@ function mapStateToProps(state) {
     type,
     listStreaming,
     closeDrawerState,
-    tagsOptions,
   };
 }
 export default connect(mapStateToProps)(CameraListDrawer);

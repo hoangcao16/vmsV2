@@ -46,11 +46,25 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
   const streamingPopupRef = useRef(null);
   const [dchanel, setDchanel] = useState(null);
   const zoom = 13;
+  useEffect(() => {
+    dispatch({
+      type: 'viewLiveCameras/fetchLiveCameraList',
+      payload: {
+        page: 1,
+        size: 10,
+        type: '4x1',
+      },
+    });
+  }, []);
   const closeRTCPeerConnection = (slotIdx) => {
+    console.log('close camera popup');
     // CLOSE STREAM
     let pcLstTmp = streamingPopupRef.current;
     if (pcLstTmp?.pc) {
       pcLstTmp?.pc?.close();
+    }
+    if (dchanel) {
+      dchanel?.close();
     }
   };
   const reconnectCamera = (camUuid, mode) => {
@@ -430,6 +444,10 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
     popup.on('open', (e) => {
       popupAttachMarkerRef.current = e.target;
       data && startCamera(data, 'webrtc');
+    });
+    popup.on('close', () => {
+      console.log('close camera popup');
+      closeRTCPeerConnection();
     });
     el.addEventListener('click', (e) => {
       if (markerTargetRef.current && markerTargetRef.current != e.target) {

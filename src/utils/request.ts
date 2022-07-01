@@ -55,9 +55,9 @@ export class BaseService {
       async (error) => {
         const originalRequest = error.config;
         if (originalRequest && error?.toJSON()?.status === 401 && !originalRequest._retry) {
-          const oldToken = localStorage.getItem(STORAGE.TOKEN);
+          const token = localStorage.getItem(STORAGE.REFRESH_TOKEN);
 
-          await AuthZApi.refreshToken(oldToken);
+          await AuthZApi.refreshToken(token);
 
           originalRequest._retry = true;
 
