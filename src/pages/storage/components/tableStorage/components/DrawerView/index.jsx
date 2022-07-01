@@ -170,9 +170,8 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
       </>
     );
   };
-  console.log(data);
+
   const handleDeleteFile = () => {
-    console.log('data', data);
     if (nameSpace === DAILY_ARCHIVE_NAMESPACE || data.tableName === 'file') {
       //DAILY ARCHIVE
       ExportEventFileApi.deletePhysicalFile(data.uuid)
@@ -591,13 +590,33 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
               :
             </div>
 
-            {nameSpace === DAILY_ARCHIVE_NAMESPACE || nameSpace === IMPORTANT_NAMESPACE ? (
+            {nameSpace === DAILY_ARCHIVE_NAMESPACE && (
               <div className="detailInfo-content">
-                {moment(data?.createdTime * 1000).format('DD/MM/YYYY HH:mm')}
+                {moment(data?.createdTime * 1000).format('DD/MM/YYYY')}
               </div>
-            ) : (
+            )}
+
+            {(nameSpace === CAPTURED_NAMESPACE || nameSpace === EVENT_FILES_NAMESPACE) && (
               <div className="detailInfo-content">
-                {moment(data?.createdTime).format('DD/MM/YYYY HH:mm')}
+                {moment(data?.createdTime).format('DD/MM/YYYY')}
+              </div>
+            )}
+
+            {nameSpace === IMPORTANT_NAMESPACE && data.tableName === 'file' && (
+              <div className="detailInfo-content">
+                {moment(data?.createdTime * 1000).format('DD/MM/YYYY')}
+              </div>
+            )}
+
+            {nameSpace === IMPORTANT_NAMESPACE && data.tableName === 'event_file' && (
+              <div className="detailInfo-content">
+                {moment(data?.createdTime).format('DD/MM/YYYY')}
+              </div>
+            )}
+
+            {nameSpace === EVENT_AI_NAMESPACE && (
+              <div className="detailInfo-content">
+                {moment(data?.createdTime).format('DD/MM/YYYY')}
               </div>
             )}
           </div>
@@ -648,11 +667,32 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
               })}
               :
             </div>
-            {nameSpace === DAILY_ARCHIVE_NAMESPACE || nameSpace === IMPORTANT_NAMESPACE ? (
+
+            {nameSpace === DAILY_ARCHIVE_NAMESPACE && (
               <div className="detailInfo-content">
                 {moment(data?.createdTime * 1000).format('DD/MM/YYYY')}
               </div>
-            ) : (
+            )}
+
+            {(nameSpace === CAPTURED_NAMESPACE || nameSpace === EVENT_FILES_NAMESPACE) && (
+              <div className="detailInfo-content">
+                {moment(data?.createdTime).format('DD/MM/YYYY')}
+              </div>
+            )}
+
+            {nameSpace === IMPORTANT_NAMESPACE && data.tableName === 'file' && (
+              <div className="detailInfo-content">
+                {moment(data?.createdTime * 1000).format('DD/MM/YYYY')}
+              </div>
+            )}
+
+            {nameSpace === IMPORTANT_NAMESPACE && data.tableName === 'event_file' && (
+              <div className="detailInfo-content">
+                {moment(data?.createdTime).format('DD/MM/YYYY')}
+              </div>
+            )}
+
+            {nameSpace === EVENT_AI_NAMESPACE && (
               <div className="detailInfo-content">
                 {moment(data?.createdTime).format('DD/MM/YYYY')}
               </div>
@@ -1064,6 +1104,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
       } else {
         setDetailAI({});
         if (data && data.uuid != null) {
+          console.log('data', data);
           EventAiAPI.getEventsByTrackingId(data.trackingId).then((data) => {
             data.payload.map((ef) => {
               if (ef.thumbnailData != null) {

@@ -108,16 +108,30 @@ function TableStorage({ dispatch, state, nameSpace }) {
           id: 'view.storage.created_time',
         }),
         dataIndex: 'createdTime',
-        render: (text) => {
-          return (
-            <CellCreateTime>
-              {moment(
-                nameSpace === DAILY_ARCHIVE_NAMESPACE || nameSpace === IMPORTANT_NAMESPACE
-                  ? text * 1000
-                  : text,
-              ).format('DD/MM/YYYY HH:mm')}
-            </CellCreateTime>
-          );
+        render: (text, record) => {
+          if (nameSpace === DAILY_ARCHIVE_NAMESPACE) {
+            return (
+              <CellCreateTime>{moment(text * 1000).format('DD/MM/YYYY HH:mm')}</CellCreateTime>
+            );
+          }
+
+          if (nameSpace === CAPTURED_NAMESPACE || nameSpace === EVENT_FILES_NAMESPACE) {
+            return <CellCreateTime>{moment(text).format('DD/MM/YYYY HH:mm')}</CellCreateTime>;
+          }
+
+          if (nameSpace === IMPORTANT_NAMESPACE) {
+            if (record.tableName === 'file') {
+              return (
+                <CellCreateTime>{moment(text * 1000).format('DD/MM/YYYY HH:mm')}</CellCreateTime>
+              );
+            }
+
+            if (record.tableName === 'event_file') {
+              return <CellCreateTime>{moment(text).format('DD/MM/YYYY HH:mm')}</CellCreateTime>;
+            }
+          }
+
+          return <CellCreateTime>{moment(text).format('DD/MM/YYYY HH:mm')}</CellCreateTime>;
         },
       },
     ];
