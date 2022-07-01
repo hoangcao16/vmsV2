@@ -5,10 +5,10 @@ import permissionCheck from '@/utils/PermissionCheck';
 import TableUtils from '@/utils/TableHelper';
 import { ClusterOutlined } from '@ant-design/icons';
 import { EditableProTable } from '@ant-design/pro-table';
-import { AutoComplete, Button, Form, Space, Empty } from 'antd';
+import { AutoComplete, Button, Empty, Form, Space } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import { ContainerFilter } from '../../style';
 import AddEditUserRole from './AddEditUserRole';
@@ -36,6 +36,16 @@ function UserRole({ dispatch, list, metadata, loading }) {
   };
   const onClose = () => {
     setOpenDrawer(false);
+    form.setFieldsValue({ searchValue: '' });
+    setSearch('');
+    dispatch({
+      type: 'userRole/fetchAllUserRole',
+      payload: {
+        filter: '',
+        page: 1,
+        size: 10,
+      },
+    });
   };
 
   const showDrawerAddUserRole = (record) => {
@@ -138,7 +148,7 @@ function UserRole({ dispatch, list, metadata, loading }) {
                   <ContainerFilter>
                     <Form className="" name="basic" autoComplete="off" form={form}>
                       <div className="collapse-filter">
-                        <MSFormItem type="input" minLength={5} maxLength={255} name="searchValue">
+                        <MSFormItem type="input" maxLength={255} name="searchValue">
                           <AutoComplete
                             placeholder={intl.formatMessage({
                               id: 'pages.setting-user.list-user.search-by-name',

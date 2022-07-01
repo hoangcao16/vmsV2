@@ -276,7 +276,6 @@ function AddEditUser({
                       })}
                       type="input"
                       name="name"
-                      minLength={5}
                       maxLength={255}
                       required={true}
                     >
@@ -337,7 +336,6 @@ function AddEditUser({
                       })}
                       type="input"
                       name="position"
-                      minLength={5}
                       maxLength={255}
                       required={true}
                     >
@@ -463,7 +461,6 @@ function AddEditUser({
                       label="Email"
                       type="email"
                       name="email"
-                      minLength={5}
                       maxLength={255}
                       required={true}
                       {...layoutLong}
@@ -524,7 +521,6 @@ function AddEditUser({
                       })}
                       type="input"
                       name="unit"
-                      minLength={5}
                       maxLength={255}
                       required={true}
                     >

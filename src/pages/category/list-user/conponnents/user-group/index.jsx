@@ -136,7 +136,7 @@ function UserGroup({ dispatch, list, metadata, loading }) {
                   <ContainerFilter>
                     <Form className="" name="basic" autoComplete="off" form={form}>
                       <div className="collapse-filter">
-                        <MSFormItem type="input" minLength={5} maxLength={255} name="searchValue">
+                        <MSFormItem type="input" maxLength={255} name="searchValue">
                           <AutoComplete
                             placeholder={intl.formatMessage({
                               id: 'pages.setting-user.list-user.search-by-name',

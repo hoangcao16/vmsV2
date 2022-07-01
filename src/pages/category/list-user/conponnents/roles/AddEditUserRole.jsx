@@ -5,7 +5,6 @@ import { CloseOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Popconfirm, Row, Space, Tooltip } from 'antd';
 import { connect } from 'dva';
 import { isEmpty } from 'lodash';
-import React from 'react';
 import { useIntl } from 'umi';
 import TableRoleCameraPermission from './camera-table/TableRoleCameraPermission';
 import TableRoleGroupCameraPermission from './group-camera-table/TableRoleGroupCameraPermission';
@@ -112,7 +111,6 @@ function AddEditUserRole({ dispatch, onClose, openDrawer, selectedRecord, handle
                 })}
                 type="input"
                 name="name"
-                minLength={5}
                 maxLength={255}
                 required={true}
               >
@@ -139,7 +137,6 @@ function AddEditUserRole({ dispatch, onClose, openDrawer, selectedRecord, handle
                 })}
                 type="input"
                 name="description"
-                minLength={5}
                 maxLength={255}
                 required={true}
               >
