@@ -125,6 +125,7 @@ const GridPanel = ({
                             camera={camera}
                             slotIndex={camera?.slot}
                             uuid={camera?.uuid}
+                            layoutIndex={index}
                           />
                           {/* )} */}
                         </GridItemContent>

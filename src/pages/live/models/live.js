@@ -42,10 +42,8 @@ export default {
       return { ...state, speedVideo: payload };
     },
     closeCamera(state, { payload }) {
-      const cameraIndex = state.grids.findIndex((grid) => grid.uuid === payload.uuid);
-
-      if (cameraIndex && cameraIndex !== -1) {
-        state.grids[cameraIndex] = {
+      if (payload) {
+        state.grids[payload] = {
           id: '',
           uuid: '',
           name: '',

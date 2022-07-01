@@ -16,7 +16,7 @@ const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
   const intl = useIntl();
   const cameraStreaming = listStreaming[cameraIndex];
   const [dchanel, setDchanel] = useState(null);
-
+  const [pconnect, setPconnect] = useState(null);
   const closeRTCPeerConnection = (slotIdx) => {
     console.log('closeRTCPeerConnection');
     // CLOSE STREAM
@@ -24,9 +24,8 @@ const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
     if (pcLstTmp?.pc) {
       pcLstTmp?.pc?.close();
     }
-    if (dchanel) {
-      dchanel?.close();
-    }
+    dchanel && dchanel?.close();
+    pconnect && pconnect?.close();
   };
   const reconnectCamera = (camUuid, mode) => {
     setTimeout(() => {
@@ -157,6 +156,7 @@ const CamLiveItem = ({ dispatch, cameraIndex, listStreaming }) => {
         .catch((e) => console.log(e))
         .finally(() => {});
       setDchanel(dc);
+      setPconnect(pc);
     }
   };
   const closeCamera = (e) => {

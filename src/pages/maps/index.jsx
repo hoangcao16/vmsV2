@@ -45,6 +45,7 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
   const [cameraOnMap, setCameraOnMap] = useState([]);
   const streamingPopupRef = useRef(null);
   const [dchanel, setDchanel] = useState(null);
+  const [pconnect, setPconnect] = useState(null);
   const zoom = 13;
   useEffect(() => {
     dispatch({
@@ -63,9 +64,8 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
     if (pcLstTmp?.pc) {
       pcLstTmp?.pc?.close();
     }
-    if (dchanel) {
-      dchanel?.close();
-    }
+    dchanel && dchanel?.close();
+    pconnect && pconnect?.close();
   };
   const reconnectCamera = (camUuid, mode) => {
     setTimeout(() => {
@@ -179,6 +179,7 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
         .catch((e) => console.log(e))
         .finally(() => {});
       setDchanel(dc);
+      setPconnect(pc);
     }
   };
   const closeCamera = (cameraUuid) => {
@@ -445,10 +446,6 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
       popupAttachMarkerRef.current = e.target;
       data && startCamera(data, 'webrtc');
     });
-    popup.on('close', () => {
-      console.log('close camera popup');
-      closeRTCPeerConnection();
-    });
     el.addEventListener('click', (e) => {
       if (markerTargetRef.current && markerTargetRef.current != e.target) {
         handleClosePopup();
@@ -536,7 +533,10 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
       <MapHeader>
         <div className="map-header-left">{intl.formatMessage({ id: 'menu.map' })}</div>
         <div className="map-header-right">
-          <Button onClick={hanldeOpenCameraAIDrawer}>
+          <Button
+            onClick={hanldeOpenCameraAIDrawer}
+            type={type === 'cameraAI' && isOpenCameraListDrawer ? 'primary' : 'default'}
+          >
             <UnorderedListOutlined />
             {intl.formatMessage(
               { id: 'view.user.detail_list.group_user_list' },
@@ -546,14 +546,21 @@ const Maps = ({ dispatch, metadata, list, closeDrawerState, type, isOpenCameraLi
               },
             )}
           </Button>
-          <Button className="middle-button" onClick={hanldeOpenAdminisUnitDrawer}>
+          <Button
+            className="middle-button"
+            onClick={hanldeOpenAdminisUnitDrawer}
+            type={type === 'adminisUnit' && isOpenCameraListDrawer ? 'primary' : 'default'}
+          >
             <UnorderedListOutlined />
             {intl.formatMessage(
               { id: 'view.map.camera_list' },
               { cam: intl.formatMessage({ id: 'view.category.administrative_unit' }) },
             )}
           </Button>
-          <Button onClick={hanldeOpenCameraDrawer}>
+          <Button
+            onClick={hanldeOpenCameraDrawer}
+            type={type === 'camera' && isOpenCameraListDrawer ? 'primary' : 'default'}
+          >
             <UnorderedListOutlined />
             {intl.formatMessage(
               { id: 'view.map.camera_list' },
