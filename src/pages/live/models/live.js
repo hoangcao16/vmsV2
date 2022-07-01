@@ -50,9 +50,7 @@ export default {
         };
       }
 
-      const newScreen = {
-        ...state.grids,
-      };
+      const newScreen = [...state.grids];
 
       return { ...state, grids: newScreen };
     },
