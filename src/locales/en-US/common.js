@@ -259,7 +259,7 @@ export default {
   'view.report.please_choose_chart_type': 'Please choose chart type',
   'view.report.type_violation': 'Type of violation',
   'view.report.to': 'To',
-  'view.report.in_system': 'In system',
+  'view.report.in_system': 'Inside the system',
   'view.report.leader': 'Leader',
   'view.report.email_not_valid': "Please fill in valid email, separate by ','",
   'view.report.sent': 'Sent',

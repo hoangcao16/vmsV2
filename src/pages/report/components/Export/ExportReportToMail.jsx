@@ -4,7 +4,7 @@ import ReportApi from '@/services/report/ReportApi';
 import UserApi from '@/services/user/UserApi';
 import getCurrentLocale from '@/utils/Locale';
 import { CloseOutlined, SendOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Modal, Radio, Select } from 'antd';
+import { Button, Form, Input, Modal, Radio, Select, Tooltip } from 'antd';
 import { connect } from 'dva';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -92,7 +92,7 @@ const ExportReportToMail = (props) => {
 
   const renderHeader = (dataType) => {
     let name = intl.formatMessage({
-      id: 'pages.report.export.exportReport',
+      id: 'pages.report.export.sentReport',
     });
     return <ModalTitle>{name}</ModalTitle>;
   };
@@ -133,7 +133,12 @@ const ExportReportToMail = (props) => {
   return (
     <>
       <div onClick={showModal}>
-        <SendOutlined />
+        <Tooltip
+          placement="left"
+          title={intl.formatMessage({ id: 'pages.report.export.sentReport' })}
+        >
+          <SendOutlined />
+        </Tooltip>
       </div>
       <Modal
         title={renderHeader(dataType)}
@@ -156,7 +161,7 @@ const ExportReportToMail = (props) => {
             <Radio.Group onChange={onChange} value={chooseEmail}>
               <Radio value={true}>
                 {intl.formatMessage({
-                  id: 'view.penaltyTicket.outside-the-system',
+                  id: 'view.report.in_system',
                 })}
               </Radio>
               <Radio value={false}>
