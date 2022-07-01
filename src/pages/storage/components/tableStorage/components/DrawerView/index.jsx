@@ -170,7 +170,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
       </>
     );
   };
-
+  console.log(data);
   const handleDeleteFile = () => {
     console.log('data', data);
     if (nameSpace === DAILY_ARCHIVE_NAMESPACE || data.tableName === 'file') {
@@ -288,24 +288,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
       params = Object.assign({ ...params, eventUuid: event.uuid, eventName: event.name });
     }
 
-    // if (!data.hasOwnProperty('tableName') || data.tableName === 'file') {
-    //   // file
-    //   params = Object.assign({ ...params, tableName: 'file' });
-
-    //   eventFilesApi
-    //     .updateFile(params, params.uuid)
-    //     .then((res) => {
-    //       notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
-    //       handleRefresh(res.payload);
-    //     })
-    //     .catch((err) => {
-    //       notify('error', 'noti.archived_file', 'noti.ERROR');
-    //     });
-
-    //   return;
-    // }
-
-    if (nameSpace === DAILY_ARCHIVE_NAMESPACE) {
+    if (data.hasOwnProperty('tableName') && data.tableName === 'file') {
       // file
       params = Object.assign({ ...params, tableName: 'file' });
 
@@ -313,16 +296,16 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
         .updateFile(params, params.uuid)
         .then((res) => {
           notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
-          handleRefresh(res.payload);
+          handleRefresh({ ...res.payload, tableName: 'file' });
         })
         .catch((err) => {
-          console.log(err);
+          notify('error', 'noti.archived_file', 'noti.ERROR');
         });
 
       return;
     }
 
-    if (nameSpace === CAPTURED_NAMESPACE || nameSpace === EVENT_FILES_NAMESPACE) {
+    if (data.hasOwnProperty('tableName') || data.tableName === 'event_file') {
       // event_file
       params = Object.assign({
         ...params,
@@ -334,7 +317,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
         .then((res) => {
           // handleRefresh(res.payload);
           // not found any playback when call api accept request,
-          handleRefresh({ ...res.payload, diskId: 2 });
+          handleRefresh({ ...res.payload, diskId: 2, tableName: 'event_file' });
           notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
         })
         .catch((err) => {
@@ -343,21 +326,62 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
       return;
     }
 
-    if (nameSpace === IMPORTANT_NAMESPACE) {
-      eventFilesApi
-        .updateFile(params, params.uuid)
-        .then((res) => {
-          // handleRefresh(res.payload);
-          // not found any playback when call api accept request,
+    //
+    if (!data.hasOwnProperty('tableName')) {
+      if (nameSpace === DAILY_ARCHIVE_NAMESPACE) {
+        // file
+        params = Object.assign({ ...params, tableName: 'file' });
 
-          handleRefresh({ ...res.payload, diskId: 2 });
-          notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
-        })
-        .catch((err) => {
-          console.log(err);
+        eventFilesApi
+          .updateFile(params, params.uuid)
+          .then((res) => {
+            notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
+            handleRefresh({ ...res.payload, tableName: 'file' });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
+        return;
+      }
+
+      if (nameSpace === CAPTURED_NAMESPACE || nameSpace === EVENT_FILES_NAMESPACE) {
+        // event_file
+        params = Object.assign({
+          ...params,
+          tableName: 'event_file',
         });
 
-      return;
+        eventFilesApi
+          .updateEventFile(params, params.uuid)
+          .then((res) => {
+            // handleRefresh(res.payload);
+            // not found any playback when call api accept request,
+            handleRefresh({ ...res.payload, diskId: 2, tableName: 'event_file' });
+            notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        return;
+      }
+
+      if (nameSpace === IMPORTANT_NAMESPACE) {
+        eventFilesApi
+          .updateEventFile(params, params.uuid)
+          .then((res) => {
+            // handleRefresh(res.payload);
+            // not found any playback when call api accept request,
+
+            handleRefresh({ ...res.payload, diskId: 2, tableName: 'event_file' });
+            notify('success', 'noti.archived_file', 'noti.successfully_edit_file');
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
+        return;
+      }
     }
   };
 
@@ -653,7 +677,7 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
 
           {(nameSpace === CAPTURED_NAMESPACE ||
             nameSpace === EVENT_FILES_NAMESPACE ||
-            nameSpace === IMPORTANT_NAMESPACE) && (
+            (nameSpace === IMPORTANT_NAMESPACE && data?.tableName === 'event_file')) && (
             <div className="detailInfo">
               <div className="detailInfo-title">
                 {intl.formatMessage({
