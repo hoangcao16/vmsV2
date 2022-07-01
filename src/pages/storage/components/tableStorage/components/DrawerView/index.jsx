@@ -104,6 +104,8 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
     dataSelected.eventUuid ? dataSelected.eventUuid : null,
   );
 
+  const [loadingDownload, setLoadingDownload] = useState(false);
+
   const saveUrlSnapshot = (url) => {
     setUrlSnapshot(url);
   };
@@ -1165,6 +1167,26 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, nameSpace]);
 
+  useEffect(() => {
+    if (nameSpace === EVENT_AI_NAMESPACE && data.videoUrl) {
+      setLoadingDownload(true);
+      ExportEventFileApi.downloadAIIntegrationFile(data?.uuid, 'Video.mp4')
+        .then((result) => {
+          const blob = new Blob([result], { type: 'octet/stream' });
+          setVideoErrorURL({
+            id: 'video',
+            type: 'mp4',
+            fileName: 'Video.mp4',
+            uuid: detailAI?.uuid,
+            url: URL.createObjectURL(blob),
+          });
+        })
+        .finally(() => {
+          setLoadingDownload(false);
+        });
+    }
+  }, [nameSpace]);
+
   return (
     <MSCustomizeDrawerStyled
       title={renderTitle()}
@@ -1269,15 +1291,52 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
           </Panel>
         </CollapseStyled>
 
-        <VideoPlayer
-          data={data}
-          nameSpace={nameSpace}
-          tracingList={tracingList}
-          saveUrlSnapshot={saveUrlSnapshot}
-          saveFileDownloadFileName={saveFileDownloadFileName}
-          handleRefresh={handleRefresh}
-        />
+        {/* render video, image */}
+        {nameSpace !== EVENT_AI_NAMESPACE && (
+          <VideoPlayer
+            data={data}
+            nameSpace={nameSpace}
+            tracingList={tracingList}
+            saveUrlSnapshot={saveUrlSnapshot}
+            saveFileDownloadFileName={saveFileDownloadFileName}
+            handleRefresh={handleRefresh}
+          />
+        )}
 
+        {nameSpace === EVENT_AI_NAMESPACE && data.videoUrl === '' && (
+          <VideoPlayer
+            data={data}
+            nameSpace={nameSpace}
+            tracingList={tracingList}
+            saveUrlSnapshot={saveUrlSnapshot}
+            saveFileDownloadFileName={saveFileDownloadFileName}
+            handleRefresh={handleRefresh}
+          />
+        )}
+
+        {nameSpace === EVENT_AI_NAMESPACE && (
+          <div>
+            {loadingDownload ? (
+              <Spin style={{ margin: '0px auto', width: '100%' }} />
+            ) : (
+              <div>
+                <video
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    padding: '12px',
+                  }}
+                  loop
+                  autoPlay
+                >
+                  <source src={videoErrorURL?.url} type="video/mp4" />
+                </video>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/*  */}
         {nameSpace === EVENT_AI_NAMESPACE && (
           <DrawerTicket
             imageViolate={imageViolate}

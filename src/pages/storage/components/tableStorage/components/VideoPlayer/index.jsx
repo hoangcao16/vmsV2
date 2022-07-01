@@ -150,6 +150,12 @@ function VideoPlayer({
   };
 
   const playEventFile = async (row) => {
+    if (nameSpace === EVENT_AI_NAMESPACE) {
+      if (!data.videoUrl || data.videoUrl === '') {
+        return;
+      }
+    }
+
     setUrlVideoTimeline(null);
     let user = reactLocalStorage.getObject('user_permissions', null);
     if (user !== undefined && user !== null) {
