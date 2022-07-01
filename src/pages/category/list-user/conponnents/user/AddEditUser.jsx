@@ -27,14 +27,14 @@ import {
 import { connect } from 'dva';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'umi';
 import { v4 as uuidV4 } from 'uuid';
 import './AddEditUser.less';
 import TableCameraPermission from './camera-table/TableCameraPermission';
 import TableGroupCameraPermission from './group-camera-table/TableGroupCameraPermission';
 import SettingPermissionUser from './SettingPermissionUser';
-import { StyledDragger } from './style';
+import { StyledDragger, StyledPhone } from './style';
 const { TabPane } = Tabs;
 
 const TABS_SELECTED = {
@@ -54,6 +54,7 @@ function AddEditUser({
   handleDeleteUser,
   selectedRecord,
   userAddingUuid,
+  list,
 }) {
   const dateFormat = 'DD/MM/YYYY';
   const intl = useIntl();
@@ -63,6 +64,16 @@ function AddEditUser({
   );
   const [keyActive, setKeyActive] = useState(TABS_SELECTED.INFO);
   const [isLoading, setLoading] = useState(false);
+  const emailRef = useRef(null);
+
+  useEffect(() => {
+    dispatch({
+      type: 'user/fetchAllUser',
+      payload: {
+        page: 1,
+      },
+    });
+  }, []);
 
   const disabledDate = (current) => {
     // Can not select days before today and today
@@ -113,18 +124,30 @@ function AddEditUser({
       date_of_birth: moment(values?.date_of_birth).format('DD-MM-YYYY'),
       avatar_file_name: avatarFileName,
     };
-
+    let checkEmail;
     if (isEmpty(selectedRecord)) {
-      dispatch({
-        type: 'user/create',
-        payload: payload,
-      });
-      setKeyActive(TABS_SELECTED.PERMISSION);
+      checkEmail = list.some((item) => item?.email === payload?.email);
     } else {
-      dispatch({
-        type: 'user/patch',
-        payload: { id: selectedRecord?.uuid, values: { ...payload } },
-      });
+      const listEdit = list.filter((item) => item?.uuid !== selectedRecord?.uuid);
+      checkEmail = listEdit.some((item) => item?.email === payload?.email);
+    }
+    if (checkEmail) {
+      notify('error', { id: 'view.user.detail_list.fail' }, 'error.AccountAlreadyExists');
+      emailRef.current.focus();
+    } else {
+      if (isEmpty(selectedRecord)) {
+        dispatch({
+          type: 'user/create',
+          payload: payload,
+        });
+        setKeyActive(TABS_SELECTED.PERMISSION);
+      } else {
+        dispatch({
+          type: 'user/patch',
+          payload: { id: selectedRecord?.uuid, values: { ...payload } },
+        });
+        onClose();
+      }
     }
 
     // onClose();
@@ -356,7 +379,7 @@ function AddEditUser({
                   </Form.Item>
                 </Col>
                 <Col span={12} className="pb-1">
-                  <Col span={24}>
+                  <StyledPhone span={24}>
                     <Form.Item
                       name={['phone']}
                       {...layoutLong}
@@ -364,9 +387,9 @@ function AddEditUser({
                         id: 'pages.setting-user.list-user.phone',
                       })}
                       rules={[
-                        ({ getFieldValue }) => ({
+                        () => ({
                           validator(rule, value) {
-                            const valiValue = getFieldValue(['phone']);
+                            const valiValue = String(value);
 
                             if (!valiValue.startsWith('0')) {
                               if (valiValue.length < 9 && valiValue.length > 0) {
@@ -409,7 +432,7 @@ function AddEditUser({
                         }}
                       />
                     </Form.Item>
-                  </Col>
+                  </StyledPhone>
                   <Col span={24}>
                     <Form.Item
                       {...layoutLong}
@@ -447,6 +470,7 @@ function AddEditUser({
                     >
                       <Input
                         autoComplete="new-password"
+                        ref={emailRef}
                         onBlur={(e) => {
                           form.setFieldsValue({
                             email: e.target.value.trim(),
@@ -542,10 +566,11 @@ function AddEditUser({
 }
 
 function mapStateToProps(state) {
-  const { userAddingUuid } = state.user;
+  const { userAddingUuid, list } = state.user;
 
   return {
     userAddingUuid,
+    list,
   };
 }
 
