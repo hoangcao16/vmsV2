@@ -2,12 +2,15 @@ import { notify } from '@/components/Notify';
 import ReportApi from '@/services/report/ReportApi';
 import getCurrentLocale from '@/utils/Locale';
 import { ExportOutlined } from '@ant-design/icons';
+import { Tooltip } from 'antd';
 import { connect } from 'dva';
 import fileDownload from 'js-file-download';
 import moment from 'moment';
+import { useIntl } from 'umi';
 import React from 'react';
 
 const ExportReport = (props) => {
+  const intl = useIntl();
   const handleExport = async () => {
     const params = {
       ...props?.filterParams,
@@ -31,9 +34,12 @@ const ExportReport = (props) => {
   };
 
   return (
-    <div>
+    <Tooltip
+      placement="left"
+      title={intl.formatMessage({ id: 'pages.report.export.exportReprot' })}
+    >
       <ExportOutlined onClick={handleExport} />
-    </div>
+    </Tooltip>
   );
 };
 
