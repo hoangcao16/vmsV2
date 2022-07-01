@@ -9,7 +9,7 @@ import {
   RightOutlined,
   ScanOutlined,
 } from '@ant-design/icons';
-import { Button, Col, Form, Input, Row, Select, Tooltip, Empty } from 'antd';
+import { Button, Col, Empty, Form, Input, Row, Select, Tooltip } from 'antd';
 import { connect } from 'dva';
 import debounce from 'lodash/debounce';
 import { useEffect, useState } from 'react';
@@ -404,6 +404,7 @@ const CameraList = ({
                     // ]}
                   >
                     <Input.Search
+                      allowClear
                       placeholder={intl.formatMessage({
                         id: 'view.storage.search_daily_archive',
                       })}
@@ -532,6 +533,7 @@ const CameraList = ({
                           name="address"
                         >
                           <Input
+                            allowClear
                             placeholder={intl.formatMessage({ id: 'view.storage.street' })}
                             onChange={debounce(onChangeAddress, 1500)}
                             maxLength={255}

@@ -130,6 +130,7 @@ const AdministrativeUnit = ({ dispatch, list, metadata, loading }) => {
               <Form className="bg-grey" form={form} layout="horizontal" autoComplete="off">
                 <Form.Item name="searchValue">
                   <Input.Search
+                    allowClear
                     maxLength={255}
                     placeholder={intl.formatMessage(
                       { id: 'view.category.plsEnter_administrative_unit_name' },

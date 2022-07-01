@@ -100,6 +100,7 @@ const CameraList = ({ dispatch, filters, cameras: listCameras = [], ...props }) 
           <StyledSearch size={8}>
             <Form.Item name="name" noStyle>
               <Input.Search
+                allowClear
                 maxLength={255}
                 placeholder={intl.formatMessage({
                   id: 'placeholder-camera',

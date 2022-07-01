@@ -264,6 +264,7 @@ const GroupCamera = ({ dispatch, groupCameraParentOptions }) => {
         <Col span={10}>
           <CameraGroupSearch>
             <Search
+              allowClear
               placeholder={intl.formatMessage({
                 id: 'view.map.search',
               })}

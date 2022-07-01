@@ -205,17 +205,6 @@ const CleanSetting = ({ list, dispatch, loading }) => {
                           ? cleanSettingData?.configCleanFile[0]?.time
                           : ''
                       }
-                      onBlur={(e) => {
-                        form.setFieldsValue({
-                          setting: e.target.value.trim(),
-                        });
-                      }}
-                      onPaste={(e) => {
-                        e.preventDefault();
-                        form.setFieldsValue({
-                          setting: e.clipboardData.getData('text').trim(),
-                        });
-                      }}
                     />
                   </Tooltip>
                 </Col>
@@ -257,17 +246,6 @@ const CleanSetting = ({ list, dispatch, loading }) => {
                           ? cleanSettingData?.configCleanFile[1]?.time
                           : ''
                       }
-                      onBlur={(e) => {
-                        form.setFieldsValue({
-                          cleanSetting: e.target.value.trim(),
-                        });
-                      }}
-                      onPaste={(e) => {
-                        e.preventDefault();
-                        form.setFieldsValue({
-                          cleanSetting: e.clipboardData.getData('text').trim(),
-                        });
-                      }}
                     />
                   </Tooltip>
                 </Col>
@@ -309,17 +287,6 @@ const CleanSetting = ({ list, dispatch, loading }) => {
                           ? cleanSettingData?.configCleanFile[2]?.time
                           : ''
                       }
-                      onBlur={(e) => {
-                        form.setFieldsValue({
-                          dataSetting: e.target.value.trim(),
-                        });
-                      }}
-                      onPaste={(e) => {
-                        e.preventDefault();
-                        form.setFieldsValue({
-                          dataSetting: e.clipboardData.getData('text').trim(),
-                        });
-                      }}
                     />
                   </Tooltip>
                 </Col>

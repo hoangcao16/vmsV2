@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Empty } from 'antd';
+import { Button, Empty, Form, Input } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -120,6 +120,7 @@ const TableTags = ({ dispatch, listTags, metadataTags, type, loading }) => {
             <Form className="bg-grey" form={form} layout="horizontal" autoComplete="off">
               <Form.Item name="searchValue">
                 <Input.Search
+                  allowClear
                   className="search-camera-category"
                   maxLength={255}
                   placeholder={intl.formatMessage(
