@@ -1303,18 +1303,9 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
           />
         )}
 
-        {nameSpace === EVENT_AI_NAMESPACE && data.videoUrl === '' && (
-          <VideoPlayer
-            data={data}
-            nameSpace={nameSpace}
-            tracingList={tracingList}
-            saveUrlSnapshot={saveUrlSnapshot}
-            saveFileDownloadFileName={saveFileDownloadFileName}
-            handleRefresh={handleRefresh}
-          />
-        )}
-
-        {nameSpace === EVENT_AI_NAMESPACE && (
+        {nameSpace === EVENT_AI_NAMESPACE &&
+        data.hasOwnProperty('videoUrl') &&
+        data.videoUrl !== '' ? (
           <div>
             {loadingDownload ? (
               <Spin style={{ margin: '0px auto', width: '100%' }} />
@@ -1334,6 +1325,15 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
               </div>
             )}
           </div>
+        ) : (
+          <VideoPlayer
+            data={data}
+            nameSpace={nameSpace}
+            tracingList={tracingList}
+            saveUrlSnapshot={saveUrlSnapshot}
+            saveFileDownloadFileName={saveFileDownloadFileName}
+            handleRefresh={handleRefresh}
+          />
         )}
 
         {/*  */}
