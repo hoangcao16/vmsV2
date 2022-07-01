@@ -199,7 +199,28 @@ const AddEditCameraCategory = ({
                 maxLength={255}
                 required={true}
               >
-                <Input />
+                <Input
+                  onBlur={(e) => {
+                    form.setFieldsValue(() => {
+                      if (type === 'camera_tags') {
+                        return { key: e.target.value.trim() };
+                      }
+                      return { name: e.target.value.trim() };
+                    });
+                  }}
+                  placeholder={intl.formatMessage({
+                    id: 'view.pages.email',
+                  })}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue(() => {
+                      if (type === 'camera_tags') {
+                        return { key: e.clipboardData.getData('text').trim() };
+                      }
+                      return { name: e.clipboardData.getData('text').trim() };
+                    });
+                  }}
+                />
               </MSFormItem>
             </Col>
           </Row>

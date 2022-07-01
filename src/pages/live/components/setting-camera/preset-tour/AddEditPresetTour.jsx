@@ -194,8 +194,21 @@ const AddEditPresetTour = ({
       <Wrapper>
         <span>Tên Preset tour:</span>
         <Form form={form} initialValues={selectedPresetTour ?? {}}>
-          <Form.Item name="name">
-            <Input required />
+          <Form.Item name="name" maxLength={255}>
+            <Input
+              required
+              onBlur={(e) => {
+                form.setFieldsValue({
+                  name: e.target.value.trim(),
+                });
+              }}
+              onPaste={(e) => {
+                e.preventDefault();
+                form.setFieldsValue({
+                  name: e.clipboardData.getData('text').trim(),
+                });
+              }}
+            />
           </Form.Item>
         </Form>
         <TableWrapper>

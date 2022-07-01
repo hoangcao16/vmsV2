@@ -261,6 +261,18 @@ const AddEditAdministrativeUnit = ({
                           }),
                         },
                       )}
+                      maxLength={255}
+                      onBlur={(e) => {
+                        form.setFieldsValue({
+                          name: e.target.value.trim(),
+                        });
+                      }}
+                      onPaste={(e) => {
+                        e.preventDefault();
+                        form.setFieldsValue({
+                          name: e.clipboardData.getData('text').trim(),
+                        });
+                      }}
                     />
                   </MSFormItem>
                 </Col>
@@ -303,6 +315,18 @@ const AddEditAdministrativeUnit = ({
               >
                 <Input
                   placeholder={intl.formatMessage({ id: 'view.map.please_choose_location' })}
+                  maxLength={255}
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      address: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      address: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
                 />
               </MSFormItem>
             </Col>
@@ -389,6 +413,18 @@ const AddEditAdministrativeUnit = ({
                       }),
                     },
                   )}
+                  maxLength={255}
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      long_: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      long_: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
                 />
               </MSFormItem>
             </Col>
@@ -410,6 +446,18 @@ const AddEditAdministrativeUnit = ({
                       }),
                     },
                   )}
+                  maxLength={255}
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      lat_: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      lat_: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
                 />
               </MSFormItem>
             </Col>

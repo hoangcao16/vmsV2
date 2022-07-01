@@ -203,7 +203,19 @@ const AddEditZone = ({
                 maxLength={255}
                 required={true}
               >
-                <Input />
+                <Input
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      name: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      name: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
+                />
               </MSFormItem>
             </Col>
 
@@ -271,7 +283,19 @@ const AddEditZone = ({
                 maxLength={255}
                 required={true}
               >
-                <Input />
+                <Input
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      address: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      address: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
+                />
               </MSFormItem>
             </Col>
 
@@ -285,7 +309,19 @@ const AddEditZone = ({
                 maxLength={255}
                 required={true}
               >
-                <TextArea />
+                <TextArea
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      description: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      description: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
+                />
               </MSFormItem>
             </Col>
             <Col span={24}>

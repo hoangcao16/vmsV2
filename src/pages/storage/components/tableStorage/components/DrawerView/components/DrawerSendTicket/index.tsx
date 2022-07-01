@@ -159,7 +159,19 @@ function DrawerSendTicket({ isOpenView, handleCancel, handleOk, loadingSendEmail
               },
             ]}
           >
-            <Input />
+            <Input
+              onBlur={(e) => {
+                form.setFieldsValue({
+                  receiver: e.target.value.trim(),
+                });
+              }}
+              onPaste={(e) => {
+                e.preventDefault();
+                form.setFieldsValue({
+                  receiver: e.clipboardData.getData('text').trim(),
+                });
+              }}
+            />
           </Form.Item>
         )}
       </Form>

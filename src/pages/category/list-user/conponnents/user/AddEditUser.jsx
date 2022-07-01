@@ -257,7 +257,20 @@ function AddEditUser({
                       maxLength={255}
                       required={true}
                     >
-                      <Input autoComplete="new-password" />
+                      <Input
+                        autoComplete="new-password"
+                        onBlur={(e) => {
+                          form.setFieldsValue({
+                            name: e.target.value.trim(),
+                          });
+                        }}
+                        onPaste={(e) => {
+                          e.preventDefault();
+                          form.setFieldsValue({
+                            name: e.clipboardData.getData('text').trim(),
+                          });
+                        }}
+                      />
                     </MSFormItem>
                   </Col>
 
@@ -305,7 +318,20 @@ function AddEditUser({
                       maxLength={255}
                       required={true}
                     >
-                      <Input autoComplete="new-password" />
+                      <Input
+                        autoComplete="new-password"
+                        onBlur={(e) => {
+                          form.setFieldsValue({
+                            position: e.target.value.trim(),
+                          });
+                        }}
+                        onPaste={(e) => {
+                          e.preventDefault();
+                          form.setFieldsValue({
+                            position: e.clipboardData.getData('text').trim(),
+                          });
+                        }}
+                      />
                     </MSFormItem>
                   </Col>
                   <Form.Item
@@ -313,7 +339,20 @@ function AddEditUser({
                     name={['avatar_file_name']}
                     rules={[{ required: false }]}
                   >
-                    <Input type="hidden" />
+                    <Input
+                      type="hidden"
+                      onBlur={(e) => {
+                        form.setFieldsValue({
+                          ['avatar_file_name']: e.target.value.trim(),
+                        });
+                      }}
+                      onPaste={(e) => {
+                        e.preventDefault();
+                        form.setFieldsValue({
+                          ['avatar_file_name']: e.clipboardData.getData('text').trim(),
+                        });
+                      }}
+                    />
                   </Form.Item>
                 </Col>
                 <Col span={12} className="pb-1">
@@ -354,7 +393,21 @@ function AddEditUser({
                         },
                       ]}
                     >
-                      <Input type="number" autoComplete="new-password" />
+                      <Input
+                        type="number"
+                        autoComplete="new-password"
+                        onBlur={(e) => {
+                          form.setFieldsValue({
+                            ['phone']: e.target.value.trim(),
+                          });
+                        }}
+                        onPaste={(e) => {
+                          e.preventDefault();
+                          form.setFieldsValue({
+                            ['phone']: e.clipboardData.getData('text').trim(),
+                          });
+                        }}
+                      />
                     </Form.Item>
                   </Col>
                   <Col span={24}>
@@ -392,7 +445,20 @@ function AddEditUser({
                       required={true}
                       {...layoutLong}
                     >
-                      <Input autoComplete="new-password" />
+                      <Input
+                        autoComplete="new-password"
+                        onBlur={(e) => {
+                          form.setFieldsValue({
+                            email: e.target.value.trim(),
+                          });
+                        }}
+                        onPaste={(e) => {
+                          e.preventDefault();
+                          form.setFieldsValue({
+                            email: e.clipboardData.getData('text').trim(),
+                          });
+                        }}
+                      />
                     </MSFormItem>
                   </Col>
                   {isEmpty(selectedRecord) && (
@@ -408,7 +474,21 @@ function AddEditUser({
                         required={true}
                         {...layoutLong}
                       >
-                        <Input type="password" autoComplete="new-password" />
+                        <Input
+                          type="password"
+                          autoComplete="new-password"
+                          onBlur={(e) => {
+                            form.setFieldsValue({
+                              password: e.target.value.trim(),
+                            });
+                          }}
+                          onPaste={(e) => {
+                            e.preventDefault();
+                            form.setFieldsValue({
+                              password: e.clipboardData.getData('text').trim(),
+                            });
+                          }}
+                        />
                       </MSFormItem>
                     </Col>
                   )}
@@ -424,7 +504,20 @@ function AddEditUser({
                       maxLength={255}
                       required={true}
                     >
-                      <Input autoComplete="new-password" />
+                      <Input
+                        autoComplete="new-password"
+                        onBlur={(e) => {
+                          form.setFieldsValue({
+                            unit: e.target.value.trim(),
+                          });
+                        }}
+                        onPaste={(e) => {
+                          e.preventDefault();
+                          form.setFieldsValue({
+                            unit: e.clipboardData.getData('text').trim(),
+                          });
+                        }}
+                      />
                     </MSFormItem>
                   </Col>
                 </Col>

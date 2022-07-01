@@ -107,7 +107,19 @@ function AddEditPreset({ showDrawerAddEditPreset, cameraSelected, selectedPreset
                   required={true}
                   width={'100%'}
                 >
-                  <Input />
+                  <Input
+                    onBlur={(e) => {
+                      form.setFieldsValue({
+                        name: e.target.value.trim(),
+                      });
+                    }}
+                    onPaste={(e) => {
+                      e.preventDefault();
+                      form.setFieldsValue({
+                        name: e.clipboardData.getData('text').trim(),
+                      });
+                    }}
+                  />
                 </MSFormItem>
               </Col>
             </Row>

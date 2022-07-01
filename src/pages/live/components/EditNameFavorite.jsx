@@ -62,7 +62,7 @@ const EditNameFavorite = ({ visible, onClose, selectedRecord, list, dispatch, sc
         </Space>
       }
     >
-      <Card title={intl.formatMessage({ id: 'pages.live-mode.action.edit-favorite' })}>
+      <Card title={intl.formatMessage({ id: 'content.live-mode.action.edit-favorite' })}>
         <Form layout="vertical" form={form} onFinish={handleSubmit} initialValues={selectedRecord}>
           <Row gutter={24}>
             <Col span={24}>
@@ -92,6 +92,18 @@ const EditNameFavorite = ({ visible, onClose, selectedRecord, list, dispatch, sc
               >
                 <Input
                   placeholder={intl.formatMessage({ id: 'components.bookmark.enter_screen_name' })}
+                  maxLength={255}
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      name: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      name: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
                 />
               </MSFormItem>
             </Col>

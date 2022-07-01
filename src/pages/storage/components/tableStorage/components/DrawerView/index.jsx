@@ -668,9 +668,21 @@ function DrawerView({ isOpenView, dataSelected, onClose, state, nameSpace, dispa
             </div>
             <div className="detailInfo-content">
               <Input.TextArea
+                name="content"
                 className="detailInfo-content__note"
                 value={note}
                 onChange={handleChangeNote}
+                onBlur={(e) => {
+                  form.setFieldsValue({
+                    content: e.target.value.trim(),
+                  });
+                }}
+                onPaste={(e) => {
+                  e.preventDefault();
+                  form.setFieldsValue({
+                    content: e.clipboardData.getData('text').trim(),
+                  });
+                }}
               />
             </div>
           </div>

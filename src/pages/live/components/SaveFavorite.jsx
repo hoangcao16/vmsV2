@@ -102,6 +102,18 @@ const SaveFavorite = ({ visible, onClose, list, dispatch, gridType, grids }) => 
               >
                 <Input
                   placeholder={intl.formatMessage({ id: 'components.bookmark.enter_screen_name' })}
+                  maxLength={255}
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      name: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      name: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
                 />
               </MSFormItem>
             </Col>

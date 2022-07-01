@@ -109,7 +109,19 @@ const AddEditField = ({
                 maxLength={255}
                 required={true}
               >
-                <Input />
+                <Input
+                  onBlur={(e) => {
+                    form.setFieldsValue({
+                      name: e.target.value.trim(),
+                    });
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    form.setFieldsValue({
+                      name: e.clipboardData.getData('text').trim(),
+                    });
+                  }}
+                />
               </MSFormItem>
             </Col>
           </Row>

@@ -909,6 +909,8 @@ export default {
   'noti.fail.email': "Email field can't be empty",
   'noti.list-user.updateUserSuccess': 'User update successful',
   'noti.list-user.updateUserFailed': 'User update failed',
+  'placeholder-camera': 'Tag camera',
+  'content.live-mode.action.edit-favorite': 'Edit name screen request',
   //Ver2================================================================================================================================
   'noti.WARNING': 'WARNING',
 };

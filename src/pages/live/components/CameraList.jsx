@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { Scrollbars } from 'react-custom-scrollbars';
 import styled from 'styled-components';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage, useIntl } from 'umi';
 
 import FilterDrawer from './FilterDrawer';
 
@@ -32,6 +32,7 @@ const CameraItem = ({ item, index }) => {
 };
 
 const CameraList = ({ dispatch, filters, cameras: listCameras = [], ...props }) => {
+  const intl = useIntl();
   const [pagination, setPagination] = React.useState({
     page: 1,
     size: 20,
@@ -98,7 +99,24 @@ const CameraList = ({ dispatch, filters, cameras: listCameras = [], ...props }) 
         <Form form={form} layout="vertical" onFinish={handleSearch}>
           <StyledSearch size={8}>
             <Form.Item name="name" noStyle>
-              <Input.Search placeholder="Nhãn camera" onSearch={form.submit} />
+              <Input.Search
+                maxLength={255}
+                placeholder={intl.formatMessage({
+                  id: 'placeholder-camera',
+                })}
+                onSearch={form.submit}
+                onBlur={(e) => {
+                  form.setFieldsValue({
+                    name: e.target.value.trim(),
+                  });
+                }}
+                onPaste={(e) => {
+                  e.preventDefault();
+                  form.setFieldsValue({
+                    name: e.clipboardData.getData('text').trim(),
+                  });
+                }}
+              />
             </Form.Item>
             <Button
               type="primary"

@@ -230,6 +230,17 @@ const CameraListDrawer = ({
                   },
                 )}
                 onSearch={form.submit}
+                onBlur={(e) => {
+                  form.setFieldsValue({
+                    name: e.target.value.trim(),
+                  });
+                }}
+                onPaste={(e) => {
+                  e.preventDefault();
+                  form.setFieldsValue({
+                    name: e.clipboardData.getData('text').trim(),
+                  });
+                }}
               />
             </Form.Item>
             <Button
