@@ -1,4 +1,3 @@
-import { AI_SOURCE } from '@/constants/common';
 import request from '@/utils/request';
 
 const EventAiAPI = {
@@ -11,11 +10,12 @@ const EventAiAPI = {
   },
 
   getTracingEvents: (uuid, params) => {
-    let url = `/vms-ai/api/v1/ai-events/${uuid}`;
-    if (REACT_APP_AI_SOURCE === AI_SOURCE.PHILONG) {
-      url = `/vms-ai/api/v1/integration-ai-events/tracing-event/${uuid}`;
-    }
+    // let url = `/vms-ai/api/v1/ai-events/${uuid}`;
+    // if (REACT_APP_AI_SOURCE === AI_SOURCE.PHILONG) {
+    //   url = `/vms-ai/api/v1/integration-ai-events/tracing-event/${uuid}`;
+    // }
 
+    const url = `/vms-ai/api/v1/integration-ai-events/tracing-event/${uuid}`;
     return request.get(url, { params: params });
   },
 
@@ -28,11 +28,12 @@ const EventAiAPI = {
   },
 
   editInfoOfEvent: (uuid, params) => {
-    let url = `/vms-ai/api/v1/ai-events/${uuid}`;
-    if (REACT_APP_AI_SOURCE === AI_SOURCE.PHILONG) {
-      url = `/vms-ai/api/v1/integration-ai-events/${uuid}`;
-    }
+    // let url = `/vms-ai/api/v1/ai-events/${uuid}`;
+    // if (REACT_APP_AI_SOURCE === AI_SOURCE.PHILONG) {
+    //   url = `/vms-ai/api/v1/integration-ai-events/${uuid}`;
+    // }
 
+    const url = `/vms-ai/api/v1/integration-ai-events/${uuid}`;
     return request.put(url, params);
   },
 
@@ -41,10 +42,12 @@ const EventAiAPI = {
   },
 
   delete: (uuid) => {
-    let url = `/vms-ai/api/v1/ai-events/${uuid}`;
-    if (REACT_APP_AI_SOURCE === 'philong') {
-      url = `/vms-ai/api/v1/integration-ai-events/${uuid}`;
-    }
+    // let url = `/vms-ai/api/v1/ai-events/${uuid}`;
+    // if (REACT_APP_AI_SOURCE === 'philong') {
+    //   url = `/vms-ai/api/v1/integration-ai-events/${uuid}`;
+    // }
+
+    const url = `/vms-ai/api/v1/integration-ai-events/${uuid}`;
     return request.delete(url);
   },
 };

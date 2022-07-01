@@ -2,13 +2,13 @@ import Footer from '@/components/Footer';
 import AuthZApi from '@/services/authz/AuthZApi';
 import { GlobalOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { ProFormCheckbox } from '@ant-design/pro-form';
-import { Form, Input, message, Tabs, Button } from 'antd';
-import { useState, useEffect } from 'react';
+import { Button, Form, Input, message, Tabs } from 'antd';
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { FormattedMessage, history, SelectLang, useIntl, useModel } from 'umi';
 import ForgotPassword from './ForgotPassword';
 import styles from './index.less';
 import { BottomForm, StyledImg } from './style';
-import styled from 'styled-components';
 const Login = () => {
   const [userLoginState, setUserLoginState] = useState({});
   const [type, setType] = useState('account');
@@ -18,7 +18,7 @@ const Login = () => {
   const [remember, setRemember] = useState(false);
   const [form] = Form.useForm();
   useEffect(() => {
-    let loginInfo = localStorage.getItem('login_info');
+    let loginInfo = JSON.parse(localStorage.getItem('login_info'));
     if (loginInfo !== undefined && loginInfo !== null) {
       let email = loginInfo.email;
       let password = loginInfo.password;
