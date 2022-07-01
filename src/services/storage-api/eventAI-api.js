@@ -1,3 +1,4 @@
+import { AI_SOURCE } from '@/constants/common';
 import request from '@/utils/request';
 
 const EventAiAPI = {
@@ -11,7 +12,7 @@ const EventAiAPI = {
 
   getTracingEvents: (uuid, params) => {
     let url = `/vms-ai/api/v1/ai-events/${uuid}`;
-    if (REACT_APP_AI_SOURCE === 'philong') {
+    if (REACT_APP_AI_SOURCE === AI_SOURCE.PHILONG) {
       url = `/vms-ai/api/v1/integration-ai-events/tracing-event/${uuid}`;
     }
 
@@ -19,16 +20,16 @@ const EventAiAPI = {
   },
 
   getEventsByTrackingId: (trackingId) => {
-    return request.get(`/vms-ai/api/v1/ai-events/by-tracking/${trackingId}`);
+    return request.get(`/vms-ai/api/v1/integration-ai-events/tracing-event/${trackingId}`);
   },
 
-  // getEventsByTrackingId: (uuid) => {
-  //   return request.get(`/vms-ai/api/v1/ai-events/${uuid}`);
-  // },
+  getDetailEvent: (uuid) => {
+    return request.get(`/vms-ai/api/v1/ai-events/${uuid}`);
+  },
 
   editInfoOfEvent: (uuid, params) => {
     let url = `/vms-ai/api/v1/ai-events/${uuid}`;
-    if (REACT_APP_AI_SOURCE === 'philong') {
+    if (REACT_APP_AI_SOURCE === AI_SOURCE.PHILONG) {
       url = `/vms-ai/api/v1/integration-ai-events/${uuid}`;
     }
 
