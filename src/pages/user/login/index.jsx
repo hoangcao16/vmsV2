@@ -1,9 +1,9 @@
 import Footer from '@/components/Footer';
 import AuthZApi from '@/services/authz/AuthZApi';
 import { GlobalOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
-import { LoginForm, ProFormCheckbox } from '@ant-design/pro-form';
+import { ProFormCheckbox } from '@ant-design/pro-form';
 import { Form, Input, message, Tabs, Button } from 'antd';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FormattedMessage, history, SelectLang, useIntl, useModel } from 'umi';
 import ForgotPassword from './ForgotPassword';
 import styles from './index.less';
@@ -15,8 +15,22 @@ const Login = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
   const [openDrawer, setOpenDrawer] = useState(false);
   const intl = useIntl();
+  const [remember, setRemember] = useState(false);
   const [form] = Form.useForm();
-
+  useEffect(() => {
+    let loginInfo = localStorage.getItem('login_info');
+    if (loginInfo !== undefined && loginInfo !== null) {
+      let email = loginInfo.email;
+      let password = loginInfo.password;
+      form.setFieldsValue({
+        email: email,
+      });
+      form.setFieldsValue({
+        password: password,
+      });
+      setRemember(true);
+    }
+  }, []);
   const showDrawer = () => {
     setOpenDrawer(true);
   };
@@ -31,6 +45,15 @@ const Login = () => {
   };
   const handleSubmit = async (values) => {
     const data = form.getFieldValue();
+    if (remember) {
+      let loginInfo = {
+        email: data?.email,
+        password: data?.password,
+      };
+      localStorage.setItem('login_info', JSON.stringify(loginInfo));
+    } else {
+      localStorage.removeItem('login_info');
+    }
     try {
       const msg = await AuthZApi.login({ ...values, ...data, type });
 
@@ -61,7 +84,9 @@ const Login = () => {
       message.error(defaultLoginFailureMessage);
     }
   };
-
+  const handleRemember = (e) => {
+    setRemember(e.target.checked);
+  };
   const { status, type: loginType } = userLoginState;
   return (
     <div className={styles.container}>
@@ -140,7 +165,12 @@ const Login = () => {
                 />
               </Form.Item>
               <BottomForm>
-                <ProFormCheckbox noStyle name="autoLogin">
+                <ProFormCheckbox
+                  noStyle
+                  name="autoLogin"
+                  checked={remember}
+                  onChange={handleRemember}
+                >
                   <FormattedMessage id="pages.login.rememberMe" />
                 </ProFormCheckbox>
 
