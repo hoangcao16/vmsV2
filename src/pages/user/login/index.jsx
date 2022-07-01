@@ -168,10 +168,7 @@ const StyleContainer = styled.div`
   padding: 32px 0;
   max-width: 500px;
   min-width: 328px;
-  width: 328px;
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* align-items: center; */
+  width: 400px;
   margin: 0 auto;
   .ant-tabs-nav-wrap {
     justify-content: center;
@@ -188,6 +185,9 @@ const StyleContainer = styled.div`
         border-bottom-color: rgb(62, 65, 65);
       }
     }
+  }
+  .ant-tabs-tab {
+    font-size: 20px;
   }
 `;
 export default Login;

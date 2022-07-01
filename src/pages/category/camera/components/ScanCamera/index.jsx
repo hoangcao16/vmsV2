@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from 'dva';
 import { StyledDrawer } from './style';
-import { Space, Button, Form, Row, Col, Input, Select, Tooltip } from 'antd';
+import { Space, Button, Form, Row, Col, Input, Select, Tooltip, Empty } from 'antd';
 import ProTable from '@ant-design/pro-table';
 import { normalizeOptions } from '@/components/select/CustomSelect';
 import { useIntl } from 'umi';
@@ -264,6 +264,9 @@ const ScanCamera = ({
           headerTitle={intl.formatMessage({ id: 'view.camera.scannable_camera' })}
           dataSource={list}
           columns={columns}
+          locale={{
+            emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+          }}
           rowKey="ip"
           search={false}
           pagination={false}

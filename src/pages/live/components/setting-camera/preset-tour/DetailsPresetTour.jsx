@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Divider, Space, Table } from 'antd';
+import { Button, Divider, Space, Table, Empty } from 'antd';
 import styled from 'styled-components';
 import { useIntl } from 'umi';
 
@@ -108,6 +108,9 @@ function DetailsPresetTour({
       <Table
         loading={loading}
         columns={columns}
+        locale={{
+          emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+        }}
         dataSource={selectedPresetTour?.listPoint}
         pagination={{ pageSize: 10 }}
       />

@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Empty } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -111,6 +111,9 @@ const TableZone = ({ dispatch, list, metadata, loading }) => {
         rowKey="id"
         search={false}
         dataSource={list}
+        locale={{
+          emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+        }}
         columns={columns}
         options={false}
         loading={loading}

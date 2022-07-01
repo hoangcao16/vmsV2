@@ -2,9 +2,8 @@ import MSCustomizeDrawer from '@/components/Drawer';
 import { STORAGE } from '@/constants/common';
 import TableUtils from '@/utils/TableHelper';
 import ProTable from '@ant-design/pro-table';
-import { Button, Space, Tag } from 'antd';
+import { Button, Space, Tag, Empty } from 'antd';
 import { connect } from 'dva';
-import React from 'react';
 import { useIntl } from 'umi';
 function AddCameraPermission({ dispatch, listCameraNotPermission, openDrawer, onClose }) {
   const intl = useIntl();
@@ -127,6 +126,11 @@ function AddCameraPermission({ dispatch, listCameraNotPermission, openDrawer, on
               })}
               rowKey="uuid"
               search={false}
+              locale={{
+                emptyText: (
+                  <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />
+                ),
+              }}
               dataSource={listCameraNotPermission}
               columns={columns}
               rowSelection={{}}

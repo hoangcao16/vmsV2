@@ -1,5 +1,5 @@
 import { filterOption, normalizeOptions } from '@/components/select/CustomSelect';
-import { Button, Select, Tooltip } from 'antd';
+import { Button, Select, Tooltip, Empty } from 'antd';
 import _ from 'lodash';
 import { findIndex } from 'lodash-es';
 import moment from 'moment';
@@ -188,6 +188,9 @@ const TableEventFile = (props) => {
         rowKey={'uuid'}
         search={false}
         options={false}
+        locale={{
+          emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+        }}
         dataSource={dataList}
         columns={eventFileColumns}
         onRow={(record) => {

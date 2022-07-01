@@ -1,4 +1,4 @@
-import { AutoComplete, Form, Input, Tag } from 'antd';
+import { Form, Input, Tag, Empty } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -133,6 +133,9 @@ const TableCamproxy = ({ dispatch, list, metadata, loading }) => {
         dataSource={list}
         columns={columns}
         options={false}
+        locale={{
+          emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+        }}
         loading={loading}
         onRow={(record) => {
           return {

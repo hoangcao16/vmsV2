@@ -1,5 +1,5 @@
 import ReportApi from '@/services/report/ReportApi';
-import { Table } from 'antd';
+import { Table, Empty } from 'antd';
 import { connect } from 'dva';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
@@ -235,6 +235,9 @@ const GeneralTable = (props) => {
       <Table
         dataSource={parseData}
         columns={columns}
+        locale={{
+          emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+        }}
         scroll={{ x: 1000, y: 500 }}
         pagination={{
           showQuickJumper: true,

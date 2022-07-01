@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { CloseOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
 import ProTable, { EditableProTable } from '@ant-design/pro-table';
-import { Button, Card, Col, Form, Input, Row, Space } from 'antd';
+import { Button, Card, Col, Form, Input, Row, Space, Empty } from 'antd';
 import { connect } from 'dva';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect, useState } from 'react';
@@ -432,6 +432,11 @@ const GroupCameraDrawer = ({
             value={cameraListInGroup}
             columns={columns()}
             rowKey="uuid"
+            locale={{
+              emptyText: (
+                <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />
+              ),
+            }}
             search={false}
             recordCreatorProps={{
               creatorButtonText: intl.formatMessage({
@@ -473,6 +478,9 @@ const GroupCameraDrawer = ({
           columns={columns()}
           rowKey="uuid"
           search={false}
+          locale={{
+            emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+          }}
           rowSelection={{
             onChange: (selectedRowKeys, selectedRows) => {
               setSelectedCameraToAdd(selectedRows);

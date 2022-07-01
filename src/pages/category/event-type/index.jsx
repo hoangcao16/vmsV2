@@ -1,6 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Empty } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -110,6 +110,9 @@ const EventType = ({ dispatch, list, metadata, loading, listField }) => {
           rowKey="id"
           search={false}
           dataSource={list}
+          locale={{
+            emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+          }}
           loading={loading}
           columns={categoryColumns}
           options={false}

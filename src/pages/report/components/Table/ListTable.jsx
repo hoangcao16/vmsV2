@@ -1,6 +1,6 @@
 import { SpanCode } from '@/pages/category/camera/components/GroupCameraDrawer/style';
 import ProTable from '@ant-design/pro-table';
-import { Col, Row } from 'antd';
+import { Col, Row, Empty } from 'antd';
 import { connect } from 'dva';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
@@ -86,6 +86,9 @@ const ListTable = ({ dataWebSocketAiEventList, dispatch, loading }) => {
           })}
           loading={loading}
           rowKey="uuid"
+          locale={{
+            emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+          }}
           search={false}
           dataSource={[...dataWebSocketAiEventList]}
           columns={columns}

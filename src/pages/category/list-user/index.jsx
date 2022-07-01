@@ -11,7 +11,7 @@ import {
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
-import { AutoComplete, Button, Col, Form, Row, Select, Space, Switch, Tooltip } from 'antd';
+import { AutoComplete, Button, Col, Form, Row, Select, Space, Switch, Tooltip, Empty } from 'antd';
 import { connect } from 'dva';
 import { debounce } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -221,6 +221,9 @@ const UserList = ({
         })}
         rowKey="id"
         search={false}
+        locale={{
+          emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+        }}
         dataSource={list}
         columns={columns}
         options={false}

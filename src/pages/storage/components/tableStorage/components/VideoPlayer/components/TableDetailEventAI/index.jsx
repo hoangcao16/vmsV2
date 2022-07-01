@@ -1,4 +1,4 @@
-import { Table } from 'antd';
+import { Table, Empty } from 'antd';
 import moment from 'moment';
 import React from 'react';
 import { useIntl } from 'umi';
@@ -71,7 +71,15 @@ function TableDetailEventAI({ tracingList = [] }) {
 
   return (
     <div>
-      <Table dataSource={tracingList} columns={columns} pagination={false} rowKey="uuid" />
+      <Table
+        dataSource={tracingList}
+        columns={columns}
+        pagination={false}
+        rowKey="uuid"
+        locale={{
+          emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+        }}
+      />
     </div>
   );
 }

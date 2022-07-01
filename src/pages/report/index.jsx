@@ -1,6 +1,5 @@
 import { Col, Row } from 'antd';
 import { connect } from 'dva';
-import React from 'react';
 import styled from 'styled-components';
 import { useIntl } from 'umi';
 import CameraStatistics from './components/CameraStatistics';

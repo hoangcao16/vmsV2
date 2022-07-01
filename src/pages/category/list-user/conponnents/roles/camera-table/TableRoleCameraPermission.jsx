@@ -2,9 +2,9 @@ import { STORAGE } from '@/constants/common';
 import UserApi from '@/services/user/UserApi';
 import { CloseOutlined } from '@ant-design/icons';
 import { EditableProTable } from '@ant-design/pro-table';
-import { Checkbox, Popconfirm, Space, Tooltip } from 'antd';
+import { Checkbox, Popconfirm, Space, Tooltip, Empty } from 'antd';
 import { connect } from 'dva';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 import AddCameraPermission from './AddCameraPermission';
 
@@ -194,6 +194,9 @@ function TableRoleCameraPermission({
         })}
         rowKey="uuid"
         search={false}
+        locale={{
+          emptyText: <Empty description={intl.formatMessage({ id: 'view.ai_config.no_data' })} />,
+        }}
         value={listCameraPermission}
         columns={columns}
         // rowSelection={{}}
